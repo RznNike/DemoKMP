@@ -27,7 +27,7 @@ kotlin {
             implementation(compose.desktop.currentOs)
             implementation(libs.voyager.navigator)
             implementation(libs.voyager.screenModel)
-//            implementation(libs.voyager.transitions)
+            implementation(libs.voyager.transitions)
 //            implementation(libs.voyager.koin)
         }
     }
