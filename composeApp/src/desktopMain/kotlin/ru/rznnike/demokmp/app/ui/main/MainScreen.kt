@@ -14,6 +14,11 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import demokmp.composeapp.generated.resources.Res
+import demokmp.composeapp.generated.resources.close_app
+import demokmp.composeapp.generated.resources.main_screen_title
+import demokmp.composeapp.generated.resources.open_settings
+import org.jetbrains.compose.resources.stringResource
 import ru.rznnike.demokmp.app.navigation.NavigationScreen
 import ru.rznnike.demokmp.app.navigation.getFlowNavigator
 import ru.rznnike.demokmp.app.ui.settings.SettingsFlow
@@ -27,7 +32,7 @@ class MainScreen : NavigationScreen {
         MaterialTheme {
             Column(modifier = Modifier.padding(20.dp)) {
                 Text(
-                    text = "I am main!",
+                    text = stringResource(Res.string.main_screen_title),
                     style = TextStyle(fontSize = 20.sp),
                     textAlign = TextAlign.Center,
                     modifier = Modifier.fillMaxWidth().align(Alignment.CenterHorizontally)
@@ -39,7 +44,7 @@ class MainScreen : NavigationScreen {
                         flowNavigator.open(SettingsFlow())
                     }
                 ) {
-                    Text("Open settings")
+                    Text(stringResource(Res.string.open_settings))
                 }
 
                 Button(
@@ -48,7 +53,7 @@ class MainScreen : NavigationScreen {
                         flowNavigator.close()
                     }
                 ) {
-                    Text("Close app")
+                    Text(stringResource(Res.string.close_app))
                 }
             }
         }

@@ -14,6 +14,10 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import demokmp.composeapp.generated.resources.Res
+import demokmp.composeapp.generated.resources.close
+import demokmp.composeapp.generated.resources.nested_settings_screen_title
+import org.jetbrains.compose.resources.stringResource
 import ru.rznnike.demokmp.app.navigation.NavigationScreen
 import ru.rznnike.demokmp.app.navigation.getScreenNavigator
 
@@ -26,7 +30,7 @@ class NestedSettingsScreen : NavigationScreen {
         MaterialTheme {
             Column(modifier = Modifier.padding(20.dp)) {
                 Text(
-                    text = "I am nested settings screen!",
+                    text = stringResource(Res.string.nested_settings_screen_title),
                     style = TextStyle(fontSize = 20.sp),
                     textAlign = TextAlign.Center,
                     modifier = Modifier.fillMaxWidth().align(Alignment.CenterHorizontally)
@@ -38,7 +42,7 @@ class NestedSettingsScreen : NavigationScreen {
                         screenNavigator.close()
                     }
                 ) {
-                    Text("Close")
+                    Text(stringResource(Res.string.close))
                 }
             }
         }

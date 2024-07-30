@@ -22,7 +22,6 @@ fun App() {
     MaterialTheme {
         var showCountries by remember { mutableStateOf(false) }
         var timeAtLocation by remember { mutableStateOf("No location selected") }
-        val greeting = remember { Greeting().greet() }
 
         Column(modifier = Modifier.padding(20.dp)) {
             Text(
@@ -55,7 +54,7 @@ fun App() {
             }
 
             Text(
-                text = "Compose: $greeting",
+                text = "Compose: hi",
                 style = TextStyle(fontSize = 20.sp),
                 textAlign = TextAlign.Center,
                 modifier = Modifier
