@@ -1,4 +1,5 @@
 <resources>
+    <string name="window_title">Демо приложение KMP</string>
     <string name="splash_screen_title">Я сплеш!</string>
     <string name="main_screen_title">Я главный экран!</string>
     <string name="settings_screen_title">Я экран настроек!</string>

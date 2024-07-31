@@ -1,4 +1,5 @@
 <resources>
+    <string name="window_title">Demo KMP app</string>
     <string name="splash_screen_title">I am splash!</string>
     <string name="main_screen_title">I am main screen!</string>
     <string name="settings_screen_title">I am settings screen!</string>

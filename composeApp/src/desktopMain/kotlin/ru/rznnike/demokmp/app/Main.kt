@@ -7,6 +7,9 @@ import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.WindowPosition
 import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
+import demokmp.composeapp.generated.resources.Res
+import demokmp.composeapp.generated.resources.window_title
+import org.jetbrains.compose.resources.stringResource
 import ru.rznnike.demokmp.app.navigation.createNavigator
 import ru.rznnike.demokmp.app.ui.splash.SplashFlow
 
@@ -16,7 +19,7 @@ fun main() = application {
         position = WindowPosition(Alignment.Center)
     )
     Window(
-        title = "TestKMP",
+        title = stringResource(Res.string.window_title),
         onCloseRequest = ::exitApplication,
         state = state
     ) {
