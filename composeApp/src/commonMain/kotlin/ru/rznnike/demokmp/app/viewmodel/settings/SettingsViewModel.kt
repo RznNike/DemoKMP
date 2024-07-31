@@ -1,30 +1,29 @@
 package ru.rznnike.demokmp.app.viewmodel.settings
 
-import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import ru.rznnike.demokmp.data.preference.PreferencesManager
 import ru.rznnike.demokmp.data.preference.dataStorePreferences
 
 class SettingsViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(SettingsUiState())
     val uiState: StateFlow<SettingsUiState> = _uiState.asStateFlow()
 
-    private val dataStore = dataStorePreferences()
-    private val testPrefKey = intPreferencesKey("TEST_COUNTER")
+    private val preferencesManager = PreferencesManager(dataStorePreferences())
 
     init {
         viewModelScope.launch {
-            dataStore.data.map { preferences ->
-                val savedCounter = preferences[testPrefKey] ?: 0
+            val savedCounter = preferencesManager.getTestCounter()
 
-                _uiState.update { currentState ->
-                    currentState.copy(
-                        counter = savedCounter
-                    )
-                }
+            _uiState.update { currentState ->
+                currentState.copy(
+                    counter = savedCounter
+                )
             }
         }
     }
@@ -32,12 +31,11 @@ class SettingsViewModel : ViewModel() {
     fun incrementCounter() {
         viewModelScope.launch {
             val newCounter = _uiState.value.counter + 1
-            dataStore.edit { preferences ->
-                preferences[testPrefKey] = newCounter
-            }
+            preferencesManager.setTestCounter(newCounter)
+
             _uiState.update { currentState ->
                 currentState.copy(
-                    counter = currentState.counter + 1
+                    counter = newCounter
                 )
             }
         }

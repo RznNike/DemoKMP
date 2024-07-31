@@ -30,9 +30,10 @@ class SettingsScreen : NavigationScreen() {
     @Preview
     @Composable
     override fun Content() {
-        val screenNavigator = getScreenNavigator()
         val settingsViewModel = viewModel { SettingsViewModel() }
         val uiState by settingsViewModel.uiState.collectAsState()
+
+        val screenNavigator = getScreenNavigator()
 
         MaterialTheme {
             Column(modifier = Modifier.padding(20.dp)) {

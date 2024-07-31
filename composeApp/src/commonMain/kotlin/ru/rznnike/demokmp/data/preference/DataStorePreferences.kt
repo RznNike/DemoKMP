@@ -23,12 +23,11 @@ internal fun createDataStoreWithDefaults(
     coroutineScope: CoroutineScope,
     migrations: List<DataMigration<Preferences>>,
     path: () -> String,
-) = PreferenceDataStoreFactory
-    .createWithPath(
-        corruptionHandler = corruptionHandler,
-        scope = coroutineScope,
-        migrations = migrations,
-        produceFile = {
-            path().toPath()
-        }
-    )
+) = PreferenceDataStoreFactory.createWithPath(
+    corruptionHandler = corruptionHandler,
+    scope = coroutineScope,
+    migrations = migrations,
+    produceFile = {
+        path().toPath()
+    }
+)
