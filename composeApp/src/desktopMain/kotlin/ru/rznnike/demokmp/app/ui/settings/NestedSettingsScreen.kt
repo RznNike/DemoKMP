@@ -21,7 +21,7 @@ import org.jetbrains.compose.resources.stringResource
 import ru.rznnike.demokmp.app.navigation.NavigationScreen
 import ru.rznnike.demokmp.app.navigation.getScreenNavigator
 
-class NestedSettingsScreen : NavigationScreen {
+class NestedSettingsScreen : NavigationScreen() {
     @Preview
     @Composable
     override fun Content() {

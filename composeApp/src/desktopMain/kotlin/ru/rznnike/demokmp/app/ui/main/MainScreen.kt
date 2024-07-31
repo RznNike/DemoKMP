@@ -23,7 +23,7 @@ import ru.rznnike.demokmp.app.navigation.NavigationScreen
 import ru.rznnike.demokmp.app.navigation.getFlowNavigator
 import ru.rznnike.demokmp.app.ui.settings.SettingsFlow
 
-class MainScreen : NavigationScreen {
+class MainScreen : NavigationScreen() {
     @Preview
     @Composable
     override fun Content() {

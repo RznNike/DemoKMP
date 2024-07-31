@@ -1,5 +1,9 @@
 package ru.rznnike.demokmp.app.navigation
 
 import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.core.screen.ScreenKey
+import cafe.adriel.voyager.core.screen.uniqueScreenKey
 
-interface NavigationScreen : Screen
+abstract class NavigationScreen : Screen {
+    override val key: ScreenKey = uniqueScreenKey
+}

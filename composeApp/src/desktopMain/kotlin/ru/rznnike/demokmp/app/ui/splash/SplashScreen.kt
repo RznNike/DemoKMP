@@ -22,7 +22,7 @@ import ru.rznnike.demokmp.app.navigation.NavigationScreen
 import ru.rznnike.demokmp.app.navigation.getFlowNavigator
 import ru.rznnike.demokmp.app.ui.main.MainFlow
 
-class SplashScreen : NavigationScreen {
+class SplashScreen : NavigationScreen() {
     @Preview
     @Composable
     override fun Content() {
