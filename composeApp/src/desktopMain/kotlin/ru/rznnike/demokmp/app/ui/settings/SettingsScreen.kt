@@ -14,19 +14,21 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import demokmp.composeapp.generated.resources.*
 import demokmp.composeapp.generated.resources.Res
 import org.jetbrains.compose.resources.stringResource
 import ru.rznnike.demokmp.app.navigation.NavigationScreen
 import ru.rznnike.demokmp.app.navigation.getScreenNavigator
+import ru.rznnike.demokmp.app.viewmodel.settings.SettingsViewModel
 
 class SettingsScreen : NavigationScreen {
     @Preview
     @Composable
     override fun Content() {
         val screenNavigator = getScreenNavigator()
-
-        var counter by remember { mutableStateOf(0) }
+        val settingsViewModel = viewModel { SettingsViewModel() }
+        val uiState by settingsViewModel.uiState.collectAsState()
 
         MaterialTheme {
             Column(modifier = Modifier.padding(20.dp)) {
@@ -39,7 +41,7 @@ class SettingsScreen : NavigationScreen {
                 )
 
                 Text(
-                    text = counter.toString(),
+                    text = uiState.counter.toString(),
                     style = TextStyle(fontSize = 20.sp),
                     textAlign = TextAlign.Center,
                     modifier = Modifier.fillMaxWidth()
@@ -49,7 +51,7 @@ class SettingsScreen : NavigationScreen {
                 Button(
                     modifier = Modifier.padding(start = 20.dp, top = 10.dp),
                     onClick = {
-                        counter++
+                        settingsViewModel.incrementCounter()
                     }
                 ) {
                     Text("++")
