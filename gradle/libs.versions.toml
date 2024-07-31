@@ -3,6 +3,8 @@ compose-plugin = "1.6.11"
 kotlin = "2.0.0"
 voyager = "1.1.0-beta02"
 viewmodel-compose = "2.8.0"
+datastore = "1.1.1"
+coroutines = "1.8.1"
 
 [libraries]
 voyager-navigator = { module = "cafe.adriel.voyager:voyager-navigator", version.ref = "voyager" }
@@ -11,6 +13,9 @@ voyager-transitions = { module = "cafe.adriel.voyager:voyager-transitions", vers
 voyager-lifecycle-kmp = { module = "cafe.adriel.voyager:voyager-lifecycle-kmp", version.ref = "voyager" }
 voyager-koin = { module = "cafe.adriel.voyager:voyager-koin", version.ref = "voyager" }
 viewmodel-compose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "viewmodel-compose" }
+datastore-preferences = { module = "androidx.datastore:datastore-preferences-core", version.ref = "datastore" }
+coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
+coroutines-swing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", version.ref = "coroutines" }
 
 
 [plugins]

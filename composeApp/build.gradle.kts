@@ -20,6 +20,8 @@ kotlin {
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
             implementation(libs.viewmodel.compose)
+            implementation(libs.datastore.preferences)
+            implementation(libs.coroutines.core)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
@@ -27,6 +29,7 @@ kotlin {
             implementation(libs.voyager.screenModel)
             implementation(libs.voyager.transitions)
             implementation(libs.voyager.lifecycle.kmp)
+            implementation(libs.coroutines.swing)
 //            implementation(libs.voyager.koin)
         }
     }
