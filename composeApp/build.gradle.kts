@@ -22,6 +22,9 @@ kotlin {
             implementation(libs.viewmodel.compose)
             implementation(libs.datastore.preferences)
             implementation(libs.coroutines.core)
+            implementation(libs.koin.core)
+            implementation(libs.koin.compose)
+            implementation(libs.koin.compose.viewmodel)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
@@ -30,7 +33,6 @@ kotlin {
             implementation(libs.voyager.transitions)
             implementation(libs.voyager.lifecycle.kmp)
             implementation(libs.coroutines.swing)
-//            implementation(libs.voyager.koin)
         }
     }
 }

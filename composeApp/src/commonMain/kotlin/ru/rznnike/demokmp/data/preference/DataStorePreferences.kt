@@ -1,33 +1,22 @@
 package ru.rznnike.demokmp.data.preference
 
-import androidx.datastore.core.DataMigration
-import androidx.datastore.core.DataStore
-import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
-import androidx.datastore.preferences.core.Preferences
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import okio.Path.Companion.toPath
+import ru.rznnike.demokmp.domain.common.DispatcherProvider
 
-expect fun dataStorePreferences(
-    corruptionHandler: ReplaceFileCorruptionHandler<Preferences>? = null,
-    coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.IO + SupervisorJob()),
-    migrations: List<DataMigration<Preferences>> = emptyList()
-): DataStore<Preferences>
+expect fun getDataStorePath() : String
 
-internal const val SETTINGS_PREFERENCES = "app_data/settings.preferences_pb"
+const val SETTINGS_PREFERENCES = "app_data/settings.preferences_pb"
 
-internal fun createDataStoreWithDefaults(
-    corruptionHandler: ReplaceFileCorruptionHandler<Preferences>?,
-    coroutineScope: CoroutineScope,
-    migrations: List<DataMigration<Preferences>>,
-    path: () -> String,
+fun createDataStore(
+    dispatcherProvider: DispatcherProvider
 ) = PreferenceDataStoreFactory.createWithPath(
-    corruptionHandler = corruptionHandler,
-    scope = coroutineScope,
-    migrations = migrations,
+    corruptionHandler = null,
+    scope = CoroutineScope(dispatcherProvider.io + SupervisorJob()),
+    migrations = emptyList(),
     produceFile = {
-        path().toPath()
+        getDataStorePath().toPath()
     }
 )

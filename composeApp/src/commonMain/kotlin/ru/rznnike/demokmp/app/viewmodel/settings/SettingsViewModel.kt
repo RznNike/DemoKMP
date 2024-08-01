@@ -1,26 +1,20 @@
 package ru.rznnike.demokmp.app.viewmodel.settings
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.koin.core.component.inject
+import ru.rznnike.demokmp.app.common.viewmodel.BaseUiViewModel
 import ru.rznnike.demokmp.data.preference.PreferencesManager
-import ru.rznnike.demokmp.data.preference.dataStorePreferences
 
-class SettingsViewModel : ViewModel() {
-    private val _uiState = MutableStateFlow(SettingsUiState())
-    val uiState: StateFlow<SettingsUiState> = _uiState.asStateFlow()
-
-    private val preferencesManager = PreferencesManager(dataStorePreferences())
+class SettingsViewModel : BaseUiViewModel<SettingsUiState>() {
+    private val preferencesManager: PreferencesManager by inject()
 
     init {
         viewModelScope.launch {
             val savedCounter = preferencesManager.getTestCounter()
 
-            _uiState.update { currentState ->
+            mutableUiState.update { currentState ->
                 currentState.copy(
                     counter = savedCounter
                 )
@@ -28,12 +22,14 @@ class SettingsViewModel : ViewModel() {
         }
     }
 
+    override fun provideDefaultUIState() = SettingsUiState()
+
     fun incrementCounter() {
         viewModelScope.launch {
-            val newCounter = _uiState.value.counter + 1
+            val newCounter = mutableUiState.value.counter + 1
             preferencesManager.setTestCounter(newCounter)
 
-            _uiState.update { currentState ->
+            mutableUiState.update { currentState ->
                 currentState.copy(
                     counter = newCounter
                 )
