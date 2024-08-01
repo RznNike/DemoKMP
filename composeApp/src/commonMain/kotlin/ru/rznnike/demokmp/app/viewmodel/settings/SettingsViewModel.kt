@@ -9,7 +9,6 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import ru.rznnike.demokmp.data.preference.PreferencesManager
 import ru.rznnike.demokmp.data.preference.dataStorePreferences
-import ru.rznnike.demokmp.data.utils.logT
 
 class SettingsViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(SettingsUiState())
@@ -18,7 +17,6 @@ class SettingsViewModel : ViewModel() {
     private val preferencesManager = PreferencesManager(dataStorePreferences())
 
     init {
-        logT("SettingsViewModel init")
         viewModelScope.launch {
             val savedCounter = preferencesManager.getTestCounter()
 
