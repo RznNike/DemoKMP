@@ -3,14 +3,12 @@ package ru.rznnike.demokmp.data.preference
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.intPreferencesKey
-import kotlinx.coroutines.flow.first
 
 class PreferencesManager(
-    private val preferences: DataStore<Preferences>
+    private val dataStore: DataStore<Preferences>
 ) {
-    private val testCounterKey = intPreferencesKey("TEST_COUNTER")
+    val testCounter = Preference.IntPreference(dataStore, "TEST_COUNTER")
+    val testCounter2 = Preference.IntPreference(dataStore, "TEST_COUNTER2", -1)
 
-    suspend fun getTestCounter() = preferences.data.first()[testCounterKey] ?: 0
-    suspend fun setTestCounter(testCounter: Int) = preferences.edit { it[testCounterKey] = testCounter }
+    suspend fun clearAll() = dataStore.edit { it.clear() }
 }

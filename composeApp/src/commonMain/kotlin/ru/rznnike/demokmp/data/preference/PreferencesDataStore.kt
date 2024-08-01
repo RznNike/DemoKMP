@@ -6,7 +6,7 @@ import kotlinx.coroutines.SupervisorJob
 import okio.Path.Companion.toPath
 import ru.rznnike.demokmp.domain.common.DispatcherProvider
 
-expect fun getDataStorePath() : String
+expect fun getDataStorePath(): String
 
 const val SETTINGS_PREFERENCES = "app_data/settings.preferences_pb"
 
