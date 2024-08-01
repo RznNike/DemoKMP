@@ -39,7 +39,7 @@ class MainScreen : NavigationScreen() {
                 )
 
                 Button(
-                    modifier = Modifier.padding(start = 20.dp, top = 10.dp),
+                    modifier = Modifier.padding(top = 10.dp),
                     onClick = {
                         flowNavigator.open(SettingsFlow())
                     }
@@ -48,7 +48,7 @@ class MainScreen : NavigationScreen() {
                 }
 
                 Button(
-                    modifier = Modifier.padding(start = 20.dp, top = 10.dp),
+                    modifier = Modifier.padding(top = 10.dp),
                     onClick = {
                         flowNavigator.close()
                     }

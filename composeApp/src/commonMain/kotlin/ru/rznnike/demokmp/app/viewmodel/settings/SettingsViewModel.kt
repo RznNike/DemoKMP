@@ -7,7 +7,7 @@ import org.koin.core.component.inject
 import ru.rznnike.demokmp.app.common.viewmodel.BaseUiViewModel
 import ru.rznnike.demokmp.data.preference.PreferencesManager
 
-class SettingsViewModel : BaseUiViewModel<SettingsUiState>() {
+class SettingsViewModel : BaseUiViewModel<SettingsViewModel.UiState>() {
     private val preferencesManager: PreferencesManager by inject()
 
     init {
@@ -22,7 +22,7 @@ class SettingsViewModel : BaseUiViewModel<SettingsUiState>() {
         }
     }
 
-    override fun provideDefaultUIState() = SettingsUiState()
+    override fun provideDefaultUIState() = UiState()
 
     fun incrementCounter() {
         viewModelScope.launch {
@@ -36,8 +36,8 @@ class SettingsViewModel : BaseUiViewModel<SettingsUiState>() {
             }
         }
     }
-}
 
-data class SettingsUiState(
-    val counter: Int = 0
-)
+    data class UiState(
+        val counter: Int = 0
+    )
+}

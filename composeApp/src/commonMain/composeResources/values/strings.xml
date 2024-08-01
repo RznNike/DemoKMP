@@ -9,4 +9,6 @@
     <string name="open_settings">Открыть настройки</string>
     <string name="open_nested_settings">Открыть вложенные настройки</string>
     <string name="go_to_main">На главный</string>
+    <string name="user_name">Имя пользователя</string>
+    <string name="enter_user_name">Введите имя пользователя</string>
 </resources>
