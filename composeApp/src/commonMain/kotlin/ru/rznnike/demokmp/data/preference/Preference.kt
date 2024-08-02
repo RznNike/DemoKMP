@@ -5,6 +5,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import kotlinx.coroutines.flow.first
+import ru.rznnike.demokmp.domain.model.common.Language
 import ru.rznnike.demokmp.domain.utils.toDoubleOrNullSmart
 
 sealed class Preference<Type>(
@@ -72,5 +73,15 @@ sealed class Preference<Type>(
         override fun Boolean.serialize() = toString()
 
         override fun String.deserialize() = toBooleanStrictOrNull()
+    }
+
+    class LanguagePreference(
+        dataStore: DataStore<Preferences>,
+        key: String,
+        defaultValue: Language
+    ) : Preference<Language>(dataStore, key, defaultValue) {
+        override fun Language.serialize() = tag
+
+        override fun String.deserialize() = Language[this]
     }
 }

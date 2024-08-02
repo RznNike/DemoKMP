@@ -2,30 +2,25 @@ package ru.rznnike.demokmp.app.ui.settings
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Button
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.OutlinedTextField
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.material.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import demokmp.composeapp.generated.resources.Res
-import demokmp.composeapp.generated.resources.close
-import demokmp.composeapp.generated.resources.enter_user_name
-import demokmp.composeapp.generated.resources.nested_settings_screen_title
+import demokmp.composeapp.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import ru.rznnike.demokmp.app.navigation.NavigationScreen
 import ru.rznnike.demokmp.app.navigation.getScreenNavigator
+import ru.rznnike.demokmp.app.viewmodel.language.LanguageViewModel
 import ru.rznnike.demokmp.app.viewmodel.profile.ProfileViewModel
+import ru.rznnike.demokmp.domain.model.common.Language
 
 class NestedSettingsScreen : NavigationScreen() {
     @Preview
@@ -33,38 +28,78 @@ class NestedSettingsScreen : NavigationScreen() {
     override fun Content() {
         val profileViewModel = koinInject<ProfileViewModel>()
         val profileUiState by profileViewModel.uiState.collectAsState()
+        val languageViewModel = koinInject<LanguageViewModel>()
+        val languageUiState by languageViewModel.uiState.collectAsState()
 
         val screenNavigator = getScreenNavigator()
 
-        MaterialTheme {
-            Column(modifier = Modifier.padding(20.dp)) {
-                Text(
-                    text = stringResource(Res.string.nested_settings_screen_title),
-                    style = TextStyle(fontSize = 20.sp),
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.fillMaxWidth().align(Alignment.CenterHorizontally)
-                )
+        var showLanguages by remember { mutableStateOf(false) }
 
-                Text(
-                    text = stringResource(Res.string.enter_user_name),
-                    style = TextStyle(fontSize = 20.sp),
-                    modifier = Modifier.fillMaxWidth()
-                        .padding(top = 10.dp)
-                )
-                OutlinedTextField(
-                    value = profileUiState.name,
-                    singleLine = true,
-                    modifier = Modifier.fillMaxWidth(),
-                    onValueChange = profileViewModel::changeName
-                )
+        key(languageUiState.language) {
+            MaterialTheme {
+                Column(modifier = Modifier.padding(20.dp)) {
+                    Text(
+                        text = stringResource(Res.string.nested_settings_screen_title),
+                        style = TextStyle(fontSize = 20.sp),
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth().align(Alignment.CenterHorizontally)
+                    )
 
-                Button(
-                    modifier = Modifier.padding(top = 10.dp),
-                    onClick = {
-                        screenNavigator.close()
+                    Text(
+                        text = stringResource(Res.string.enter_user_name),
+                        style = TextStyle(fontSize = 20.sp),
+                        modifier = Modifier.fillMaxWidth()
+                            .padding(top = 10.dp)
+                    )
+                    OutlinedTextField(
+                        value = profileUiState.name,
+                        singleLine = true,
+                        modifier = Modifier.fillMaxWidth(),
+                        onValueChange = profileViewModel::changeName
+                    )
+
+                    Text(
+                        text = stringResource(Res.string.select_language),
+                        style = TextStyle(fontSize = 20.sp),
+                        modifier = Modifier.fillMaxWidth()
+                            .padding(top = 10.dp)
+                    )
+                    Row(
+                        modifier = Modifier.padding(top = 10.dp)
+                    ) {
+                        DropdownMenu(
+                            expanded = showLanguages,
+                            onDismissRequest = { showLanguages = false }
+                        ) {
+                            Language.entries.forEach { language ->
+                                DropdownMenuItem(
+                                    onClick = {
+                                        languageViewModel.setLanguage(language)
+                                        showLanguages = false
+                                    }
+                                ) {
+                                    Text(language.localizedName)
+                                }
+                            }
+                        }
                     }
-                ) {
-                    Text(stringResource(Res.string.close))
+                    Button(
+                        modifier = Modifier.padding(top = 10.dp),
+                        onClick = {
+                            showLanguages = !showLanguages
+                        }
+                    ) {
+                        Text(languageUiState.language.localizedName)
+                    }
+
+                    Button(
+                        modifier = Modifier.padding(top = 10.dp),
+                        onClick = {
+                            screenNavigator.close()
+                        }
+                    ) {
+                        Text(stringResource(Res.string.close))
+                    }
                 }
             }
         }

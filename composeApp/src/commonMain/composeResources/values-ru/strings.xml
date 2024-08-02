@@ -1,0 +1,15 @@
+<resources>
+    <string name="window_title">Демо приложение KMP</string>
+    <string name="splash_screen_title">Я сплеш!</string>
+    <string name="main_screen_title">Я главный экран!</string>
+    <string name="settings_screen_title">Я экран настроек!</string>
+    <string name="nested_settings_screen_title">Я вложенный экран настроек!</string>
+    <string name="close">Закрыть</string>
+    <string name="close_app">Закрыть приложение</string>
+    <string name="open_settings">Открыть настройки</string>
+    <string name="open_nested_settings">Открыть вложенные настройки</string>
+    <string name="go_to_main">На главный</string>
+    <string name="user_name">Имя пользователя</string>
+    <string name="enter_user_name">Введите имя пользователя</string>
+    <string name="select_language">Выберите язык</string>
+</resources>
