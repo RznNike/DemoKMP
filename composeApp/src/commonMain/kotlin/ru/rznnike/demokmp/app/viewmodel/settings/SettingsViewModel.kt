@@ -5,18 +5,28 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.koin.core.component.inject
 import ru.rznnike.demokmp.app.common.viewmodel.BaseUiViewModel
-import ru.rznnike.demokmp.data.preference.PreferencesManager
+import ru.rznnike.demokmp.domain.interactor.preferences.GetTestCounterUseCase
+import ru.rznnike.demokmp.domain.interactor.preferences.SetTestCounterUseCase
+import ru.rznnike.demokmp.domain.utils.logger
 
 class SettingsViewModel : BaseUiViewModel<SettingsViewModel.UiState>() {
-    private val preferencesManager: PreferencesManager by inject()
+    private val getTestCounterUseCase: GetTestCounterUseCase by inject()
+    private val setTestCounterUseCase: SetTestCounterUseCase by inject()
 
     init {
         viewModelScope.launch {
-            mutableUiState.update { currentState ->
-                currentState.copy(
-                    counter = preferencesManager.testCounter.get()
-                )
-            }
+            getTestCounterUseCase().process(
+                { result ->
+                    mutableUiState.update { currentState ->
+                        currentState.copy(
+                            counter = result
+                        )
+                    }
+                }, { error ->
+                    logger(error)
+                    // TODO
+                }
+            )
         }
     }
 
@@ -25,7 +35,7 @@ class SettingsViewModel : BaseUiViewModel<SettingsViewModel.UiState>() {
     fun incrementCounter() {
         viewModelScope.launch {
             val newCounter = mutableUiState.value.counter + 1
-            preferencesManager.testCounter.set(newCounter)
+            setTestCounterUseCase(newCounter)
 
             mutableUiState.update { currentState ->
                 currentState.copy(

@@ -20,7 +20,9 @@ sealed class Preference<Type>(
 
     suspend fun get(): Type = dataStore.data.first()[typedKey]?.deserialize() ?: defaultValue
 
-    suspend fun set(newValue: Type) = dataStore.edit { it[typedKey] = newValue.serialize() }
+    suspend fun set(newValue: Type) {
+        dataStore.edit { it[typedKey] = newValue.serialize() }
+    }
 
     class StringPreference(
         dataStore: DataStore<Preferences>,
