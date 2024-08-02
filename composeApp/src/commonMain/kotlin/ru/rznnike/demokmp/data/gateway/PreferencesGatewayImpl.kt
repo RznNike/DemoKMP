@@ -5,12 +5,14 @@ import ru.rznnike.demokmp.data.preference.PreferencesManager
 import ru.rznnike.demokmp.domain.common.DispatcherProvider
 import ru.rznnike.demokmp.domain.gateway.PreferencesGateway
 import ru.rznnike.demokmp.domain.model.common.Language
+import java.io.FileNotFoundException
 
 class PreferencesGatewayImpl(
     private val dispatcherProvider: DispatcherProvider,
     private val preferencesManager: PreferencesManager
 ) : PreferencesGateway {
     override suspend fun getTestCounter(): Int = withContext(dispatcherProvider.io) {
+        throw FileNotFoundException()
         preferencesManager.testCounter.get()
     }
 

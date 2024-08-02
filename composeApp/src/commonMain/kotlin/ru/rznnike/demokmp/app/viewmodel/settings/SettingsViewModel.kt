@@ -5,11 +5,13 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.koin.core.component.inject
 import ru.rznnike.demokmp.app.common.viewmodel.BaseUiViewModel
+import ru.rznnike.demokmp.app.error.ErrorHandler
 import ru.rznnike.demokmp.domain.interactor.preferences.GetTestCounterUseCase
 import ru.rznnike.demokmp.domain.interactor.preferences.SetTestCounterUseCase
 import ru.rznnike.demokmp.domain.utils.logger
 
 class SettingsViewModel : BaseUiViewModel<SettingsViewModel.UiState>() {
+    private val errorHandler: ErrorHandler by inject()
     private val getTestCounterUseCase: GetTestCounterUseCase by inject()
     private val setTestCounterUseCase: SetTestCounterUseCase by inject()
 
@@ -23,8 +25,11 @@ class SettingsViewModel : BaseUiViewModel<SettingsViewModel.UiState>() {
                         )
                     }
                 }, { error ->
-                    logger(error)
-                    // TODO
+                    errorHandler.proceed(error) { message ->
+                        logger(message)
+                        logger("это тест ру")
+                        logger("and this is eng")
+                    }
                 }
             )
         }
