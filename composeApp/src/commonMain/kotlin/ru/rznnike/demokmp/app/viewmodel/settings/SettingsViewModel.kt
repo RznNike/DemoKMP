@@ -14,8 +14,7 @@ class SettingsViewModel : BaseUiViewModel<SettingsViewModel.UiState>() {
         viewModelScope.launch {
             mutableUiState.update { currentState ->
                 currentState.copy(
-                    counter = preferencesManager.testCounter.get(),
-                    counter2 = preferencesManager.testCounter2.get()
+                    counter = preferencesManager.testCounter.get()
                 )
             }
         }
@@ -36,21 +35,7 @@ class SettingsViewModel : BaseUiViewModel<SettingsViewModel.UiState>() {
         }
     }
 
-    fun incrementCounter2() {
-        viewModelScope.launch {
-            val newCounter = mutableUiState.value.counter2 + 1
-            preferencesManager.testCounter2.set(newCounter)
-
-            mutableUiState.update { currentState ->
-                currentState.copy(
-                    counter2 = newCounter
-                )
-            }
-        }
-    }
-
     data class UiState(
-        val counter: Int = 0,
-        val counter2: Int = 0
+        val counter: Int = 0
     )
 }

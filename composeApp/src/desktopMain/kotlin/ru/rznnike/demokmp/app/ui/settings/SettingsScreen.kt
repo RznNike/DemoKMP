@@ -63,23 +63,6 @@ class SettingsScreen : NavigationScreen() {
                     Text("++")
                 }
 
-                Text(
-                    text = settingsUiState.counter2.toString(),
-                    style = TextStyle(fontSize = 20.sp),
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.fillMaxWidth()
-                        .align(Alignment.CenterHorizontally)
-                        .padding(top = 10.dp)
-                )
-                Button(
-                    modifier = Modifier.padding(top = 10.dp),
-                    onClick = {
-                        settingsViewModel.incrementCounter2()
-                    }
-                ) {
-                    Text("++")
-                }
-
                 Button(
                     modifier = Modifier.padding(top = 10.dp),
                     onClick = {
