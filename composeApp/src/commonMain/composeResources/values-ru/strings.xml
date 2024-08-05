@@ -13,4 +13,6 @@
     <string name="enter_user_name">Введите имя пользователя</string>
     <string name="select_language">Выберите язык</string>
     <string name="unknown_error">Неизвестная ошибка</string>
+    <string name="test_dialog">Тестовый диалог</string>
+    <string name="test_message">Тестовое сообщение</string>
 </resources>

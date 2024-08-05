@@ -20,7 +20,7 @@ import demokmp.composeapp.generated.resources.splash_screen_title
 import org.jetbrains.compose.resources.stringResource
 import ru.rznnike.demokmp.app.navigation.NavigationScreen
 import ru.rznnike.demokmp.app.navigation.getFlowNavigator
-import ru.rznnike.demokmp.app.ui.main.MainFlow
+import ru.rznnike.demokmp.app.ui.home.HomeFlow
 
 class SplashScreen : NavigationScreen() {
     @Preview
@@ -40,7 +40,7 @@ class SplashScreen : NavigationScreen() {
                 Button(
                     modifier = Modifier.padding(top = 10.dp),
                     onClick = {
-                        flowNavigator.newRoot(MainFlow())
+                        flowNavigator.newRoot(HomeFlow())
                     }
                 ) {
                     Text(stringResource(Res.string.go_to_main))

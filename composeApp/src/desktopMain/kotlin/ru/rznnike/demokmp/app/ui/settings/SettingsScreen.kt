@@ -72,15 +72,6 @@ class SettingsScreen : NavigationScreen() {
                     Text(stringResource(Res.string.open_nested_settings))
                 }
 
-                Button(
-                    modifier = Modifier.padding(top = 10.dp),
-                    onClick = {
-                        screenNavigator.close()
-                    }
-                ) {
-                    Text(stringResource(Res.string.close))
-                }
-
                 val nameString = "%s: %s".format(
                     stringResource(Res.string.user_name),
                     profileUiState.name
@@ -95,10 +86,10 @@ class SettingsScreen : NavigationScreen() {
                 Button(
                     modifier = Modifier.padding(top = 10.dp),
                     onClick = {
-                        screenNavigator.open(SnackbarScreen())
+                        screenNavigator.close()
                     }
                 ) {
-                    Text("Snackbar screen")
+                    Text(stringResource(Res.string.close))
                 }
             }
         }

@@ -16,8 +16,7 @@ import org.koin.compose.KoinContext
 import org.koin.compose.koinInject
 import org.koin.core.context.startKoin
 import ru.rznnike.demokmp.app.di.appComponent
-import ru.rznnike.demokmp.app.navigation.createNavigator
-import ru.rznnike.demokmp.app.ui.splash.SplashFlow
+import ru.rznnike.demokmp.app.ui.main.mainFrame
 import ru.rznnike.demokmp.app.viewmodel.language.LanguageViewModel
 import java.util.*
 
@@ -54,7 +53,7 @@ private fun ApplicationScope.startUI() {
                 window.title = stringResource(Res.string.window_title)
 
                 ProvideNavigatorLifecycleKMPSupport {
-                    createNavigator(SplashFlow())
+                    mainFrame()
                 }
             }
         }
