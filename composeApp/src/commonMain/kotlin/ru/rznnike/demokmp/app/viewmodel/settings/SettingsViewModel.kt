@@ -27,8 +27,6 @@ class SettingsViewModel : BaseUiViewModel<SettingsViewModel.UiState>() {
                 }, { error ->
                     errorHandler.proceed(error) { message ->
                         logger(message)
-                        logger("это тест ру")
-                        logger("and this is eng")
                     }
                 }
             )
