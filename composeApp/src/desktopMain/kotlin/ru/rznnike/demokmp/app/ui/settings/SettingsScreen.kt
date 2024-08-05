@@ -91,6 +91,15 @@ class SettingsScreen : NavigationScreen() {
                     modifier = Modifier.fillMaxWidth()
                         .padding(top = 10.dp)
                 )
+
+                Button(
+                    modifier = Modifier.padding(top = 10.dp),
+                    onClick = {
+                        screenNavigator.open(SnackbarScreen())
+                    }
+                ) {
+                    Text("Snackbar screen")
+                }
             }
         }
     }
