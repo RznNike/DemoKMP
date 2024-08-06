@@ -3,17 +3,23 @@ import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
+    alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.compose)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.buildkonfig)
+    alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.ktorfit)
 }
 
 kotlin {
+    androidTarget()
+
     jvm("desktop")
-    
+
     sourceSets {
         val desktopMain by getting
-        
+
         commonMain.dependencies {
             implementation(compose.runtime)
             implementation(compose.foundation)
@@ -27,6 +33,8 @@ kotlin {
             implementation(libs.koin.core)
             implementation(libs.koin.compose)
             implementation(libs.koin.compose.viewmodel)
+            implementation(libs.kotlinx.serialization)
+            implementation(libs.ktorfit)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
@@ -37,6 +45,11 @@ kotlin {
             implementation(libs.coroutines.swing)
         }
     }
+}
+
+android {
+    namespace = "ru.rznnike.demokmp"
+    compileSdk = 34
 }
 
 compose.desktop {
