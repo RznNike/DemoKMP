@@ -15,7 +15,6 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import demokmp.composeapp.generated.resources.Res
 import demokmp.composeapp.generated.resources.close
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
@@ -34,7 +33,6 @@ fun mainFrame() {
 
     val snackbarHostState = remember { SnackbarHostState() }
     var dialogData by remember { mutableStateOf<SystemMessage?>(null) }
-    var notificationsJob: Job? = remember { null }
 
     fun showAlertMessage(systemMessage: SystemMessage) {
         dialogData = systemMessage
@@ -69,8 +67,7 @@ fun mainFrame() {
         }
     }
 
-    notificationsJob?.cancel() // TODO fix multiple subscriptions
-    notificationsJob = coroutineScopeProvider.ui.launch {
+    LaunchedEffect(notifier) {
         notifier.subscribe().collect {
             onNextMessageNotify(it)
         }
@@ -122,6 +119,6 @@ fun mainFrame() {
         }
     ) {
         createNavigator(SplashFlow())
+        DialogLayout()
     }
-    DialogLayout()
 }
