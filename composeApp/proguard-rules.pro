@@ -1,4 +1,4 @@
 -dontwarn okio.AsyncTimeout$Watchdog
--dontwarn org.slf4j.*
+-keep class org.slf4j.*
 -keep class kotlinx.coroutines.internal.MainDispatcherFactory { *; }
 -keep class kotlinx.coroutines.swing.SwingDispatcherFactory { *; }

@@ -4,6 +4,7 @@ coroutines = "1.8.1"
 voyager = "1.1.0-beta02"
 koin-compose = "1.2.0-Beta5"
 ktorfit = "2.0.0"
+ktor = "2.3.11"
 
 
 [libraries]
@@ -38,6 +39,11 @@ kotlinx-serialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-
 # Ktorfit
 # https://github.com/Foso/Ktorfit
 ktorfit = { module = "de.jensklingenberg.ktorfit:ktorfit-lib", version.ref = "ktorfit" }
+
+# Ktor addons - versions should be compatible with Ktorfit
+# https://foso.github.io/Ktorfit/#compatibility
+ktor-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
+ktor-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
 
 
 [plugins]
