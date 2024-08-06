@@ -1,0 +1,1 @@
+-dontwarn okio.AsyncTimeout$Watchdog

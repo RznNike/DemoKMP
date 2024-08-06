@@ -1,9 +1,11 @@
+import com.codingfeline.buildkonfig.compiler.FieldSpec
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 
 plugins {
-    alias(libs.plugins.kotlinMultiplatform)
-    alias(libs.plugins.jetbrainsCompose)
+    alias(libs.plugins.kotlin.multiplatform)
+    alias(libs.plugins.jetbrains.compose)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.buildkonfig)
 }
 
 kotlin {
@@ -37,7 +39,6 @@ kotlin {
     }
 }
 
-
 compose.desktop {
     application {
         mainClass = "ru.rznnike.demokmp.app.MainKt"
@@ -47,5 +48,23 @@ compose.desktop {
             packageName = "ru.rznnike.demokmp"
             packageVersion = "1.0.0"
         }
+
+        buildTypes {
+            release {
+                proguard {
+                    obfuscate.set(true)
+                    configurationFiles.from(project.file("proguard-rules.pro"))
+                }
+            }
+        }
+    }
+}
+
+buildkonfig {
+    packageName = "ru.rznnike.demokmp"
+
+    defaultConfigs {
+        buildConfigField(FieldSpec.Type.BOOLEAN, "DEBUG", "true")
+        buildConfigField(FieldSpec.Type.STRING, "API_MAIN", "https://dog.ceo/api/")
     }
 }
