@@ -35,9 +35,11 @@ kotlin {
             implementation(libs.koin.compose.viewmodel)
             implementation(libs.kotlinx.serialization)
             implementation(libs.ktorfit)
+            implementation(libs.ktor.okhttp)
             implementation(libs.ktor.negotiation)
             implementation(libs.ktor.json)
-            implementation(libs.slf4j)
+            implementation(libs.ktor.logging)
+            implementation(libs.logback)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)

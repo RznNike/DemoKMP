@@ -42,12 +42,14 @@ ktorfit = { module = "de.jensklingenberg.ktorfit:ktorfit-lib", version.ref = "kt
 
 # Ktor addons - versions should be compatible with Ktorfit
 # https://foso.github.io/Ktorfit/#compatibility
+ktor-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
 ktor-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
 ktor-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
+ktor-logging = { module = "io.ktor:ktor-client-logging", version.ref = "ktor" }
 
-# SLF4J
-# https://mvnrepository.com/artifact/org.slf4j/slf4j-simple
-slf4j = { module = "org.slf4j:slf4j-simple", version = "1.7.36" }
+# Logback
+# https://mvnrepository.com/artifact/ch.qos.logback/logback-classic
+logback = { module = "ch.qos.logback:logback-classic", version = "1.5.6" }
 
 
 [plugins]

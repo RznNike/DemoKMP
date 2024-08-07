@@ -10,7 +10,6 @@ import ru.rznnike.demokmp.app.error.ErrorHandler
 import ru.rznnike.demokmp.domain.interactor.networktest.GetRandomImageLinkUseCase
 import ru.rznnike.demokmp.domain.interactor.preferences.GetTestCounterUseCase
 import ru.rznnike.demokmp.domain.interactor.preferences.SetTestCounterUseCase
-import ru.rznnike.demokmp.domain.utils.logger
 
 class SettingsViewModel : BaseUiViewModel<SettingsViewModel.UiState>() {
     private val notifier: Notifier by inject()
@@ -36,8 +35,7 @@ class SettingsViewModel : BaseUiViewModel<SettingsViewModel.UiState>() {
             )
             getRandomImageLinkUseCase().process(
                 { result ->
-                    logger("Network request success!")
-                    logger(result)
+                    // TODO
                 }, { error ->
                     errorHandler.proceed(error) { message ->
                         notifier.sendAlert(message)
