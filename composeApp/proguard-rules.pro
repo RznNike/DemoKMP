@@ -1,12 +1,40 @@
--dontwarn okio.AsyncTimeout$Watchdog
--keep class org.slf4j.*
 #noinspection ShrinkerUnresolvedReference
--keepnames class kotlinx.coroutines.swing.SwingDispatcherFactory {}
+
+# Logs
+-dontwarn ch.qos.logback.**
+
+
+### Serialization ###
+-keep class io.ktor.serialization.**
+-keep class * {
+    @kotlinx.serialization.SerialName <fields>;
+}
+
+
+### OkHttp ###
+
+# JSR 305 annotations are for embedding nullability information.
+-dontwarn javax.annotation.**
+
+# A resource is loaded with a relative path so the package of this class must be preserved.
+-keeppackagenames okhttp3.internal.publicsuffix.*
+-adaptresourcefilenames okhttp3/internal/publicsuffix/PublicSuffixDatabase.gz
+
+# Animal Sniffer compileOnly dependency to ensure APIs are compatible with older versions of Java.
+-dontwarn org.codehaus.mojo.animal_sniffer.*
+
+# OkHttp platform used only on JVM and when Conscrypt and other security providers are available.
+-dontwarn okhttp3.internal.platform.**
+-dontwarn org.conscrypt.**
+-dontwarn org.bouncycastle.**
+-dontwarn org.openjsse.**
+
 
 ### Coroutines ###
 
 # ServiceLoader support
 -keepnames class kotlinx.coroutines.internal.MainDispatcherFactory {}
+-keep class kotlinx.coroutines.swing.SwingDispatcherFactory {}
 -keepnames class kotlinx.coroutines.CoroutineExceptionHandler {}
 
 # Most of volatile fields are updated with AFU and should not be mangled
