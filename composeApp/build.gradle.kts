@@ -37,6 +37,7 @@ kotlin {
             implementation(libs.ktorfit)
             implementation(libs.ktor.negotiation)
             implementation(libs.ktor.json)
+            implementation(libs.slf4j)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)

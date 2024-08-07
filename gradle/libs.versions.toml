@@ -45,6 +45,10 @@ ktorfit = { module = "de.jensklingenberg.ktorfit:ktorfit-lib", version.ref = "kt
 ktor-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
 ktor-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
 
+# SLF4J
+# https://mvnrepository.com/artifact/org.slf4j/slf4j-simple
+slf4j = { module = "org.slf4j:slf4j-simple", version = "1.7.36" }
+
 
 [plugins]
 jetbrains-compose = { id = "org.jetbrains.compose", version = "1.6.11" }
