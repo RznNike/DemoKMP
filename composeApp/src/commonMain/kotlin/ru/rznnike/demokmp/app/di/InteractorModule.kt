@@ -1,7 +1,7 @@
 package ru.rznnike.demokmp.app.di
 
 import org.koin.dsl.module
-import ru.rznnike.demokmp.domain.interactor.networktest.GetRandomImageLinkUseCase
+import ru.rznnike.demokmp.domain.interactor.networkexample.GetRandomImageLinksUseCase
 import ru.rznnike.demokmp.domain.interactor.preferences.GetLanguageUseCase
 import ru.rznnike.demokmp.domain.interactor.preferences.GetTestCounterUseCase
 import ru.rznnike.demokmp.domain.interactor.preferences.SetLanguageUseCase
@@ -13,5 +13,5 @@ internal val interactorModule = module {
     single { GetLanguageUseCase(get(), get()) }
     single { SetLanguageUseCase(get(), get()) }
 
-    single { GetRandomImageLinkUseCase(get(), get()) }
+    single { GetRandomImageLinksUseCase(get(), get()) }
 }

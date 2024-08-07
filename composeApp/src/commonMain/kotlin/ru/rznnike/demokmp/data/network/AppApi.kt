@@ -1,9 +1,12 @@
 package ru.rznnike.demokmp.data.network
 
 import de.jensklingenberg.ktorfit.http.GET
-import ru.rznnike.demokmp.data.network.model.RandomImageLinkModel
+import de.jensklingenberg.ktorfit.http.Path
+import ru.rznnike.demokmp.data.network.model.RandomImageLinksModel
 
 interface AppApi {
-    @GET("breeds/image/random")
-    suspend fun getRandomImage(): RandomImageLinkModel
+    @GET("breeds/image/random/{count}")
+    suspend fun getRandomImages(
+        @Path("count") count: Int
+    ): RandomImageLinksModel
 }

@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class RandomImageLinkModel(
+data class RandomImageLinksModel(
     @SerialName("message")
-    val link: String
+    val links: List<String>
 )

@@ -20,6 +20,7 @@ import org.koin.compose.koinInject
 import ru.rznnike.demokmp.app.common.notifier.Notifier
 import ru.rznnike.demokmp.app.navigation.NavigationScreen
 import ru.rznnike.demokmp.app.navigation.getFlowNavigator
+import ru.rznnike.demokmp.app.ui.networkexample.NetworkExampleFlow
 import ru.rznnike.demokmp.app.ui.settings.SettingsFlow
 
 class HomeScreen : NavigationScreen() {
@@ -46,6 +47,15 @@ class HomeScreen : NavigationScreen() {
                     }
                 ) {
                     Text(stringResource(Res.string.open_settings))
+                }
+
+                Button(
+                    modifier = Modifier.padding(top = 10.dp),
+                    onClick = {
+                        flowNavigator.open(NetworkExampleFlow())
+                    }
+                ) {
+                    Text(stringResource(Res.string.open_network_example))
                 }
 
                 Button(
