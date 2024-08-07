@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -15,12 +14,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import demokmp.composeapp.generated.resources.*
-import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import ru.rznnike.demokmp.app.common.notifier.Notifier
 import ru.rznnike.demokmp.app.navigation.NavigationScreen
 import ru.rznnike.demokmp.app.navigation.getFlowNavigator
+import ru.rznnike.demokmp.app.ui.networkexample.NetworkExampleFlow
 import ru.rznnike.demokmp.app.ui.settings.SettingsFlow
+import ru.rznnike.demokmp.app.utils.TextR
 
 class HomeScreen : NavigationScreen() {
     @Preview
@@ -32,8 +32,8 @@ class HomeScreen : NavigationScreen() {
 
         MaterialTheme {
             Column(modifier = Modifier.padding(20.dp)) {
-                Text(
-                    text = stringResource(Res.string.main_screen_title),
+                TextR(
+                    textRes = Res.string.main_screen_title,
                     style = TextStyle(fontSize = 20.sp),
                     textAlign = TextAlign.Center,
                     modifier = Modifier.fillMaxWidth().align(Alignment.CenterHorizontally)
@@ -45,7 +45,16 @@ class HomeScreen : NavigationScreen() {
                         flowNavigator.open(SettingsFlow())
                     }
                 ) {
-                    Text(stringResource(Res.string.open_settings))
+                    TextR(Res.string.open_settings)
+                }
+
+                Button(
+                    modifier = Modifier.padding(top = 10.dp),
+                    onClick = {
+                        flowNavigator.open(NetworkExampleFlow())
+                    }
+                ) {
+                    TextR(Res.string.open_network_example)
                 }
 
                 Button(
@@ -54,7 +63,7 @@ class HomeScreen : NavigationScreen() {
                         notifier.sendAlert(Res.string.test_dialog)
                     }
                 ) {
-                    Text(stringResource(Res.string.test_dialog))
+                    TextR(Res.string.test_dialog)
                 }
                 Button(
                     modifier = Modifier.padding(top = 10.dp),
@@ -62,7 +71,7 @@ class HomeScreen : NavigationScreen() {
                         notifier.sendMessage(Res.string.test_message)
                     }
                 ) {
-                    Text(stringResource(Res.string.test_message))
+                    TextR(Res.string.test_message)
                 }
 
                 Button(
@@ -71,7 +80,7 @@ class HomeScreen : NavigationScreen() {
                         flowNavigator.close()
                     }
                 ) {
-                    Text(stringResource(Res.string.close_app))
+                    TextR(Res.string.close_app)
                 }
             }
         }

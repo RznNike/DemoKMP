@@ -17,12 +17,12 @@ import demokmp.composeapp.generated.resources.Res
 import demokmp.composeapp.generated.resources.close
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
-import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import ru.rznnike.demokmp.app.common.notifier.Notifier
 import ru.rznnike.demokmp.app.common.notifier.SystemMessage
 import ru.rznnike.demokmp.app.navigation.createNavigator
 import ru.rznnike.demokmp.app.ui.splash.SplashFlow
+import ru.rznnike.demokmp.app.utils.TextR
 import ru.rznnike.demokmp.domain.common.CoroutineScopeProvider
 
 @Preview
@@ -98,7 +98,7 @@ fun mainFrame() {
                                 dialogData = null
                             }
                         ) {
-                            Text(stringResource(Res.string.close))
+                            TextR(Res.string.close)
                         }
                     }
                 }

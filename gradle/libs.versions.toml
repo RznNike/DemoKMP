@@ -3,6 +3,9 @@ kotlin = "2.0.0"
 coroutines = "1.8.1"
 voyager = "1.1.0-beta02"
 koin-compose = "1.2.0-Beta5"
+ktorfit = "2.0.0"
+ktor = "2.3.11"
+coil = "3.0.0-alpha09"
 
 
 [libraries]
@@ -30,16 +33,49 @@ koin-core = { module = "io.insert-koin:koin-core", version = "3.5.6" }
 koin-compose = { module = "io.insert-koin:koin-compose", version.ref = "koin-compose" }
 koin-compose-viewmodel = { module = "io.insert-koin:koin-compose-viewmodel", version.ref = "koin-compose" }
 
-## Gson
-## https://github.com/google/gson
-#gson = { module = "com.google.code.gson:gson", version = "2.11.0" }
+# Serialization
+# https://github.com/Kotlin/kotlinx.serialization
+kotlinx-serialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version = "1.7.1" }
+
+# Ktorfit - network
+# https://github.com/Foso/Ktorfit
+ktorfit = { module = "de.jensklingenberg.ktorfit:ktorfit-lib", version.ref = "ktorfit" }
+
+# Ktor addons (versions should be compatible with Ktorfit)
+# https://foso.github.io/Ktorfit/#compatibility
+ktor-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
+ktor-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
+ktor-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
+ktor-logging = { module = "io.ktor:ktor-client-logging", version.ref = "ktor" }
+
+# Logging (for Ktor)
+# https://mvnrepository.com/artifact/ch.qos.logback/logback-classic
+logback = { module = "ch.qos.logback:logback-classic", version = "1.5.6" }
+
+# Image loader
+# https://github.com/coil-kt/coil
+coil = { module = "io.coil-kt.coil3:coil", version.ref = "coil" }
+coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil" }
+coil-ktor = { module = "io.coil-kt.coil3:coil-network-ktor2", version.ref = "coil" }
 
 
 [plugins]
 jetbrains-compose = { id = "org.jetbrains.compose", version = "1.6.11" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+#noinspection GradleDependency
+android-application = { id = "com.android.application", version = "8.2.2" } # newer versions are not supported by IDEA
 
 # BuildConfig
 # https://github.com/yshrsmz/BuildKonfig
 buildkonfig = { id = "com.codingfeline.buildkonfig", version = "0.15.1" }
+
+# KSP
+# https://mvnrepository.com/artifact/com.google.devtools.ksp/com.google.devtools.ksp.gradle.plugin?repo=central
+#noinspection GradleDependency
+ksp = { id = "com.google.devtools.ksp", version = "2.0.0-1.0.23" } # 1.0.24 is not working with ktorfit
+
+# Ktorfit - network
+# https://github.com/Foso/Ktorfit
+ktorfit = { id = "de.jensklingenberg.ktorfit", version.ref = "ktorfit" }

@@ -4,6 +4,8 @@ object GlobalConstants {
     const val AUTHORIZATION = "Authorization"
     const val TOKEN_TEMPLATE = "Bearer %s"
 
+    const val APP_DATA_DIR = "app_data"
+
     const val DATE_PATTERN_SIMPLE = "dd.MM.yyyy"
     const val DATE_PATTERN_SIMPLE_WITH_TIME = "dd.MM.yyyy HH:mm"
     const val DATE_PATTERN_SIMPLE_WITH_FULL_TIME = "dd.MM.yyyy HH:mm:ss"

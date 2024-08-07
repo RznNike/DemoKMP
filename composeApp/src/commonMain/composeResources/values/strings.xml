@@ -15,4 +15,7 @@
     <string name="unknown_error">Unknown error</string>
     <string name="test_dialog">Test dialog</string>
     <string name="test_message">Test message</string>
+    <string name="open_network_example">Open network example</string>
+    <string name="network_example_screen_title">I am network screen!</string>
+    <string name="request_images">Request images</string>
 </resources>
