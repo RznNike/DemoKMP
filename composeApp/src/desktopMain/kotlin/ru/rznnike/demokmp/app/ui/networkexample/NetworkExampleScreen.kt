@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -22,9 +21,9 @@ import demokmp.composeapp.generated.resources.Res
 import demokmp.composeapp.generated.resources.close
 import demokmp.composeapp.generated.resources.network_example_screen_title
 import demokmp.composeapp.generated.resources.request_images
-import org.jetbrains.compose.resources.stringResource
 import ru.rznnike.demokmp.app.navigation.NavigationScreen
 import ru.rznnike.demokmp.app.navigation.getScreenNavigator
+import ru.rznnike.demokmp.app.utils.TextR
 import ru.rznnike.demokmp.app.viewmodel.networkexample.NetworkExampleViewModel
 
 class NetworkExampleScreen : NavigationScreen() {
@@ -38,8 +37,8 @@ class NetworkExampleScreen : NavigationScreen() {
 
         MaterialTheme {
             Column(modifier = Modifier.padding(20.dp)) {
-                Text(
-                    text = stringResource(Res.string.network_example_screen_title),
+                TextR(
+                    textRes = Res.string.network_example_screen_title,
                     style = TextStyle(fontSize = 20.sp),
                     textAlign = TextAlign.Center,
                     modifier = Modifier.fillMaxWidth()
@@ -71,7 +70,7 @@ class NetworkExampleScreen : NavigationScreen() {
                         networkExampleViewModel.requestImages()
                     }
                 ) {
-                    Text(stringResource(Res.string.request_images))
+                    TextR(Res.string.request_images)
                 }
 
                 Button(
@@ -80,7 +79,7 @@ class NetworkExampleScreen : NavigationScreen() {
                         screenNavigator.close()
                     }
                 ) {
-                    Text(stringResource(Res.string.close))
+                    TextR(Res.string.close)
                 }
             }
         }

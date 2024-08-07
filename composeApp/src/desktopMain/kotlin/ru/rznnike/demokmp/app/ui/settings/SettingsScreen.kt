@@ -22,6 +22,7 @@ import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import ru.rznnike.demokmp.app.navigation.NavigationScreen
 import ru.rznnike.demokmp.app.navigation.getScreenNavigator
+import ru.rznnike.demokmp.app.utils.TextR
 import ru.rznnike.demokmp.app.viewmodel.profile.ProfileViewModel
 import ru.rznnike.demokmp.app.viewmodel.settings.SettingsViewModel
 
@@ -38,8 +39,8 @@ class SettingsScreen : NavigationScreen() {
 
         MaterialTheme {
             Column(modifier = Modifier.padding(20.dp)) {
-                Text(
-                    text = stringResource(Res.string.settings_screen_title),
+                TextR(
+                    textRes = Res.string.settings_screen_title,
                     style = TextStyle(fontSize = 20.sp),
                     textAlign = TextAlign.Center,
                     modifier = Modifier.fillMaxWidth()
@@ -69,7 +70,7 @@ class SettingsScreen : NavigationScreen() {
                         screenNavigator.open(NestedSettingsScreen())
                     }
                 ) {
-                    Text(stringResource(Res.string.open_nested_settings))
+                    TextR(Res.string.open_nested_settings)
                 }
 
                 val nameString = "%s: %s".format(
@@ -89,7 +90,7 @@ class SettingsScreen : NavigationScreen() {
                         screenNavigator.close()
                     }
                 ) {
-                    Text(stringResource(Res.string.close))
+                    TextR(Res.string.close)
                 }
             }
         }

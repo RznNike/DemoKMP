@@ -14,10 +14,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import demokmp.composeapp.generated.resources.*
-import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import ru.rznnike.demokmp.app.navigation.NavigationScreen
 import ru.rznnike.demokmp.app.navigation.getScreenNavigator
+import ru.rznnike.demokmp.app.utils.TextR
 import ru.rznnike.demokmp.app.viewmodel.language.LanguageViewModel
 import ru.rznnike.demokmp.app.viewmodel.profile.ProfileViewModel
 import ru.rznnike.demokmp.domain.model.common.Language
@@ -38,15 +38,15 @@ class NestedSettingsScreen : NavigationScreen() {
         key(languageUiState.language) {
             MaterialTheme {
                 Column(modifier = Modifier.padding(20.dp)) {
-                    Text(
-                        text = stringResource(Res.string.nested_settings_screen_title),
+                    TextR(
+                        textRes = Res.string.nested_settings_screen_title,
                         style = TextStyle(fontSize = 20.sp),
                         textAlign = TextAlign.Center,
                         modifier = Modifier.fillMaxWidth().align(Alignment.CenterHorizontally)
                     )
 
-                    Text(
-                        text = stringResource(Res.string.enter_user_name),
+                    TextR(
+                        textRes = Res.string.enter_user_name,
                         style = TextStyle(fontSize = 20.sp),
                         modifier = Modifier.fillMaxWidth()
                             .padding(top = 10.dp)
@@ -58,8 +58,8 @@ class NestedSettingsScreen : NavigationScreen() {
                         onValueChange = profileViewModel::changeName
                     )
 
-                    Text(
-                        text = stringResource(Res.string.select_language),
+                    TextR(
+                        textRes = Res.string.select_language,
                         style = TextStyle(fontSize = 20.sp),
                         modifier = Modifier.fillMaxWidth()
                             .padding(top = 10.dp)
@@ -98,7 +98,7 @@ class NestedSettingsScreen : NavigationScreen() {
                             screenNavigator.close()
                         }
                     ) {
-                        Text(stringResource(Res.string.close))
+                        TextR(Res.string.close)
                     }
                 }
             }
