@@ -48,6 +48,9 @@ kotlin {
             implementation(libs.voyager.transitions)
             implementation(libs.voyager.lifecycle.kmp)
             implementation(libs.coroutines.swing)
+            implementation(libs.coil)
+            implementation(libs.coil.compose)
+            implementation(libs.coil.ktor)
         }
     }
 }
