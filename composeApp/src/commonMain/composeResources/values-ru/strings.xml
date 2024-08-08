@@ -18,4 +18,10 @@
     <string name="open_network_example">Открыть пример сети</string>
     <string name="network_example_screen_title">Я экран сети!</string>
     <string name="request_images">Запросить картинки</string>
+    <string name="open_db_example">Открыть пример БД</string>
+    <string name="db_example_screen_title">Я экран БД!</string>
+    <string name="enter_name">Введите имя</string>
+    <string name="add">Добавить</string>
+    <string name="delete">Удалить</string>
+    <string name="delete_all">Удалить всё</string>
 </resources>

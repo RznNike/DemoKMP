@@ -1,12 +1,12 @@
-package ru.rznnike.demokmp.app.ui.settings
+package ru.rznnike.demokmp.app.ui.screen.networkexample
 
 import androidx.compose.runtime.Composable
 import ru.rznnike.demokmp.app.navigation.NavigationFlow
 import ru.rznnike.demokmp.app.navigation.createNavigator
 
-class SettingsFlow : NavigationFlow() {
+class NetworkExampleFlow : NavigationFlow() {
     @Composable
     override fun Content() {
-        createNavigator(SettingsScreen())
+        createNavigator(NetworkExampleScreen())
     }
 }

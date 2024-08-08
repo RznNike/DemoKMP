@@ -1,4 +1,4 @@
-package ru.rznnike.demokmp.app.ui.splash
+package ru.rznnike.demokmp.app.ui.screen.splash
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.Column
@@ -18,7 +18,7 @@ import demokmp.composeapp.generated.resources.go_to_main
 import demokmp.composeapp.generated.resources.splash_screen_title
 import ru.rznnike.demokmp.app.navigation.NavigationScreen
 import ru.rznnike.demokmp.app.navigation.getFlowNavigator
-import ru.rznnike.demokmp.app.ui.home.HomeFlow
+import ru.rznnike.demokmp.app.ui.screen.home.HomeFlow
 import ru.rznnike.demokmp.app.utils.TextR
 
 class SplashScreen : NavigationScreen() {

@@ -1,8 +1,10 @@
 package ru.rznnike.demokmp.app.di
 
+import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import org.koin.dsl.module
 import ru.rznnike.demokmp.data.storage.MainDB
 import ru.rznnike.demokmp.data.storage.getDatabaseBuilder
+import ru.rznnike.demokmp.domain.common.DispatcherProvider
 
 internal val databaseModule = module {
     single {
@@ -10,6 +12,8 @@ internal val databaseModule = module {
             .fallbackToDestructiveMigration(
                 dropAllTables = true
             )
+            .setDriver(BundledSQLiteDriver())
+            .setQueryCoroutineContext(get<DispatcherProvider>().io)
             .build()
     }
 

@@ -49,7 +49,7 @@ kotlin {
             implementation(libs.logback)
 
             implementation(libs.room.runtime)
-//            implementation(libs.sqlite.bundled)
+            implementation(libs.sqlite.bundled)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)

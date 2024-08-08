@@ -12,6 +12,10 @@ class DBExampleGatewayImpl(
     private val dispatcherProvider: DispatcherProvider,
     private val dbExampleDataDao: DBExampleDataDao
 ) : DBExampleGateway {
+    override suspend fun get(id: Long): DBExampleData? = withContext(dispatcherProvider.io) {
+        dbExampleDataDao.get(id = id)?.toDBExampleData()
+    }
+
     override suspend fun getAll(): List<DBExampleData> = withContext(dispatcherProvider.io) {
         dbExampleDataDao.getAll()
             .map { it.toDBExampleData() }

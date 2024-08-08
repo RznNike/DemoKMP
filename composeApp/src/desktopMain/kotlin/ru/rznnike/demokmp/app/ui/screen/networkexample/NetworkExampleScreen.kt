@@ -1,4 +1,4 @@
-package ru.rznnike.demokmp.app.ui.networkexample
+package ru.rznnike.demokmp.app.ui.screen.networkexample
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.*

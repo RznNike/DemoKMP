@@ -5,11 +5,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import okio.Path.Companion.toPath
 import ru.rznnike.demokmp.domain.common.DispatcherProvider
-import ru.rznnike.demokmp.domain.utils.GlobalConstants
 
 expect fun getDataStorePath(): String
-
-const val SETTINGS_PREFERENCES = "${GlobalConstants.APP_DATA_DIR}/settings.preferences_pb"
 
 fun createDataStore(
     dispatcherProvider: DispatcherProvider

@@ -1,4 +1,4 @@
-package ru.rznnike.demokmp.app.ui.home
+package ru.rznnike.demokmp.app.ui.screen.home
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.Column
@@ -18,8 +18,9 @@ import org.koin.compose.koinInject
 import ru.rznnike.demokmp.app.common.notifier.Notifier
 import ru.rznnike.demokmp.app.navigation.NavigationScreen
 import ru.rznnike.demokmp.app.navigation.getFlowNavigator
-import ru.rznnike.demokmp.app.ui.networkexample.NetworkExampleFlow
-import ru.rznnike.demokmp.app.ui.settings.SettingsFlow
+import ru.rznnike.demokmp.app.ui.screen.dbexample.DBExampleFlow
+import ru.rznnike.demokmp.app.ui.screen.networkexample.NetworkExampleFlow
+import ru.rznnike.demokmp.app.ui.screen.settings.SettingsFlow
 import ru.rznnike.demokmp.app.utils.TextR
 
 class HomeScreen : NavigationScreen() {
@@ -55,6 +56,15 @@ class HomeScreen : NavigationScreen() {
                     }
                 ) {
                     TextR(Res.string.open_network_example)
+                }
+
+                Button(
+                    modifier = Modifier.padding(top = 10.dp),
+                    onClick = {
+                        flowNavigator.open(DBExampleFlow())
+                    }
+                ) {
+                    TextR(Res.string.open_db_example)
                 }
 
                 Button(
