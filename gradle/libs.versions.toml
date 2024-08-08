@@ -6,6 +6,8 @@ koin-compose = "1.2.0-Beta5"
 ktorfit = "2.0.0"
 ktor = "2.3.11"
 coil = "3.0.0-alpha09"
+room = "2.7.0-alpha06"
+sqlite = "2.5.0-alpha06"
 
 
 [libraries]
@@ -58,6 +60,15 @@ coil = { module = "io.coil-kt.coil3:coil", version.ref = "coil" }
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil" }
 coil-ktor = { module = "io.coil-kt.coil3:coil-network-ktor2", version.ref = "coil" }
 
+# Room DB
+# https://developer.android.com/jetpack/androidx/releases/room
+room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
+room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
+
+# SQLite (Room dependency)
+# https://developer.android.com/jetpack/androidx/releases/sqlite
+sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version.ref = "sqlite" }
+
 
 [plugins]
 jetbrains-compose = { id = "org.jetbrains.compose", version = "1.6.11" }
@@ -77,5 +88,7 @@ buildkonfig = { id = "com.codingfeline.buildkonfig", version = "0.15.1" }
 ksp = { id = "com.google.devtools.ksp", version = "2.0.0-1.0.23" } # 1.0.24 is not working with ktorfit
 
 # Ktorfit - network
-# https://github.com/Foso/Ktorfit
 ktorfit = { id = "de.jensklingenberg.ktorfit", version.ref = "ktorfit" }
+
+# Room
+room = { id = "androidx.room", version.ref = "room" }
