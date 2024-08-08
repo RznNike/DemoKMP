@@ -7,6 +7,7 @@ import org.koin.core.component.inject
 import ru.rznnike.demokmp.app.common.notifier.Notifier
 import ru.rznnike.demokmp.app.common.viewmodel.BaseUiViewModel
 import ru.rznnike.demokmp.app.error.ErrorHandler
+import ru.rznnike.demokmp.domain.common.DispatcherProvider
 import ru.rznnike.demokmp.domain.interactor.dbexample.AddDBExampleDataUseCase
 import ru.rznnike.demokmp.domain.interactor.dbexample.DeleteAllDBExampleDataUseCase
 import ru.rznnike.demokmp.domain.interactor.dbexample.DeleteDBExampleDataUseCase
@@ -16,10 +17,18 @@ import ru.rznnike.demokmp.domain.model.dbexample.DBExampleData
 class DBExampleViewModel : BaseUiViewModel<DBExampleViewModel.UiState>() {
     private val notifier: Notifier by inject()
     private val errorHandler: ErrorHandler by inject()
+    private val dispatcherProvider: DispatcherProvider by inject()
     private val getDBExampleDataListUseCase: GetDBExampleDataListUseCase by inject()
     private val addDBExampleDataUseCase: AddDBExampleDataUseCase by inject()
     private val deleteDBExampleDataUseCase: DeleteDBExampleDataUseCase by inject()
     private val deleteAllDBExampleDataUseCase: DeleteAllDBExampleDataUseCase by inject()
+
+    init {
+        viewModelScope.launch(dispatcherProvider.default) {
+            setProgress(true)
+            loadData()
+        }
+    }
 
     override fun provideDefaultUIState() = UiState()
 
@@ -52,13 +61,6 @@ class DBExampleViewModel : BaseUiViewModel<DBExampleViewModel.UiState>() {
         setProgress(false)
         errorHandler.proceed(error) { message ->
             notifier.sendAlert(message)
-        }
-    }
-
-    init {
-        viewModelScope.launch {
-            setProgress(true)
-            loadData()
         }
     }
 

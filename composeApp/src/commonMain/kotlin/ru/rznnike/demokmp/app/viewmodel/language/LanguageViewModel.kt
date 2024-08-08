@@ -5,16 +5,18 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.koin.core.component.inject
 import ru.rznnike.demokmp.app.common.viewmodel.BaseUiViewModel
+import ru.rznnike.demokmp.domain.common.DispatcherProvider
 import ru.rznnike.demokmp.domain.interactor.preferences.GetLanguageUseCase
 import ru.rznnike.demokmp.domain.interactor.preferences.SetLanguageUseCase
 import ru.rznnike.demokmp.domain.model.common.Language
 
 class LanguageViewModel : BaseUiViewModel<LanguageViewModel.UiState>() {
+    private val dispatcherProvider: DispatcherProvider by inject()
     private val getLanguageUseCase: GetLanguageUseCase by inject()
     private val setLanguageUseCase: SetLanguageUseCase by inject()
 
     init {
-        viewModelScope.launch {
+        viewModelScope.launch(dispatcherProvider.default) {
             val selectedLanguage = getLanguageUseCase().data
             mutableUiState.update { currentState ->
                 currentState.copy(
