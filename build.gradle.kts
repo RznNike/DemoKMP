@@ -9,4 +9,5 @@ plugins {
     alias(libs.plugins.buildkonfig) apply false
     alias(libs.plugins.ksp) apply false
     alias(libs.plugins.ktorfit) apply false
+    alias(libs.plugins.room) apply false
 }

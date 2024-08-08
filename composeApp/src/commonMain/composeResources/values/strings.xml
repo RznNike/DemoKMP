@@ -18,4 +18,10 @@
     <string name="open_network_example">Open network example</string>
     <string name="network_example_screen_title">I am network screen!</string>
     <string name="request_images">Request images</string>
+    <string name="open_db_example">Open DB example</string>
+    <string name="db_example_screen_title">I am DB screen!</string>
+    <string name="enter_name">Enter name</string>
+    <string name="add">Add</string>
+    <string name="delete">Delete</string>
+    <string name="delete_all">Delete all</string>
 </resources>

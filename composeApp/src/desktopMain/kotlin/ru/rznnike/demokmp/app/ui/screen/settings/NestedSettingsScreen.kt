@@ -1,4 +1,4 @@
-package ru.rznnike.demokmp.app.ui.settings
+package ru.rznnike.demokmp.app.ui.screen.settings
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.Column
@@ -52,10 +52,10 @@ class NestedSettingsScreen : NavigationScreen() {
                             .padding(top = 10.dp)
                     )
                     OutlinedTextField(
-                        value = profileUiState.name,
+                        value = profileUiState.nameInput,
                         singleLine = true,
                         modifier = Modifier.fillMaxWidth(),
-                        onValueChange = profileViewModel::changeName
+                        onValueChange = profileViewModel::onNameInput
                     )
 
                     TextR(

@@ -6,15 +6,17 @@ import ru.rznnike.demokmp.app.common.viewmodel.BaseUiViewModel
 class ProfileViewModel : BaseUiViewModel<ProfileViewModel.UiState>() {
     override fun provideDefaultUIState() = UiState()
 
-    fun changeName(newValue: String) {
-        mutableUiState.update { currentState ->
-            currentState.copy(
-                name = newValue
-            )
+    fun onNameInput(newValue: String) {
+        if (newValue != mutableUiState.value.nameInput) {
+            mutableUiState.update { currentState ->
+                currentState.copy(
+                    nameInput = newValue
+                )
+            }
         }
     }
 
     data class UiState(
-        val name: String = "qwe"
+        val nameInput: String = "qwe"
     )
 }

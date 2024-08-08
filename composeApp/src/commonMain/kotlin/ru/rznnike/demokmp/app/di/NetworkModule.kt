@@ -12,18 +12,17 @@ import okhttp3.OkHttpClient
 import org.koin.dsl.module
 import ru.rznnike.demokmp.BuildKonfig
 import ru.rznnike.demokmp.data.network.createAppApi
-import ru.rznnike.demokmp.domain.utils.GlobalConstants
+import ru.rznnike.demokmp.data.utils.DataConstants
 import java.io.File
 import java.util.concurrent.TimeUnit
 
-private const val RESPONSES_PATH = "${GlobalConstants.APP_DATA_DIR}/responses"
 private const val CACHE_MAX_SIZE = 100 * 1024 * 1024 // 100 MB
 private const val TIMEOUT_MS = 60_000L // 60 sec
 
 internal val networkModule = module {
     fun getCache() = try {
-        val httpCacheDirectory = File(RESPONSES_PATH)
-        Cache(httpCacheDirectory, CACHE_MAX_SIZE.toLong())
+        val cacheDirectory = File(DataConstants.NETWORK_CACHE_PATH)
+        Cache(cacheDirectory, CACHE_MAX_SIZE.toLong())
     } catch (ignored: Exception) { null }
 
     fun OkHttpClient.Builder.allTimeoutsMs(timeout: Long) =

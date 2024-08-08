@@ -21,7 +21,7 @@ import org.koin.compose.koinInject
 import ru.rznnike.demokmp.app.common.notifier.Notifier
 import ru.rznnike.demokmp.app.common.notifier.SystemMessage
 import ru.rznnike.demokmp.app.navigation.createNavigator
-import ru.rznnike.demokmp.app.ui.splash.SplashFlow
+import ru.rznnike.demokmp.app.ui.screen.splash.SplashFlow
 import ru.rznnike.demokmp.app.utils.TextR
 import ru.rznnike.demokmp.domain.common.CoroutineScopeProvider
 

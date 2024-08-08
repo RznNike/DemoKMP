@@ -1,4 +1,4 @@
-package ru.rznnike.demokmp.app.ui.settings
+package ru.rznnike.demokmp.app.ui.screen.settings
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.Column
@@ -75,7 +75,7 @@ class SettingsScreen : NavigationScreen() {
 
                 val nameString = "%s: %s".format(
                     stringResource(Res.string.user_name),
-                    profileUiState.name
+                    profileUiState.nameInput
                 )
                 Text(
                     text = nameString,

@@ -1,3 +1,5 @@
 package ru.rznnike.demokmp.data.preference
 
-actual fun getDataStorePath(): String = SETTINGS_PREFERENCES
+import ru.rznnike.demokmp.data.utils.DataConstants
+
+actual fun getDataStorePath(): String = DataConstants.PREFERENCES_PATH
