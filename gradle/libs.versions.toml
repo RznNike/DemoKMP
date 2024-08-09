@@ -5,7 +5,7 @@ voyager = "1.1.0-beta02"
 koin-compose = "1.2.0-Beta5"
 ktorfit = "2.0.0"
 ktor = "2.3.11"
-coil = "3.0.0-alpha09"
+coil = "3.0.0-alpha10"
 room = "2.7.0-alpha06"
 sqlite = "2.5.0-alpha06"
 
