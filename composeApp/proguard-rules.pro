@@ -1,14 +1,33 @@
 #noinspection ShrinkerUnresolvedReference
 
+# Project classes
+-keep class ru.rznnike.demokmp.data.network.model.** { *; }
+-keep class ru.rznnike.demokmp.domain.model.** { *; }
+-keepclassmembers enum * { *; }
+
 # Logs
 -dontwarn ch.qos.logback.**
 
-
-### Serialization ###
--keep class io.ktor.serialization.**
+# Serialization
 -keep class * {
     @kotlinx.serialization.SerialName <fields>;
 }
+
+# DataStore
+-keepclassmembers class androidx.datastore.preferences.PreferencesProto$PreferenceMap {
+    private androidx.datastore.preferences.protobuf.MapFieldLite preferences_;
+}
+-keepclassmembers class androidx.datastore.preferences.PreferencesProto$Value {
+     private java.lang.Object value_;
+     private int valueCase_;
+}
+
+# SQLite
+-keep class androidx.sqlite.** { *; }
+
+# Ktor
+-keep class io.ktor.client.** { *; }
+-keep class io.ktor.serialization.**
 
 
 ### OkHttp ###
