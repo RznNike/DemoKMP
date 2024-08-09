@@ -32,10 +32,10 @@ fun mainFrame() {
     val coroutineScopeProvider = koinInject<CoroutineScopeProvider>()
 
     val snackbarHostState = remember { SnackbarHostState() }
-    var dialogData by remember { mutableStateOf<SystemMessage?>(null) }
+    val activeDialogs = remember { mutableStateListOf<SystemMessage>() }
 
     fun showAlertMessage(systemMessage: SystemMessage) {
-        dialogData = systemMessage
+        activeDialogs += systemMessage
     }
 
     fun showBarMessage(systemMessage: SystemMessage) {
@@ -75,9 +75,15 @@ fun mainFrame() {
 
     @Composable
     fun DialogLayout() {
-        dialogData?.let {
+        fun closeDialog(dialog: SystemMessage) {
+            activeDialogs -= dialog
+        }
+
+        activeDialogs.lastOrNull()?.let { dialog ->
             Dialog(
-                onDismissRequest = { dialogData = null },
+                onDismissRequest = {
+                    closeDialog(dialog)
+                },
                 properties = DialogProperties(
                     dismissOnBackPress = true,
                     dismissOnClickOutside = true
@@ -88,14 +94,14 @@ fun mainFrame() {
                         modifier = Modifier.padding(20.dp),
                     ) {
                         Text(
-                            text = dialogData?.text ?: "",
+                            text = dialog.text ?: "",
                             textAlign = TextAlign.Center,
                             modifier = Modifier.fillMaxWidth().align(Alignment.CenterHorizontally)
                         )
                         Button(
                             modifier = Modifier.padding(top = 10.dp),
                             onClick = {
-                                dialogData = null
+                                closeDialog(dialog)
                             }
                         ) {
                             TextR(Res.string.close)
