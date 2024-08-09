@@ -15,15 +15,21 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import demokmp.composeapp.generated.resources.Res
 import demokmp.composeapp.generated.resources.close
+import demokmp.composeapp.generated.resources.request_images
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import ru.rznnike.demokmp.app.common.notifier.Notifier
 import ru.rznnike.demokmp.app.common.notifier.SystemMessage
 import ru.rznnike.demokmp.app.navigation.createNavigator
+import ru.rznnike.demokmp.app.ui.dialog.AlertDialogAction
+import ru.rznnike.demokmp.app.ui.dialog.AlertDialogType
+import ru.rznnike.demokmp.app.ui.dialog.showAlertDialog
 import ru.rznnike.demokmp.app.ui.screen.splash.SplashFlow
 import ru.rznnike.demokmp.app.utils.TextR
 import ru.rznnike.demokmp.domain.common.CoroutineScopeProvider
+import ru.rznnike.demokmp.domain.utils.logger
 
 @Preview
 @Composable
@@ -80,35 +86,19 @@ fun mainFrame() {
         }
 
         activeDialogs.lastOrNull()?.let { dialog ->
-            Dialog(
-                onDismissRequest = {
+            showAlertDialog(
+                type = AlertDialogType.HORIZONTAL,
+                header = dialog.text ?: "",
+                cancellable = true,
+                onCancelListener = {
                     closeDialog(dialog)
                 },
-                properties = DialogProperties(
-                    dismissOnBackPress = true,
-                    dismissOnClickOutside = true
-                )
-            ) {
-                Card {
-                    Column(
-                        modifier = Modifier.padding(20.dp),
-                    ) {
-                        Text(
-                            text = dialog.text ?: "",
-                            textAlign = TextAlign.Center,
-                            modifier = Modifier.fillMaxWidth().align(Alignment.CenterHorizontally)
-                        )
-                        Button(
-                            modifier = Modifier.padding(top = 10.dp),
-                            onClick = {
-                                closeDialog(dialog)
-                            }
-                        ) {
-                            TextR(Res.string.close)
-                        }
+                actions = listOf(
+                    AlertDialogAction(stringResource(Res.string.close)) {
+                        closeDialog(dialog)
                     }
-                }
-            }
+                )
+            )
         }
     }
 

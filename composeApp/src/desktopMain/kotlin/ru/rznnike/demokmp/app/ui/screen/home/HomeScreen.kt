@@ -14,10 +14,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import demokmp.composeapp.generated.resources.*
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import ru.rznnike.demokmp.app.common.notifier.Notifier
 import ru.rznnike.demokmp.app.navigation.NavigationScreen
 import ru.rznnike.demokmp.app.navigation.getFlowNavigator
+import ru.rznnike.demokmp.app.ui.dialog.AlertDialogAction
+import ru.rznnike.demokmp.app.ui.dialog.AlertDialogType
+import ru.rznnike.demokmp.app.ui.dialog.showAlertDialog
 import ru.rznnike.demokmp.app.ui.screen.dbexample.DBExampleFlow
 import ru.rznnike.demokmp.app.ui.screen.networkexample.NetworkExampleFlow
 import ru.rznnike.demokmp.app.ui.screen.settings.SettingsFlow
@@ -75,6 +79,20 @@ class HomeScreen : NavigationScreen() {
                 ) {
                     TextR(Res.string.test_dialog)
                 }
+                showAlertDialog(
+                    type = AlertDialogType.HORIZONTAL,
+                    header = "TTTEEESSSTTT",
+                    cancellable = true,
+                    onCancelListener = {
+
+                    },
+                    actions = listOf(
+                        AlertDialogAction(stringResource(Res.string.close)) {
+
+                        }
+                    )
+                )
+
                 Button(
                     modifier = Modifier.padding(top = 10.dp),
                     onClick = {
