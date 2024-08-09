@@ -94,7 +94,8 @@ compose.desktop {
         buildTypes {
             release {
                 proguard {
-                    obfuscate.set(true)
+                    obfuscate.set(false)
+                    // TODO coil not loading images with obfuscation
                     configurationFiles.from(project.file("proguard-rules.pro"))
                 }
             }
