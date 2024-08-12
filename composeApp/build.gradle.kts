@@ -63,7 +63,7 @@ kotlin {
 
             implementation(libs.coil)
             implementation(libs.coil.compose)
-            implementation(libs.coil.ktor)
+            implementation(libs.coil.okhttp)
         }
     }
 
@@ -94,8 +94,7 @@ compose.desktop {
         buildTypes {
             release {
                 proguard {
-                    obfuscate.set(false)
-                    // TODO coil not loading images with obfuscation
+                    obfuscate.set(true)
                     configurationFiles.from(project.file("proguard-rules.pro"))
                 }
             }
