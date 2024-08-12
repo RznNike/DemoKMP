@@ -1,21 +1,11 @@
 package ru.rznnike.demokmp.app.ui.main
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
 import demokmp.composeapp.generated.resources.Res
 import demokmp.composeapp.generated.resources.close
-import demokmp.composeapp.generated.resources.request_images
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
@@ -25,11 +15,9 @@ import ru.rznnike.demokmp.app.common.notifier.SystemMessage
 import ru.rznnike.demokmp.app.navigation.createNavigator
 import ru.rznnike.demokmp.app.ui.dialog.AlertDialogAction
 import ru.rznnike.demokmp.app.ui.dialog.AlertDialogType
-import ru.rznnike.demokmp.app.ui.dialog.showAlertDialog
+import ru.rznnike.demokmp.app.ui.dialog.CommonAlertDialog
 import ru.rznnike.demokmp.app.ui.screen.splash.SplashFlow
-import ru.rznnike.demokmp.app.utils.TextR
 import ru.rznnike.demokmp.domain.common.CoroutineScopeProvider
-import ru.rznnike.demokmp.domain.utils.logger
 
 @Preview
 @Composable
@@ -86,7 +74,7 @@ fun mainFrame() {
         }
 
         activeDialogs.lastOrNull()?.let { dialog ->
-            showAlertDialog(
+            CommonAlertDialog(
                 type = AlertDialogType.HORIZONTAL,
                 header = dialog.text ?: "",
                 cancellable = true,

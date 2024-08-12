@@ -5,10 +5,12 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Card
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -17,7 +19,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 
 @Composable
-fun showAlertDialog(
+fun CommonAlertDialog(
     type: AlertDialogType,
     header: String,
     message: String? = null,
@@ -25,75 +27,66 @@ fun showAlertDialog(
     onCancelListener: (() -> Unit)? = null,
     actions: List<AlertDialogAction>
 ) {
-    var showDialog by remember { mutableStateOf(true) }
-
-    fun closeDialog() {
-        showDialog = false
-    }
-
-    if (showDialog) {
-        Dialog(
-            onDismissRequest = {
-                closeDialog()
-                onCancelListener?.invoke()
-            },
-            properties = DialogProperties(
-                dismissOnBackPress = cancellable,
-                dismissOnClickOutside = cancellable
-            )
-        ) {
-            Card {
-                Column(
-                    modifier = Modifier.padding(20.dp),
-                ) {
+    Dialog(
+        onDismissRequest = {
+            onCancelListener?.invoke()
+        },
+        properties = DialogProperties(
+            dismissOnBackPress = cancellable,
+            dismissOnClickOutside = cancellable
+        )
+    ) {
+        Card {
+            Column(
+                modifier = Modifier.padding(20.dp),
+            ) {
+                Text(
+                    text = header,
+                    style = TextStyle(fontSize = 20.sp),
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
+                )
+                if (!message.isNullOrBlank()) {
                     Text(
-                        text = header,
-                        style = TextStyle(fontSize = 20.sp),
+                        text = message,
+                        style = TextStyle(fontSize = 16.sp),
                         textAlign = TextAlign.Center,
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth().padding(top = 10.dp)
                     )
-                    if (!message.isNullOrBlank()) {
-                        Text(
-                            text = message,
-                            style = TextStyle(fontSize = 16.sp),
-                            textAlign = TextAlign.Center,
-                            modifier = Modifier.fillMaxWidth().padding(top = 10.dp)
-                        )
-                    }
-                    when (type) {
-                        AlertDialogType.HORIZONTAL -> Row(
-                            modifier = Modifier.padding(top = 10.dp)
-                        ) {
-                            actions.forEachIndexed { index, action ->
-                                val padding = if (index == 0) 0.dp else 10.dp
-                                // TODO use action.accent flag
-                                Button(
-                                    modifier = Modifier.padding(start = padding),
-                                    onClick = {
-                                        if (action.dismissDialog) {
-                                            closeDialog()
-                                        }
-                                        action.callback()
-                                    }
-                                ) {
-                                    Text(action.text)
+                }
+                when (type) {
+                    AlertDialogType.HORIZONTAL -> Row(
+                        modifier = Modifier.padding(top = 10.dp)
+                    ) {
+                        actions.forEachIndexed { index, action ->
+                            val padding = if (index == 0) 0.dp else 10.dp
+                            Button(
+                                modifier = Modifier.padding(start = padding),
+                                colors = ButtonDefaults.buttonColors(
+                                    backgroundColor = if (action.accent) Color.Blue else Color.Gray,
+                                    contentColor = Color.White
+                                ),
+                                onClick = {
+                                    action.callback()
                                 }
+                            ) {
+                                Text(action.text)
                             }
                         }
-                        AlertDialogType.VERTICAL -> Column {
-                            actions.forEach { action ->
-                                // TODO use action.accent flag
-                                Button(
-                                    modifier = Modifier.padding(top = 10.dp),
-                                    onClick = {
-                                        if (action.dismissDialog) {
-                                            closeDialog()
-                                        }
-                                        action.callback()
-                                    }
-                                ) {
-                                    Text(action.text)
+                    }
+                    AlertDialogType.VERTICAL -> Column {
+                        actions.forEach { action ->
+                            Button(
+                                modifier = Modifier.padding(top = 10.dp),
+                                colors = ButtonDefaults.buttonColors(
+                                    backgroundColor = if (action.accent) Color.Blue else Color.Gray,
+                                    contentColor = Color.White
+                                ),
+                                onClick = {
+                                    action.callback()
                                 }
+                            ) {
+                                Text(action.text)
                             }
                         }
                     }
