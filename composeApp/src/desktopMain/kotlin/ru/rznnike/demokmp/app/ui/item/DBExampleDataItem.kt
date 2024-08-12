@@ -2,6 +2,7 @@ package ru.rznnike.demokmp.app.ui.item
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.Button
@@ -34,7 +35,8 @@ fun DBExampleDataItem(
             text = data.name,
             style = TextStyle(fontSize = 20.sp),
             modifier = Modifier
-                .width(300.dp)
+                .fillMaxWidth()
+                .weight(1f)
                 .align(Alignment.CenterVertically)
         )
         Button(

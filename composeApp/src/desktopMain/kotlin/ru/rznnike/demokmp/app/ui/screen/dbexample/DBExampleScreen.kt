@@ -37,7 +37,8 @@ class DBExampleScreen : NavigationScreen() {
                     textRes = Res.string.db_example_screen_title,
                     style = TextStyle(fontSize = 20.sp),
                     textAlign = TextAlign.Center,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
                         .align(Alignment.CenterHorizontally)
                 )
 
@@ -47,7 +48,9 @@ class DBExampleScreen : NavigationScreen() {
                     OutlinedTextField(
                         value = dbExampleUiState.nameInput,
                         singleLine = true,
-                        modifier = Modifier.width(300.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1f),
                         onValueChange = dbExampleViewModel::onNameInput
                     )
                     Button(
