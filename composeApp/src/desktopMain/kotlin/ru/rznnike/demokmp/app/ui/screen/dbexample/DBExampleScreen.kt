@@ -1,7 +1,11 @@
 package ru.rznnike.demokmp.app.ui.screen.dbexample
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
+import androidx.compose.foundation.VerticalScrollbar
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.rememberScrollbarAdapter
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
@@ -71,10 +75,29 @@ class DBExampleScreen : NavigationScreen() {
                     }
                 }
 
-                dbExampleUiState.data.forEach {
-                    DBExampleDataItem(it) {
-                        dbExampleViewModel.deleteData(it)
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .weight(1f)
+                ) {
+                    val verticalScrollState = rememberScrollState()
+                    Column(
+                        modifier = Modifier
+                            .verticalScroll(verticalScrollState)
+                            .fillMaxSize()
+                    ) {
+                        dbExampleUiState.data.forEach {
+                            DBExampleDataItem(it) {
+                                dbExampleViewModel.deleteData(it)
+                            }
+                        }
                     }
+                    VerticalScrollbar(
+                        modifier = Modifier
+                            .align(Alignment.CenterEnd)
+                            .fillMaxHeight(),
+                        adapter = rememberScrollbarAdapter(verticalScrollState)
+                    )
                 }
 
                 Button(
