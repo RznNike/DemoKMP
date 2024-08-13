@@ -1,4 +1,4 @@
-package ru.rznnike.demokmp.app.ui.dialog
+package ru.rznnike.demokmp.app.ui.dialog.common
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
