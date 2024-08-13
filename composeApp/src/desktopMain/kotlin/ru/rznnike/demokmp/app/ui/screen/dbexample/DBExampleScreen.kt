@@ -3,10 +3,12 @@ package ru.rznnike.demokmp.app.ui.screen.dbexample
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.VerticalScrollbar
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollbarAdapter
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
+import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.runtime.Composable
@@ -36,59 +38,67 @@ class DBExampleScreen : NavigationScreen() {
         val screenNavigator = getScreenNavigator()
 
         MaterialTheme {
-            Column(modifier = Modifier.padding(20.dp)) {
+            Column(modifier = Modifier.padding(vertical = 20.dp)) {
                 TextR(
                     textRes = Res.string.db_example_screen_title,
                     style = TextStyle(fontSize = 20.sp),
                     textAlign = TextAlign.Center,
                     modifier = Modifier
+                        .padding(horizontal = 20.dp)
                         .fillMaxWidth()
                         .align(Alignment.CenterHorizontally)
                 )
 
+                Spacer(modifier = Modifier.height(20.dp))
                 Row(
-                    modifier = Modifier.padding(top = 10.dp).fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth()
                 ) {
+                    Spacer(modifier = Modifier.width(20.dp))
                     OutlinedTextField(
                         value = dbExampleUiState.nameInput,
                         singleLine = true,
                         modifier = Modifier
-                            .fillMaxWidth()
                             .weight(1f),
                         onValueChange = dbExampleViewModel::onNameInput
                     )
+                    Spacer(modifier = Modifier.width(10.dp))
                     Button(
-                        modifier = Modifier.padding(start = 10.dp),
                         onClick = {
                             dbExampleViewModel.addData()
                         }
                     ) {
                         TextR(Res.string.add)
                     }
+                    Spacer(modifier = Modifier.width(10.dp))
                     Button(
-                        modifier = Modifier.padding(start = 10.dp),
                         onClick = {
                             dbExampleViewModel.deleteAllData()
                         }
                     ) {
                         TextR(Res.string.delete_all)
                     }
+                    Spacer(modifier = Modifier.width(20.dp))
                 }
 
+                Spacer(modifier = Modifier.height(20.dp))
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
                         .weight(1f)
                 ) {
-                    val verticalScrollState = rememberScrollState()
-                    Column(
+                    val state = rememberLazyListState()
+                    LazyColumn(
+                        state = state,
                         modifier = Modifier
-                            .verticalScroll(verticalScrollState)
                             .fillMaxSize()
+                            .padding(horizontal = 20.dp)
                     ) {
-                        dbExampleUiState.data.forEach {
-                            DBExampleDataItem(it) {
-                                dbExampleViewModel.deleteData(it)
+                        itemsIndexed(dbExampleUiState.data) { index, item ->
+                            DBExampleDataItem(item) {
+                                dbExampleViewModel.deleteData(item)
+                            }
+                            if (index < dbExampleUiState.data.lastIndex) {
+                                Divider()
                             }
                         }
                     }
@@ -96,12 +106,13 @@ class DBExampleScreen : NavigationScreen() {
                         modifier = Modifier
                             .align(Alignment.CenterEnd)
                             .fillMaxHeight(),
-                        adapter = rememberScrollbarAdapter(verticalScrollState)
+                        adapter = rememberScrollbarAdapter(state)
                     )
                 }
 
+                Spacer(modifier = Modifier.height(20.dp))
                 Button(
-                    modifier = Modifier.padding(top = 10.dp),
+                    modifier = Modifier.padding(horizontal = 20.dp),
                     onClick = {
                         screenNavigator.close()
                     }

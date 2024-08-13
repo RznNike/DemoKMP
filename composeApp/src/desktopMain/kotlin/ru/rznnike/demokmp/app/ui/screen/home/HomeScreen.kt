@@ -1,9 +1,11 @@
 package ru.rznnike.demokmp.app.ui.screen.home
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.VerticalScrollbar
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.rememberScrollbarAdapter
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -32,7 +34,8 @@ class HomeScreen : NavigationScreen() {
         val flowNavigator = getFlowNavigator()
 
         MaterialTheme {
-            Column(modifier = Modifier.padding(20.dp)) {
+            Column {
+                Spacer(Modifier.height(20.dp))
                 TextR(
                     textRes = Res.string.main_screen_title,
                     style = TextStyle(fontSize = 20.sp),
@@ -40,58 +43,74 @@ class HomeScreen : NavigationScreen() {
                     modifier = Modifier.fillMaxWidth().align(Alignment.CenterHorizontally)
                 )
 
-                Button(
-                    modifier = Modifier.padding(top = 10.dp),
-                    onClick = {
-                        flowNavigator.open(SettingsFlow())
-                    }
+                Spacer(Modifier.height(20.dp))
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .weight(1f)
                 ) {
-                    TextR(Res.string.open_settings)
-                }
-
-                Button(
-                    modifier = Modifier.padding(top = 10.dp),
-                    onClick = {
-                        flowNavigator.open(NetworkExampleFlow())
+                    val verticalScrollState = rememberScrollState()
+                    Column(
+                        modifier = Modifier
+                            .padding(horizontal = 20.dp)
+                            .verticalScroll(verticalScrollState)
+                            .fillMaxSize()
+                    ) {
+                        Button(
+                            onClick = {
+                                flowNavigator.open(SettingsFlow())
+                            }
+                        ) {
+                            TextR(Res.string.open_settings)
+                        }
+                        Spacer(Modifier.height(10.dp))
+                        Button(
+                            onClick = {
+                                flowNavigator.open(NetworkExampleFlow())
+                            }
+                        ) {
+                            TextR(Res.string.open_network_example)
+                        }
+                        Spacer(Modifier.height(10.dp))
+                        Button(
+                            onClick = {
+                                flowNavigator.open(DBExampleFlow())
+                            }
+                        ) {
+                            TextR(Res.string.open_db_example)
+                        }
+                        Spacer(Modifier.height(10.dp))
+                        Button(
+                            onClick = {
+                                notifier.sendAlert(Res.string.test_dialog)
+                            }
+                        ) {
+                            TextR(Res.string.test_dialog)
+                        }
+                        Spacer(Modifier.height(10.dp))
+                        Button(
+                            onClick = {
+                                notifier.sendMessage(Res.string.test_message)
+                            }
+                        ) {
+                            TextR(Res.string.test_message)
+                        }
+                        Spacer(Modifier.height(10.dp))
+                        Button(
+                            onClick = {
+                                flowNavigator.close()
+                            }
+                        ) {
+                            TextR(Res.string.close_app)
+                        }
+                        Spacer(Modifier.height(20.dp))
                     }
-                ) {
-                    TextR(Res.string.open_network_example)
-                }
-
-                Button(
-                    modifier = Modifier.padding(top = 10.dp),
-                    onClick = {
-                        flowNavigator.open(DBExampleFlow())
-                    }
-                ) {
-                    TextR(Res.string.open_db_example)
-                }
-
-                Button(
-                    modifier = Modifier.padding(top = 10.dp),
-                    onClick = {
-                        notifier.sendAlert(Res.string.test_dialog)
-                    }
-                ) {
-                    TextR(Res.string.test_dialog)
-                }
-
-                Button(
-                    modifier = Modifier.padding(top = 10.dp),
-                    onClick = {
-                        notifier.sendMessage(Res.string.test_message)
-                    }
-                ) {
-                    TextR(Res.string.test_message)
-                }
-
-                Button(
-                    modifier = Modifier.padding(top = 10.dp),
-                    onClick = {
-                        flowNavigator.close()
-                    }
-                ) {
-                    TextR(Res.string.close_app)
+                    VerticalScrollbar(
+                        modifier = Modifier
+                            .align(Alignment.CenterEnd)
+                            .fillMaxHeight(),
+                        adapter = rememberScrollbarAdapter(verticalScrollState)
+                    )
                 }
             }
         }
