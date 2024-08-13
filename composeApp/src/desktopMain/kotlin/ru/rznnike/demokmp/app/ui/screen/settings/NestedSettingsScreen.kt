@@ -26,9 +26,9 @@ class NestedSettingsScreen : NavigationScreen() {
     @Preview
     @Composable
     override fun Content() {
-        val profileViewModel = koinInject<ProfileViewModel>()
+        val profileViewModel: ProfileViewModel = koinInject()
         val profileUiState by profileViewModel.uiState.collectAsState()
-        val languageViewModel = koinInject<LanguageViewModel>()
+        val languageViewModel: LanguageViewModel = koinInject()
         val languageUiState by languageViewModel.uiState.collectAsState()
 
         val screenNavigator = getScreenNavigator()

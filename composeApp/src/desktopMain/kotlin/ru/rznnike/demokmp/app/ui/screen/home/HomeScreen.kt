@@ -27,7 +27,7 @@ class HomeScreen : NavigationScreen() {
     @Preview
     @Composable
     override fun Content() {
-        val notifier = koinInject<Notifier>()
+        val notifier: Notifier = koinInject()
 
         val flowNavigator = getFlowNavigator()
 

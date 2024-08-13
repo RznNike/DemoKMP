@@ -32,7 +32,7 @@ class SettingsScreen : NavigationScreen() {
     override fun Content() {
         val settingsViewModel = viewModel { SettingsViewModel() }
         val settingsUiState by settingsViewModel.uiState.collectAsState()
-        val profileViewModel = koinInject<ProfileViewModel>()
+        val profileViewModel: ProfileViewModel = koinInject()
         val profileUiState by profileViewModel.uiState.collectAsState()
 
         val screenNavigator = getScreenNavigator()

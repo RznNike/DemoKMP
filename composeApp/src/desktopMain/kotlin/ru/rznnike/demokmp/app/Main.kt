@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.input.key.*
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.*
@@ -15,6 +16,7 @@ import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.KoinContext
 import org.koin.compose.koinInject
 import org.koin.core.context.startKoin
+import ru.rznnike.demokmp.app.common.notifier.Notifier
 import ru.rznnike.demokmp.app.di.appComponent
 import ru.rznnike.demokmp.app.ui.main.mainFrame
 import ru.rznnike.demokmp.app.viewmodel.language.LanguageViewModel
@@ -36,7 +38,9 @@ fun initKoin() {
 @Composable
 private fun ApplicationScope.startUI() {
     KoinContext {
-        val languageViewModel = koinInject<LanguageViewModel>()
+        val notifier: Notifier = koinInject()
+
+        val languageViewModel: LanguageViewModel = koinInject()
         val languageUiState by languageViewModel.uiState.collectAsState()
 
         val state = rememberWindowState(
@@ -46,7 +50,20 @@ private fun ApplicationScope.startUI() {
         Window(
             title = stringResource(Res.string.window_title),
             onCloseRequest = ::exitApplication,
-            state = state
+            state = state,
+            onPreviewKeyEvent = { keyEvent ->
+                when {
+                    keyEvent.isCtrlPressed && (keyEvent.key == Key.F) && (keyEvent.type == KeyEventType.KeyDown) -> {
+                        notifier.sendMessage("Ctrl+F")
+                        true
+                    }
+                    keyEvent.isCtrlPressed && keyEvent.isAltPressed && (keyEvent.key == Key.D) && (keyEvent.type == KeyEventType.KeyDown) -> {
+                        notifier.sendMessage("Ctrl+Alt+D")
+                        true
+                    }
+                    else -> false
+                }
+            }
         ) {
             if (languageUiState.loaded) {
                 Locale.setDefault(Locale.forLanguageTag(languageUiState.language.tag))
