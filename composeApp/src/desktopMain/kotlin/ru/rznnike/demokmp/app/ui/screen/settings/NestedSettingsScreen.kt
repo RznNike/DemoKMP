@@ -35,71 +35,69 @@ class NestedSettingsScreen : NavigationScreen() {
 
         var showLanguages by remember { mutableStateOf(false) }
 
-        key(languageUiState.language) {
-            MaterialTheme {
-                Column(modifier = Modifier.padding(20.dp)) {
-                    TextR(
-                        textRes = Res.string.nested_settings_screen_title,
-                        style = TextStyle(fontSize = 20.sp),
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.fillMaxWidth().align(Alignment.CenterHorizontally)
-                    )
+        key(languageUiState.language.tag) {
+            Column(modifier = Modifier.padding(20.dp)) {
+                TextR(
+                    textRes = Res.string.nested_settings_screen_title,
+                    style = TextStyle(fontSize = 20.sp),
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth().align(Alignment.CenterHorizontally)
+                )
 
-                    TextR(
-                        textRes = Res.string.enter_user_name,
-                        style = TextStyle(fontSize = 20.sp),
-                        modifier = Modifier.fillMaxWidth()
-                            .padding(top = 10.dp)
-                    )
-                    OutlinedTextField(
-                        value = profileUiState.nameInput,
-                        singleLine = true,
-                        modifier = Modifier.fillMaxWidth(),
-                        onValueChange = profileViewModel::onNameInput
-                    )
+                TextR(
+                    textRes = Res.string.enter_user_name,
+                    style = TextStyle(fontSize = 20.sp),
+                    modifier = Modifier.fillMaxWidth()
+                        .padding(top = 10.dp)
+                )
+                OutlinedTextField(
+                    value = profileUiState.nameInput,
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth(),
+                    onValueChange = profileViewModel::onNameInput
+                )
 
-                    TextR(
-                        textRes = Res.string.select_language,
-                        style = TextStyle(fontSize = 20.sp),
-                        modifier = Modifier.fillMaxWidth()
-                            .padding(top = 10.dp)
-                    )
-                    Row(
-                        modifier = Modifier.padding(top = 10.dp)
+                TextR(
+                    textRes = Res.string.select_language,
+                    style = TextStyle(fontSize = 20.sp),
+                    modifier = Modifier.fillMaxWidth()
+                        .padding(top = 10.dp)
+                )
+                Row(
+                    modifier = Modifier.padding(top = 10.dp)
+                ) {
+                    DropdownMenu(
+                        expanded = showLanguages,
+                        onDismissRequest = { showLanguages = false }
                     ) {
-                        DropdownMenu(
-                            expanded = showLanguages,
-                            onDismissRequest = { showLanguages = false }
-                        ) {
-                            Language.entries.forEach { language ->
-                                DropdownMenuItem(
-                                    onClick = {
-                                        languageViewModel.setLanguage(language)
-                                        showLanguages = false
-                                    }
-                                ) {
-                                    Text(language.localizedName)
+                        Language.entries.forEach { language ->
+                            DropdownMenuItem(
+                                onClick = {
+                                    languageViewModel.setLanguage(language)
+                                    showLanguages = false
                                 }
+                            ) {
+                                Text(language.localizedName)
                             }
                         }
                     }
-                    Button(
-                        modifier = Modifier.padding(top = 10.dp),
-                        onClick = {
-                            showLanguages = !showLanguages
-                        }
-                    ) {
-                        Text(languageUiState.language.localizedName)
+                }
+                Button(
+                    modifier = Modifier.padding(top = 10.dp),
+                    onClick = {
+                        showLanguages = !showLanguages
                     }
+                ) {
+                    Text(languageUiState.language.localizedName)
+                }
 
-                    Button(
-                        modifier = Modifier.padding(top = 10.dp),
-                        onClick = {
-                            screenNavigator.close()
-                        }
-                    ) {
-                        TextR(Res.string.close)
+                Button(
+                    modifier = Modifier.padding(top = 10.dp),
+                    onClick = {
+                        screenNavigator.close()
                     }
+                ) {
+                    TextR(Res.string.close)
                 }
             }
         }

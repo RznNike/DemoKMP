@@ -4,7 +4,6 @@ import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
 import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -35,52 +34,50 @@ class NetworkExampleScreen : NavigationScreen() {
 
         val screenNavigator = getScreenNavigator()
 
-        MaterialTheme {
-            Column(modifier = Modifier.padding(20.dp)) {
-                TextR(
-                    textRes = Res.string.network_example_screen_title,
-                    style = TextStyle(fontSize = 20.sp),
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.fillMaxWidth()
-                        .align(Alignment.CenterHorizontally)
-                )
+        Column(modifier = Modifier.padding(20.dp)) {
+            TextR(
+                textRes = Res.string.network_example_screen_title,
+                style = TextStyle(fontSize = 20.sp),
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth()
+                    .align(Alignment.CenterHorizontally)
+            )
 
-                Row(
-                    modifier = Modifier.padding(top = 10.dp).height(200.dp).fillMaxWidth()
-                ) {
-                    networkExampleUiState.images.forEach { image ->
-                        SubcomposeAsyncImage(
-                            modifier = Modifier
-                                .fillMaxHeight()
-                                .aspectRatio(1f)
-                                .padding(end = 10.dp),
-                            model = image,
-                            contentDescription = null,
-                            contentScale = ContentScale.Crop,
-                            loading = {
-                                CircularProgressIndicator()
-                            }
-                        )
-                    }
+            Row(
+                modifier = Modifier.padding(top = 10.dp).height(200.dp).fillMaxWidth()
+            ) {
+                networkExampleUiState.images.forEach { image ->
+                    SubcomposeAsyncImage(
+                        modifier = Modifier
+                            .fillMaxHeight()
+                            .aspectRatio(1f)
+                            .padding(end = 10.dp),
+                        model = image,
+                        contentDescription = null,
+                        contentScale = ContentScale.Crop,
+                        loading = {
+                            CircularProgressIndicator()
+                        }
+                    )
                 }
+            }
 
-                Button(
-                    modifier = Modifier.padding(top = 10.dp),
-                    onClick = {
-                        networkExampleViewModel.requestImages()
-                    }
-                ) {
-                    TextR(Res.string.request_images)
+            Button(
+                modifier = Modifier.padding(top = 10.dp),
+                onClick = {
+                    networkExampleViewModel.requestImages()
                 }
+            ) {
+                TextR(Res.string.request_images)
+            }
 
-                Button(
-                    modifier = Modifier.padding(top = 10.dp),
-                    onClick = {
-                        screenNavigator.close()
-                    }
-                ) {
-                    TextR(Res.string.close)
+            Button(
+                modifier = Modifier.padding(top = 10.dp),
+                onClick = {
+                    screenNavigator.close()
                 }
+            ) {
+                TextR(Res.string.close)
             }
         }
     }

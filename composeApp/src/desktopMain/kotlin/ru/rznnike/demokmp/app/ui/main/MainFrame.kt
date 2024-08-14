@@ -90,19 +90,21 @@ fun mainFrame() {
         }
     }
 
-    Scaffold(
-        snackbarHost = {
-            SnackbarHost(hostState = snackbarHostState) {
-                Snackbar(
-                    snackbarData = it,
-                    backgroundColor = Color.White,
-                    contentColor = Color.Black,
-                    actionColor = Color.Blue
-                )
+    MaterialTheme {
+        Scaffold(
+            snackbarHost = {
+                SnackbarHost(hostState = snackbarHostState) {
+                    Snackbar(
+                        snackbarData = it,
+                        backgroundColor = Color.White,
+                        contentColor = Color.Black,
+                        actionColor = Color.Blue
+                    )
+                }
             }
+        ) {
+            createNavigator(SplashFlow())
+            DialogLayout()
         }
-    ) {
-        createNavigator(SplashFlow())
-        DialogLayout()
     }
 }

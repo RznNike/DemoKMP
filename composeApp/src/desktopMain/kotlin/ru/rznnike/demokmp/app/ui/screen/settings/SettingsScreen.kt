@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Button
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -37,61 +36,59 @@ class SettingsScreen : NavigationScreen() {
 
         val screenNavigator = getScreenNavigator()
 
-        MaterialTheme {
-            Column(modifier = Modifier.padding(20.dp)) {
-                TextR(
-                    textRes = Res.string.settings_screen_title,
-                    style = TextStyle(fontSize = 20.sp),
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.fillMaxWidth()
-                        .align(Alignment.CenterHorizontally)
-                )
+        Column(modifier = Modifier.padding(20.dp)) {
+            TextR(
+                textRes = Res.string.settings_screen_title,
+                style = TextStyle(fontSize = 20.sp),
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth()
+                    .align(Alignment.CenterHorizontally)
+            )
 
-                Text(
-                    text = settingsUiState.counter.toString(),
-                    style = TextStyle(fontSize = 20.sp),
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.fillMaxWidth()
-                        .align(Alignment.CenterHorizontally)
-                        .padding(top = 10.dp)
-                )
-                Button(
-                    modifier = Modifier.padding(top = 10.dp),
-                    onClick = {
-                        settingsViewModel.incrementCounter()
-                    }
-                ) {
-                    Text("++")
+            Text(
+                text = settingsUiState.counter.toString(),
+                style = TextStyle(fontSize = 20.sp),
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth()
+                    .align(Alignment.CenterHorizontally)
+                    .padding(top = 10.dp)
+            )
+            Button(
+                modifier = Modifier.padding(top = 10.dp),
+                onClick = {
+                    settingsViewModel.incrementCounter()
                 }
+            ) {
+                Text("++")
+            }
 
-                Button(
-                    modifier = Modifier.padding(top = 10.dp),
-                    onClick = {
-                        screenNavigator.open(NestedSettingsScreen())
-                    }
-                ) {
-                    TextR(Res.string.open_nested_settings)
+            Button(
+                modifier = Modifier.padding(top = 10.dp),
+                onClick = {
+                    screenNavigator.open(NestedSettingsScreen())
                 }
+            ) {
+                TextR(Res.string.open_nested_settings)
+            }
 
-                val nameString = "%s: %s".format(
-                    stringResource(Res.string.user_name),
-                    profileUiState.nameInput
-                )
-                Text(
-                    text = nameString,
-                    style = TextStyle(fontSize = 20.sp),
-                    modifier = Modifier.fillMaxWidth()
-                        .padding(top = 10.dp)
-                )
+            val nameString = "%s: %s".format(
+                stringResource(Res.string.user_name),
+                profileUiState.nameInput
+            )
+            Text(
+                text = nameString,
+                style = TextStyle(fontSize = 20.sp),
+                modifier = Modifier.fillMaxWidth()
+                    .padding(top = 10.dp)
+            )
 
-                Button(
-                    modifier = Modifier.padding(top = 10.dp),
-                    onClick = {
-                        screenNavigator.close()
-                    }
-                ) {
-                    TextR(Res.string.close)
+            Button(
+                modifier = Modifier.padding(top = 10.dp),
+                onClick = {
+                    screenNavigator.close()
                 }
+            ) {
+                TextR(Res.string.close)
             }
         }
     }
