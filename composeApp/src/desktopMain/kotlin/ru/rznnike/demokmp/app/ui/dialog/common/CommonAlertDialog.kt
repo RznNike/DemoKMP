@@ -4,10 +4,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.Card
-import androidx.compose.material.Text
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -63,7 +63,7 @@ fun CommonAlertDialog(
                             Button(
                                 modifier = Modifier.padding(start = padding),
                                 colors = ButtonDefaults.buttonColors(
-                                    backgroundColor = if (action.accent) Color.Blue else Color.Gray,
+                                    containerColor = if (action.accent) Color.Blue else Color.Gray,
                                     contentColor = Color.White
                                 ),
                                 onClick = {
@@ -79,7 +79,7 @@ fun CommonAlertDialog(
                             Button(
                                 modifier = Modifier.padding(top = 10.dp),
                                 colors = ButtonDefaults.buttonColors(
-                                    backgroundColor = if (action.accent) Color.Blue else Color.Gray,
+                                    containerColor = if (action.accent) Color.Blue else Color.Gray,
                                     contentColor = Color.White
                                 ),
                                 onClick = {

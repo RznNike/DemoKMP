@@ -1,7 +1,7 @@
 package ru.rznnike.demokmp.app.ui.main
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
-import androidx.compose.material.*
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
 import demokmp.composeapp.generated.resources.Res
@@ -96,7 +96,7 @@ fun mainFrame() {
                 SnackbarHost(hostState = snackbarHostState) {
                     Snackbar(
                         snackbarData = it,
-                        backgroundColor = Color.White,
+                        containerColor = Color.White,
                         contentColor = Color.Black,
                         actionColor = Color.Blue
                     )
