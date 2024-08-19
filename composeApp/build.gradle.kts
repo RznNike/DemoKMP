@@ -81,22 +81,22 @@ android {
     compileSdk = 34
 }
 
-compose.desktop {
-    application {
-        mainClass = "ru.rznnike.demokmp.app.MainKt"
+compose.desktop.application {
+    mainClass = "ru.rznnike.demokmp.app.MainKt"
 
-        nativeDistributions {
-            targetFormats(TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "ru.rznnike.demokmp"
-            packageVersion = "1.0.0"
-        }
+    nativeDistributions {
+        targetFormats(TargetFormat.Msi, TargetFormat.Deb)
+        packageName = "ru.rznnike.demokmp"
+        packageVersion = "1.0.0"
 
-        buildTypes {
-            release {
-                proguard {
-                    obfuscate.set(true)
-                    configurationFiles.from(project.file("proguard-rules.pro"))
-                }
+        modules("jdk.unsupported")
+    }
+
+    buildTypes {
+        release {
+            proguard {
+                obfuscate.set(true)
+                configurationFiles.from(project.file("proguard-rules.pro"))
             }
         }
     }
