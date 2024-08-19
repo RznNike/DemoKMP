@@ -17,6 +17,7 @@ import ru.rznnike.demokmp.app.ui.dialog.common.AlertDialogAction
 import ru.rznnike.demokmp.app.ui.dialog.common.AlertDialogType
 import ru.rznnike.demokmp.app.ui.dialog.common.CommonAlertDialog
 import ru.rznnike.demokmp.app.ui.screen.splash.SplashFlow
+import ru.rznnike.demokmp.app.ui.theme.AppTheme
 import ru.rznnike.demokmp.domain.common.CoroutineScopeProvider
 
 @Preview
@@ -90,7 +91,7 @@ fun mainFrame() {
         }
     }
 
-    MaterialTheme {
+    AppTheme {
         Scaffold(
             snackbarHost = {
                 SnackbarHost(hostState = snackbarHostState) {
