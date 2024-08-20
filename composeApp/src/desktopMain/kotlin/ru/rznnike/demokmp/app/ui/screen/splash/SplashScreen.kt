@@ -1,23 +1,25 @@
 package ru.rznnike.demokmp.app.ui.screen.splash
 
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.desktop.ui.tooling.preview.Preview
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.Composable
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import demokmp.composeapp.generated.resources.Res
-import demokmp.composeapp.generated.resources.go_to_main
-import demokmp.composeapp.generated.resources.splash_screen_title
+import demokmp.composeapp.generated.resources.ic_compose
+import kotlinx.coroutines.delay
+import org.jetbrains.compose.resources.painterResource
 import ru.rznnike.demokmp.app.navigation.NavigationScreen
 import ru.rznnike.demokmp.app.navigation.getFlowNavigator
 import ru.rznnike.demokmp.app.ui.screen.home.HomeFlow
-import ru.rznnike.demokmp.app.utils.TextR
+
+private const val ANIMATION_DURATION_MS = 1000
+private const val SPLASH_DURATION_MS = 1500L
 
 class SplashScreen : NavigationScreen() {
     @Preview
@@ -25,22 +27,36 @@ class SplashScreen : NavigationScreen() {
     override fun Content() {
         val flowNavigator = getFlowNavigator()
 
-        Column(modifier = Modifier.padding(20.dp)) {
-            TextR(
-                textRes = Res.string.splash_screen_title,
-                style = MaterialTheme.typography.titleLarge,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth().align(Alignment.CenterHorizontally)
+        var imageVisible by remember { mutableStateOf(false) }
+        val imageAlpha: Float by animateFloatAsState(
+            targetValue = if (imageVisible) 1f else 0f,
+            animationSpec = tween(
+                durationMillis = ANIMATION_DURATION_MS,
+                easing = LinearEasing
             )
+        )
 
-            Button(
-                modifier = Modifier.padding(top = 10.dp),
-                onClick = {
-                    flowNavigator.newRoot(HomeFlow())
-                }
-            ) {
-                TextR(Res.string.go_to_main)
-            }
+        LaunchedEffect("init") {
+            imageVisible = true
+
+            delay(SPLASH_DURATION_MS)
+            flowNavigator.newRoot(HomeFlow())
+        }
+
+        Box(
+            modifier = Modifier
+                .padding(20.dp)
+                .fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            Image(
+                modifier = Modifier
+                    .width(300.dp)
+                    .height(300.dp),
+                alpha = imageAlpha,
+                painter = painterResource(Res.drawable.ic_compose),
+                contentDescription = null
+            )
         }
     }
 }
