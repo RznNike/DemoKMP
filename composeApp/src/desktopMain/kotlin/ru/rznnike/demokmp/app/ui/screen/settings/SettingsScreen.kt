@@ -32,7 +32,6 @@ class SettingsScreen : NavigationScreen() {
         val settingsViewModel = viewModel { SettingsViewModel() }
         val settingsUiState by settingsViewModel.uiState.collectAsState()
         val profileViewModel: ProfileViewModel = koinInject()
-        val profileUiState by profileViewModel.uiState.collectAsState()
 
         val screenNavigator = getScreenNavigator()
 
@@ -73,7 +72,7 @@ class SettingsScreen : NavigationScreen() {
 
             val nameString = "%s: %s".format(
                 stringResource(Res.string.user_name),
-                profileUiState.nameInput
+                profileViewModel.nameInput
             )
             Text(
                 text = nameString,

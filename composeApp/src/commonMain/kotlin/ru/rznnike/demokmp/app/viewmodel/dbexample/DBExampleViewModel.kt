@@ -1,5 +1,8 @@
 package ru.rznnike.demokmp.app.viewmodel.dbexample
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -22,6 +25,9 @@ class DBExampleViewModel : BaseUiViewModel<DBExampleViewModel.UiState>() {
     private val addDBExampleDataUseCase: AddDBExampleDataUseCase by inject()
     private val deleteDBExampleDataUseCase: DeleteDBExampleDataUseCase by inject()
     private val deleteAllDBExampleDataUseCase: DeleteAllDBExampleDataUseCase by inject()
+
+    var nameInput by mutableStateOf("")
+        private set
 
     init {
         viewModelScope.launch(dispatcherProvider.default) {
@@ -65,28 +71,18 @@ class DBExampleViewModel : BaseUiViewModel<DBExampleViewModel.UiState>() {
     }
 
     fun onNameInput(newValue: String) {
-        if (newValue != mutableUiState.value.nameInput) {
-            mutableUiState.update { currentState ->
-                currentState.copy(
-                    nameInput = newValue
-                )
-            }
-        }
+        nameInput = newValue
     }
 
     fun addData() {
         viewModelScope.launch {
             setProgress(true)
             val data = DBExampleData(
-                name = mutableUiState.value.nameInput
+                name = nameInput
             )
             addDBExampleDataUseCase(data).process(
                 {
-                    mutableUiState.update { currentState ->
-                        currentState.copy(
-                            nameInput = ""
-                        )
-                    }
+                    nameInput = ""
                 }, ::onError
             )
             loadData()
@@ -115,7 +111,6 @@ class DBExampleViewModel : BaseUiViewModel<DBExampleViewModel.UiState>() {
 
     data class UiState(
         val isLoading: Boolean = false,
-        val data: List<DBExampleData> = emptyList(),
-        val nameInput: String = ""
+        val data: List<DBExampleData> = emptyList()
     )
 }

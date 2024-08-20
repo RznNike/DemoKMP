@@ -27,7 +27,6 @@ class NestedSettingsScreen : NavigationScreen() {
     @Composable
     override fun Content() {
         val profileViewModel: ProfileViewModel = koinInject()
-        val profileUiState by profileViewModel.uiState.collectAsState()
         val languageViewModel: LanguageViewModel = koinInject()
         val languageUiState by languageViewModel.uiState.collectAsState()
 
@@ -39,7 +38,7 @@ class NestedSettingsScreen : NavigationScreen() {
             Column(modifier = Modifier.padding(20.dp)) {
                 TextR(
                     textRes = Res.string.nested_settings_screen_title,
-                    style = TextStyle(fontSize = 20.sp),
+                    fontSize = 20.sp,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.fillMaxWidth().align(Alignment.CenterHorizontally)
                 )
@@ -51,7 +50,7 @@ class NestedSettingsScreen : NavigationScreen() {
                         .padding(top = 10.dp)
                 )
                 OutlinedTextField(
-                    value = profileUiState.nameInput,
+                    value = profileViewModel.nameInput,
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth(),
                     onValueChange = profileViewModel::onNameInput

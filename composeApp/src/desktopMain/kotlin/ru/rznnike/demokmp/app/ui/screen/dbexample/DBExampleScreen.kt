@@ -8,7 +8,7 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollbarAdapter
 import androidx.compose.material3.Button
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -53,7 +53,7 @@ class DBExampleScreen : NavigationScreen() {
             ) {
                 Spacer(modifier = Modifier.width(20.dp))
                 OutlinedTextField(
-                    value = dbExampleUiState.nameInput,
+                    value = dbExampleViewModel.nameInput,
                     singleLine = true,
                     modifier = Modifier
                         .weight(1f),
@@ -99,7 +99,7 @@ class DBExampleScreen : NavigationScreen() {
                             dbExampleViewModel.deleteData(item)
                         }
                         if (index < dbExampleUiState.data.lastIndex) {
-                            Divider()
+                            HorizontalDivider()
                         }
                     }
                 }

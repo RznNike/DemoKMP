@@ -21,19 +21,19 @@ private val fontFamily = FontFamily(
 private val baseline = Typography()
 
 val appTypography = Typography(
-    displayLarge = baseline.displayLarge.copy(fontFamily = fontFamily),
-    displayMedium = baseline.displayMedium.copy(fontFamily = fontFamily),
-    displaySmall = baseline.displaySmall.copy(fontFamily = fontFamily),
-    headlineLarge = baseline.headlineLarge.copy(fontFamily = fontFamily),
-    headlineMedium = baseline.headlineMedium.copy(fontFamily = fontFamily),
-    headlineSmall = baseline.headlineSmall.copy(fontFamily = fontFamily),
-    titleLarge = baseline.titleLarge.copy(fontFamily = fontFamily),
-    titleMedium = baseline.titleMedium.copy(fontFamily = fontFamily),
-    titleSmall = baseline.titleSmall.copy(fontFamily = fontFamily),
-    bodyLarge = baseline.bodyLarge.copy(fontFamily = fontFamily), // default for Text, TextField, Button
-    bodyMedium = baseline.bodyMedium.copy(fontFamily = fontFamily),
-    bodySmall = baseline.bodySmall.copy(fontFamily = fontFamily),
-    labelLarge = baseline.labelLarge.copy(fontFamily = fontFamily),
-    labelMedium = baseline.labelMedium.copy(fontFamily = fontFamily),
-    labelSmall = baseline.labelSmall.copy(fontFamily = fontFamily),
+    displayLarge = baseline.displayLarge.copy(fontFamily = fontFamily), // 57 dp
+    displayMedium = baseline.displayMedium.copy(fontFamily = fontFamily), // 45 dp
+    displaySmall = baseline.displaySmall.copy(fontFamily = fontFamily), // 36 dp
+    headlineLarge = baseline.headlineLarge.copy(fontFamily = fontFamily), // 32 dp
+    headlineMedium = baseline.headlineMedium.copy(fontFamily = fontFamily), // 28 dp
+    headlineSmall = baseline.headlineSmall.copy(fontFamily = fontFamily), // 24 dp
+    titleLarge = baseline.titleLarge.copy(fontFamily = fontFamily), // 22 dp
+    titleMedium = baseline.titleMedium.copy(fontFamily = fontFamily), // 16 dp
+    titleSmall = baseline.titleSmall.copy(fontFamily = fontFamily), // 14 dp
+    bodyLarge = baseline.bodyLarge.copy(fontFamily = fontFamily), // 16 dp, default for Text, TextField, Button
+    bodyMedium = baseline.bodyMedium.copy(fontFamily = fontFamily), // 14 dp
+    bodySmall = baseline.bodySmall.copy(fontFamily = fontFamily), // 12 dp
+    labelLarge = baseline.labelLarge.copy(fontFamily = fontFamily), // 14 dp
+    labelMedium = baseline.labelMedium.copy(fontFamily = fontFamily), // 12 dp
+    labelSmall = baseline.labelSmall.copy(fontFamily = fontFamily), // 11 dp
 )
