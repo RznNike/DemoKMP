@@ -11,7 +11,7 @@
     <string name="go_to_main">Go to main</string>
     <string name="user_name">User name</string>
     <string name="enter_user_name">Enter user name</string>
-    <string name="select_language">Select language</string>
+    <string name="language">Language</string>
     <string name="unknown_error">Unknown error</string>
     <string name="test_dialog">Test dialog</string>
     <string name="test_message">Test message</string>
@@ -24,4 +24,9 @@
     <string name="add">Add</string>
     <string name="delete">Delete</string>
     <string name="delete_all">Delete all</string>
+    <string name="theme">Theme</string>
+    <string name="theme_light">Light</string>
+    <string name="theme_dark">Dark</string>
+    <string name="theme_auto">Auto</string>
+    <string name="theme_changing_message">Restart app to fully apply new theme</string>
 </resources>

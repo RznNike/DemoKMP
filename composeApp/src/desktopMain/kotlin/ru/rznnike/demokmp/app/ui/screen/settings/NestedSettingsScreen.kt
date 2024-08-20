@@ -15,26 +15,29 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import demokmp.composeapp.generated.resources.*
 import org.koin.compose.koinInject
+import ru.rznnike.demokmp.app.model.common.toAppModel
 import ru.rznnike.demokmp.app.navigation.NavigationScreen
 import ru.rznnike.demokmp.app.navigation.getScreenNavigator
 import ru.rznnike.demokmp.app.utils.TextR
-import ru.rznnike.demokmp.app.viewmodel.language.LanguageViewModel
+import ru.rznnike.demokmp.app.viewmodel.configuration.AppConfigurationViewModel
 import ru.rznnike.demokmp.app.viewmodel.profile.ProfileViewModel
 import ru.rznnike.demokmp.domain.model.common.Language
+import ru.rznnike.demokmp.domain.model.common.Theme
 
 class NestedSettingsScreen : NavigationScreen() {
     @Preview
     @Composable
     override fun Content() {
         val profileViewModel: ProfileViewModel = koinInject()
-        val languageViewModel: LanguageViewModel = koinInject()
-        val languageUiState by languageViewModel.uiState.collectAsState()
+        val appConfigurationViewModel: AppConfigurationViewModel = koinInject()
+        val appConfigurationUiState by appConfigurationViewModel.uiState.collectAsState()
 
         val screenNavigator = getScreenNavigator()
 
         var showLanguages by remember { mutableStateOf(false) }
+        var showThemes by remember { mutableStateOf(false) }
 
-        key(languageUiState.language.tag) {
+        key(appConfigurationUiState.language.tag) {
             Column(modifier = Modifier.padding(20.dp)) {
                 TextR(
                     textRes = Res.string.nested_settings_screen_title,
@@ -57,7 +60,7 @@ class NestedSettingsScreen : NavigationScreen() {
                 )
 
                 TextR(
-                    textRes = Res.string.select_language,
+                    textRes = Res.string.language,
                     style = TextStyle(fontSize = 20.sp),
                     modifier = Modifier.fillMaxWidth()
                         .padding(top = 10.dp)
@@ -75,7 +78,7 @@ class NestedSettingsScreen : NavigationScreen() {
                                     Text(language.localizedName)
                                 },
                                 onClick = {
-                                    languageViewModel.setLanguage(language)
+                                    appConfigurationViewModel.setLanguage(language)
                                     showLanguages = false
                                 }
                             )
@@ -88,7 +91,42 @@ class NestedSettingsScreen : NavigationScreen() {
                         showLanguages = !showLanguages
                     }
                 ) {
-                    Text(languageUiState.language.localizedName)
+                    Text(appConfigurationUiState.language.localizedName)
+                }
+
+                TextR(
+                    textRes = Res.string.theme,
+                    style = TextStyle(fontSize = 20.sp),
+                    modifier = Modifier.fillMaxWidth()
+                        .padding(top = 10.dp)
+                )
+                Row(
+                    modifier = Modifier.padding(top = 10.dp)
+                ) {
+                    DropdownMenu(
+                        expanded = showThemes,
+                        onDismissRequest = { showThemes = false }
+                    ) {
+                        Theme.entries.forEach { theme ->
+                            DropdownMenuItem(
+                                text = {
+                                    TextR(theme.toAppModel().nameRes)
+                                },
+                                onClick = {
+                                    appConfigurationViewModel.setTheme(theme)
+                                    showThemes = false
+                                }
+                            )
+                        }
+                    }
+                }
+                Button(
+                    modifier = Modifier.padding(top = 10.dp),
+                    onClick = {
+                        showThemes = !showThemes
+                    }
+                ) {
+                    TextR(appConfigurationUiState.theme.toAppModel().nameRes)
                 }
 
                 Button(

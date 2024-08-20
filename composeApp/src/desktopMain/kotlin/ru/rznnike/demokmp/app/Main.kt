@@ -19,7 +19,7 @@ import org.koin.core.context.startKoin
 import ru.rznnike.demokmp.app.common.notifier.Notifier
 import ru.rznnike.demokmp.app.di.appComponent
 import ru.rznnike.demokmp.app.ui.main.mainFrame
-import ru.rznnike.demokmp.app.viewmodel.language.LanguageViewModel
+import ru.rznnike.demokmp.app.viewmodel.configuration.AppConfigurationViewModel
 import java.util.*
 
 fun main() = application {
@@ -40,8 +40,8 @@ private fun ApplicationScope.startUI() {
     KoinContext {
         val notifier: Notifier = koinInject()
 
-        val languageViewModel: LanguageViewModel = koinInject()
-        val languageUiState by languageViewModel.uiState.collectAsState()
+        val appConfigurationViewModel: AppConfigurationViewModel = koinInject()
+        val appConfiguration by appConfigurationViewModel.uiState.collectAsState()
 
         val state = rememberWindowState(
             size = DpSize(800.dp, 800.dp),
@@ -65,8 +65,8 @@ private fun ApplicationScope.startUI() {
                 }
             }
         ) {
-            if (languageUiState.loaded) {
-                Locale.setDefault(Locale.forLanguageTag(languageUiState.language.tag))
+            if (appConfiguration.loaded) {
+                Locale.setDefault(Locale.forLanguageTag(appConfiguration.language.tag))
                 window.title = stringResource(Res.string.window_title)
 
                 ProvideNavigatorLifecycleKMPSupport {
