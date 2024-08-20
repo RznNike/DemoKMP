@@ -1,10 +1,13 @@
 package ru.rznnike.demokmp.app
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.input.key.*
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.*
@@ -20,7 +23,14 @@ import ru.rznnike.demokmp.app.common.notifier.Notifier
 import ru.rznnike.demokmp.app.di.appComponent
 import ru.rznnike.demokmp.app.ui.main.mainFrame
 import ru.rznnike.demokmp.app.viewmodel.configuration.AppConfigurationViewModel
+import java.awt.Dimension
 import java.util.*
+
+private val WINDOW_START_WIDTH_DP = 800.dp
+private val WINDOW_START_HEIGHT_DP = 800.dp
+
+private val WINDOW_MIN_WIDTH_DP = 300.dp
+private val WINDOW_MIN_HEIGHT_DP = 300.dp
 
 fun main() = application {
     initKoin()
@@ -44,7 +54,10 @@ private fun ApplicationScope.startUI() {
         val appConfiguration by appConfigurationViewModel.uiState.collectAsState()
 
         val state = rememberWindowState(
-            size = DpSize(800.dp, 800.dp),
+            size = DpSize(
+                width = WINDOW_START_WIDTH_DP,
+                height = WINDOW_START_HEIGHT_DP
+            ),
             position = WindowPosition(Alignment.Center)
         )
         Window(
@@ -65,6 +78,10 @@ private fun ApplicationScope.startUI() {
                 }
             }
         ) {
+            setMinimumSize(
+                width = WINDOW_MIN_WIDTH_DP,
+                height = WINDOW_MIN_HEIGHT_DP
+            )
             if (appConfiguration.loaded) {
                 Locale.setDefault(Locale.forLanguageTag(appConfiguration.language.tag))
                 window.title = stringResource(Res.string.window_title)
@@ -73,6 +90,19 @@ private fun ApplicationScope.startUI() {
                     mainFrame()
                 }
             }
+        }
+    }
+}
+
+@Composable
+fun FrameWindowScope.setMinimumSize(
+    width: Dp = Dp.Unspecified,
+    height: Dp = Dp.Unspecified,
+) {
+    val density = LocalDensity.current
+    LaunchedEffect(density) {
+        window.minimumSize = with(density) {
+            Dimension(width.toPx().toInt(), height.toPx().toInt())
         }
     }
 }
