@@ -1,24 +1,23 @@
 <resources>
     <string name="window_title">Демо приложение KMP</string>
-    <string name="splash_screen_title">Я сплеш!</string>
-    <string name="main_screen_title">Я главный экран!</string>
+    <string name="main_screen">Главный экран</string>
+    <string name="open_settings">Открыть настройки</string>
+    <string name="open_network_example">Открыть пример сети</string>
+    <string name="open_db_example">Открыть пример БД</string>
+    <string name="test_dialog">Тестовый диалог</string>
+    <string name="test_message">Тестовое сообщение</string>
+    <string name="hotkeys_tip">Тест горячих клавиш: попробуйте нажать Ctrl+F или Ctrl+Alt+D</string>
+
     <string name="settings_screen_title">Я экран настроек!</string>
     <string name="nested_settings_screen_title">Я вложенный экран настроек!</string>
     <string name="close">Закрыть</string>
-    <string name="close_app">Закрыть приложение</string>
-    <string name="open_settings">Открыть настройки</string>
     <string name="open_nested_settings">Открыть вложенные настройки</string>
-    <string name="go_to_main">На главный</string>
     <string name="user_name">Имя пользователя</string>
     <string name="enter_user_name">Введите имя пользователя</string>
     <string name="language">Язык</string>
     <string name="unknown_error">Неизвестная ошибка</string>
-    <string name="test_dialog">Тестовый диалог</string>
-    <string name="test_message">Тестовое сообщение</string>
-    <string name="open_network_example">Открыть пример сети</string>
     <string name="network_example_screen_title">Я экран сети!</string>
     <string name="request_images">Запросить картинки</string>
-    <string name="open_db_example">Открыть пример БД</string>
     <string name="db_example_screen_title">Я экран БД!</string>
     <string name="enter_name">Введите имя</string>
     <string name="add">Добавить</string>

@@ -1,6 +1,7 @@
 package ru.rznnike.demokmp.app.ui.theme
 
 import androidx.compose.material3.Typography
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -37,3 +38,8 @@ val appTypography = Typography(
     labelMedium = baseline.labelMedium.copy(fontFamily = fontFamily), // 12 dp
     labelSmall = baseline.labelSmall.copy(fontFamily = fontFamily), // 11 dp
 )
+
+val Typography.bodyLargeItalic: TextStyle
+    get() = bodyLarge.copy(
+        fontStyle = FontStyle.Italic
+    )
