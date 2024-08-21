@@ -4,7 +4,6 @@ import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.graphics.Color
 import demokmp.composeapp.generated.resources.Res
 import demokmp.composeapp.generated.resources.close
 import kotlinx.coroutines.launch
@@ -110,9 +109,9 @@ fun mainFrame() {
                 SnackbarHost(hostState = snackbarHostState) {
                     Snackbar(
                         snackbarData = it,
-                        containerColor = Color.White,
-                        contentColor = Color.Black,
-                        actionColor = Color.Blue
+                        containerColor = MaterialTheme.colorScheme.tertiaryContainer,
+                        contentColor = MaterialTheme.colorScheme.onTertiaryContainer,
+                        actionColor = MaterialTheme.colorScheme.onTertiaryContainer
                     )
                 }
             }

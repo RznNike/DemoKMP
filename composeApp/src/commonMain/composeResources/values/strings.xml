@@ -7,10 +7,10 @@
     <string name="test_dialog">Test dialog</string>
     <string name="test_message">Test message</string>
     <string name="hotkeys_tip">Hotkeys test: try to press Ctrl+F or Ctrl+Alt+D</string>
+    <string name="close">Close</string>
 
     <string name="settings_screen_title">I am settings screen!</string>
     <string name="nested_settings_screen_title">I am nested settings screen!</string>
-    <string name="close">Close</string>
     <string name="open_nested_settings">Open nested settings</string>
     <string name="user_name">User name</string>
     <string name="enter_user_name">Enter user name</string>

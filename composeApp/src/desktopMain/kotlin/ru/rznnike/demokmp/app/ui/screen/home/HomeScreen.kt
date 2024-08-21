@@ -89,7 +89,7 @@ class HomeScreen : NavigationScreen() {
                         notifier.sendAlert(Res.string.test_dialog)
                     }
                     MenuButton(Res.string.test_message) {
-                        notifier.sendMessage(Res.string.test_message)
+                        notifier.sendActionMessage(Res.string.test_message, Res.string.close) {}
                     }
                 }
                 VerticalScrollbar(
