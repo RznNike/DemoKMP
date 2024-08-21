@@ -1,10 +1,15 @@
 package ru.rznnike.demokmp.app
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.key.*
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
@@ -24,6 +29,8 @@ import org.koin.core.context.startKoin
 import ru.rznnike.demokmp.app.common.notifier.Notifier
 import ru.rznnike.demokmp.app.di.appComponent
 import ru.rznnike.demokmp.app.ui.main.mainFrame
+import ru.rznnike.demokmp.app.ui.theme.backgroundDark
+import ru.rznnike.demokmp.app.ui.theme.backgroundLight
 import ru.rznnike.demokmp.app.viewmodel.configuration.AppConfigurationViewModel
 import java.awt.Dimension
 import java.util.*
@@ -92,6 +99,14 @@ private fun ApplicationScope.startUI() {
                 ProvideNavigatorLifecycleKMPSupport {
                     mainFrame()
                 }
+            } else { // default background while the theme has not yet loaded
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(
+                            color = if (isSystemInDarkTheme()) backgroundDark else backgroundLight
+                        )
+                )
             }
         }
     }
