@@ -90,6 +90,13 @@ compose.desktop.application {
         packageVersion = "1.0.0"
 
         modules("jdk.unsupported")
+
+        windows {
+            iconFile.set(project.file("src/commonMain/composeResources/drawable/icon.ico"))
+        }
+        linux {
+            iconFile.set(project.file("src/commonMain/composeResources/drawable/icon.png"))
+        }
     }
 
     buildTypes {

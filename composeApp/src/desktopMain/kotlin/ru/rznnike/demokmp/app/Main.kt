@@ -14,7 +14,9 @@ import androidx.compose.ui.window.*
 import cafe.adriel.voyager.core.annotation.ExperimentalVoyagerApi
 import cafe.adriel.voyager.jetpack.ProvideNavigatorLifecycleKMPSupport
 import demokmp.composeapp.generated.resources.Res
+import demokmp.composeapp.generated.resources.ic_compose
 import demokmp.composeapp.generated.resources.window_title
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.KoinContext
 import org.koin.compose.koinInject
@@ -61,6 +63,7 @@ private fun ApplicationScope.startUI() {
             position = WindowPosition(Alignment.Center)
         )
         Window(
+            icon = painterResource(Res.drawable.ic_compose),
             title = stringResource(Res.string.window_title),
             onCloseRequest = ::exitApplication,
             state = state,
