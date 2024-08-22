@@ -14,16 +14,16 @@
     <string name="delete_all">Удалить всё</string>
     <string name="http_example">Пример HTTP</string>
     <string name="unknown_error">Неизвестная ошибка</string>
-
-    <string name="settings_screen_title">Я экран настроек!</string>
-    <string name="nested_settings_screen_title">Я вложенный экран настроек!</string>
-    <string name="open_nested_settings">Открыть вложенные настройки</string>
+    <string name="settings">Настройки</string>
     <string name="user_name">Имя пользователя</string>
-    <string name="enter_user_name">Введите имя пользователя</string>
+    <string name="test_counter">Тестовый счетчик</string>
     <string name="language">Язык</string>
     <string name="theme">Тема</string>
     <string name="theme_light">Светлая</string>
     <string name="theme_dark">Темная</string>
     <string name="theme_auto">Авто</string>
     <string name="theme_changing_message">Перезапустите приложение, чтобы полностью применить новую тему</string>
+    <string name="nested_settings_screen_title">Я вложенный экран настроек!</string>
+    <string name="open_nested_settings">Открыть вложенные настройки</string>
+    <string name="to_main_screen">На главный экран</string>
 </resources>
