@@ -39,6 +39,8 @@ val surfaceContainerLowLight = Color(0xFFF3F4E9)
 val surfaceContainerLight = Color(0xFFEEEFE3)
 val surfaceContainerHighLight = Color(0xFFE8E9DE)
 val surfaceContainerHighestLight = Color(0xFFE2E3D8)
+// Custom colors
+val surfaceContainerA50Light = Color(0x80EEEFE3)
 
 val primaryDark = Color(0xFFB1D18A)
 val onPrimaryDark = Color(0xFF1F3701)
@@ -75,3 +77,5 @@ val surfaceContainerLowDark = Color(0xFF1A1C16)
 val surfaceContainerDark = Color(0xFF1E201A)
 val surfaceContainerHighDark = Color(0xFF282B24)
 val surfaceContainerHighestDark = Color(0xFF33362E)
+// Custom colors
+val surfaceContainerA50Dark = Color(0x801E201A)

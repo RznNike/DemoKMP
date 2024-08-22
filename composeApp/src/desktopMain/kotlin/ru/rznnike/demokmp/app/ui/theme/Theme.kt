@@ -5,6 +5,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.compose.ui.graphics.Color
 
 private val lightScheme = lightColorScheme(
     primary = primaryLight,
@@ -82,20 +86,37 @@ private val darkScheme = darkColorScheme(
     surfaceContainerHighest = surfaceContainerHighestDark,
 )
 
+@Immutable
+data class CustomColorScheme(
+    val surfaceContainerA50: Color = Color.Unspecified
+)
+
+val customLightScheme = CustomColorScheme(
+    surfaceContainerA50 = surfaceContainerA50Light
+)
+
+val customDarkScheme = CustomColorScheme(
+    surfaceContainerA50 = surfaceContainerA50Dark
+)
+
+val localCustomColorScheme = staticCompositionLocalOf { CustomColorScheme() }
+
 @Composable
 fun AppTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit
 ) {
-    val colorScheme = when {
-        darkTheme -> darkScheme
-        else -> lightScheme
-    }
+    val colorScheme = if (darkTheme) darkScheme else lightScheme
+    val customColorScheme = if (darkTheme) customDarkScheme else customLightScheme
 
-    MaterialTheme(
-        colorScheme = colorScheme,
-        typography = appTypography,
-        shapes = appShapes,
-        content = content
-    )
+    CompositionLocalProvider(
+        localCustomColorScheme provides customColorScheme
+    ) {
+        MaterialTheme(
+            colorScheme = colorScheme,
+            typography = appTypography,
+            shapes = appShapes,
+            content = content
+        )
+    }
 }

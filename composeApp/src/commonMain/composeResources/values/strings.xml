@@ -10,6 +10,8 @@
     <string name="close">Close</string>
     <string name="db_example">DB example</string>
     <string name="db_example_input_label">Entry name</string>
+    <string name="add">Add</string>
+    <string name="delete_all">Delete all</string>
 
     <string name="settings_screen_title">I am settings screen!</string>
     <string name="nested_settings_screen_title">I am nested settings screen!</string>
@@ -20,9 +22,6 @@
     <string name="unknown_error">Unknown error</string>
     <string name="network_example_screen_title">I am network screen!</string>
     <string name="request_images">Request images</string>
-    <string name="add">Add</string>
-    <string name="delete">Delete</string>
-    <string name="delete_all">Delete all</string>
     <string name="theme">Theme</string>
     <string name="theme_light">Light</string>
     <string name="theme_dark">Dark</string>

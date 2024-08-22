@@ -76,7 +76,7 @@ class DBExampleViewModel : BaseUiViewModel<DBExampleViewModel.UiState>() {
 
     fun addData() {
         viewModelScope.launch {
-            if (nameInput.isBlank()) return@launch
+            if (nameInput.isBlank() || mutableUiState.value.isLoading) return@launch
 
             setProgress(true)
             val data = DBExampleData(

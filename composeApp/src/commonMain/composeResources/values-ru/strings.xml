@@ -10,6 +10,8 @@
     <string name="close">Закрыть</string>
     <string name="db_example">Пример БД</string>
     <string name="db_example_input_label">Имя записи</string>
+    <string name="add">Добавить</string>
+    <string name="delete_all">Удалить всё</string>
 
     <string name="settings_screen_title">Я экран настроек!</string>
     <string name="nested_settings_screen_title">Я вложенный экран настроек!</string>
@@ -20,9 +22,6 @@
     <string name="unknown_error">Неизвестная ошибка</string>
     <string name="network_example_screen_title">Я экран сети!</string>
     <string name="request_images">Запросить картинки</string>
-    <string name="add">Добавить</string>
-    <string name="delete">Удалить</string>
-    <string name="delete_all">Удалить всё</string>
     <string name="theme">Тема</string>
     <string name="theme_light">Светлая</string>
     <string name="theme_dark">Темная</string>

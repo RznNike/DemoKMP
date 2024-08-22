@@ -2,6 +2,7 @@ package ru.rznnike.demokmp.app.ui.screen.dbexample
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.VerticalScrollbar
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -20,6 +21,8 @@ import org.jetbrains.compose.resources.stringResource
 import ru.rznnike.demokmp.app.navigation.NavigationScreen
 import ru.rznnike.demokmp.app.navigation.getScreenNavigator
 import ru.rznnike.demokmp.app.ui.item.DBExampleDataItem
+import ru.rznnike.demokmp.app.ui.theme.localCustomColorScheme
+import ru.rznnike.demokmp.app.ui.theme.surfaceContainerA50Light
 import ru.rznnike.demokmp.app.ui.view.Toolbar
 import ru.rznnike.demokmp.app.ui.view.ToolbarButton
 import ru.rznnike.demokmp.app.utils.TextR
@@ -123,8 +126,7 @@ class DBExampleScreen : NavigationScreen() {
                     .weight(1f)
             ) {
                 val state = rememberLazyListState()
-                LazyColumn(
-                    state = state,
+                Box(
                     modifier = Modifier
                         .padding(horizontal = 16.dp)
                         .fillMaxSize()
@@ -133,13 +135,31 @@ class DBExampleScreen : NavigationScreen() {
                                 bottomStart = CornerSize(0.dp),
                                 bottomEnd = CornerSize(0.dp)
                             )
-                        ),
-                    contentPadding = PaddingValues(bottom = 16.dp),
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                        )
                 ) {
-                    items(dbExampleUiState.data) { item ->
-                        DBExampleDataItem(item) {
-                            dbExampleViewModel.deleteData(item)
+                    LazyColumn(
+                        state = state,
+                        modifier = Modifier.fillMaxSize(),
+                        contentPadding = PaddingValues(bottom = 16.dp),
+                        verticalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+                        items(dbExampleUiState.data) { item ->
+                            DBExampleDataItem(item) {
+                                dbExampleViewModel.deleteData(item)
+                            }
+                        }
+                    }
+
+                    if (dbExampleUiState.isLoading) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .background(localCustomColorScheme.current.surfaceContainerA50),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            CircularProgressIndicator(
+                                modifier = Modifier.size(50.dp)
+                            )
                         }
                     }
                 }
