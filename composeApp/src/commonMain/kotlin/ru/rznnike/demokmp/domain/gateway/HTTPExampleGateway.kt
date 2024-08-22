@@ -1,5 +1,5 @@
 package ru.rznnike.demokmp.domain.gateway
 
-interface NetworkExampleGateway {
+interface HTTPExampleGateway {
     suspend fun getRandomImageLinks(count: Int): List<String>
 }

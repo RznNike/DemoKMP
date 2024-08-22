@@ -2,7 +2,7 @@ package ru.rznnike.demokmp.app.di
 
 import org.koin.dsl.module
 import ru.rznnike.demokmp.domain.interactor.dbexample.*
-import ru.rznnike.demokmp.domain.interactor.networkexample.GetRandomImageLinksUseCase
+import ru.rznnike.demokmp.domain.interactor.httpexample.GetRandomImageLinksUseCase
 import ru.rznnike.demokmp.domain.interactor.preferences.*
 
 internal val interactorModule = module {

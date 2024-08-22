@@ -21,7 +21,7 @@ import ru.rznnike.demokmp.app.common.notifier.Notifier
 import ru.rznnike.demokmp.app.navigation.NavigationScreen
 import ru.rznnike.demokmp.app.navigation.getFlowNavigator
 import ru.rznnike.demokmp.app.ui.screen.dbexample.DBExampleFlow
-import ru.rznnike.demokmp.app.ui.screen.networkexample.NetworkExampleFlow
+import ru.rznnike.demokmp.app.ui.screen.httpexample.HTTPExampleFlow
 import ru.rznnike.demokmp.app.ui.screen.settings.SettingsFlow
 import ru.rznnike.demokmp.app.ui.theme.bodyLargeItalic
 import ru.rznnike.demokmp.app.ui.view.Toolbar
@@ -79,8 +79,8 @@ class HomeScreen : NavigationScreen() {
                     MenuButton(Res.string.open_settings) {
                         flowNavigator.open(SettingsFlow())
                     }
-                    MenuButton(Res.string.open_network_example) {
-                        flowNavigator.open(NetworkExampleFlow())
+                    MenuButton(Res.string.open_http_example) {
+                        flowNavigator.open(HTTPExampleFlow())
                     }
                     MenuButton(Res.string.open_db_example) {
                         flowNavigator.open(DBExampleFlow())
