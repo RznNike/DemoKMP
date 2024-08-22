@@ -35,8 +35,7 @@ fun Toolbar(
         ) {
             Box(
                 modifier = Modifier
-                    .width(32.dp)
-                    .height(32.dp)
+                    .size(32.dp)
                     .padding(4.dp)
                     .onClick {
                         button?.onClick?.invoke()

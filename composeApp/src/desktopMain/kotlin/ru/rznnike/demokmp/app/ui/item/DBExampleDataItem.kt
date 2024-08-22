@@ -1,21 +1,20 @@
 package ru.rznnike.demokmp.app.ui.item
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import demokmp.composeapp.generated.resources.Res
-import demokmp.composeapp.generated.resources.delete
-import ru.rznnike.demokmp.app.utils.TextR
+import demokmp.composeapp.generated.resources.ic_delete
+import org.jetbrains.compose.resources.painterResource
 import ru.rznnike.demokmp.domain.model.dbexample.DBExampleData
 
 @Composable
@@ -23,27 +22,46 @@ fun DBExampleDataItem(
     data: DBExampleData,
     onDeleteClick: () -> Unit
 ) {
-    Row {
-        Text(
-            text = data.id.toString(),
-            style = TextStyle(fontSize = 20.sp),
+    Surface(
+        shape = MaterialTheme.shapes.medium,
+        color = MaterialTheme.colorScheme.surfaceContainer
+    ) {
+        Row(
             modifier = Modifier
-                .width(50.dp)
-                .align(Alignment.CenterVertically)
-        )
-        Text(
-            text = data.name,
-            style = TextStyle(fontSize = 20.sp),
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f)
-                .align(Alignment.CenterVertically)
-        )
-        Button(
-            modifier = Modifier.padding(start = 10.dp),
-            onClick = onDeleteClick
+                .padding(16.dp)
+                .fillMaxWidth(),
         ) {
-            TextR(Res.string.delete)
+            Text(
+                text = data.id.toString(),
+                modifier = Modifier
+                    .width(50.dp)
+                    .align(Alignment.CenterVertically),
+                style = MaterialTheme.typography.titleLarge
+            )
+            Spacer(Modifier.width(8.dp))
+            Text(
+                text = data.name,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
+                    .align(Alignment.CenterVertically),
+                style = MaterialTheme.typography.titleLarge
+            )
+            Spacer(Modifier.width(16.dp))
+            Button(
+                modifier = Modifier
+                    .defaultMinSize(minWidth = 1.dp, minHeight = 1.dp),
+                contentPadding = PaddingValues(8.dp),
+                onClick = onDeleteClick
+            ) {
+                Image(
+                    modifier = Modifier
+                        .size(24.dp),
+                    painter = painterResource(Res.drawable.ic_delete),
+                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onPrimary),
+                    contentDescription = null
+                )
+            }
         }
     }
 }

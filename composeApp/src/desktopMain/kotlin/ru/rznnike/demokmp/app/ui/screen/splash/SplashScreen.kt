@@ -50,9 +50,7 @@ class SplashScreen : NavigationScreen() {
             contentAlignment = Alignment.Center
         ) {
             Image(
-                modifier = Modifier
-                    .width(300.dp)
-                    .height(300.dp),
+                modifier = Modifier.size(300.dp),
                 alpha = imageAlpha,
                 painter = painterResource(Res.drawable.ic_compose),
                 contentDescription = null
