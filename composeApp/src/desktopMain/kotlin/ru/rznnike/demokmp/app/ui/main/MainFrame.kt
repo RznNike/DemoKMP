@@ -4,6 +4,7 @@ import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
 import demokmp.composeapp.generated.resources.Res
 import demokmp.composeapp.generated.resources.close
 import kotlinx.coroutines.launch
@@ -18,6 +19,7 @@ import ru.rznnike.demokmp.app.ui.dialog.common.AlertDialogType
 import ru.rznnike.demokmp.app.ui.dialog.common.CommonAlertDialog
 import ru.rznnike.demokmp.app.ui.screen.splash.SplashFlow
 import ru.rznnike.demokmp.app.ui.theme.AppTheme
+import ru.rznnike.demokmp.app.utils.clearFocusOnTap
 import ru.rznnike.demokmp.app.viewmodel.configuration.AppConfigurationViewModel
 import ru.rznnike.demokmp.domain.common.CoroutineScopeProvider
 import ru.rznnike.demokmp.domain.model.common.Theme
@@ -105,6 +107,7 @@ fun mainFrame() {
         darkTheme = darkTheme
     ) {
         Scaffold(
+            modifier = Modifier.clearFocusOnTap(),
             snackbarHost = {
                 SnackbarHost(hostState = snackbarHostState) {
                     Snackbar(
