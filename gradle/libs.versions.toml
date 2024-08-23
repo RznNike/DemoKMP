@@ -6,8 +6,8 @@ koin-compose = "1.2.0-Beta5"
 ktorfit = "2.0.1"
 ktor = "2.3.12"
 coil = "3.0.0-alpha10"
-room = "2.7.0-alpha06"
-sqlite = "2.5.0-alpha06"
+room = "2.7.0-alpha07"
+sqlite = "2.5.0-alpha07"
 
 
 [libraries]
@@ -52,7 +52,7 @@ ktor-logging = { module = "io.ktor:ktor-client-logging", version.ref = "ktor" }
 
 # Logging (for Ktor)
 # https://mvnrepository.com/artifact/ch.qos.logback/logback-classic
-logback = { module = "ch.qos.logback:logback-classic", version = "1.5.6" }
+logback = { module = "ch.qos.logback:logback-classic", version = "1.5.7" }
 
 # Image loader
 # https://github.com/coil-kt/coil
