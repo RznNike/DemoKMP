@@ -35,11 +35,11 @@ import ru.rznnike.demokmp.app.viewmodel.configuration.AppConfigurationViewModel
 import java.awt.Dimension
 import java.util.*
 
-private val WINDOW_START_WIDTH_DP = 800.dp
-private val WINDOW_START_HEIGHT_DP = 800.dp
+private val WINDOW_START_WIDTH_DP = 600.dp
+private val WINDOW_START_HEIGHT_DP = 600.dp
 
-private val WINDOW_MIN_WIDTH_DP = 300.dp
-private val WINDOW_MIN_HEIGHT_DP = 300.dp
+private val WINDOW_MIN_WIDTH_DP = 500.dp
+private val WINDOW_MIN_HEIGHT_DP = 500.dp
 
 fun main() = application {
     initKoin()

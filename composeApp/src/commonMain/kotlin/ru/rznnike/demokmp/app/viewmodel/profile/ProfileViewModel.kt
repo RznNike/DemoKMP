@@ -6,7 +6,7 @@ import androidx.compose.runtime.setValue
 import ru.rznnike.demokmp.app.common.viewmodel.BaseViewModel
 
 class ProfileViewModel : BaseViewModel() {
-    var nameInput by mutableStateOf("")
+    var nameInput by mutableStateOf("John Wick")
         private set
 
     fun onNameInput(newValue: String) {

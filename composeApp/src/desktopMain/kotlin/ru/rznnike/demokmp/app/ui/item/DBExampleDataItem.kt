@@ -42,7 +42,6 @@ fun DBExampleDataItem(
             Text(
                 text = data.name,
                 modifier = Modifier
-                    .fillMaxWidth()
                     .weight(1f)
                     .align(Alignment.CenterVertically),
                 style = MaterialTheme.typography.titleLarge

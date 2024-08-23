@@ -3,6 +3,7 @@ package ru.rznnike.demokmp.app.ui.view
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.onClick
 import androidx.compose.material3.MaterialTheme
@@ -61,7 +62,6 @@ fun Toolbar(
             text = title,
             style = MaterialTheme.typography.titleLarge,
             modifier = Modifier
-                .fillMaxWidth()
                 .weight(1f)
                 .align(Alignment.CenterVertically),
             textAlign = TextAlign.Center
