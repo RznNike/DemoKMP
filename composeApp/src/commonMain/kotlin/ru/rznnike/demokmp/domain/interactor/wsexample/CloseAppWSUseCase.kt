@@ -1,14 +1,13 @@
 package ru.rznnike.demokmp.domain.interactor.wsexample
 
 import ru.rznnike.demokmp.domain.common.DispatcherProvider
-import ru.rznnike.demokmp.domain.common.interactor.FlowUseCase
+import ru.rznnike.demokmp.domain.common.interactor.UseCase
 import ru.rznnike.demokmp.domain.gateway.WebSocketExampleGateway
-import ru.rznnike.demokmp.domain.model.wsexample.WebSocketMessage
 
-class OpenAppWSSessionUseCase(
+class CloseAppWSUseCase(
     private val webSocketExampleGateway: WebSocketExampleGateway,
     dispatcherProvider: DispatcherProvider
-) : FlowUseCase<WebSocketMessage>(dispatcherProvider) {
+) : UseCase<Unit>(dispatcherProvider) {
     override suspend fun execute() =
-        webSocketExampleGateway.openSession()
+        webSocketExampleGateway.closeAppWS()
 }

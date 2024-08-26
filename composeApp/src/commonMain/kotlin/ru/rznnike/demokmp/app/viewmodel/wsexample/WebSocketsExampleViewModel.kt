@@ -11,10 +11,11 @@ import org.koin.core.component.inject
 import ru.rznnike.demokmp.app.common.notifier.Notifier
 import ru.rznnike.demokmp.app.common.viewmodel.BaseUiViewModel
 import ru.rznnike.demokmp.app.error.ErrorHandler
+import ru.rznnike.demokmp.data.network.websocket.WebSocketConnectionState
 import ru.rznnike.demokmp.domain.common.CoroutineScopeProvider
 import ru.rznnike.demokmp.domain.common.DispatcherProvider
-import ru.rznnike.demokmp.domain.interactor.wsexample.CloseAppWSSessionUseCase
-import ru.rznnike.demokmp.domain.interactor.wsexample.OpenAppWSSessionUseCase
+import ru.rznnike.demokmp.domain.interactor.wsexample.CloseAppWSUseCase
+import ru.rznnike.demokmp.domain.interactor.wsexample.OpenAppWSUseCase
 import ru.rznnike.demokmp.domain.interactor.wsexample.SendAppWSMessageUseCase
 import ru.rznnike.demokmp.domain.model.wsexample.WebSocketMessage
 
@@ -23,8 +24,8 @@ class WebSocketsExampleViewModel : BaseUiViewModel<WebSocketsExampleViewModel.Ui
     private val errorHandler: ErrorHandler by inject()
     private val dispatcherProvider: DispatcherProvider by inject()
     private val coroutineScopeProvider: CoroutineScopeProvider by inject()
-    private val openAppWSSessionUseCase: OpenAppWSSessionUseCase by inject()
-    private val closeAppWSSessionUseCase: CloseAppWSSessionUseCase by inject()
+    private val openAppWSUseCase: OpenAppWSUseCase by inject()
+    private val closeAppWSUseCase: CloseAppWSUseCase by inject()
     private val sendAppWSMessageUseCase: SendAppWSMessageUseCase by inject()
 
     var messageInput by mutableStateOf("")
@@ -32,23 +33,44 @@ class WebSocketsExampleViewModel : BaseUiViewModel<WebSocketsExampleViewModel.Ui
 
     init {
         viewModelScope.launch(dispatcherProvider.default) {
-            openAppWSSessionUseCase().cancellable().collect { message ->
-                mutableUiState.update { currentState ->
-                    currentState.copy(
-                        messages = currentState.messages + message
-                    )
-                }
-            }
+            openAppWSUseCase().process(
+                { result ->
+                    viewModelScope.launch {
+                        result.messages.cancellable().collect { message ->
+                            mutableUiState.update { currentState ->
+                                currentState.copy(
+                                    messages = currentState.messages + message
+                                )
+                            }
+                        }
+                    }
+                    viewModelScope.launch {
+                        result.connectionState.collect { connectionState ->
+                            mutableUiState.update { currentState ->
+                                currentState.copy(
+                                    connectionState = connectionState
+                                )
+                            }
+                        }
+                    }
+                }, ::onError
+            )
         }
     }
 
     override fun onCleared() {
         coroutineScopeProvider.default.launch {
-            closeAppWSSessionUseCase()
+            closeAppWSUseCase()
         }
     }
 
     override fun provideDefaultUIState() = UiState()
+
+    private suspend fun onError(error: Throwable) {
+        errorHandler.proceed(error) { message ->
+            notifier.sendAlert(message)
+        }
+    }
 
     fun onMessageInput(newValue: String) {
         messageInput = newValue
@@ -80,6 +102,7 @@ class WebSocketsExampleViewModel : BaseUiViewModel<WebSocketsExampleViewModel.Ui
     }
 
     data class UiState(
-        val messages: List<WebSocketMessage> = emptyList()
+        val messages: List<WebSocketMessage> = emptyList(),
+        val connectionState: WebSocketConnectionState = WebSocketConnectionState.DISCONNECTED
     )
 }

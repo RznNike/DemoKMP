@@ -30,4 +30,6 @@
     <string name="ws_example">Пример WebSockets</string>
     <string name="message">Сообщение</string>
     <string name="send">Отправить</string>
+    <string name="no_internet_connection">Нет доступа в Интернет</string>
+    <string name="connection">Подключение</string>
 </resources>

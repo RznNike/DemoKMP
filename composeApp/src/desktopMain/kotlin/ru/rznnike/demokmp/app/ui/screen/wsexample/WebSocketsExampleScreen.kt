@@ -2,24 +2,25 @@ package ru.rznnike.demokmp.app.ui.screen.wsexample
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.VerticalScrollbar
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollbarAdapter
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.CornerSize
-import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Surface
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.key.*
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import demokmp.composeapp.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
@@ -30,6 +31,7 @@ import ru.rznnike.demokmp.app.ui.view.Toolbar
 import ru.rznnike.demokmp.app.ui.view.ToolbarButton
 import ru.rznnike.demokmp.app.utils.TextR
 import ru.rznnike.demokmp.app.viewmodel.wsexample.WebSocketsExampleViewModel
+import ru.rznnike.demokmp.data.network.websocket.WebSocketConnectionState
 
 class WebSocketsExampleScreen : NavigationScreen() {
     @Preview
@@ -125,7 +127,7 @@ class WebSocketsExampleScreen : NavigationScreen() {
                     LazyColumn(
                         state = state,
                         modifier = Modifier.fillMaxSize(),
-                        contentPadding = PaddingValues(bottom = 16.dp),
+                        contentPadding = PaddingValues(bottom = 64.dp),
                         verticalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
                         items(webSocketsExampleUiState.messages) { item ->
@@ -139,6 +141,40 @@ class WebSocketsExampleScreen : NavigationScreen() {
                         .fillMaxHeight(),
                     adapter = rememberScrollbarAdapter(state)
                 )
+
+                Row(
+                    modifier = Modifier
+                        .padding(bottom = 16.dp)
+                        .background(
+                            color = MaterialTheme.colorScheme.surfaceContainerHigh,
+                            shape = MaterialTheme.shapes.medium
+                        )
+                        .padding(8.dp)
+                        .align(Alignment.BottomCenter),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(
+                        text = "${stringResource(Res.string.connection)}:",
+                        style = MaterialTheme.typography.bodyLarge.let {
+                            it.copy(
+                                lineHeight = it.fontSize
+                            )
+                        }
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Box(
+                        modifier = Modifier
+                            .size(16.dp)
+                            .background(
+                                color = if (webSocketsExampleUiState.connectionState == WebSocketConnectionState.CONNECTED) {
+                                    Color.Green
+                                } else {
+                                    Color.Red
+                                },
+                                shape = CircleShape
+                            )
+                    )
+                }
             }
         }
     }

@@ -30,4 +30,6 @@
     <string name="ws_example">WebSockets example</string>
     <string name="message">Message</string>
     <string name="send">Send</string>
+    <string name="no_internet_connection">No Internet connection</string>
+    <string name="connection">Connection</string>
 </resources>

@@ -10,5 +10,5 @@ class SendAppWSMessageUseCase(
     dispatcherProvider: DispatcherProvider
 ) : UseCaseWithParams<WebSocketMessage, Unit>(dispatcherProvider) {
     override suspend fun execute(parameters: WebSocketMessage) =
-        webSocketExampleGateway.sendMessage(parameters)
+        webSocketExampleGateway.sendAppWSMessage(parameters)
 }
