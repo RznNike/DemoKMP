@@ -22,7 +22,6 @@
     <string name="theme_light">Светлая</string>
     <string name="theme_dark">Темная</string>
     <string name="theme_auto">Авто</string>
-    <string name="theme_changing_message">Перезапустите приложение, чтобы полностью применить новую тему</string>
     <string name="nested_settings_screen_title">Я вложенный экран настроек!</string>
     <string name="open_nested_settings">Открыть вложенные настройки</string>
     <string name="to_main_screen">На главный экран</string>

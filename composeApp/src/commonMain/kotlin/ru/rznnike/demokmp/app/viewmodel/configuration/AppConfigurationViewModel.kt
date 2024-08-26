@@ -1,12 +1,9 @@
 package ru.rznnike.demokmp.app.viewmodel.configuration
 
 import androidx.lifecycle.viewModelScope
-import demokmp.composeapp.generated.resources.Res
-import demokmp.composeapp.generated.resources.theme_changing_message
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.koin.core.component.inject
-import ru.rznnike.demokmp.app.common.notifier.Notifier
 import ru.rznnike.demokmp.app.common.viewmodel.BaseUiViewModel
 import ru.rznnike.demokmp.domain.common.DispatcherProvider
 import ru.rznnike.demokmp.domain.interactor.preferences.GetLanguageUseCase
@@ -17,7 +14,6 @@ import ru.rznnike.demokmp.domain.model.common.Language
 import ru.rznnike.demokmp.domain.model.common.Theme
 
 class AppConfigurationViewModel : BaseUiViewModel<AppConfigurationViewModel.UiState>() {
-    private val notifier: Notifier by inject()
     private val dispatcherProvider: DispatcherProvider by inject()
     private val getLanguageUseCase: GetLanguageUseCase by inject()
     private val setLanguageUseCase: SetLanguageUseCase by inject()
@@ -64,8 +60,6 @@ class AppConfigurationViewModel : BaseUiViewModel<AppConfigurationViewModel.UiSt
                         theme = newValue
                     )
                 }
-
-                notifier.sendAlert(Res.string.theme_changing_message)
             }
         }
     }

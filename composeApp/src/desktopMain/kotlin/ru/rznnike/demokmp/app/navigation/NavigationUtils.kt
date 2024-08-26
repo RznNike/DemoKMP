@@ -7,6 +7,7 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import cafe.adriel.voyager.transitions.FadeTransition
+import ru.rznnike.demokmp.app.ui.theme.AppTheme
 
 @Composable
 fun getFlowNavigator() = FlowNavigator(LocalNavigator.currentOrThrow.parent!!)
@@ -17,8 +18,10 @@ fun getScreenNavigator() = ScreenNavigator(LocalNavigator.currentOrThrow)
 @OptIn(ExperimentalVoyagerApi::class)
 @Composable
 fun createNavigator(screen: Screen) = Navigator(screen) { navigator ->
-    FadeTransition(
-        navigator = navigator,
-        disposeScreenAfterTransitionEnd = true
-    )
+    AppTheme {
+        FadeTransition(
+            navigator = navigator,
+            disposeScreenAfterTransitionEnd = true
+        )
+    }
 }

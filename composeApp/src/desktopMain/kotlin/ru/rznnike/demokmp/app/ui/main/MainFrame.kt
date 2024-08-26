@@ -1,9 +1,11 @@
 package ru.rznnike.demokmp.app.ui.main
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import demokmp.composeapp.generated.resources.Res
 import demokmp.composeapp.generated.resources.close
@@ -20,16 +22,11 @@ import ru.rznnike.demokmp.app.ui.dialog.common.CommonAlertDialog
 import ru.rznnike.demokmp.app.ui.screen.splash.SplashFlow
 import ru.rznnike.demokmp.app.ui.theme.AppTheme
 import ru.rznnike.demokmp.app.utils.clearFocusOnTap
-import ru.rznnike.demokmp.app.viewmodel.configuration.AppConfigurationViewModel
 import ru.rznnike.demokmp.domain.common.CoroutineScopeProvider
-import ru.rznnike.demokmp.domain.model.common.Theme
 
 @Preview
 @Composable
 fun mainFrame() {
-    val appConfigurationViewModel: AppConfigurationViewModel = koinInject()
-    val appConfigurationUiState by appConfigurationViewModel.uiState.collectAsState()
-
     val notifier = koinInject<Notifier>()
     val coroutineScopeProvider = koinInject<CoroutineScopeProvider>()
 
@@ -98,14 +95,7 @@ fun mainFrame() {
         }
     }
 
-    val darkTheme = when (appConfigurationUiState.theme) {
-        Theme.AUTO -> isSystemInDarkTheme()
-        Theme.LIGHT -> false
-        Theme.DARK -> true
-    }
-    AppTheme(
-        darkTheme = darkTheme
-    ) {
+    AppTheme {
         Scaffold(
             modifier = Modifier.clearFocusOnTap(),
             snackbarHost = {

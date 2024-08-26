@@ -4,11 +4,11 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.Immutable
-import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
+import org.koin.compose.koinInject
+import ru.rznnike.demokmp.app.viewmodel.configuration.AppConfigurationViewModel
+import ru.rznnike.demokmp.domain.model.common.Theme
 
 private val lightScheme = lightColorScheme(
     primary = primaryLight,
@@ -103,9 +103,16 @@ val localCustomColorScheme = staticCompositionLocalOf { CustomColorScheme() }
 
 @Composable
 fun AppTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit
 ) {
+    val appConfigurationViewModel: AppConfigurationViewModel = koinInject()
+    val appConfigurationUiState by appConfigurationViewModel.uiState.collectAsState()
+
+    val darkTheme = when (appConfigurationUiState.theme) {
+        Theme.AUTO -> isSystemInDarkTheme()
+        Theme.LIGHT -> false
+        Theme.DARK -> true
+    }
     val colorScheme = if (darkTheme) darkScheme else lightScheme
     val customColorScheme = if (darkTheme) customDarkScheme else customLightScheme
 
