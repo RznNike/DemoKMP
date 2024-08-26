@@ -1,5 +1,5 @@
 [versions]
-kotlin = "2.0.10"
+kotlin = "2.0.20"
 coroutines = "1.8.1"
 voyager = "1.1.0-beta02"
 koin-compose = "1.2.0-Beta5"
@@ -77,7 +77,6 @@ jetbrains-compose = { id = "org.jetbrains.compose", version = "1.6.11" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
-#noinspection GradleDependency
 android-application = { id = "com.android.application", version = "8.5.2" }
 
 # BuildConfig
@@ -86,8 +85,7 @@ buildkonfig = { id = "com.codingfeline.buildkonfig", version = "0.15.1" }
 
 # KSP
 # https://mvnrepository.com/artifact/com.google.devtools.ksp/com.google.devtools.ksp.gradle.plugin?repo=central
-#noinspection GradleDependency
-ksp = { id = "com.google.devtools.ksp", version = "2.0.10-1.0.24" }
+ksp = { id = "com.google.devtools.ksp", version = "2.0.20-1.0.24" }
 
 # Ktorfit - network
 ktorfit = { id = "de.jensklingenberg.ktorfit", version.ref = "ktorfit" }
