@@ -26,4 +26,10 @@
     <string name="nested_settings">Nested settings</string>
     <string name="open_nested_settings">Open nested settings</string>
     <string name="to_main_screen">To main screen</string>
+    <string name="open_ws_example">Open WS example</string>
+    <string name="ws_example">WebSockets example</string>
+    <string name="message">Message</string>
+    <string name="send">Send</string>
+    <string name="no_internet_connection">No Internet connection</string>
+    <string name="connection">Connection</string>
 </resources>

@@ -42,10 +42,12 @@ kotlin {
             implementation(libs.kotlinx.serialization)
 
             implementation(libs.ktorfit)
+            implementation(libs.ktor.core)
             implementation(libs.ktor.okhttp)
             implementation(libs.ktor.negotiation)
             implementation(libs.ktor.json)
             implementation(libs.ktor.logging)
+            implementation(libs.ktor.websockets)
             implementation(libs.logback)
 
             implementation(libs.room.runtime)
@@ -115,5 +117,6 @@ buildkonfig {
     defaultConfigs {
         buildConfigField(FieldSpec.Type.BOOLEAN, "DEBUG", "true")
         buildConfigField(FieldSpec.Type.STRING, "API_MAIN", "https://dog.ceo/api/")
+        buildConfigField(FieldSpec.Type.STRING, "API_WEBSOCKETS", "wss://echo.websocket.org/")
     }
 }

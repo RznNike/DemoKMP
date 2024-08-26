@@ -23,6 +23,7 @@ import ru.rznnike.demokmp.app.navigation.getFlowNavigator
 import ru.rznnike.demokmp.app.ui.screen.dbexample.DBExampleFlow
 import ru.rznnike.demokmp.app.ui.screen.httpexample.HTTPExampleFlow
 import ru.rznnike.demokmp.app.ui.screen.settings.SettingsFlow
+import ru.rznnike.demokmp.app.ui.screen.wsexample.WebSocketsExampleFlow
 import ru.rznnike.demokmp.app.ui.theme.bodyLargeItalic
 import ru.rznnike.demokmp.app.ui.view.Toolbar
 import ru.rznnike.demokmp.app.utils.TextR
@@ -81,6 +82,9 @@ class HomeScreen : NavigationScreen() {
                     }
                     MenuButton(Res.string.open_http_example) {
                         flowNavigator.open(HTTPExampleFlow())
+                    }
+                    MenuButton(Res.string.open_ws_example) {
+                        flowNavigator.open(WebSocketsExampleFlow())
                     }
                     MenuButton(Res.string.open_db_example) {
                         flowNavigator.open(DBExampleFlow())
