@@ -14,6 +14,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.input.key.*
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import demokmp.composeapp.generated.resources.*
@@ -101,7 +102,16 @@ class DBExampleScreen : NavigationScreen() {
                             TextR(Res.string.db_example_input_label)
                         },
                         modifier = Modifier
-                            .weight(1f),
+                            .weight(1f)
+                            .onKeyEvent { keyEvent ->
+                                when {
+                                    (keyEvent.key.nativeKeyCode == Key.Enter.nativeKeyCode) && (keyEvent.type == KeyEventType.KeyUp) -> {
+                                        dbExampleViewModel.addData()
+                                        true
+                                    }
+                                    else -> false
+                                }
+                            },
                         onValueChange = dbExampleViewModel::onNameInput
                     )
                     Spacer(Modifier.width(16.dp))
