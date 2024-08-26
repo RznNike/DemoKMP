@@ -8,21 +8,24 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import ru.rznnike.demokmp.domain.model.wsexample.WebSocketMessage
 
 @Composable
 fun WebSocketMessageItem(
-    message: String
+    message: WebSocketMessage
 ) {
     Surface(
         shape = MaterialTheme.shapes.medium,
         color = MaterialTheme.colorScheme.surfaceContainer
     ) {
         Text(
-            text = message,
+            text = message.text,
             modifier = Modifier
                 .padding(16.dp)
-                .fillMaxWidth()
+                .fillMaxWidth(),
+            textAlign = if (message.isIncoming) TextAlign.Start else TextAlign.End,
         )
     }
 }
@@ -30,5 +33,10 @@ fun WebSocketMessageItem(
 @Preview
 @Composable
 private fun WebSocketMessageItemPreview() {
-    WebSocketMessageItem("Test")
+    WebSocketMessageItem(
+        WebSocketMessage(
+            text = "Test",
+            isIncoming = true
+        )
+    )
 }

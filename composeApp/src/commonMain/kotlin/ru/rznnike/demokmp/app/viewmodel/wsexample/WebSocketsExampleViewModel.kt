@@ -4,6 +4,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.flow.cancellable
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.koin.core.component.inject
@@ -15,7 +16,7 @@ import ru.rznnike.demokmp.domain.common.DispatcherProvider
 import ru.rznnike.demokmp.domain.interactor.wsexample.CloseAppWSSessionUseCase
 import ru.rznnike.demokmp.domain.interactor.wsexample.OpenAppWSSessionUseCase
 import ru.rznnike.demokmp.domain.interactor.wsexample.SendAppWSMessageUseCase
-import ru.rznnike.demokmp.domain.utils.logger
+import ru.rznnike.demokmp.domain.model.wsexample.WebSocketMessage
 
 class WebSocketsExampleViewModel : BaseUiViewModel<WebSocketsExampleViewModel.UiState>() {
     private val notifier: Notifier by inject()
@@ -31,17 +32,13 @@ class WebSocketsExampleViewModel : BaseUiViewModel<WebSocketsExampleViewModel.Ui
 
     init {
         viewModelScope.launch(dispatcherProvider.default) {
-            openAppWSSessionUseCase(
-                OpenAppWSSessionUseCase.Parameters(
-                    onMessage = { message ->
-                        mutableUiState.update { currentState ->
-                            currentState.copy(
-                                messages = currentState.messages + message
-                            )
-                        }
-                    }
-                )
-            )
+            openAppWSSessionUseCase().cancellable().collect { message ->
+                mutableUiState.update { currentState ->
+                    currentState.copy(
+                        messages = currentState.messages + message
+                    )
+                }
+            }
         }
     }
 
@@ -61,9 +58,18 @@ class WebSocketsExampleViewModel : BaseUiViewModel<WebSocketsExampleViewModel.Ui
         viewModelScope.launch {
             if (messageInput.isBlank()) return@launch
 
-            sendAppWSMessageUseCase(messageInput).process(
+            val message = WebSocketMessage(
+                text = messageInput,
+                isIncoming = false
+            )
+            sendAppWSMessageUseCase(message).process(
                 {
                     messageInput = ""
+                    mutableUiState.update { currentState ->
+                        currentState.copy(
+                            messages = currentState.messages + message
+                        )
+                    }
                 }, { error ->
                     errorHandler.proceed(error) { message ->
                         notifier.sendAlert(message)
@@ -74,6 +80,6 @@ class WebSocketsExampleViewModel : BaseUiViewModel<WebSocketsExampleViewModel.Ui
     }
 
     data class UiState(
-        val messages: List<String> = emptyList()
+        val messages: List<WebSocketMessage> = emptyList()
     )
 }

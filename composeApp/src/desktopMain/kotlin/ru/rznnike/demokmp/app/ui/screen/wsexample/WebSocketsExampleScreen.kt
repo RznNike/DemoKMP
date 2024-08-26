@@ -6,10 +6,12 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import demokmp.composeapp.generated.resources.*
@@ -97,12 +99,12 @@ class WebSocketsExampleScreen : NavigationScreen() {
                     modifier = Modifier
                         .padding(horizontal = 16.dp)
                         .fillMaxSize()
-//                        .clip(
-//                            MaterialTheme.shapes.medium.copy(
-//                                bottomStart = CornerSize(0.dp),
-//                                bottomEnd = CornerSize(0.dp)
-//                            )
-//                        )
+                        .clip(
+                            MaterialTheme.shapes.medium.copy(
+                                bottomStart = CornerSize(0.dp),
+                                bottomEnd = CornerSize(0.dp)
+                            )
+                        )
                 ) {
                     LazyColumn(
                         state = state,
