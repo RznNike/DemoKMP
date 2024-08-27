@@ -41,9 +41,9 @@ private val WINDOW_START_HEIGHT_DP = 600.dp
 private val WINDOW_MIN_WIDTH_DP = 500.dp
 private val WINDOW_MIN_HEIGHT_DP = 500.dp
 
-fun main() = application {
+fun main(args: Array<String>) = application {
     initKoin()
-    startUI()
+    startUI(args)
 }
 
 fun initKoin() {
@@ -55,12 +55,14 @@ fun initKoin() {
 
 @OptIn(ExperimentalVoyagerApi::class)
 @Composable
-private fun ApplicationScope.startUI() {
+private fun ApplicationScope.startUI(args: Array<String>) {
     KoinContext {
         val notifier: Notifier = koinInject()
 
         val appConfigurationViewModel: AppConfigurationViewModel = koinInject()
         val appConfiguration by appConfigurationViewModel.uiState.collectAsState()
+
+        appConfigurationViewModel.setArgs(args)
 
         val state = rememberWindowState(
             size = DpSize(

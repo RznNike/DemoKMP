@@ -33,12 +33,16 @@ import ru.rznnike.demokmp.app.ui.view.Toolbar
 import ru.rznnike.demokmp.app.utils.TextR
 import ru.rznnike.demokmp.app.utils.getMacAddress
 import ru.rznnike.demokmp.app.utils.platformName
+import ru.rznnike.demokmp.app.viewmodel.configuration.AppConfigurationViewModel
 
 class HomeScreen : NavigationScreen() {
     @OptIn(ExperimentalLayoutApi::class)
     @Preview
     @Composable
     override fun Content() {
+        val appConfigurationViewModel: AppConfigurationViewModel = koinInject()
+        val appConfiguration by appConfigurationViewModel.uiState.collectAsState()
+
         val notifier: Notifier = koinInject()
 
         val flowNavigator = getFlowNavigator()
@@ -132,7 +136,7 @@ class HomeScreen : NavigationScreen() {
         }
 
         if (showAboutDialog) {
-            val details = "%s: %s.%d%s\n%s: %s\n%s: %s".format(
+            val details = "%s: %s.%d%s\n%s: %s\n%s: %s\n%s: %s".format(
                 stringResource(Res.string.version),
                 BuildKonfig.VERSION_NAME,
                 BuildKonfig.VERSION_CODE,
@@ -140,7 +144,9 @@ class HomeScreen : NavigationScreen() {
                 stringResource(Res.string.environment),
                 platformName,
                 stringResource(Res.string.mac),
-                macAddress
+                macAddress,
+                stringResource(Res.string.launch_args),
+                appConfiguration.args.joinToString()
             )
             CommonAlertDialog(
                 type = AlertDialogType.HORIZONTAL,

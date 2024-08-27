@@ -64,7 +64,18 @@ class AppConfigurationViewModel : BaseUiViewModel<AppConfigurationViewModel.UiSt
         }
     }
 
+    fun setArgs(newValue: Array<String>) {
+        viewModelScope.launch {
+            mutableUiState.update { currentState ->
+                currentState.copy(
+                    args = newValue.toList()
+                )
+            }
+        }
+    }
+
     data class UiState(
+        val args: List<String> = emptyList(),
         val language: Language = Language.default,
         val theme: Theme = Theme.default,
         val loaded: Boolean = false

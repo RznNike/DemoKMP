@@ -35,4 +35,5 @@
     <string name="version">Version</string>
     <string name="environment">Environment</string>
     <string name="mac">MAC</string>
+    <string name="launch_args">Launch arguments</string>
 </resources>
