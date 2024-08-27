@@ -78,18 +78,22 @@ dependencies {
     add("kspDesktop", libs.room.compiler)
 }
 
+private val globalPackageName = "ru.rznnike.demokmp"
+private val globalVersionName = "1.0.0"
+private val globalVersionCode = 1
+
 android {
-    namespace = "ru.rznnike.demokmp"
+    namespace = globalPackageName
     compileSdk = 34
 }
 
 compose.desktop.application {
-    mainClass = "ru.rznnike.demokmp.app.MainKt"
+    mainClass = "$globalPackageName.app.MainKt"
 
     nativeDistributions {
         targetFormats(TargetFormat.Msi, TargetFormat.Deb)
-        packageName = "ru.rznnike.demokmp"
-        packageVersion = "1.0.0"
+        packageName = globalPackageName
+        packageVersion = globalVersionName
 
         modules("jdk.unsupported")
 
@@ -112,11 +116,13 @@ compose.desktop.application {
 }
 
 buildkonfig {
-    packageName = "ru.rznnike.demokmp"
+    packageName = globalPackageName
 
     defaultConfigs {
         buildConfigField(FieldSpec.Type.BOOLEAN, "DEBUG", "true")
         buildConfigField(FieldSpec.Type.STRING, "API_MAIN", "https://dog.ceo/api/")
         buildConfigField(FieldSpec.Type.STRING, "API_WEBSOCKETS", "wss://echo.websocket.org/")
+        buildConfigField(FieldSpec.Type.STRING, "VERSION_NAME", globalVersionName)
+        buildConfigField(FieldSpec.Type.INT, "VERSION_CODE", globalVersionCode.toString())
     }
 }

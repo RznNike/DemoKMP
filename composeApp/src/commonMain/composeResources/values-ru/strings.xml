@@ -31,4 +31,7 @@
     <string name="send">Отправить</string>
     <string name="no_internet_connection">Нет доступа в Интернет</string>
     <string name="connection">Подключение</string>
+    <string name="about_app">О приложении</string>
+    <string name="version">Версия</string>
+    <string name="environment">Окружение</string>
 </resources>

@@ -31,4 +31,7 @@
     <string name="send">Send</string>
     <string name="no_internet_connection">No Internet connection</string>
     <string name="connection">Connection</string>
+    <string name="about_app">About app</string>
+    <string name="version">Version</string>
+    <string name="environment">Environment</string>
 </resources>
