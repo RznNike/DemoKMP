@@ -129,7 +129,10 @@ class WebSocketsExampleScreen : NavigationScreen() {
                         contentPadding = PaddingValues(bottom = 64.dp),
                         verticalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
-                        items(webSocketsExampleUiState.messages) { item ->
+                        items(
+                            items = webSocketsExampleUiState.messages,
+                            key = { it.hashCode() }
+                        ) { item ->
                             WebSocketMessageItem(item)
                         }
                     }

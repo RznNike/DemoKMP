@@ -12,3 +12,8 @@ New run configuration -> Gradle -> add args:
 
 ## Run exe from PowerShell with args:
 ```& ".\ru.rznnike.demokmp.exe" "foo foo2" bar```
+
+## Used APIs
+https://dog.ceo/dog-api/
+
+https://websocket.org/tools/websocket-echo-server

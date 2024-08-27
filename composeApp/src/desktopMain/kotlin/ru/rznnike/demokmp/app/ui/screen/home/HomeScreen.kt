@@ -49,7 +49,7 @@ class HomeScreen : NavigationScreen() {
 
         var showAboutDialog by remember { mutableStateOf(false) }
 
-        val macAddress = getMacAddress()
+        val macAddress = remember { getMacAddress() }
 
         Column {
             Spacer(Modifier.height(16.dp))
@@ -73,7 +73,7 @@ class HomeScreen : NavigationScreen() {
                         .fillMaxSize()
                         .padding(bottom = 16.dp),
                     horizontalArrangement = Arrangement.spacedBy(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     @Composable
                     fun MenuButton(text: StringResource, onClick: () -> Unit) {

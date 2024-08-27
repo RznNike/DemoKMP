@@ -3,6 +3,7 @@ package ru.rznnike.demokmp.app.ui.dialog.common
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
@@ -10,6 +11,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun CommonAlertDialog(
     type: AlertDialogType,
@@ -67,17 +69,23 @@ fun CommonAlertDialog(
                 }
 
                 when (type) {
-                    AlertDialogType.HORIZONTAL -> Row(
-                        modifier = Modifier
-                            .padding(top = 16.dp)
-                            .align(Alignment.End)
-                    ) {
-                        actions.reversed().forEachIndexed { index, action ->
-                            DialogButton(
-                                action = action
-                            )
-                            if (index < actions.lastIndex) {
-                                Spacer(modifier = Modifier.width(16.dp))
+                    AlertDialogType.HORIZONTAL -> {
+                        val actionsReversed = remember(actions) { actions.reversed() }
+                        FlowRow(
+                            modifier = Modifier
+                                .padding(top = 16.dp)
+                                .fillMaxWidth()
+                                .align(Alignment.End),
+                            horizontalArrangement = Arrangement.spacedBy(
+                                space = 16.dp,
+                                alignment = Alignment.End
+                            ),
+                            verticalArrangement = Arrangement.spacedBy(16.dp)
+                        ) {
+                            actionsReversed.forEach { action ->
+                                DialogButton(
+                                    action = action
+                                )
                             }
                         }
                     }

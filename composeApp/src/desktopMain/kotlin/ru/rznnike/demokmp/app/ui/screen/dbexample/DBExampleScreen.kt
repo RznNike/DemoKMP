@@ -152,7 +152,10 @@ class DBExampleScreen : NavigationScreen() {
                         contentPadding = PaddingValues(bottom = 16.dp),
                         verticalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
-                        items(dbExampleUiState.data) { item ->
+                        items(
+                            items = dbExampleUiState.data,
+                            key = { it.id }
+                        ) { item ->
                             DBExampleDataItem(item) {
                                 dbExampleViewModel.deleteData(item)
                             }
