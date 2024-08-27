@@ -31,6 +31,7 @@ import ru.rznnike.demokmp.app.ui.screen.wsexample.WebSocketsExampleFlow
 import ru.rznnike.demokmp.app.ui.theme.bodyLargeItalic
 import ru.rznnike.demokmp.app.ui.view.Toolbar
 import ru.rznnike.demokmp.app.utils.TextR
+import ru.rznnike.demokmp.app.utils.getMacAddress
 import ru.rznnike.demokmp.app.utils.platformName
 
 class HomeScreen : NavigationScreen() {
@@ -43,6 +44,8 @@ class HomeScreen : NavigationScreen() {
         val flowNavigator = getFlowNavigator()
 
         var showAboutDialog by remember { mutableStateOf(false) }
+
+        val macAddress = getMacAddress()
 
         Column {
             Spacer(Modifier.height(16.dp))
@@ -73,7 +76,10 @@ class HomeScreen : NavigationScreen() {
                         Button(
                             modifier = Modifier
                                 .weight(1f)
-                                .height(80.dp),
+                                .widthIn(
+                                    min = 150.dp
+                                )
+                                .height(70.dp),
                             onClick = onClick
                         ) {
                             TextR(
@@ -126,13 +132,15 @@ class HomeScreen : NavigationScreen() {
         }
 
         if (showAboutDialog) {
-            val details = "%s: %s.%d%s\n%s: %s".format(
+            val details = "%s: %s.%d%s\n%s: %s\n%s: %s".format(
                 stringResource(Res.string.version),
                 BuildKonfig.VERSION_NAME,
                 BuildKonfig.VERSION_CODE,
                 if (BuildKonfig.DEBUG) " debug" else "",
                 stringResource(Res.string.environment),
-                platformName
+                platformName,
+                stringResource(Res.string.mac),
+                macAddress
             )
             CommonAlertDialog(
                 type = AlertDialogType.HORIZONTAL,
