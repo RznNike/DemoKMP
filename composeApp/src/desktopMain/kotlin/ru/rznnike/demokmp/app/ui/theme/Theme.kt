@@ -1,11 +1,16 @@
 package ru.rznnike.demokmp.app.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
+import demokmp.composeapp.generated.resources.Res
+import demokmp.composeapp.generated.resources.ic_compose
+import demokmp.composeapp.generated.resources.ic_compose_dark
+import org.jetbrains.compose.resources.DrawableResource
 import org.koin.compose.koinInject
 import ru.rznnike.demokmp.app.viewmodel.configuration.AppConfigurationViewModel
 import ru.rznnike.demokmp.domain.model.common.Theme
@@ -91,15 +96,31 @@ data class CustomColorScheme(
     val surfaceContainerA50: Color = Color.Unspecified
 )
 
-val customLightScheme = CustomColorScheme(
+val lightCustomScheme = CustomColorScheme(
     surfaceContainerA50 = surfaceContainerA50Light
 )
 
-val customDarkScheme = CustomColorScheme(
+val darkCustomScheme = CustomColorScheme(
     surfaceContainerA50 = surfaceContainerA50Dark
 )
 
 val localCustomColorScheme = staticCompositionLocalOf { CustomColorScheme() }
+
+@Suppress("PropertyName")
+@Immutable
+data class CustomDrawables(
+    val ic_compose: DrawableResource
+)
+
+val lightCustomDrawables = CustomDrawables(
+    ic_compose = Res.drawable.ic_compose
+)
+
+val darkCustomDrawables = CustomDrawables(
+    ic_compose = Res.drawable.ic_compose_dark
+)
+
+val localCustomDrawables = staticCompositionLocalOf { lightCustomDrawables }
 
 @Composable
 fun AppTheme(
@@ -108,16 +129,28 @@ fun AppTheme(
     val appConfigurationViewModel: AppConfigurationViewModel = koinInject()
     val appConfigurationUiState by appConfigurationViewModel.uiState.collectAsState()
 
+    val colorScheme: ColorScheme
+    val customColorScheme: CustomColorScheme
+    val customDrawables: CustomDrawables
+
     val darkTheme = when (appConfigurationUiState.theme) {
         Theme.AUTO -> isSystemInDarkTheme()
         Theme.LIGHT -> false
         Theme.DARK -> true
     }
-    val colorScheme = if (darkTheme) darkScheme else lightScheme
-    val customColorScheme = if (darkTheme) customDarkScheme else customLightScheme
+    if (darkTheme) {
+        colorScheme = darkScheme
+        customColorScheme = darkCustomScheme
+        customDrawables = darkCustomDrawables
+    } else {
+        colorScheme = lightScheme
+        customColorScheme = lightCustomScheme
+        customDrawables = lightCustomDrawables
+    }
 
     CompositionLocalProvider(
-        localCustomColorScheme provides customColorScheme
+        localCustomColorScheme provides customColorScheme,
+        localCustomDrawables provides customDrawables
     ) {
         MaterialTheme(
             colorScheme = colorScheme,

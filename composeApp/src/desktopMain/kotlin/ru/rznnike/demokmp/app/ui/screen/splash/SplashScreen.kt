@@ -5,18 +5,20 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import demokmp.composeapp.generated.resources.Res
-import demokmp.composeapp.generated.resources.ic_compose
 import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.painterResource
 import ru.rznnike.demokmp.app.navigation.NavigationScreen
 import ru.rznnike.demokmp.app.navigation.getFlowNavigator
 import ru.rznnike.demokmp.app.ui.screen.home.HomeFlow
+import ru.rznnike.demokmp.app.ui.theme.localCustomDrawables
 
 private const val ANIMATION_DURATION_MS = 1000
 private const val SPLASH_DURATION_MS = 1500L
@@ -52,7 +54,7 @@ class SplashScreen : NavigationScreen() {
             Image(
                 modifier = Modifier.size(300.dp),
                 alpha = imageAlpha,
-                painter = painterResource(Res.drawable.ic_compose),
+                painter = painterResource(localCustomDrawables.current.ic_compose),
                 contentDescription = null
             )
         }
