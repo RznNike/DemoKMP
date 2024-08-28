@@ -12,4 +12,6 @@ interface DBExampleGateway {
     suspend fun delete(data: DBExampleData)
 
     suspend fun deleteAll()
+
+    suspend fun closeDB()
 }
