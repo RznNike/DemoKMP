@@ -24,7 +24,7 @@ kotlin {
         commonMain.dependencies {
             implementation(compose.runtime)
             implementation(compose.foundation)
-            implementation(compose.material)
+            implementation(compose.material3)
             implementation(compose.ui)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
@@ -42,10 +42,12 @@ kotlin {
             implementation(libs.kotlinx.serialization)
 
             implementation(libs.ktorfit)
+            implementation(libs.ktor.core)
             implementation(libs.ktor.okhttp)
             implementation(libs.ktor.negotiation)
             implementation(libs.ktor.json)
             implementation(libs.ktor.logging)
+            implementation(libs.ktor.websockets)
             implementation(libs.logback)
 
             implementation(libs.room.runtime)
@@ -76,37 +78,51 @@ dependencies {
     add("kspDesktop", libs.room.compiler)
 }
 
+private val globalPackageName = "ru.rznnike.demokmp"
+private val globalVersionName = "1.0.0"
+private val globalVersionCode = 1
+
 android {
-    namespace = "ru.rznnike.demokmp"
+    namespace = globalPackageName
     compileSdk = 34
 }
 
-compose.desktop {
-    application {
-        mainClass = "ru.rznnike.demokmp.app.MainKt"
+compose.desktop.application {
+    mainClass = "$globalPackageName.app.MainKt"
 
-        nativeDistributions {
-            targetFormats(TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "ru.rznnike.demokmp"
-            packageVersion = "1.0.0"
+    nativeDistributions {
+        targetFormats(TargetFormat.Msi, TargetFormat.Deb)
+        packageName = globalPackageName
+        packageVersion = globalVersionName
+
+        modules("jdk.unsupported")
+
+        windows {
+            iconFile.set(project.file("src/commonMain/composeResources/drawable/icon.ico"))
         }
+        linux {
+            iconFile.set(project.file("src/commonMain/composeResources/drawable/icon.png"))
+        }
+    }
 
-        buildTypes {
-            release {
-                proguard {
-                    obfuscate.set(true)
-                    configurationFiles.from(project.file("proguard-rules.pro"))
-                }
+    buildTypes {
+        release {
+            proguard {
+                obfuscate.set(true)
+                configurationFiles.from(project.file("proguard-rules.pro"))
             }
         }
     }
 }
 
 buildkonfig {
-    packageName = "ru.rznnike.demokmp"
+    packageName = globalPackageName
 
     defaultConfigs {
         buildConfigField(FieldSpec.Type.BOOLEAN, "DEBUG", "true")
         buildConfigField(FieldSpec.Type.STRING, "API_MAIN", "https://dog.ceo/api/")
+        buildConfigField(FieldSpec.Type.STRING, "API_WEBSOCKETS", "wss://echo.websocket.org/")
+        buildConfigField(FieldSpec.Type.STRING, "VERSION_NAME", globalVersionName)
+        buildConfigField(FieldSpec.Type.INT, "VERSION_CODE", globalVersionCode.toString())
     }
 }

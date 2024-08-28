@@ -1,15 +1,15 @@
-package ru.rznnike.demokmp.domain.interactor.networkexample
+package ru.rznnike.demokmp.domain.interactor.httpexample
 
 import ru.rznnike.demokmp.domain.common.DispatcherProvider
 import ru.rznnike.demokmp.domain.common.interactor.UseCaseWithParams
-import ru.rznnike.demokmp.domain.gateway.NetworkExampleGateway
+import ru.rznnike.demokmp.domain.gateway.HTTPExampleGateway
 
 class GetRandomImageLinksUseCase(
-    private val networkTestGateway: NetworkExampleGateway,
+    private val httpExampleGateway: HTTPExampleGateway,
     dispatcherProvider: DispatcherProvider
 ) : UseCaseWithParams<GetRandomImageLinksUseCase.Parameters, List<String>>(dispatcherProvider) {
     override suspend fun execute(parameters: Parameters) =
-        networkTestGateway.getRandomImageLinks(
+        httpExampleGateway.getRandomImageLinks(
             count = parameters.count
         )
 

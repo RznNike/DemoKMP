@@ -1,10 +1,13 @@
 package ru.rznnike.demokmp.app.utils
 
-import androidx.compose.material.LocalTextStyle
-import androidx.compose.material.Text
+import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.material3.LocalTextStyle
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
@@ -55,3 +58,15 @@ fun TextR(
     onTextLayout = onTextLayout,
     style = style
 )
+
+@Composable
+fun Modifier.clearFocusOnTap(): Modifier {
+    val focusManager = LocalFocusManager.current
+    return pointerInput(Unit) {
+        detectTapGestures(
+            onTap = {
+                focusManager.clearFocus()
+            }
+        )
+    }
+}

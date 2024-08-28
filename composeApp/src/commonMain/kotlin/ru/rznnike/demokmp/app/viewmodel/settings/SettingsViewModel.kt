@@ -38,14 +38,13 @@ class SettingsViewModel : BaseUiViewModel<SettingsViewModel.UiState>() {
 
     override fun provideDefaultUIState() = UiState()
 
-    fun incrementCounter() {
+    fun onCounterInput(newValue: Int) {
         viewModelScope.launch {
-            val newCounter = mutableUiState.value.counter + 1
-            setTestCounterUseCase(newCounter)
+            setTestCounterUseCase(newValue)
 
             mutableUiState.update { currentState ->
                 currentState.copy(
-                    counter = newCounter
+                    counter = newValue
                 )
             }
         }

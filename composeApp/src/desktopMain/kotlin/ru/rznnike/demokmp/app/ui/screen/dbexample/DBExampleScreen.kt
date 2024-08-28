@@ -2,29 +2,29 @@ package ru.rznnike.demokmp.app.ui.screen.dbexample
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.VerticalScrollbar
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollbarAdapter
-import androidx.compose.material.Button
-import androidx.compose.material.Divider
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.OutlinedTextField
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.foundation.shape.CornerSize
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.input.key.*
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import demokmp.composeapp.generated.resources.*
+import org.jetbrains.compose.resources.stringResource
 import ru.rznnike.demokmp.app.navigation.NavigationScreen
 import ru.rznnike.demokmp.app.navigation.getScreenNavigator
 import ru.rznnike.demokmp.app.ui.item.DBExampleDataItem
+import ru.rznnike.demokmp.app.ui.theme.localCustomColorScheme
+import ru.rznnike.demokmp.app.ui.view.Toolbar
+import ru.rznnike.demokmp.app.ui.view.ToolbarButton
 import ru.rznnike.demokmp.app.utils.TextR
 import ru.rznnike.demokmp.app.viewmodel.dbexample.DBExampleViewModel
 
@@ -37,88 +37,150 @@ class DBExampleScreen : NavigationScreen() {
 
         val screenNavigator = getScreenNavigator()
 
-        MaterialTheme {
-            Column(modifier = Modifier.padding(vertical = 20.dp)) {
-                TextR(
-                    textRes = Res.string.db_example_screen_title,
-                    style = TextStyle(fontSize = 20.sp),
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier
-                        .padding(horizontal = 20.dp)
-                        .fillMaxWidth()
-                        .align(Alignment.CenterHorizontally)
-                )
+        var showToolbarMenu by remember { mutableStateOf(false) }
 
-                Spacer(modifier = Modifier.height(20.dp))
-                Row(
-                    modifier = Modifier.fillMaxWidth()
+        Column {
+            Spacer(Modifier.height(16.dp))
+            Box(
+                contentAlignment = Alignment.TopEnd
+            ) {
+                Toolbar(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 12.dp),
+                    title = stringResource(Res.string.db_example),
+                    leftButton = ToolbarButton(Res.drawable.ic_back) {
+                        screenNavigator.close()
+                    },
+                    rightButton = ToolbarButton(Res.drawable.ic_menu) {
+                        showToolbarMenu = true
+                    }
+                )
+                Box(
+                    modifier = Modifier.padding(horizontal = 16.dp)
                 ) {
-                    Spacer(modifier = Modifier.width(20.dp))
+                    DropdownMenu(
+                        expanded = showToolbarMenu,
+                        onDismissRequest = { showToolbarMenu = false }
+                    ) {
+                        DropdownMenuItem(
+                            text = {
+                                TextR(Res.string.delete_all)
+                            },
+                            onClick = {
+                                showToolbarMenu = false
+                                dbExampleViewModel.deleteAllData()
+                            }
+                        )
+                    }
+                }
+            }
+            Spacer(Modifier.height(16.dp))
+
+            Surface(
+                modifier = Modifier
+                    .padding(horizontal = 16.dp)
+                    .fillMaxWidth(),
+                shape = MaterialTheme.shapes.medium,
+                color = MaterialTheme.colorScheme.surfaceContainerHigh
+            ) {
+                Row(
+                    modifier = Modifier
+                        .padding(
+                            start = 16.dp,
+                            end = 16.dp,
+                            top = 8.dp,
+                            bottom = 16.dp
+                        )
+                        .fillMaxWidth()
+                        .height(IntrinsicSize.Min)
+                ) {
                     OutlinedTextField(
-                        value = dbExampleUiState.nameInput,
+                        value = dbExampleViewModel.nameInput,
                         singleLine = true,
+                        label = {
+                            TextR(Res.string.db_example_input_label)
+                        },
                         modifier = Modifier
-                            .weight(1f),
+                            .weight(1f)
+                            .onKeyEvent { keyEvent ->
+                                when {
+                                    (keyEvent.key.nativeKeyCode == Key.Enter.nativeKeyCode) && (keyEvent.type == KeyEventType.KeyUp) -> {
+                                        dbExampleViewModel.addData()
+                                        true
+                                    }
+                                    else -> false
+                                }
+                            },
                         onValueChange = dbExampleViewModel::onNameInput
                     )
-                    Spacer(modifier = Modifier.width(10.dp))
+                    Spacer(Modifier.width(16.dp))
                     Button(
+                        modifier = Modifier
+                            .padding(top = 8.dp)
+                            .fillMaxHeight(),
                         onClick = {
                             dbExampleViewModel.addData()
                         }
                     ) {
                         TextR(Res.string.add)
                     }
-                    Spacer(modifier = Modifier.width(10.dp))
-                    Button(
-                        onClick = {
-                            dbExampleViewModel.deleteAllData()
-                        }
-                    ) {
-                        TextR(Res.string.delete_all)
-                    }
-                    Spacer(modifier = Modifier.width(20.dp))
                 }
+            }
 
-                Spacer(modifier = Modifier.height(20.dp))
+            Spacer(Modifier.height(16.dp))
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .weight(1f)
+            ) {
+                val state = rememberLazyListState()
                 Box(
                     modifier = Modifier
+                        .padding(horizontal = 16.dp)
                         .fillMaxSize()
-                        .weight(1f)
+                        .clip(
+                            MaterialTheme.shapes.medium.copy(
+                                bottomStart = CornerSize(0.dp),
+                                bottomEnd = CornerSize(0.dp)
+                            )
+                        )
                 ) {
-                    val state = rememberLazyListState()
                     LazyColumn(
                         state = state,
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(horizontal = 20.dp)
+                        modifier = Modifier.fillMaxSize(),
+                        contentPadding = PaddingValues(bottom = 16.dp),
+                        verticalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
-                        itemsIndexed(dbExampleUiState.data) { index, item ->
+                        items(
+                            items = dbExampleUiState.data,
+                            key = { it.id }
+                        ) { item ->
                             DBExampleDataItem(item) {
                                 dbExampleViewModel.deleteData(item)
                             }
-                            if (index < dbExampleUiState.data.lastIndex) {
-                                Divider()
-                            }
                         }
                     }
-                    VerticalScrollbar(
-                        modifier = Modifier
-                            .align(Alignment.CenterEnd)
-                            .fillMaxHeight(),
-                        adapter = rememberScrollbarAdapter(state)
-                    )
-                }
 
-                Spacer(modifier = Modifier.height(20.dp))
-                Button(
-                    modifier = Modifier.padding(horizontal = 20.dp),
-                    onClick = {
-                        screenNavigator.close()
+                    if (dbExampleUiState.isLoading) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .background(localCustomColorScheme.current.surfaceContainerA50),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            CircularProgressIndicator(
+                                modifier = Modifier.size(50.dp)
+                            )
+                        }
                     }
-                ) {
-                    TextR(Res.string.close)
                 }
+                VerticalScrollbar(
+                    modifier = Modifier
+                        .align(Alignment.CenterEnd)
+                        .fillMaxHeight(),
+                    adapter = rememberScrollbarAdapter(state)
+                )
             }
         }
     }

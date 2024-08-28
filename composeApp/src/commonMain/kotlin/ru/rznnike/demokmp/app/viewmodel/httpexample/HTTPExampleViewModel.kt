@@ -1,4 +1,4 @@
-package ru.rznnike.demokmp.app.viewmodel.networkexample
+package ru.rznnike.demokmp.app.viewmodel.httpexample
 
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.update
@@ -7,12 +7,20 @@ import org.koin.core.component.inject
 import ru.rznnike.demokmp.app.common.notifier.Notifier
 import ru.rznnike.demokmp.app.common.viewmodel.BaseUiViewModel
 import ru.rznnike.demokmp.app.error.ErrorHandler
-import ru.rznnike.demokmp.domain.interactor.networkexample.GetRandomImageLinksUseCase
+import ru.rznnike.demokmp.domain.common.DispatcherProvider
+import ru.rznnike.demokmp.domain.interactor.httpexample.GetRandomImageLinksUseCase
 
-class NetworkExampleViewModel : BaseUiViewModel<NetworkExampleViewModel.UiState>() {
+class HTTPExampleViewModel : BaseUiViewModel<HTTPExampleViewModel.UiState>() {
     private val notifier: Notifier by inject()
     private val errorHandler: ErrorHandler by inject()
+    private val dispatcherProvider: DispatcherProvider by inject()
     private val getRandomImageLinksUseCase: GetRandomImageLinksUseCase by inject()
+
+    init {
+        viewModelScope.launch(dispatcherProvider.default) {
+            requestImages()
+        }
+    }
 
     override fun provideDefaultUIState() = UiState()
 

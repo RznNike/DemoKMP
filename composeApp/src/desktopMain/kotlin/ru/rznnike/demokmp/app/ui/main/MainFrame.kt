@@ -1,9 +1,12 @@
 package ru.rznnike.demokmp.app.ui.main
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
-import androidx.compose.material.*
-import androidx.compose.runtime.*
-import androidx.compose.ui.graphics.Color
+import androidx.compose.material3.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
 import demokmp.composeapp.generated.resources.Res
 import demokmp.composeapp.generated.resources.close
 import kotlinx.coroutines.launch
@@ -17,6 +20,8 @@ import ru.rznnike.demokmp.app.ui.dialog.common.AlertDialogAction
 import ru.rznnike.demokmp.app.ui.dialog.common.AlertDialogType
 import ru.rznnike.demokmp.app.ui.dialog.common.CommonAlertDialog
 import ru.rznnike.demokmp.app.ui.screen.splash.SplashFlow
+import ru.rznnike.demokmp.app.ui.theme.AppTheme
+import ru.rznnike.demokmp.app.utils.clearFocusOnTap
 import ru.rznnike.demokmp.domain.common.CoroutineScopeProvider
 
 @Preview
@@ -90,19 +95,22 @@ fun mainFrame() {
         }
     }
 
-    Scaffold(
-        snackbarHost = {
-            SnackbarHost(hostState = snackbarHostState) {
-                Snackbar(
-                    snackbarData = it,
-                    backgroundColor = Color.White,
-                    contentColor = Color.Black,
-                    actionColor = Color.Blue
-                )
+    AppTheme {
+        Scaffold(
+            modifier = Modifier.clearFocusOnTap(),
+            snackbarHost = {
+                SnackbarHost(hostState = snackbarHostState) {
+                    Snackbar(
+                        snackbarData = it,
+                        containerColor = MaterialTheme.colorScheme.tertiaryContainer,
+                        contentColor = MaterialTheme.colorScheme.onTertiaryContainer,
+                        actionColor = MaterialTheme.colorScheme.onTertiaryContainer
+                    )
+                }
             }
+        ) {
+            createNavigator(SplashFlow())
+            DialogLayout()
         }
-    ) {
-        createNavigator(SplashFlow())
-        DialogLayout()
     }
 }

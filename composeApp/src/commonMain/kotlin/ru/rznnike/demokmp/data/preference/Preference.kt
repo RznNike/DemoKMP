@@ -6,6 +6,7 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import kotlinx.coroutines.flow.first
 import ru.rznnike.demokmp.domain.model.common.Language
+import ru.rznnike.demokmp.domain.model.common.Theme
 import ru.rznnike.demokmp.domain.utils.toDoubleOrNullSmart
 
 sealed class Preference<Type>(
@@ -83,5 +84,15 @@ sealed class Preference<Type>(
         override fun Language.serialize() = tag
 
         override fun String.deserialize() = Language[this]
+    }
+
+    class ThemePreference(
+        dataStore: DataStore<Preferences>,
+        key: String,
+        defaultValue: Theme
+    ) : Preference<Theme>(dataStore, key, defaultValue) {
+        override fun Theme.serialize() = id.toString()
+
+        override fun String.deserialize() = Theme[toIntOrNull() ?: 0]
     }
 }

@@ -6,113 +6,162 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.rememberScrollbarAdapter
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Button
-import androidx.compose.material.MaterialTheme
-import androidx.compose.runtime.Composable
+import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import demokmp.composeapp.generated.resources.*
+import org.jetbrains.compose.resources.StringResource
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
+import ru.rznnike.demokmp.BuildKonfig
 import ru.rznnike.demokmp.app.common.notifier.Notifier
 import ru.rznnike.demokmp.app.navigation.NavigationScreen
 import ru.rznnike.demokmp.app.navigation.getFlowNavigator
+import ru.rznnike.demokmp.app.ui.dialog.common.AlertDialogAction
+import ru.rznnike.demokmp.app.ui.dialog.common.AlertDialogType
+import ru.rznnike.demokmp.app.ui.dialog.common.CommonAlertDialog
 import ru.rznnike.demokmp.app.ui.screen.dbexample.DBExampleFlow
-import ru.rznnike.demokmp.app.ui.screen.networkexample.NetworkExampleFlow
+import ru.rznnike.demokmp.app.ui.screen.httpexample.HTTPExampleFlow
 import ru.rznnike.demokmp.app.ui.screen.settings.SettingsFlow
+import ru.rznnike.demokmp.app.ui.screen.wsexample.WebSocketsExampleFlow
+import ru.rznnike.demokmp.app.ui.theme.bodyLargeItalic
+import ru.rznnike.demokmp.app.ui.view.Toolbar
 import ru.rznnike.demokmp.app.utils.TextR
+import ru.rznnike.demokmp.app.utils.getMacAddress
+import ru.rznnike.demokmp.app.utils.platformName
+import ru.rznnike.demokmp.app.viewmodel.configuration.AppConfigurationViewModel
 
 class HomeScreen : NavigationScreen() {
+    @OptIn(ExperimentalLayoutApi::class)
     @Preview
     @Composable
     override fun Content() {
+        val appConfigurationViewModel: AppConfigurationViewModel = koinInject()
+        val appConfiguration by appConfigurationViewModel.uiState.collectAsState()
+
         val notifier: Notifier = koinInject()
 
         val flowNavigator = getFlowNavigator()
 
-        MaterialTheme {
-            Column {
-                Spacer(Modifier.height(20.dp))
-                TextR(
-                    textRes = Res.string.main_screen_title,
-                    style = TextStyle(fontSize = 20.sp),
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.fillMaxWidth().align(Alignment.CenterHorizontally)
-                )
+        var showAboutDialog by remember { mutableStateOf(false) }
 
-                Spacer(Modifier.height(20.dp))
-                Box(
+        val macAddress = remember { getMacAddress() }
+
+        Column {
+            Spacer(Modifier.height(16.dp))
+            Toolbar(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 12.dp),
+                title = stringResource(Res.string.main_screen)
+            )
+            Spacer(Modifier.height(16.dp))
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .weight(1f)
+            ) {
+                val verticalScrollState = rememberScrollState()
+                FlowRow(
                     modifier = Modifier
+                        .padding(horizontal = 16.dp)
+                        .verticalScroll(verticalScrollState)
                         .fillMaxSize()
-                        .weight(1f)
+                        .padding(bottom = 16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                    val verticalScrollState = rememberScrollState()
-                    Column(
-                        modifier = Modifier
-                            .padding(horizontal = 20.dp)
-                            .verticalScroll(verticalScrollState)
-                            .fillMaxSize()
-                    ) {
+                    @Composable
+                    fun MenuButton(text: StringResource, onClick: () -> Unit) {
                         Button(
-                            onClick = {
-                                flowNavigator.open(SettingsFlow())
-                            }
+                            modifier = Modifier
+                                .weight(1f)
+                                .widthIn(
+                                    min = 150.dp
+                                )
+                                .height(70.dp),
+                            onClick = onClick
                         ) {
-                            TextR(Res.string.open_settings)
+                            TextR(
+                                modifier = Modifier.fillMaxWidth(),
+                                textRes = text,
+                                textAlign = TextAlign.Center
+                            )
                         }
-                        Spacer(Modifier.height(10.dp))
-                        Button(
-                            onClick = {
-                                flowNavigator.open(NetworkExampleFlow())
-                            }
-                        ) {
-                            TextR(Res.string.open_network_example)
-                        }
-                        Spacer(Modifier.height(10.dp))
-                        Button(
-                            onClick = {
-                                flowNavigator.open(DBExampleFlow())
-                            }
-                        ) {
-                            TextR(Res.string.open_db_example)
-                        }
-                        Spacer(Modifier.height(10.dp))
-                        Button(
-                            onClick = {
-                                notifier.sendAlert(Res.string.test_dialog)
-                            }
-                        ) {
-                            TextR(Res.string.test_dialog)
-                        }
-                        Spacer(Modifier.height(10.dp))
-                        Button(
-                            onClick = {
-                                notifier.sendMessage(Res.string.test_message)
-                            }
-                        ) {
-                            TextR(Res.string.test_message)
-                        }
-                        Spacer(Modifier.height(10.dp))
-                        Button(
-                            onClick = {
-                                flowNavigator.close()
-                            }
-                        ) {
-                            TextR(Res.string.close_app)
-                        }
-                        Spacer(Modifier.height(20.dp))
                     }
-                    VerticalScrollbar(
-                        modifier = Modifier
-                            .align(Alignment.CenterEnd)
-                            .fillMaxHeight(),
-                        adapter = rememberScrollbarAdapter(verticalScrollState)
-                    )
+
+                    MenuButton(Res.string.open_settings) {
+                        flowNavigator.open(SettingsFlow())
+                    }
+                    MenuButton(Res.string.open_http_example) {
+                        flowNavigator.open(HTTPExampleFlow())
+                    }
+                    MenuButton(Res.string.open_ws_example) {
+                        flowNavigator.open(WebSocketsExampleFlow())
+                    }
+                    MenuButton(Res.string.open_db_example) {
+                        flowNavigator.open(DBExampleFlow())
+                    }
+                    MenuButton(Res.string.about_app) {
+                        showAboutDialog = true
+                    }
+                    MenuButton(Res.string.test_dialog) {
+                        notifier.sendAlert(Res.string.test_dialog)
+                    }
+                    MenuButton(Res.string.test_message) {
+                        notifier.sendActionMessage(Res.string.test_message, Res.string.close) {}
+                    }
                 }
+                VerticalScrollbar(
+                    modifier = Modifier
+                        .align(Alignment.CenterEnd)
+                        .fillMaxHeight(),
+                    adapter = rememberScrollbarAdapter(verticalScrollState)
+                )
             }
+            TextR(
+                textRes = Res.string.hotkeys_tip,
+                textAlign = TextAlign.Center,
+                style = MaterialTheme.typography.bodyLargeItalic,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .align(Alignment.CenterHorizontally)
+            )
+            Spacer(Modifier.height(16.dp))
+        }
+
+        if (showAboutDialog) {
+            val details = "%s: %s.%d%s\n%s: %s\n%s: %s\n%s: %s".format(
+                stringResource(Res.string.version),
+                BuildKonfig.VERSION_NAME,
+                BuildKonfig.VERSION_CODE,
+                if (BuildKonfig.DEBUG) " debug" else "",
+                stringResource(Res.string.environment),
+                platformName,
+                stringResource(Res.string.mac),
+                macAddress,
+                stringResource(Res.string.launch_args),
+                appConfiguration.args.joinToString()
+            )
+            CommonAlertDialog(
+                type = AlertDialogType.HORIZONTAL,
+                header = stringResource(Res.string.window_title),
+                message = details,
+                cancellable = true,
+                onCancelListener = {
+                    showAboutDialog = false
+                },
+                actions = listOf(
+                    AlertDialogAction(stringResource(Res.string.close)) {
+                        showAboutDialog = false
+                    }
+                )
+            )
         }
     }
 }

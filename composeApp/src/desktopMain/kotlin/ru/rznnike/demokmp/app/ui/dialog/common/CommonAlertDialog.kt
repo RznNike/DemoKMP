@@ -1,23 +1,17 @@
 package ru.rznnike.demokmp.app.ui.dialog.common
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.Card
-import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun CommonAlertDialog(
     type: AlertDialogType,
@@ -38,55 +32,75 @@ fun CommonAlertDialog(
     ) {
         Card {
             Column(
-                modifier = Modifier.padding(20.dp),
+                modifier = Modifier.padding(16.dp),
             ) {
                 Text(
                     text = header,
-                    style = TextStyle(fontSize = 20.sp),
+                    style = MaterialTheme.typography.titleLarge,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.fillMaxWidth()
                 )
                 if (!message.isNullOrBlank()) {
                     Text(
                         text = message,
-                        style = TextStyle(fontSize = 16.sp),
                         textAlign = TextAlign.Center,
-                        modifier = Modifier.fillMaxWidth().padding(top = 10.dp)
+                        modifier = Modifier.fillMaxWidth().padding(top = 16.dp)
                     )
                 }
-                when (type) {
-                    AlertDialogType.HORIZONTAL -> Row(
-                        modifier = Modifier.padding(top = 10.dp)
+
+                @Composable
+                fun DialogButton(modifier: Modifier = Modifier, action: AlertDialogAction) {
+                    Button(
+                        modifier = modifier,
+                        colors = if (action.accent) {
+                            ButtonDefaults.buttonColors()
+                        } else {
+                            ButtonDefaults.buttonColors(
+                                containerColor = MaterialTheme.colorScheme.secondary,
+                                contentColor = MaterialTheme.colorScheme.onSecondary
+                            )
+                        },
+                        onClick = {
+                            action.callback()
+                        }
                     ) {
-                        actions.forEachIndexed { index, action ->
-                            val padding = if (index == 0) 0.dp else 10.dp
-                            Button(
-                                modifier = Modifier.padding(start = padding),
-                                colors = ButtonDefaults.buttonColors(
-                                    backgroundColor = if (action.accent) Color.Blue else Color.Gray,
-                                    contentColor = Color.White
-                                ),
-                                onClick = {
-                                    action.callback()
-                                }
-                            ) {
-                                Text(action.text)
+                        Text(action.text)
+                    }
+                }
+
+                when (type) {
+                    AlertDialogType.HORIZONTAL -> {
+                        val actionsReversed = remember(actions) { actions.reversed() }
+                        FlowRow(
+                            modifier = Modifier
+                                .padding(top = 16.dp)
+                                .fillMaxWidth()
+                                .align(Alignment.End),
+                            horizontalArrangement = Arrangement.spacedBy(
+                                space = 16.dp,
+                                alignment = Alignment.End
+                            ),
+                            verticalArrangement = Arrangement.spacedBy(16.dp)
+                        ) {
+                            actionsReversed.forEach { action ->
+                                DialogButton(
+                                    action = action
+                                )
                             }
                         }
                     }
-                    AlertDialogType.VERTICAL -> Column {
-                        actions.forEach { action ->
-                            Button(
-                                modifier = Modifier.padding(top = 10.dp),
-                                colors = ButtonDefaults.buttonColors(
-                                    backgroundColor = if (action.accent) Color.Blue else Color.Gray,
-                                    contentColor = Color.White
-                                ),
-                                onClick = {
-                                    action.callback()
-                                }
-                            ) {
-                                Text(action.text)
+                    AlertDialogType.VERTICAL -> Column(
+                        modifier = Modifier
+                            .padding(top = 16.dp)
+                            .fillMaxWidth()
+                    ) {
+                        actions.forEachIndexed { index, action ->
+                            DialogButton(
+                                modifier = Modifier.align(Alignment.End),
+                                action = action
+                            )
+                            if (index < actions.lastIndex) {
+                                Spacer(modifier = Modifier.height(8.dp))
                             }
                         }
                     }

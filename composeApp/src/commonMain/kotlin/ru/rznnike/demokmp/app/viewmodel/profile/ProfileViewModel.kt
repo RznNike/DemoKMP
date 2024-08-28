@@ -1,22 +1,15 @@
 package ru.rznnike.demokmp.app.viewmodel.profile
 
-import kotlinx.coroutines.flow.update
-import ru.rznnike.demokmp.app.common.viewmodel.BaseUiViewModel
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import ru.rznnike.demokmp.app.common.viewmodel.BaseViewModel
 
-class ProfileViewModel : BaseUiViewModel<ProfileViewModel.UiState>() {
-    override fun provideDefaultUIState() = UiState()
+class ProfileViewModel : BaseViewModel() {
+    var nameInput by mutableStateOf("John Wick")
+        private set
 
     fun onNameInput(newValue: String) {
-        if (newValue != mutableUiState.value.nameInput) {
-            mutableUiState.update { currentState ->
-                currentState.copy(
-                    nameInput = newValue
-                )
-            }
-        }
+        nameInput = newValue
     }
-
-    data class UiState(
-        val nameInput: String = "qwe"
-    )
 }

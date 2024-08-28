@@ -5,6 +5,7 @@ import ru.rznnike.demokmp.data.preference.PreferencesManager
 import ru.rznnike.demokmp.domain.common.DispatcherProvider
 import ru.rznnike.demokmp.domain.gateway.PreferencesGateway
 import ru.rznnike.demokmp.domain.model.common.Language
+import ru.rznnike.demokmp.domain.model.common.Theme
 
 class PreferencesGatewayImpl(
     private val dispatcherProvider: DispatcherProvider,
@@ -24,5 +25,13 @@ class PreferencesGatewayImpl(
 
     override suspend fun setLanguage(newValue: Language) = withContext(dispatcherProvider.io) {
         preferencesManager.language.set(newValue)
+    }
+
+    override suspend fun getTheme(): Theme = withContext(dispatcherProvider.io) {
+        preferencesManager.theme.get()
+    }
+
+    override suspend fun setTheme(newValue: Theme) = withContext(dispatcherProvider.io) {
+        preferencesManager.theme.set(newValue)
     }
 }
