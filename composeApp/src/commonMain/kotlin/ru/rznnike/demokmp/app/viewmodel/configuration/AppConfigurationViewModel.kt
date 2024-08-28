@@ -6,6 +6,7 @@ import kotlinx.coroutines.launch
 import org.koin.core.component.inject
 import ru.rznnike.demokmp.app.common.viewmodel.BaseUiViewModel
 import ru.rznnike.demokmp.domain.common.DispatcherProvider
+import ru.rznnike.demokmp.domain.interactor.dbexample.CloseDBUseCase
 import ru.rznnike.demokmp.domain.interactor.preferences.GetLanguageUseCase
 import ru.rznnike.demokmp.domain.interactor.preferences.GetThemeUseCase
 import ru.rznnike.demokmp.domain.interactor.preferences.SetLanguageUseCase
@@ -19,6 +20,7 @@ class AppConfigurationViewModel : BaseUiViewModel<AppConfigurationViewModel.UiSt
     private val setLanguageUseCase: SetLanguageUseCase by inject()
     private val getThemeUseCase: GetThemeUseCase by inject()
     private val setThemeUseCase: SetThemeUseCase by inject()
+    private val closeDBUseCase: CloseDBUseCase by inject()
 
     init {
         viewModelScope.launch(dispatcherProvider.default) {
@@ -71,6 +73,13 @@ class AppConfigurationViewModel : BaseUiViewModel<AppConfigurationViewModel.UiSt
                     args = newValue.toList()
                 )
             }
+        }
+    }
+
+    fun onCloseApplication(closeFunction: () -> Unit) {
+        viewModelScope.launch {
+            closeDBUseCase()
+            closeFunction()
         }
     }
 

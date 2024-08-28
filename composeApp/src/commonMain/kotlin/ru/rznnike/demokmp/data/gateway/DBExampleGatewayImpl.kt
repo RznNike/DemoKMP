@@ -1,6 +1,7 @@
 package ru.rznnike.demokmp.data.gateway
 
 import kotlinx.coroutines.withContext
+import ru.rznnike.demokmp.data.storage.MainDB
 import ru.rznnike.demokmp.data.storage.dao.DBExampleDataDao
 import ru.rznnike.demokmp.data.storage.entity.toDBExampleData
 import ru.rznnike.demokmp.data.storage.entity.toDBExampleDataEntity
@@ -10,7 +11,8 @@ import ru.rznnike.demokmp.domain.model.dbexample.DBExampleData
 
 class DBExampleGatewayImpl(
     private val dispatcherProvider: DispatcherProvider,
-    private val dbExampleDataDao: DBExampleDataDao
+    private val dbExampleDataDao: DBExampleDataDao,
+    private val mainDB: MainDB
 ) : DBExampleGateway {
     override suspend fun get(id: Long): DBExampleData? = withContext(dispatcherProvider.io) {
         dbExampleDataDao.get(id = id)?.toDBExampleData()
@@ -31,5 +33,9 @@ class DBExampleGatewayImpl(
 
     override suspend fun deleteAll() = withContext(dispatcherProvider.io) {
         dbExampleDataDao.deleteAll()
+    }
+
+    override suspend fun closeDB() = withContext(dispatcherProvider.io) {
+        mainDB.close()
     }
 }

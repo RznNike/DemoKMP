@@ -14,5 +14,5 @@ internal val gatewayModule = module {
     single<PreferencesGateway> { PreferencesGatewayImpl(get(), get()) }
     single<HTTPExampleGateway> { HTTPExampleGatewayImpl(get(), get()) }
     single<WebSocketExampleGateway> { WebSocketExampleGatewayImpl(get(), get()) }
-    single<DBExampleGateway> { DBExampleGatewayImpl(get(), get()) }
+    single<DBExampleGateway> { DBExampleGatewayImpl(get(), get(), get()) }
 }

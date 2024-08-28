@@ -74,7 +74,9 @@ private fun ApplicationScope.startUI(args: Array<String>) {
         Window(
             icon = painterResource(Res.drawable.ic_compose),
             title = stringResource(Res.string.window_title),
-            onCloseRequest = ::exitApplication,
+            onCloseRequest = {
+                appConfigurationViewModel.onCloseApplication(::exitApplication)
+            },
             state = state,
             onPreviewKeyEvent = { keyEvent ->
                 when {

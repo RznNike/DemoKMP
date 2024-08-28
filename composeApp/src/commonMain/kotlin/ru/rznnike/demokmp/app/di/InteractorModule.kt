@@ -23,6 +23,7 @@ internal val interactorModule = module {
     single { AddDBExampleDataUseCase(get(), get()) }
     single { DeleteDBExampleDataUseCase(get(), get()) }
     single { DeleteAllDBExampleDataUseCase(get(), get()) }
+    single { CloseDBUseCase(get(), get()) }
 
     single { OpenAppWSUseCase(get(), get()) }
     single { CloseAppWSUseCase(get(), get()) }
