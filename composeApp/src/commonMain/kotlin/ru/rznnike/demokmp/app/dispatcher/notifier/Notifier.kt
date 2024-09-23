@@ -1,4 +1,4 @@
-package ru.rznnike.demokmp.app.common.notifier
+package ru.rznnike.demokmp.app.dispatcher.notifier
 
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow

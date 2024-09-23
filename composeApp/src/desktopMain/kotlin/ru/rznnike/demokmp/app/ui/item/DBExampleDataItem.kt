@@ -12,10 +12,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.unit.dp
-import demokmp.composeapp.generated.resources.Res
-import demokmp.composeapp.generated.resources.ic_delete
 import org.jetbrains.compose.resources.painterResource
 import ru.rznnike.demokmp.domain.model.dbexample.DBExampleData
+import ru.rznnike.demokmp.generated.resources.Res
+import ru.rznnike.demokmp.generated.resources.ic_delete
 
 @Composable
 fun DBExampleDataItem(

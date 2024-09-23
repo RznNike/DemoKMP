@@ -1,6 +1,7 @@
-package ru.rznnike.demokmp.data.network.websocket
+package ru.rznnike.demokmp.domain.model.websocket
 
 enum class WebSocketConnectionState {
+    CONNECTING,
     CONNECTED,
     DISCONNECTED,
     CLOSED

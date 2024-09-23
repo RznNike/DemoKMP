@@ -8,6 +8,5 @@ class DeleteAllDBExampleDataUseCase(
     private val dbExampleGateway: DBExampleGateway,
     dispatcherProvider: DispatcherProvider
 ) : UseCase<Unit>(dispatcherProvider) {
-    override suspend fun execute() =
-        dbExampleGateway.deleteAll()
+    override suspend fun execute() = dbExampleGateway.deleteAll()
 }

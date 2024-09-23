@@ -8,6 +8,5 @@ class SetTestCounterUseCase(
     private val preferencesGateway: PreferencesGateway,
     dispatcherProvider: DispatcherProvider
 ) : UseCaseWithParams<Int, Unit>(dispatcherProvider) {
-    override suspend fun execute(parameters: Int) =
-        preferencesGateway.setTestCounter(parameters)
+    override suspend fun execute(parameters: Int) = preferencesGateway.setTestCounter(parameters)
 }

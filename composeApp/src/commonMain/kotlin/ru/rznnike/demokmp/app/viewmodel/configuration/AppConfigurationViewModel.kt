@@ -30,7 +30,7 @@ class AppConfigurationViewModel : BaseUiViewModel<AppConfigurationViewModel.UiSt
                 currentState.copy(
                     language = selectedLanguage ?: currentState.language,
                     theme = selectedTheme ?: currentState.theme,
-                    loaded = true
+                    isLoaded = true
                 )
             }
         }
@@ -87,6 +87,6 @@ class AppConfigurationViewModel : BaseUiViewModel<AppConfigurationViewModel.UiSt
         val args: List<String> = emptyList(),
         val language: Language = Language.default,
         val theme: Theme = Theme.default,
-        val loaded: Boolean = false
+        val isLoaded: Boolean = false
     )
 }

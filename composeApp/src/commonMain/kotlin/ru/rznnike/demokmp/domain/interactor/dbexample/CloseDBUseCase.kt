@@ -8,6 +8,5 @@ class CloseDBUseCase(
     private val dbExampleGateway: DBExampleGateway,
     dispatcherProvider: DispatcherProvider
 ) : UseCase<Unit>(dispatcherProvider) {
-    override suspend fun execute() =
-        dbExampleGateway.closeDB()
+    override suspend fun execute() = dbExampleGateway.closeDB()
 }

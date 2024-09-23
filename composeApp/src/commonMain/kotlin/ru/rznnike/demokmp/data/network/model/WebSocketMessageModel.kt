@@ -2,7 +2,7 @@ package ru.rznnike.demokmp.data.network.model
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import ru.rznnike.demokmp.domain.model.wsexample.WebSocketMessage
+import ru.rznnike.demokmp.domain.model.websocket.WebSocketMessage
 
 @Serializable
 data class WebSocketMessageModel(

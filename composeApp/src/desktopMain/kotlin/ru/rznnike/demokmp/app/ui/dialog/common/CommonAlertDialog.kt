@@ -3,13 +3,17 @@ package ru.rznnike.demokmp.app.ui.dialog.common
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import ru.rznnike.demokmp.app.ui.view.SelectableButton
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -21,6 +25,8 @@ fun CommonAlertDialog(
     onCancelListener: (() -> Unit)? = null,
     actions: List<AlertDialogAction>
 ) {
+    val focusRequester = remember { FocusRequester() }
+
     Dialog(
         onDismissRequest = {
             onCancelListener?.invoke()
@@ -30,13 +36,17 @@ fun CommonAlertDialog(
             dismissOnClickOutside = cancellable
         )
     ) {
-        Card {
+        Card(
+            colors = CardDefaults.cardColors().copy(
+                containerColor = MaterialTheme.colorScheme.surface,
+                contentColor = MaterialTheme.colorScheme.onSurface
+            ),
+        ) {
             Column(
                 modifier = Modifier.padding(16.dp),
             ) {
                 Text(
                     text = header,
-                    style = MaterialTheme.typography.titleLarge,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -50,7 +60,7 @@ fun CommonAlertDialog(
 
                 @Composable
                 fun DialogButton(modifier: Modifier = Modifier, action: AlertDialogAction) {
-                    Button(
+                    SelectableButton(
                         modifier = modifier,
                         colors = if (action.accent) {
                             ButtonDefaults.buttonColors()
@@ -82,8 +92,11 @@ fun CommonAlertDialog(
                             ),
                             verticalArrangement = Arrangement.spacedBy(16.dp)
                         ) {
-                            actionsReversed.forEach { action ->
+                            actionsReversed.forEachIndexed { index, action ->
                                 DialogButton(
+                                    modifier = Modifier.let {
+                                        if (index == actions.lastIndex) it.focusRequester(focusRequester) else it
+                                    },
                                     action = action
                                 )
                             }
@@ -96,7 +109,11 @@ fun CommonAlertDialog(
                     ) {
                         actions.forEachIndexed { index, action ->
                             DialogButton(
-                                modifier = Modifier.align(Alignment.End),
+                                modifier = Modifier
+                                    .align(Alignment.End)
+                                    .let {
+                                        if (index == 0) it.focusRequester(focusRequester) else it
+                                    },
                                 action = action
                             )
                             if (index < actions.lastIndex) {
@@ -107,5 +124,9 @@ fun CommonAlertDialog(
                 }
             }
         }
+    }
+
+    LaunchedEffect("init") {
+        focusRequester.requestFocus()
     }
 }

@@ -9,6 +9,5 @@ class SetLanguageUseCase(
     private val preferencesGateway: PreferencesGateway,
     dispatcherProvider: DispatcherProvider
 ) : UseCaseWithParams<Language, Unit>(dispatcherProvider) {
-    override suspend fun execute(parameters: Language) =
-        preferencesGateway.setLanguage(parameters)
+    override suspend fun execute(parameters: Language) = preferencesGateway.setLanguage(parameters)
 }

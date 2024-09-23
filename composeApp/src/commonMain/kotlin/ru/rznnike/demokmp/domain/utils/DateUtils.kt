@@ -53,6 +53,6 @@ fun LocalDate.atEndOfDay(): LocalDateTime = atTime(23, 59, 59, 999_999_999)
 
 fun LocalDate.atStartOfMonth(): LocalDate = withDayOfMonth(1)
 
-fun LocalDate.atEndOfMonth(): LocalDate = atStartOfMonth().plusMonths(1).minusDays(1)
+fun LocalDate.atEndOfMonth(): LocalDate = withDayOfMonth(lengthOfMonth())
 
 fun currentTimeMillis() = Clock.systemUTC().millis()

@@ -7,7 +7,6 @@ import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.plugins.logging.*
 import io.ktor.client.plugins.websocket.*
 import io.ktor.serialization.kotlinx.json.*
-import kotlinx.serialization.json.Json
 import okhttp3.Cache
 import okhttp3.OkHttpClient
 import org.koin.dsl.module
@@ -15,6 +14,7 @@ import ru.rznnike.demokmp.BuildKonfig
 import ru.rznnike.demokmp.data.network.AppWebSocketManager
 import ru.rznnike.demokmp.data.network.createAppApi
 import ru.rznnike.demokmp.data.utils.DataConstants
+import ru.rznnike.demokmp.data.utils.defaultJson
 import java.io.File
 import java.time.Duration
 import java.util.concurrent.TimeUnit
@@ -49,13 +49,7 @@ internal val networkModule = module {
 
     fun HttpClientConfig<OkHttpConfig>.installJson() {
         install(ContentNegotiation) {
-            json(
-                Json {
-                    isLenient = true
-                    explicitNulls = false
-                    ignoreUnknownKeys = true
-                }
-            )
+            json(defaultJson())
         }
     }
 

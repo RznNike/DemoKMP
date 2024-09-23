@@ -1,20 +1,19 @@
 package ru.rznnike.demokmp.app.ui.main
 
-import androidx.compose.desktop.ui.tooling.preview.Preview
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.onClick
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import demokmp.composeapp.generated.resources.Res
-import demokmp.composeapp.generated.resources.close
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
-import ru.rznnike.demokmp.app.common.notifier.Notifier
-import ru.rznnike.demokmp.app.common.notifier.SystemMessage
+import ru.rznnike.demokmp.app.dispatcher.notifier.Notifier
+import ru.rznnike.demokmp.app.dispatcher.notifier.SystemMessage
 import ru.rznnike.demokmp.app.navigation.createNavigator
 import ru.rznnike.demokmp.app.ui.dialog.common.AlertDialogAction
 import ru.rznnike.demokmp.app.ui.dialog.common.AlertDialogType
@@ -23,8 +22,10 @@ import ru.rznnike.demokmp.app.ui.screen.splash.SplashFlow
 import ru.rznnike.demokmp.app.ui.theme.AppTheme
 import ru.rznnike.demokmp.app.utils.clearFocusOnTap
 import ru.rznnike.demokmp.domain.common.CoroutineScopeProvider
+import ru.rznnike.demokmp.generated.resources.Res
+import ru.rznnike.demokmp.generated.resources.close
 
-@Preview
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun mainFrame() {
     val notifier = koinInject<Notifier>()
@@ -101,6 +102,10 @@ fun mainFrame() {
             snackbarHost = {
                 SnackbarHost(hostState = snackbarHostState) {
                     Snackbar(
+                        modifier = Modifier
+                            .onClick {
+                                snackbarHostState.currentSnackbarData?.dismiss()
+                            },
                         snackbarData = it,
                         containerColor = MaterialTheme.colorScheme.tertiaryContainer,
                         contentColor = MaterialTheme.colorScheme.onTertiaryContainer,
