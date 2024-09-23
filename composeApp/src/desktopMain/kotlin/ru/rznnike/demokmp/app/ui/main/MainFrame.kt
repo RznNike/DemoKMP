@@ -1,6 +1,11 @@
 package ru.rznnike.demokmp.app.ui.main
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.onClick
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -114,7 +119,24 @@ fun mainFrame() {
                 }
             }
         ) {
-            createNavigator(SplashFlow())
+            Box {
+                Column( // Background artefacts fix for Intel Arc GPU
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    @Composable
+                    fun BackgroundPart() = Box(
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxWidth()
+                            .background(color = MaterialTheme.colorScheme.background)
+                    )
+
+                    // Background views must not be fillMaxSize(), so we need at least 2 views to fix this bug
+                    BackgroundPart()
+                    BackgroundPart()
+                }
+                createNavigator(SplashFlow())
+            }
             DialogLayout()
         }
     }
