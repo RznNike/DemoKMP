@@ -4,8 +4,8 @@ import org.koin.dsl.module
 import ru.rznnike.demokmp.domain.interactor.dbexample.*
 import ru.rznnike.demokmp.domain.interactor.httpexample.GetRandomImageLinksUseCase
 import ru.rznnike.demokmp.domain.interactor.preferences.*
-import ru.rznnike.demokmp.domain.interactor.wsexample.CloseAppWSUseCase
-import ru.rznnike.demokmp.domain.interactor.wsexample.OpenAppWSUseCase
+import ru.rznnike.demokmp.domain.interactor.wsexample.CloseAppWSSessionUseCase
+import ru.rznnike.demokmp.domain.interactor.wsexample.GetAppWSSessionUseCase
 import ru.rznnike.demokmp.domain.interactor.wsexample.SendAppWSMessageUseCase
 
 internal val interactorModule = module {
@@ -25,7 +25,7 @@ internal val interactorModule = module {
     single { DeleteAllDBExampleDataUseCase(get(), get()) }
     single { CloseDBUseCase(get(), get()) }
 
-    single { OpenAppWSUseCase(get(), get()) }
-    single { CloseAppWSUseCase(get(), get()) }
+    single { GetAppWSSessionUseCase(get(), get()) }
+    single { CloseAppWSSessionUseCase(get(), get()) }
     single { SendAppWSMessageUseCase(get(), get()) }
 }

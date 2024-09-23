@@ -1,6 +1,5 @@
 package ru.rznnike.demokmp.app.ui.screen.settings
 
-import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.VerticalScrollbar
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -12,25 +11,22 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import demokmp.composeapp.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import ru.rznnike.demokmp.app.navigation.NavigationScreen
-import ru.rznnike.demokmp.app.navigation.getFlowNavigator
-import ru.rznnike.demokmp.app.navigation.getScreenNavigator
+import ru.rznnike.demokmp.app.navigation.getNavigator
+import ru.rznnike.demokmp.app.ui.view.TextR
 import ru.rznnike.demokmp.app.ui.view.Toolbar
 import ru.rznnike.demokmp.app.ui.view.ToolbarButton
-import ru.rznnike.demokmp.app.utils.TextR
 import ru.rznnike.demokmp.app.viewmodel.profile.ProfileViewModel
+import ru.rznnike.demokmp.generated.resources.*
 
 class NestedSettingsScreen : NavigationScreen() {
-    @Preview
     @Composable
-    override fun Content() {
-        val profileViewModel: ProfileViewModel = koinInject()
+    override fun Layout() {
+        val navigator = getNavigator()
 
-        val screenNavigator = getScreenNavigator()
-        val flowNavigator = getFlowNavigator()
+        val profileViewModel: ProfileViewModel = koinInject()
 
         Column {
             Spacer(Modifier.height(16.dp))
@@ -40,7 +36,7 @@ class NestedSettingsScreen : NavigationScreen() {
                     .padding(horizontal = 12.dp),
                 title = stringResource(Res.string.nested_settings),
                 leftButton = ToolbarButton(Res.drawable.ic_back) {
-                    screenNavigator.close()
+                    navigator.closeScreen()
                 }
             )
             Spacer(Modifier.height(16.dp))
@@ -71,7 +67,7 @@ class NestedSettingsScreen : NavigationScreen() {
                     Spacer(modifier = Modifier.height(16.dp))
                     Button(
                         onClick = {
-                            flowNavigator.close()
+                            navigator.closeFlow()
                         }
                     ) {
                         TextR(Res.string.to_main_screen)

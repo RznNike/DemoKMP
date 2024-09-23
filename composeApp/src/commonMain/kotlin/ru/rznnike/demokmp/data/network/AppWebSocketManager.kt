@@ -8,8 +8,9 @@ import kotlinx.coroutines.flow.*
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import ru.rznnike.demokmp.data.network.model.WebSocketMessageModel
-import ru.rznnike.demokmp.data.network.websocket.WebSocketConnectionState
-import ru.rznnike.demokmp.data.network.websocket.WebSocketData
+import ru.rznnike.demokmp.data.utils.defaultJson
+import ru.rznnike.demokmp.domain.model.websocket.WebSocketConnectionState
+import ru.rznnike.demokmp.domain.model.websocket.WebSocketSessionData
 import ru.rznnike.demokmp.domain.utils.logger
 import java.io.IOException
 
@@ -21,55 +22,69 @@ class AppWebSocketManager(
 ) {
     private var session: WebSocketSession? = null
     private var connectionState = MutableStateFlow(WebSocketConnectionState.DISCONNECTED)
+    private var sessionData: WebSocketSessionData<WebSocketMessageModel>? = null
+    private val jsonParser = defaultJson()
 
-    fun open(): WebSocketData<WebSocketMessageModel> {
-        connectionState.value = WebSocketConnectionState.DISCONNECTED
-        val messagesFlow = flow {
-            logger("$LOG_TAG | Trying to open a session: $url")
-            if (connectionState.value == WebSocketConnectionState.CLOSED) {
-                close()
-                return@flow
-            }
+    fun getSession(): WebSocketSessionData<WebSocketMessageModel> {
+        return sessionData ?: let {
+            connectionState = MutableStateFlow(WebSocketConnectionState.DISCONNECTED)
+            val messagesFlow = flow {
+                if (connectionState.value == WebSocketConnectionState.CLOSED) return@flow
 
-            client.webSocketSession(url).let { newSession ->
-                logger("$LOG_TAG | Session opened")
-                session = newSession
-                connectionState.value = WebSocketConnectionState.CONNECTED
+                logger("$LOG_TAG | Trying to open a session: $url")
+                connectionState.value = WebSocketConnectionState.CONNECTING
+                client.webSocketSession(url).let { newSession ->
+                    connectionState.value = WebSocketConnectionState.CONNECTED
+                    logger("$LOG_TAG | Session opened")
+                    session = newSession
 
-                emitAll(
-                    newSession.incoming.receiveAsFlow().mapNotNull {
-                        val json = (it as? Frame.Text)?.readText() ?: ""
-                        logger("$LOG_TAG | Message received:\n$json")
-                        return@mapNotNull try {
-                            Json.decodeFromString<WebSocketMessageModel>(json)
-                        } catch (exception: Exception) {
-                            logger("$LOG_TAG | Message NOT mapped")
-                            null
+                    emitAll(
+                        newSession.incoming.receiveAsFlow().mapNotNull { frame ->
+                            logger("$LOG_TAG | Message received with type ${frame.frameType}:")
+                            var message: WebSocketMessageModel? = null
+                            when (frame) {
+                                is Frame.Text -> {
+                                    val json = frame.readText()
+                                    logger("$LOG_TAG | $json")
+                                    try {
+                                        message = jsonParser.decodeFromString<WebSocketMessageModel>(json)
+                                    } catch (exception: Exception) {
+                                        logger(exception, "$LOG_TAG | Message NOT mapped")
+                                    }
+                                }
+                                is Frame.Close -> closeSession()
+                                is Frame.Binary -> Unit
+                                is Frame.Ping -> Unit
+                                is Frame.Pong -> Unit
+                            }
+                            return@mapNotNull message
                         }
-                    }
-                )
+                    )
+                }
+            }.retry { error ->
+                logger("$LOG_TAG | Connection error")
+                (error is IOException).also {
+                    connectionState.value = WebSocketConnectionState.DISCONNECTED
+                    session = null
+                    delay(10_000)
+                }
             }
-        }.retry { error ->
-            logger("$LOG_TAG | Connection error")
-            (error is IOException).also {
-                connectionState.value = WebSocketConnectionState.DISCONNECTED
-                session = null
-                delay(10_000)
-            }
+            WebSocketSessionData(
+                url = url,
+                messages = messagesFlow,
+                connectionState = connectionState.asStateFlow()
+            )
         }
-        return WebSocketData(
-            messages = messagesFlow,
-            connectionState = connectionState.asStateFlow()
-        )
     }
 
-    suspend fun close() {
+    suspend fun closeSession() {
         session?.let { session ->
             session.close(CloseReason(CloseReason.Codes.NORMAL, "Normal close request"))
-            logger("$LOG_TAG | Session closed: $url")
+            logger("$LOG_TAG | Session closed")
         }
-        session = null
         connectionState.value = WebSocketConnectionState.CLOSED
+        session = null
+        sessionData = null
     }
 
     suspend fun sendMessage(message: WebSocketMessageModel) {

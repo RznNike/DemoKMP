@@ -9,6 +9,5 @@ class AddDBExampleDataUseCase(
     private val dbExampleGateway: DBExampleGateway,
     dispatcherProvider: DispatcherProvider
 ) : UseCaseWithParams<DBExampleData, Unit>(dispatcherProvider) {
-    override suspend fun execute(parameters: DBExampleData) =
-        dbExampleGateway.add(parameters)
+    override suspend fun execute(parameters: DBExampleData) = dbExampleGateway.add(parameters)
 }

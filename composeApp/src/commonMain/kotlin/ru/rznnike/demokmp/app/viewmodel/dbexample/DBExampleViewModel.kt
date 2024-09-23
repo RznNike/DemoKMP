@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.koin.core.component.inject
-import ru.rznnike.demokmp.app.common.notifier.Notifier
+import ru.rznnike.demokmp.app.dispatcher.notifier.Notifier
 import ru.rznnike.demokmp.app.common.viewmodel.BaseUiViewModel
 import ru.rznnike.demokmp.app.error.ErrorHandler
 import ru.rznnike.demokmp.domain.common.DispatcherProvider
@@ -33,15 +33,16 @@ class DBExampleViewModel : BaseUiViewModel<DBExampleViewModel.UiState>() {
         viewModelScope.launch(dispatcherProvider.default) {
             setProgress(true)
             loadData()
+            setProgress(false)
         }
     }
 
     override fun provideDefaultUIState() = UiState()
 
-    private fun setProgress(isLoading: Boolean) {
+    override fun onProgressStateChanged(show: Boolean) {
         mutableUiState.update { currentState ->
             currentState.copy(
-                isLoading = isLoading
+                isLoading = show
             )
         }
     }
@@ -49,7 +50,6 @@ class DBExampleViewModel : BaseUiViewModel<DBExampleViewModel.UiState>() {
     private fun setData(data: List<DBExampleData>) {
         mutableUiState.update { currentState ->
             currentState.copy(
-                isLoading = false,
                 data = data
             )
         }
@@ -88,6 +88,7 @@ class DBExampleViewModel : BaseUiViewModel<DBExampleViewModel.UiState>() {
                 }, ::onError
             )
             loadData()
+            setProgress(false)
         }
     }
 
@@ -98,6 +99,7 @@ class DBExampleViewModel : BaseUiViewModel<DBExampleViewModel.UiState>() {
                 { }, ::onError
             )
             loadData()
+            setProgress(false)
         }
     }
 
@@ -108,6 +110,7 @@ class DBExampleViewModel : BaseUiViewModel<DBExampleViewModel.UiState>() {
                 { }, ::onError
             )
             loadData()
+            setProgress(false)
         }
     }
 

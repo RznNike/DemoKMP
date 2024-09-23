@@ -1,6 +1,5 @@
 package ru.rznnike.demokmp.app.ui.screen.dbexample
 
-import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.VerticalScrollbar
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -17,25 +16,24 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.key.*
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import demokmp.composeapp.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 import ru.rznnike.demokmp.app.navigation.NavigationScreen
-import ru.rznnike.demokmp.app.navigation.getScreenNavigator
+import ru.rznnike.demokmp.app.navigation.getNavigator
 import ru.rznnike.demokmp.app.ui.item.DBExampleDataItem
 import ru.rznnike.demokmp.app.ui.theme.localCustomColorScheme
+import ru.rznnike.demokmp.app.ui.view.TextR
 import ru.rznnike.demokmp.app.ui.view.Toolbar
 import ru.rznnike.demokmp.app.ui.view.ToolbarButton
-import ru.rznnike.demokmp.app.utils.TextR
 import ru.rznnike.demokmp.app.viewmodel.dbexample.DBExampleViewModel
+import ru.rznnike.demokmp.generated.resources.*
 
 class DBExampleScreen : NavigationScreen() {
-    @Preview
     @Composable
-    override fun Content() {
+    override fun Layout() {
+        val navigator = getNavigator()
+
         val dbExampleViewModel = viewModel { DBExampleViewModel() }
         val dbExampleUiState by dbExampleViewModel.uiState.collectAsState()
-
-        val screenNavigator = getScreenNavigator()
 
         var showToolbarMenu by remember { mutableStateOf(false) }
 
@@ -50,7 +48,7 @@ class DBExampleScreen : NavigationScreen() {
                         .padding(horizontal = 12.dp),
                     title = stringResource(Res.string.db_example),
                     leftButton = ToolbarButton(Res.drawable.ic_back) {
-                        screenNavigator.close()
+                        navigator.closeScreen()
                     },
                     rightButton = ToolbarButton(Res.drawable.ic_menu) {
                         showToolbarMenu = true

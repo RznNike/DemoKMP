@@ -5,12 +5,11 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.key.*
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.DpSize
@@ -18,20 +17,20 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.*
 import cafe.adriel.voyager.core.annotation.ExperimentalVoyagerApi
 import cafe.adriel.voyager.jetpack.ProvideNavigatorLifecycleKMPSupport
-import demokmp.composeapp.generated.resources.Res
-import demokmp.composeapp.generated.resources.ic_compose
-import demokmp.composeapp.generated.resources.window_title
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.KoinContext
 import org.koin.compose.koinInject
 import org.koin.core.context.startKoin
-import ru.rznnike.demokmp.app.common.notifier.Notifier
 import ru.rznnike.demokmp.app.di.appComponent
+import ru.rznnike.demokmp.app.dispatcher.keyboard.KeyEventDispatcher
 import ru.rznnike.demokmp.app.ui.main.mainFrame
 import ru.rznnike.demokmp.app.ui.theme.backgroundDark
 import ru.rznnike.demokmp.app.ui.theme.backgroundLight
 import ru.rznnike.demokmp.app.viewmodel.configuration.AppConfigurationViewModel
+import ru.rznnike.demokmp.generated.resources.Res
+import ru.rznnike.demokmp.generated.resources.ic_compose
+import ru.rznnike.demokmp.generated.resources.window_title
 import java.awt.Dimension
 import java.util.*
 
@@ -57,10 +56,10 @@ fun initKoin() {
 @Composable
 private fun ApplicationScope.startUI(args: Array<String>) {
     KoinContext {
-        val notifier: Notifier = koinInject()
-
         val appConfigurationViewModel: AppConfigurationViewModel = koinInject()
-        val appConfiguration by appConfigurationViewModel.uiState.collectAsState()
+        val appConfigurationUiState by appConfigurationViewModel.uiState.collectAsState()
+
+        val keyEventDispatcher: KeyEventDispatcher = koinInject()
 
         appConfigurationViewModel.setArgs(args)
 
@@ -79,25 +78,16 @@ private fun ApplicationScope.startUI(args: Array<String>) {
             },
             state = state,
             onPreviewKeyEvent = { keyEvent ->
-                when {
-                    keyEvent.isCtrlPressed && (keyEvent.key == Key.F) && (keyEvent.type == KeyEventType.KeyDown) -> {
-                        notifier.sendMessage("Ctrl+F")
-                        true
-                    }
-                    keyEvent.isCtrlPressed && keyEvent.isAltPressed && (keyEvent.key == Key.D) && (keyEvent.type == KeyEventType.KeyDown) -> {
-                        notifier.sendMessage("Ctrl+Alt+D")
-                        true
-                    }
-                    else -> false
-                }
+                keyEventDispatcher.sendEvent(keyEvent)
+                false
             }
         ) {
             setMinimumSize(
                 width = WINDOW_MIN_WIDTH_DP,
                 height = WINDOW_MIN_HEIGHT_DP
             )
-            if (appConfiguration.loaded) {
-                Locale.setDefault(Locale.forLanguageTag(appConfiguration.language.tag))
+            if (appConfigurationUiState.isLoaded) {
+                Locale.setDefault(Locale.forLanguageTag(appConfigurationUiState.language.tag))
                 window.title = stringResource(Res.string.window_title)
 
                 ProvideNavigatorLifecycleKMPSupport {
@@ -122,7 +112,7 @@ fun FrameWindowScope.setMinimumSize(
     height: Dp = Dp.Unspecified,
 ) {
     val density = LocalDensity.current
-    LaunchedEffect(density) {
+    key(density) {
         window.minimumSize = with(density) {
             Dimension(width.toPx().toInt(), height.toPx().toInt())
         }

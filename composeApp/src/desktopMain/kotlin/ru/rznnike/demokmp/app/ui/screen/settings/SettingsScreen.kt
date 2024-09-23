@@ -1,6 +1,5 @@
 package ru.rznnike.demokmp.app.ui.screen.settings
 
-import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.VerticalScrollbar
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -13,33 +12,32 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import demokmp.composeapp.generated.resources.*
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
-import ru.rznnike.demokmp.app.model.common.toAppModel
 import ru.rznnike.demokmp.app.navigation.NavigationScreen
-import ru.rznnike.demokmp.app.navigation.getScreenNavigator
+import ru.rznnike.demokmp.app.navigation.getNavigator
+import ru.rznnike.demokmp.app.ui.view.TextR
 import ru.rznnike.demokmp.app.ui.view.Toolbar
 import ru.rznnike.demokmp.app.ui.view.ToolbarButton
-import ru.rznnike.demokmp.app.utils.TextR
+import ru.rznnike.demokmp.app.utils.nameRes
 import ru.rznnike.demokmp.app.viewmodel.configuration.AppConfigurationViewModel
 import ru.rznnike.demokmp.app.viewmodel.profile.ProfileViewModel
 import ru.rznnike.demokmp.app.viewmodel.settings.SettingsViewModel
 import ru.rznnike.demokmp.domain.model.common.Language
 import ru.rznnike.demokmp.domain.model.common.Theme
+import ru.rznnike.demokmp.generated.resources.*
 
 class SettingsScreen : NavigationScreen() {
-    @Preview
     @Composable
-    override fun Content() {
+    override fun Layout() {
+        val navigator = getNavigator()
+
         val profileViewModel: ProfileViewModel = koinInject()
         val settingsViewModel = viewModel { SettingsViewModel() }
         val settingsUiState by settingsViewModel.uiState.collectAsState()
         val appConfigurationViewModel: AppConfigurationViewModel = koinInject()
         val appConfigurationUiState by appConfigurationViewModel.uiState.collectAsState()
-
-        val screenNavigator = getScreenNavigator()
 
         key(appConfigurationUiState.language.tag) {
             Column {
@@ -50,7 +48,7 @@ class SettingsScreen : NavigationScreen() {
                         .padding(horizontal = 12.dp),
                     title = stringResource(Res.string.settings),
                     leftButton = ToolbarButton(Res.drawable.ic_back) {
-                        screenNavigator.close()
+                        navigator.closeScreen()
                     }
                 )
                 Spacer(Modifier.height(16.dp))
@@ -88,7 +86,7 @@ class SettingsScreen : NavigationScreen() {
                                 Spacer(Modifier.width(16.dp))
                                 Button(
                                     onClick = {
-                                        screenNavigator.open(NestedSettingsScreen())
+                                        navigator.openScreen(NestedSettingsScreen())
                                     }
                                 ) {
                                     TextR(Res.string.open_nested_settings)
@@ -211,12 +209,12 @@ class SettingsScreen : NavigationScreen() {
                             Spacer(Modifier.width(16.dp))
                             OptionsSelector(
                                 headerRes = Res.string.theme,
-                                buttonText = stringResource(appConfigurationUiState.theme.toAppModel().nameRes)
+                                buttonText = stringResource(appConfigurationUiState.theme.nameRes)
                             ) { closeMenu ->
                                 Theme.entries.forEach { theme ->
                                     DropdownMenuItem(
                                         text = {
-                                            TextR(theme.toAppModel().nameRes)
+                                            TextR(theme.nameRes)
                                         },
                                         onClick = {
                                             appConfigurationViewModel.setTheme(theme)

@@ -3,7 +3,6 @@ package ru.rznnike.demokmp.app.ui.screen.splash
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,7 +15,7 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.painterResource
 import ru.rznnike.demokmp.app.navigation.NavigationScreen
-import ru.rznnike.demokmp.app.navigation.getFlowNavigator
+import ru.rznnike.demokmp.app.navigation.getNavigator
 import ru.rznnike.demokmp.app.ui.screen.home.HomeFlow
 import ru.rznnike.demokmp.app.ui.theme.localCustomDrawables
 
@@ -24,10 +23,9 @@ private const val ANIMATION_DURATION_MS = 1000
 private const val SPLASH_DURATION_MS = 1500L
 
 class SplashScreen : NavigationScreen() {
-    @Preview
     @Composable
-    override fun Content() {
-        val flowNavigator = getFlowNavigator()
+    override fun Layout() {
+        val navigator = getNavigator()
 
         var imageVisible by remember { mutableStateOf(false) }
         val imageAlpha: Float by animateFloatAsState(
@@ -42,7 +40,7 @@ class SplashScreen : NavigationScreen() {
             imageVisible = true
 
             delay(SPLASH_DURATION_MS)
-            flowNavigator.newRoot(HomeFlow())
+            navigator.newRootFlow(HomeFlow())
         }
 
         Box(

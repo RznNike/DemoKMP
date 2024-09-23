@@ -9,6 +9,5 @@ class GetDBExampleDataListUseCase(
     private val dbExampleGateway: DBExampleGateway,
     dispatcherProvider: DispatcherProvider
 ) : UseCase<List<DBExampleData>>(dispatcherProvider) {
-    override suspend fun execute() =
-        dbExampleGateway.getAll()
+    override suspend fun execute() = dbExampleGateway.getAll()
 }

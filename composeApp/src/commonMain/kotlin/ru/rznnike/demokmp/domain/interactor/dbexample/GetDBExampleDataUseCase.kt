@@ -9,10 +9,9 @@ class GetDBExampleDataUseCase(
     private val dbExampleGateway: DBExampleGateway,
     dispatcherProvider: DispatcherProvider
 ) : UseCaseWithParams<GetDBExampleDataUseCase.Parameters, GetDBExampleDataUseCase.Result>(dispatcherProvider) {
-    override suspend fun execute(parameters: Parameters) =
-        Result(
-            data = dbExampleGateway.get(id = parameters.id)
-        )
+    override suspend fun execute(parameters: Parameters) = Result(
+        data = dbExampleGateway.get(id = parameters.id)
+    )
 
     data class Parameters(
         val id: Long

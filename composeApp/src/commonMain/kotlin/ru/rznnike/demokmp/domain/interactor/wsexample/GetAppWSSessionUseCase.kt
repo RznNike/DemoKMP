@@ -1,15 +1,14 @@
 package ru.rznnike.demokmp.domain.interactor.wsexample
 
-import ru.rznnike.demokmp.data.network.websocket.WebSocketData
 import ru.rznnike.demokmp.domain.common.DispatcherProvider
 import ru.rznnike.demokmp.domain.common.interactor.UseCase
 import ru.rznnike.demokmp.domain.gateway.WebSocketExampleGateway
-import ru.rznnike.demokmp.domain.model.wsexample.WebSocketMessage
+import ru.rznnike.demokmp.domain.model.websocket.WebSocketMessage
+import ru.rznnike.demokmp.domain.model.websocket.WebSocketSessionData
 
-class OpenAppWSUseCase(
+class GetAppWSSessionUseCase(
     private val webSocketExampleGateway: WebSocketExampleGateway,
     dispatcherProvider: DispatcherProvider
-) : UseCase<WebSocketData<WebSocketMessage>>(dispatcherProvider) {
-    override suspend fun execute() =
-        webSocketExampleGateway.openAppWS()
+) : UseCase<WebSocketSessionData<WebSocketMessage>>(dispatcherProvider) {
+    override suspend fun execute() = webSocketExampleGateway.getSession()
 }

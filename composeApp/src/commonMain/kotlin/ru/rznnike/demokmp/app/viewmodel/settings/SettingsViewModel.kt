@@ -4,7 +4,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.koin.core.component.inject
-import ru.rznnike.demokmp.app.common.notifier.Notifier
+import ru.rznnike.demokmp.app.dispatcher.notifier.Notifier
 import ru.rznnike.demokmp.app.common.viewmodel.BaseUiViewModel
 import ru.rznnike.demokmp.app.error.ErrorHandler
 import ru.rznnike.demokmp.domain.common.DispatcherProvider

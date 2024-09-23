@@ -9,6 +9,5 @@ class SetThemeUseCase(
     private val preferencesGateway: PreferencesGateway,
     dispatcherProvider: DispatcherProvider
 ) : UseCaseWithParams<Theme, Unit>(dispatcherProvider) {
-    override suspend fun execute(parameters: Theme) =
-        preferencesGateway.setTheme(parameters)
+    override suspend fun execute(parameters: Theme) = preferencesGateway.setTheme(parameters)
 }

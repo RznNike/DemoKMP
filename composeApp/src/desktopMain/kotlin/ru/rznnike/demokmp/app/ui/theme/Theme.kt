@@ -1,19 +1,17 @@
 package ru.rznnike.demokmp.app.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material3.ColorScheme
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.lightColorScheme
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
-import demokmp.composeapp.generated.resources.Res
-import demokmp.composeapp.generated.resources.ic_compose
-import demokmp.composeapp.generated.resources.ic_compose_dark
+import androidx.compose.ui.unit.Dp
 import org.jetbrains.compose.resources.DrawableResource
 import org.koin.compose.koinInject
 import ru.rznnike.demokmp.app.viewmodel.configuration.AppConfigurationViewModel
 import ru.rznnike.demokmp.domain.model.common.Theme
+import ru.rznnike.demokmp.generated.resources.Res
+import ru.rznnike.demokmp.generated.resources.ic_compose
+import ru.rznnike.demokmp.generated.resources.ic_compose_dark
 
 private val lightScheme = lightColorScheme(
     primary = primaryLight,
@@ -150,7 +148,8 @@ fun AppTheme(
 
     CompositionLocalProvider(
         localCustomColorScheme provides customColorScheme,
-        localCustomDrawables provides customDrawables
+        localCustomDrawables provides customDrawables,
+        LocalMinimumInteractiveComponentSize provides Dp.Unspecified
     ) {
         MaterialTheme(
             colorScheme = colorScheme,

@@ -4,7 +4,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.koin.core.component.inject
-import ru.rznnike.demokmp.app.common.notifier.Notifier
+import ru.rznnike.demokmp.app.dispatcher.notifier.Notifier
 import ru.rznnike.demokmp.app.common.viewmodel.BaseUiViewModel
 import ru.rznnike.demokmp.app.error.ErrorHandler
 import ru.rznnike.demokmp.domain.common.DispatcherProvider
@@ -24,10 +24,10 @@ class HTTPExampleViewModel : BaseUiViewModel<HTTPExampleViewModel.UiState>() {
 
     override fun provideDefaultUIState() = UiState()
 
-    private fun setProgress(isLoading: Boolean) {
+    override fun onProgressStateChanged(show: Boolean) {
         mutableUiState.update { currentState ->
             currentState.copy(
-                isLoading = isLoading
+                isLoading = show
             )
         }
     }
@@ -35,7 +35,6 @@ class HTTPExampleViewModel : BaseUiViewModel<HTTPExampleViewModel.UiState>() {
     private fun setImages(images: List<String>) {
         mutableUiState.update { currentState ->
             currentState.copy(
-                isLoading = false,
                 images = images
             )
         }
@@ -52,12 +51,12 @@ class HTTPExampleViewModel : BaseUiViewModel<HTTPExampleViewModel.UiState>() {
                 { result ->
                     setImages(result)
                 }, { error ->
-                    setProgress(false)
                     errorHandler.proceed(error) { message ->
                         notifier.sendAlert(message)
                     }
                 }
             )
+            setProgress(false)
         }
     }
 

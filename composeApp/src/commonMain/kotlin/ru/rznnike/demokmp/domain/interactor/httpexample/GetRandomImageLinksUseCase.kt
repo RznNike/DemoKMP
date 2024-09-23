@@ -8,10 +8,9 @@ class GetRandomImageLinksUseCase(
     private val httpExampleGateway: HTTPExampleGateway,
     dispatcherProvider: DispatcherProvider
 ) : UseCaseWithParams<GetRandomImageLinksUseCase.Parameters, List<String>>(dispatcherProvider) {
-    override suspend fun execute(parameters: Parameters) =
-        httpExampleGateway.getRandomImageLinks(
-            count = parameters.count
-        )
+    override suspend fun execute(parameters: Parameters) = httpExampleGateway.getRandomImageLinks(
+        count = parameters.count
+    )
 
     data class Parameters(
         val count: Int

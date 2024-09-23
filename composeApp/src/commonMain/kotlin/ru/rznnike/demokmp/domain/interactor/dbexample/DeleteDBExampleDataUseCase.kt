@@ -9,6 +9,5 @@ class DeleteDBExampleDataUseCase(
     private val dbExampleGateway: DBExampleGateway,
     dispatcherProvider: DispatcherProvider
 ) : UseCaseWithParams<DBExampleData, Unit>(dispatcherProvider) {
-    override suspend fun execute(parameters: DBExampleData) =
-        dbExampleGateway.delete(parameters)
+    override suspend fun execute(parameters: DBExampleData) = dbExampleGateway.delete(parameters)
 }

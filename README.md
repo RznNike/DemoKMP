@@ -19,7 +19,7 @@ This is an example project with a set of solutions to typical problems, demonstr
 * Dark/Light theme with auto and manual selection
 * Strings localization
 * Launch arguments
-* Hotkeys
+* Screen-scoped hotkeys
 
 ## Used libraries
 * [Voyager](https://voyager.adriel.cafe/)
@@ -39,7 +39,7 @@ This is an example project with a set of solutions to typical problems, demonstr
 ## Launch project
 This project was created and tested using [IntelliJ IDEA](https://www.jetbrains.com/idea/). All further instructions are provided for this IDE.
 
-### Standart launch
+### Standard launch
 In IDE:
 
 ```Run -> Edit Configurations -> + (Add New Configuration) -> Gradle```

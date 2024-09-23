@@ -1,6 +1,5 @@
 package ru.rznnike.demokmp.app.ui.screen.home
 
-import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.VerticalScrollbar
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -11,16 +10,16 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.key.*
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import demokmp.composeapp.generated.resources.*
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import ru.rznnike.demokmp.BuildKonfig
-import ru.rznnike.demokmp.app.common.notifier.Notifier
+import ru.rznnike.demokmp.app.dispatcher.notifier.Notifier
 import ru.rznnike.demokmp.app.navigation.NavigationScreen
-import ru.rznnike.demokmp.app.navigation.getFlowNavigator
+import ru.rznnike.demokmp.app.navigation.getNavigator
 import ru.rznnike.demokmp.app.ui.dialog.common.AlertDialogAction
 import ru.rznnike.demokmp.app.ui.dialog.common.AlertDialogType
 import ru.rznnike.demokmp.app.ui.dialog.common.CommonAlertDialog
@@ -29,23 +28,32 @@ import ru.rznnike.demokmp.app.ui.screen.httpexample.HTTPExampleFlow
 import ru.rznnike.demokmp.app.ui.screen.settings.SettingsFlow
 import ru.rznnike.demokmp.app.ui.screen.wsexample.WebSocketsExampleFlow
 import ru.rznnike.demokmp.app.ui.theme.bodyLargeItalic
+import ru.rznnike.demokmp.app.ui.view.TextR
 import ru.rznnike.demokmp.app.ui.view.Toolbar
-import ru.rznnike.demokmp.app.utils.TextR
 import ru.rznnike.demokmp.app.utils.getMacAddress
 import ru.rznnike.demokmp.app.utils.platformName
 import ru.rznnike.demokmp.app.viewmodel.configuration.AppConfigurationViewModel
+import ru.rznnike.demokmp.generated.resources.*
 
 class HomeScreen : NavigationScreen() {
     @OptIn(ExperimentalLayoutApi::class)
-    @Preview
     @Composable
-    override fun Content() {
+    override fun Layout() {
+        val navigator = getNavigator()
+
         val appConfigurationViewModel: AppConfigurationViewModel = koinInject()
         val appConfiguration by appConfigurationViewModel.uiState.collectAsState()
 
         val notifier: Notifier = koinInject()
 
-        val flowNavigator = getFlowNavigator()
+        screenKeyEventCallback = { keyEvent ->
+            if (keyEvent.type == KeyEventType.KeyDown) {
+                when {
+                    keyEvent.isCtrlPressed && (keyEvent.key == Key.F) -> notifier.sendMessage("Ctrl+F")
+                    keyEvent.isCtrlPressed && keyEvent.isAltPressed && (keyEvent.key == Key.D) -> notifier.sendMessage("Ctrl+Alt+D")
+                }
+            }
+        }
 
         var showAboutDialog by remember { mutableStateOf(false) }
 
@@ -95,16 +103,16 @@ class HomeScreen : NavigationScreen() {
                     }
 
                     MenuButton(Res.string.open_settings) {
-                        flowNavigator.open(SettingsFlow())
+                        navigator.openFlow(SettingsFlow())
                     }
                     MenuButton(Res.string.open_http_example) {
-                        flowNavigator.open(HTTPExampleFlow())
+                        navigator.openFlow(HTTPExampleFlow())
                     }
                     MenuButton(Res.string.open_ws_example) {
-                        flowNavigator.open(WebSocketsExampleFlow())
+                        navigator.openFlow(WebSocketsExampleFlow())
                     }
                     MenuButton(Res.string.open_db_example) {
-                        flowNavigator.open(DBExampleFlow())
+                        navigator.openFlow(DBExampleFlow())
                     }
                     MenuButton(Res.string.about_app) {
                         showAboutDialog = true

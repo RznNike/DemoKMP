@@ -13,5 +13,6 @@ class PreferencesManager(
     val language = Preference.LanguagePreference(dataStore, "LANGUAGE", Language.default)
     val theme = Preference.ThemePreference(dataStore, "THEME", Theme.default)
 
+    @Suppress("unused")
     suspend fun clearAll() = dataStore.edit { it.clear() }
 }

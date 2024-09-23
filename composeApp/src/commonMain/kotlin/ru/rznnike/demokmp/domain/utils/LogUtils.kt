@@ -1,10 +1,18 @@
 package ru.rznnike.demokmp.domain.utils
 
-fun logger(message: String) = println(getLogMessageWithTime(message))
+import ru.rznnike.demokmp.BuildKonfig
+
+fun logger(message: String) {
+    if (BuildKonfig.DEBUG) {
+        println(getLogMessageWithTime(message))
+    }
+}
 
 fun logger(exception: Throwable, message: String = "") {
-    println(getLogMessageWithTime(message))
-    println((exception.stackTraceToString()))
+    if (BuildKonfig.DEBUG) {
+        println(getLogMessageWithTime(message))
+        println((exception.stackTraceToString()))
+    }
 }
 
 private fun getLogMessageWithTime(message: String) =

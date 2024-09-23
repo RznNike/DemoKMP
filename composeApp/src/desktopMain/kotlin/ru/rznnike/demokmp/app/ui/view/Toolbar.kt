@@ -14,11 +14,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import demokmp.composeapp.generated.resources.Res
-import demokmp.composeapp.generated.resources.ic_back
-import demokmp.composeapp.generated.resources.ic_delete
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
+import ru.rznnike.demokmp.generated.resources.Res
+import ru.rznnike.demokmp.generated.resources.ic_back
+import ru.rznnike.demokmp.generated.resources.ic_delete
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable

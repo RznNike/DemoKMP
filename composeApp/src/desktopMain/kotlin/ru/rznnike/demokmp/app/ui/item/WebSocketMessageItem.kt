@@ -10,7 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import ru.rznnike.demokmp.domain.model.wsexample.WebSocketMessage
+import ru.rznnike.demokmp.domain.model.websocket.WebSocketMessage
 
 @Composable
 fun WebSocketMessageItem(

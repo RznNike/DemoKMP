@@ -87,29 +87,35 @@ android {
     compileSdk = 34
 }
 
-compose.desktop.application {
-    mainClass = "$globalPackageName.app.MainKt"
-
-    nativeDistributions {
-        targetFormats(TargetFormat.Msi, TargetFormat.Deb)
-        packageName = globalPackageName
-        packageVersion = globalVersionName
-
-        modules("jdk.unsupported")
-
-        windows {
-            iconFile.set(project.file("src/commonMain/composeResources/drawable/icon.ico"))
-        }
-        linux {
-            iconFile.set(project.file("src/commonMain/composeResources/drawable/icon.png"))
-        }
+compose {
+    resources {
+        packageOfResClass = "$globalPackageName.generated.resources"
     }
 
-    buildTypes {
-        release {
-            proguard {
-                obfuscate.set(true)
-                configurationFiles.from(project.file("proguard-rules.pro"))
+    desktop.application {
+        mainClass = "$globalPackageName.app.MainKt"
+
+        nativeDistributions {
+            targetFormats(TargetFormat.Msi, TargetFormat.Deb)
+            packageName = globalPackageName
+            packageVersion = globalVersionName
+
+            modules("jdk.unsupported")
+
+            windows {
+                iconFile.set(project.file("src/commonMain/composeResources/drawable/icon.ico"))
+            }
+            linux {
+                iconFile.set(project.file("src/commonMain/composeResources/drawable/icon.png"))
+            }
+        }
+
+        buildTypes {
+            release {
+                proguard {
+                    obfuscate.set(true)
+                    configurationFiles.from(project.file("proguard-rules.pro"))
+                }
             }
         }
     }
