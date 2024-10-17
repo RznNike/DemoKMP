@@ -48,6 +48,8 @@ Under the ```Run``` header add these arguments in input field, then save the con
 
 ```desktopRun -DmainClass=ru.rznnike.demokmp.app.MainKt --quiet```
 
+At the line ```Environment variables``` add ```DEBUG=true``` to change debug mode flag automatically on launch.
+
 ### Launch with args
 You can run a Kotlin application with arguments that will be passed to the main() function.
 
@@ -66,7 +68,7 @@ This project is configured to create builds for Windows and Linux. If you want t
 
 To create a distributable build, run ```createDistributable``` (without Proguard) or ```createReleaseDistributable``` (with Proguard) Gradle task.
 
-To create an installer, run ```packageXXX``` or ```packageReleaseXXX``` accordingly (where ```XXX``` is ```Msi``` or ```Deb``` depending on your OS).
+To create an installer, run ```packageDistributionForCurrentOS``` or ```packageReleaseDistributionForCurrentOS``` accordingly.
 
 *Note: you can build your application only for the OS you are currently using. If, for example, you use Windows and need to create a build for Linux, consider doing it in a virtual machine.*
 

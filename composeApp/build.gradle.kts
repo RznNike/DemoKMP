@@ -1,4 +1,6 @@
 import com.codingfeline.buildkonfig.compiler.FieldSpec
+import org.gradle.configurationcache.extensions.capitalized
+import org.gradle.nativeplatform.platform.internal.DefaultNativePlatform
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 
 plugins {
@@ -81,6 +83,8 @@ dependencies {
 private val globalPackageName = "ru.rznnike.demokmp"
 private val globalVersionName = "1.0.0"
 private val globalVersionCode = 1
+private val debug = System.getenv("DEBUG")?.toBoolean() ?: false
+private val os = if (DefaultNativePlatform.getCurrentOperatingSystem().isWindows) "windows" else "linux"
 
 android {
     namespace = globalPackageName
@@ -100,7 +104,7 @@ compose {
             packageName = globalPackageName
             packageVersion = globalVersionName
 
-            modules("jdk.unsupported")
+            includeAllModules = true
 
             windows {
                 iconFile.set(project.file("src/commonMain/composeResources/drawable/icon.ico"))
@@ -125,10 +129,29 @@ buildkonfig {
     packageName = globalPackageName
 
     defaultConfigs {
-        buildConfigField(FieldSpec.Type.BOOLEAN, "DEBUG", "true")
+        buildConfigField(FieldSpec.Type.BOOLEAN, "DEBUG", "$debug")
+        buildConfigField(FieldSpec.Type.STRING, "OS", os)
         buildConfigField(FieldSpec.Type.STRING, "API_MAIN", "https://dog.ceo/api/")
         buildConfigField(FieldSpec.Type.STRING, "API_WEBSOCKETS", "wss://echo.websocket.org/")
         buildConfigField(FieldSpec.Type.STRING, "VERSION_NAME", globalVersionName)
         buildConfigField(FieldSpec.Type.INT, "VERSION_CODE", globalVersionCode.toString())
     }
+}
+
+task("generateReleaseApp") {
+    dependsOn("createReleaseDistributable")
+    doLast {
+        copy {
+            from("${project.rootDir}/composeApp/build/compose/binaries/main-release/app/${globalPackageName}")
+            into("${project.rootDir}/distributableOutput/${globalVersionCode}/application")
+        }
+    }
+}
+
+task<Zip>("generateReleaseArchive") {
+    dependsOn("generateReleaseApp")
+    val buildType = if (debug) "debug" else "release"
+    archiveFileName = "DemoKMP_${os.capitalized()}_v${globalVersionName}.${globalVersionCode}_${buildType}.zip"
+    destinationDirectory = file("${project.rootDir}/distributableArchive")
+    from("${project.rootDir}/distributableOutput/${globalVersionCode}")
 }
