@@ -72,6 +72,10 @@ room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 # https://developer.android.com/jetpack/androidx/releases/sqlite
 sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version.ref = "sqlite" }
 
+# PDF renderer
+# https://mvnrepository.com/artifact/org.apache.pdfbox/pdfbox
+pdfbox = { module = "org.apache.pdfbox:pdfbox", version = "3.0.3" }
+
 
 [plugins]
 # https://github.com/JetBrains/compose-multiplatform

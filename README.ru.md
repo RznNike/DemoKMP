@@ -20,6 +20,7 @@
 * Локализация строк
 * Параметры запуска
 * Горячие клавиши в контексте экрана
+* Базовый просмотр PDF
 
 ## Использованные библиотеки
 * [Voyager](https://voyager.adriel.cafe/)
@@ -31,6 +32,7 @@
 * [Ktorfit](https://foso.github.io/Ktorfit/)
 * [Coil](https://coil-kt.github.io/coil/)
 * [BuildKonfig](https://github.com/yshrsmz/BuildKonfig)
+* [PDFBox](https://pdfbox.apache.org/)
 
 ## Использованные примеры API
 * HTTP - [dog.ceo](https://dog.ceo/dog-api/)

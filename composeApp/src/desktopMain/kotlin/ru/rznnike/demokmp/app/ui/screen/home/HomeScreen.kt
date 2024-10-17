@@ -25,6 +25,7 @@ import ru.rznnike.demokmp.app.ui.dialog.common.AlertDialogType
 import ru.rznnike.demokmp.app.ui.dialog.common.CommonAlertDialog
 import ru.rznnike.demokmp.app.ui.screen.dbexample.DBExampleFlow
 import ru.rznnike.demokmp.app.ui.screen.httpexample.HTTPExampleFlow
+import ru.rznnike.demokmp.app.ui.screen.pdfexample.PdfExampleFlow
 import ru.rznnike.demokmp.app.ui.screen.settings.SettingsFlow
 import ru.rznnike.demokmp.app.ui.screen.wsexample.WebSocketsExampleFlow
 import ru.rznnike.demokmp.app.ui.theme.bodyLargeItalic
@@ -102,17 +103,20 @@ class HomeScreen : NavigationScreen() {
                         }
                     }
 
-                    MenuButton(Res.string.open_settings) {
+                    MenuButton(Res.string.settings) {
                         navigator.openFlow(SettingsFlow())
                     }
-                    MenuButton(Res.string.open_http_example) {
+                    MenuButton(Res.string.http_example) {
                         navigator.openFlow(HTTPExampleFlow())
                     }
-                    MenuButton(Res.string.open_ws_example) {
+                    MenuButton(Res.string.ws_example) {
                         navigator.openFlow(WebSocketsExampleFlow())
                     }
-                    MenuButton(Res.string.open_db_example) {
+                    MenuButton(Res.string.db_example) {
                         navigator.openFlow(DBExampleFlow())
+                    }
+                    MenuButton(Res.string.pdf_example) {
+                        navigator.openFlow(PdfExampleFlow())
                     }
                     MenuButton(Res.string.about_app) {
                         showAboutDialog = true

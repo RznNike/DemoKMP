@@ -68,6 +68,8 @@ kotlin {
             implementation(libs.coil)
             implementation(libs.coil.compose)
             implementation(libs.coil.okhttp)
+
+            implementation(libs.pdfbox)
         }
     }
 
