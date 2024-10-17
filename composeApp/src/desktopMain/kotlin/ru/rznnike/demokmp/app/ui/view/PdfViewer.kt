@@ -23,6 +23,7 @@ import androidx.compose.ui.graphics.toComposeImageBitmap
 import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.isCtrlPressed
 import androidx.compose.ui.input.pointer.onPointerEvent
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.Dispatchers
@@ -96,6 +97,7 @@ fun PdfViewer(
                         color = MaterialTheme.colorScheme.outline
                     ),
                 bitmap = it,
+                contentScale = ContentScale.FillWidth,
                 contentDescription = null
             )
         }
