@@ -12,19 +12,13 @@ import cafe.adriel.voyager.transitions.FadeTransition
 
 val LocalNavigationFlows = staticCompositionLocalOf { mutableListOf<NavigationFlow>() }
 
-@OptIn(ExperimentalVoyagerApi::class)
 @Composable
 fun createNavigator(flow: NavigationFlow) {
     val flows = remember { mutableListOf(flow) }
     CompositionLocalProvider(
         LocalNavigationFlows provides flows
     ) {
-        Navigator(flow.screens) { navigator ->
-            FadeTransition(
-                navigator = navigator,
-                disposeScreenAfterTransitionEnd = true
-            )
-        }
+        Navigator(flow.screens)
     }
 }
 
