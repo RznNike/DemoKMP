@@ -21,17 +21,8 @@ class PdfExampleViewModel(
 
     override fun provideDefaultUIState() = UiState()
 
-    override fun onProgressStateChanged(show: Boolean) {
-        mutableUiState.update { currentState ->
-            currentState.copy(
-                isLoading = show
-            )
-        }
-    }
-
     private fun loadDocument() {
         viewModelScope.launch {
-            setProgress(true)
             getSamplePdfUseCase().process(
                 { result ->
                     mutableUiState.update { currentState ->
@@ -50,7 +41,6 @@ class PdfExampleViewModel(
                     }
                 }
             )
-            setProgress(false)
         }
     }
 
@@ -59,7 +49,6 @@ class PdfExampleViewModel(
     }
 
     data class UiState(
-        val isLoading: Boolean = false,
         val pdf: File? = null,
         val isError: Boolean = false
     )

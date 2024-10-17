@@ -10,6 +10,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollbarAdapter
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
@@ -30,7 +31,9 @@ import org.apache.pdfbox.Loader
 import org.apache.pdfbox.rendering.PDFRenderer
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
+import ru.rznnike.demokmp.app.ui.theme.bodyLargeBold
 import ru.rznnike.demokmp.generated.resources.Res
+import ru.rznnike.demokmp.generated.resources.error_file_loading
 import ru.rznnike.demokmp.generated.resources.ic_minus
 import ru.rznnike.demokmp.generated.resources.ic_plus
 import java.io.File
@@ -48,6 +51,7 @@ private val SCROLL_STEP_DP = 100.dp
 fun PdfViewer(
     modifier: Modifier = Modifier,
     file: File?,
+    isError: Boolean = false,
     dpi: Float = 300f,
     loadingContext: CoroutineContext = Dispatchers.IO
 ) = Box(
@@ -102,41 +106,58 @@ fun PdfViewer(
             .fillMaxHeight(),
         adapter = rememberScrollbarAdapter(scrollState)
     )
-    if (pages.isNotEmpty()) {
-        Row(
-            modifier = Modifier
-                .padding(16.dp)
-                .align(Alignment.BottomEnd)
-        ) {
-            @Composable
-            fun ZoomButton(
-                iconRes: DrawableResource,
-                onClick: () -> Unit
-            ) = Button(
+    when {
+        isError -> {
+            TextR(
+                modifier = Modifier.align(Alignment.Center),
+                textRes = Res.string.error_file_loading,
+                style = MaterialTheme.typography.bodyLargeBold
+            )
+        }
+        pages.isEmpty() -> {
+            CircularProgressIndicator(
                 modifier = Modifier
-                    .size(40.dp)
-                    .focusProperties {
-                        canFocus = false
-                    },
-                contentPadding = PaddingValues(0.dp),
-                onClick = onClick
+                    .size(48.dp)
+                    .align(Alignment.Center),
+                color = MaterialTheme.colorScheme.primary
+            )
+        }
+        else -> {
+            Row(
+                modifier = Modifier
+                    .padding(16.dp)
+                    .align(Alignment.BottomEnd)
             ) {
-                Icon(
+                @Composable
+                fun ZoomButton(
+                    iconRes: DrawableResource,
+                    onClick: () -> Unit
+                ) = Button(
                     modifier = Modifier
-                        .padding(vertical = 8.dp)
-                        .size(24.dp),
-                    painter = painterResource(iconRes),
-                    tint = MaterialTheme.colorScheme.onPrimary,
-                    contentDescription = null
-                )
-            }
+                        .size(40.dp)
+                        .focusProperties {
+                            canFocus = false
+                        },
+                    contentPadding = PaddingValues(0.dp),
+                    onClick = onClick
+                ) {
+                    Icon(
+                        modifier = Modifier
+                            .padding(vertical = 8.dp)
+                            .size(24.dp),
+                        painter = painterResource(iconRes),
+                        tint = MaterialTheme.colorScheme.onPrimary,
+                        contentDescription = null
+                    )
+                }
 
-            ZoomButton(Res.drawable.ic_minus) {
-                scale = max(scale - SCALE_STEP, SCALE_MIN)
-            }
-            Spacer(Modifier.width(16.dp))
-            ZoomButton(Res.drawable.ic_plus) {
-                scale = min(scale + SCALE_STEP, SCALE_MAX)
+                ZoomButton(Res.drawable.ic_minus) {
+                    scale = max(scale - SCALE_STEP, SCALE_MIN)
+                }
+                Spacer(Modifier.width(16.dp))
+                ZoomButton(Res.drawable.ic_plus) {
+                    scale = min(scale + SCALE_STEP, SCALE_MAX)
+                }
             }
         }
     }
