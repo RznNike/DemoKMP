@@ -3,9 +3,12 @@ package ru.rznnike.demokmp.app.di
 import de.jensklingenberg.ktorfit.Ktorfit
 import io.ktor.client.*
 import io.ktor.client.engine.okhttp.*
+import io.ktor.client.plugins.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.plugins.logging.*
 import io.ktor.client.plugins.websocket.*
+import io.ktor.client.request.*
+import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import okhttp3.Cache
 import okhttp3.OkHttpClient
@@ -13,6 +16,10 @@ import org.koin.dsl.module
 import ru.rznnike.demokmp.BuildKonfig
 import ru.rznnike.demokmp.data.network.AppWebSocketManager
 import ru.rznnike.demokmp.data.network.createAppApi
+import ru.rznnike.demokmp.data.network.interceptor.HttpBaseUrlInterceptor
+import ru.rznnike.demokmp.data.network.interceptor.HttpErrorResponseInterceptor
+import ru.rznnike.demokmp.data.network.interceptor.HttpHeaderInterceptor
+import ru.rznnike.demokmp.data.network.interceptor.HttpLoggingInterceptor
 import ru.rznnike.demokmp.data.utils.DataConstants
 import ru.rznnike.demokmp.data.utils.defaultJson
 import java.io.File
@@ -51,13 +58,14 @@ internal val networkModule = module {
         install(ContentNegotiation) {
             json(defaultJson())
         }
+        install(DefaultRequest) {
+            header(HttpHeaders.ContentType, ContentType.Application.Json)
+        }
     }
 
-    fun HttpClientConfig<OkHttpConfig>.installLogging() {
+    fun OkHttpClient.Builder.addLoggingInterceptor() {
         if (BuildKonfig.DEBUG) {
-            install(Logging) {
-                level = LogLevel.BODY
-            }
+            addInterceptor(HttpLoggingInterceptor())
         }
     }
 
@@ -66,9 +74,13 @@ internal val networkModule = module {
             .baseUrl(BuildKonfig.API_MAIN)
             .httpClient(
                 HttpClient(OkHttp) {
-                    configureOkHttp()
+                    configureOkHttp {
+                        addInterceptor(HttpBaseUrlInterceptor(get()))
+                        addInterceptor(HttpHeaderInterceptor(get()))
+                        addInterceptor(HttpErrorResponseInterceptor())
+                        addLoggingInterceptor()
+                    }
                     installJson()
-                    installLogging()
                 }
             )
             .build()
@@ -80,11 +92,11 @@ internal val networkModule = module {
             client = HttpClient(OkHttp) {
                 configureOkHttp {
                     pingInterval(Duration.ofMillis(WEB_SOCKET_PING_MS))
+                    addLoggingInterceptor()
                 }
                 install(WebSockets)
-                installLogging()
             },
-            url = BuildKonfig.API_WEBSOCKETS
+            preferencesManager = get()
         )
     }
 }

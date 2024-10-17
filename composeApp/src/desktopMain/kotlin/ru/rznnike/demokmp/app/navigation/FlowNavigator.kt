@@ -33,11 +33,12 @@ class FlowNavigator(
     }
 
     fun closeFlow() {
-        val oldFlow = navigationFlows.removeLast()
-        repeat(oldFlow.screens.size) {
-            navigator.pop()
-        }
-        if (navigator.size < 1) {
+        if (navigationFlows.size > 1) {
+            val oldFlow = navigationFlows.removeLast()
+            repeat(oldFlow.screens.size) {
+                navigator.pop()
+            }
+        } else {
             exitProcess(0)
         }
     }

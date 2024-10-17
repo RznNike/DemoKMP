@@ -4,6 +4,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import org.koin.dsl.module
+import ru.rznnike.demokmp.app.dispatcher.event.EventDispatcher
 import ru.rznnike.demokmp.app.dispatcher.keyboard.KeyEventDispatcher
 import ru.rznnike.demokmp.app.dispatcher.notifier.Notifier
 import ru.rznnike.demokmp.app.error.ErrorHandler
@@ -15,6 +16,7 @@ internal val appModule = module {
     single { Clock.systemUTC() }
     single { ErrorHandler() }
     single { Notifier(get()) }
+    single { EventDispatcher(get()) }
     single { KeyEventDispatcher(get()) }
 
     single<CoroutineScopeProvider> {

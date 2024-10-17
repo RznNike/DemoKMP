@@ -131,7 +131,7 @@ buildkonfig {
     defaultConfigs {
         buildConfigField(FieldSpec.Type.BOOLEAN, "DEBUG", "$debug")
         buildConfigField(FieldSpec.Type.STRING, "OS", os)
-        buildConfigField(FieldSpec.Type.STRING, "API_MAIN", "https://dog.ceo/api/")
+        buildConfigField(FieldSpec.Type.STRING, "API_MAIN", "https://dog.ceo/")
         buildConfigField(FieldSpec.Type.STRING, "API_WEBSOCKETS", "wss://echo.websocket.org/")
         buildConfigField(FieldSpec.Type.STRING, "VERSION_NAME", globalVersionName)
         buildConfigField(FieldSpec.Type.INT, "VERSION_CODE", globalVersionCode.toString())

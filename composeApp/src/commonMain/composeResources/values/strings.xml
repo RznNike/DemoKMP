@@ -36,4 +36,5 @@
     <string name="environment">Environment</string>
     <string name="mac">MAC</string>
     <string name="launch_args">Launch arguments</string>
+    <string name="error_on_server">Error on server</string>
 </resources>

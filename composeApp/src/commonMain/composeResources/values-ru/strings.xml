@@ -36,4 +36,5 @@
     <string name="environment">Окружение</string>
     <string name="mac">MAC</string>
     <string name="launch_args">Параметры запуска</string>
+    <string name="error_on_server">Ошибка на сервере</string>
 </resources>
