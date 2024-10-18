@@ -1,12 +1,12 @@
 package ru.rznnike.demokmp.data.utils
 
 import ru.rznnike.demokmp.BuildKonfig
+import ru.rznnike.demokmp.domain.utils.OperatingSystem
 
 object DataConstants {
-    @Suppress("KotlinConstantConditions")
     val ROOT_DIR = when {
         BuildKonfig.DEBUG -> "workDirectory"
-        BuildKonfig.OS == "windows" -> ".."
+        OperatingSystem.isWindows -> ".."
         else -> "../.."
     }
     val APP_DATA_DIR = "${ROOT_DIR}/data"
