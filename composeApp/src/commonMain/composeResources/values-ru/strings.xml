@@ -1,9 +1,6 @@
 <resources>
     <string name="window_title">Демо приложение KMP</string>
     <string name="main_screen">Главный экран</string>
-    <string name="open_settings">Открыть настройки</string>
-    <string name="open_http_example">Открыть пример HTTP</string>
-    <string name="open_db_example">Открыть пример БД</string>
     <string name="test_dialog">Тестовый диалог</string>
     <string name="test_message">Тестовое сообщение</string>
     <string name="hotkeys_tip">Тест горячих клавиш: попробуйте нажать Ctrl+F или Ctrl+Alt+D</string>
@@ -23,9 +20,7 @@
     <string name="theme_dark">Темная</string>
     <string name="theme_auto">Авто</string>
     <string name="nested_settings">Вложенные настройки</string>
-    <string name="open_nested_settings">Открыть вложенные настройки</string>
     <string name="to_main_screen">На главный экран</string>
-    <string name="open_ws_example">Открыть пример WS</string>
     <string name="ws_example">Пример WebSockets</string>
     <string name="message">Сообщение</string>
     <string name="send">Отправить</string>
@@ -36,4 +31,18 @@
     <string name="environment">Окружение</string>
     <string name="mac">MAC</string>
     <string name="launch_args">Параметры запуска</string>
+    <string name="error_on_server">Ошибка на сервере</string>
+    <string name="pdf_example">Пример PDF</string>
+    <string name="error_file_loading">Ошибка загрузки файла</string>
+    <string name="search">Поиск</string>
+    <string name="nothing_found">Ничего не найдено</string>
+    <string name="custom_ui_elements">Пользовательские элементы UI</string>
+    <string name="button">Кнопка</string>
+    <string name="tab_1">Вкладка 1</string>
+    <string name="tab_2">Вкладка 2</string>
+    <string name="tab_3">Вкладка 3</string>
+    <string name="input_field">Поле ввода</string>
+    <string name="date_selection">Выбор даты</string>
+    <string name="dropdown">Список</string>
+    <string name="dropdown_with_filter">Список с фильтром</string>
 </resources>

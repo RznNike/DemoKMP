@@ -20,6 +20,8 @@
 * Локализация строк
 * Параметры запуска
 * Горячие клавиши в контексте экрана
+* Базовый просмотр PDF
+* Различные пользовательские элементы UI
 
 ## Использованные библиотеки
 * [Voyager](https://voyager.adriel.cafe/)
@@ -31,6 +33,7 @@
 * [Ktorfit](https://foso.github.io/Ktorfit/)
 * [Coil](https://coil-kt.github.io/coil/)
 * [BuildKonfig](https://github.com/yshrsmz/BuildKonfig)
+* [PDFBox](https://pdfbox.apache.org/)
 
 ## Использованные примеры API
 * HTTP - [dog.ceo](https://dog.ceo/dog-api/)
@@ -47,6 +50,8 @@
 Под заголовком ```Run``` добавьте эти аргументы в поле ввода, затем сохраните конфигурацию:
 
 ```desktopRun -DmainClass=ru.rznnike.demokmp.app.MainKt --quiet```
+
+В строке ```Environment variables``` добавьте ```DEBUG=true```, чтобы автоматически менять флаг отладочного режима при запуске.
 
 ### Запуск с параметрами
 Вы можете запустить Kotlin приложение с параметрами, которые будут переданы в функцию main().
@@ -66,7 +71,7 @@
 
 Чтобы создать распространяемую сборку, запустите задачу Gradle ```createDistributable``` (без Proguard) или ```createReleaseDistributable``` (с Proguard).
 
-Чтобы создать установщик, запустите ```packageXXX``` or ```packageReleaseXXX``` соответственно (где ```XXX``` - это ```Msi``` или ```Deb``` в зависимости от вашей ОС).
+Чтобы создать установщик, запустите ```packageDistributionForCurrentOS``` или ```packageReleaseDistributionForCurrentOS``` соответственно.
 
 *Примечание: вы можете собрать приложение только для той ОС, которую используете в данный момент. Если, например, вы используете Windows и вам необходимо создать сборку для Linux, рассмотрите возможность сделать это в виртуальной машине.*
 

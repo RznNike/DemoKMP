@@ -20,6 +20,8 @@ This is an example project with a set of solutions to typical problems, demonstr
 * Strings localization
 * Launch arguments
 * Screen-scoped hotkeys
+* Basic PDF viewer
+* Various custom UI elements
 
 ## Used libraries
 * [Voyager](https://voyager.adriel.cafe/)
@@ -31,6 +33,7 @@ This is an example project with a set of solutions to typical problems, demonstr
 * [Ktorfit](https://foso.github.io/Ktorfit/)
 * [Coil](https://coil-kt.github.io/coil/)
 * [BuildKonfig](https://github.com/yshrsmz/BuildKonfig)
+* [PDFBox](https://pdfbox.apache.org/)
 
 ## Used example APIs
 * HTTP - [dog.ceo](https://dog.ceo/dog-api/)
@@ -47,6 +50,8 @@ In IDE:
 Under the ```Run``` header add these arguments in input field, then save the configuration:
 
 ```desktopRun -DmainClass=ru.rznnike.demokmp.app.MainKt --quiet```
+
+At the line ```Environment variables``` add ```DEBUG=true``` to change debug mode flag automatically on launch.
 
 ### Launch with args
 You can run a Kotlin application with arguments that will be passed to the main() function.
@@ -66,7 +71,7 @@ This project is configured to create builds for Windows and Linux. If you want t
 
 To create a distributable build, run ```createDistributable``` (without Proguard) or ```createReleaseDistributable``` (with Proguard) Gradle task.
 
-To create an installer, run ```packageXXX``` or ```packageReleaseXXX``` accordingly (where ```XXX``` is ```Msi``` or ```Deb``` depending on your OS).
+To create an installer, run ```packageDistributionForCurrentOS``` or ```packageReleaseDistributionForCurrentOS``` accordingly.
 
 *Note: you can build your application only for the OS you are currently using. If, for example, you use Windows and need to create a build for Linux, consider doing it in a virtual machine.*
 

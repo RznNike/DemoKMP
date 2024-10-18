@@ -29,6 +29,10 @@
 -keep class io.ktor.client.** { *; }
 -keep class io.ktor.serialization.**
 
+# PdfBox
+-dontwarn org.apache.commons.logging.**
+-dontwarn org.apache.pdfbox.io.IOUtils
+
 
 ### OkHttp ###
 

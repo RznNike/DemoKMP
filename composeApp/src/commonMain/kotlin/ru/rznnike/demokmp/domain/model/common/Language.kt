@@ -4,11 +4,11 @@ enum class Language(
     val tag: String,
     val localizedName: String
 ) {
-    RU("ru", "Русский"),
-    EN("en", "English");
+    RU("ru-RU", "Русский"),
+    EN("en-US", "English");
 
     companion object {
-        val default = RU
+        val default = EN
 
         operator fun get(tag: String) = entries.find { it.tag == tag } ?: default
     }

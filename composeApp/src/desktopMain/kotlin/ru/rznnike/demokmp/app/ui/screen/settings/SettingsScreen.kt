@@ -9,10 +9,13 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.StringResource
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import ru.rznnike.demokmp.app.navigation.NavigationScreen
@@ -33,9 +36,9 @@ class SettingsScreen : NavigationScreen() {
     override fun Layout() {
         val navigator = getNavigator()
 
+        val viewModel = viewModel { SettingsViewModel() }
+        val uiState by viewModel.uiState.collectAsState()
         val profileViewModel: ProfileViewModel = koinInject()
-        val settingsViewModel = viewModel { SettingsViewModel() }
-        val settingsUiState by settingsViewModel.uiState.collectAsState()
         val appConfigurationViewModel: AppConfigurationViewModel = koinInject()
         val appConfigurationUiState by appConfigurationViewModel.uiState.collectAsState()
 
@@ -89,7 +92,7 @@ class SettingsScreen : NavigationScreen() {
                                         navigator.openScreen(NestedSettingsScreen())
                                     }
                                 ) {
-                                    TextR(Res.string.open_nested_settings)
+                                    TextR(Res.string.nested_settings)
                                 }
                             }
                         }
@@ -105,19 +108,26 @@ class SettingsScreen : NavigationScreen() {
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 @Composable
-                                fun CounterButton(text: String, onClick: () -> Unit) {
-                                    Button(
-                                        modifier = Modifier.size(40.dp),
-                                        contentPadding = PaddingValues(0.dp),
-                                        onClick = onClick
-                                    ) {
-                                        Text(
-                                            text = text,
-                                            modifier = Modifier.wrapContentSize(),
-                                            style = MaterialTheme.typography.titleLarge,
-                                            textAlign = TextAlign.Center
-                                        )
-                                    }
+                                fun CounterButton(
+                                    iconRes: DrawableResource,
+                                    onClick: () -> Unit
+                                ) = Button(
+                                    modifier = Modifier
+                                        .size(40.dp)
+                                        .focusProperties {
+                                            canFocus = false
+                                        },
+                                    contentPadding = PaddingValues(0.dp),
+                                    onClick = onClick
+                                ) {
+                                    Icon(
+                                        modifier = Modifier
+                                            .padding(vertical = 8.dp)
+                                            .size(24.dp),
+                                        painter = painterResource(iconRes),
+                                        tint = MaterialTheme.colorScheme.onPrimary,
+                                        contentDescription = null
+                                    )
                                 }
 
                                 TextR(
@@ -126,19 +136,19 @@ class SettingsScreen : NavigationScreen() {
                                         .weight(1f)
                                 )
                                 Spacer(Modifier.width(16.dp))
-                                CounterButton("-") {
-                                    settingsViewModel.onCounterInput(settingsUiState.counter - 1)
+                                CounterButton(Res.drawable.ic_minus) {
+                                    viewModel.onCounterInput(uiState.counter - 1)
                                 }
                                 Spacer(Modifier.width(8.dp))
                                 Text(
-                                    text = settingsUiState.counter.toString(),
+                                    text = uiState.counter.toString(),
                                     modifier = Modifier
                                         .width(50.dp),
                                     textAlign = TextAlign.Center
                                 )
                                 Spacer(Modifier.width(8.dp))
-                                CounterButton("+") {
-                                    settingsViewModel.onCounterInput(settingsUiState.counter + 1)
+                                CounterButton(Res.drawable.ic_plus) {
+                                    viewModel.onCounterInput(uiState.counter + 1)
                                 }
                             }
                         }

@@ -36,8 +36,8 @@ class WebSocketsExampleScreen : NavigationScreen() {
     override fun Layout() {
         val navigator = getNavigator()
 
-        val webSocketsExampleViewModel = viewModel { WebSocketsExampleViewModel() }
-        val webSocketsExampleUiState by webSocketsExampleViewModel.uiState.collectAsState()
+        val viewModel = viewModel { WebSocketsExampleViewModel() }
+        val uiState by viewModel.uiState.collectAsState()
 
         Column {
             Spacer(Modifier.height(16.dp))
@@ -71,7 +71,7 @@ class WebSocketsExampleScreen : NavigationScreen() {
                         .height(IntrinsicSize.Min)
                 ) {
                     OutlinedTextField(
-                        value = webSocketsExampleViewModel.messageInput,
+                        value = viewModel.messageInput,
                         singleLine = true,
                         label = {
                             TextR(Res.string.message)
@@ -81,13 +81,13 @@ class WebSocketsExampleScreen : NavigationScreen() {
                             .onKeyEvent { keyEvent ->
                                 when {
                                     (keyEvent.key.nativeKeyCode == Key.Enter.nativeKeyCode) && (keyEvent.type == KeyEventType.KeyUp) -> {
-                                        webSocketsExampleViewModel.sendMessage()
+                                        viewModel.sendMessage()
                                         true
                                     }
                                     else -> false
                                 }
                             },
-                        onValueChange = webSocketsExampleViewModel::onMessageInput
+                        onValueChange = viewModel::onMessageInput
                     )
                     Spacer(Modifier.width(16.dp))
                     Button(
@@ -95,7 +95,7 @@ class WebSocketsExampleScreen : NavigationScreen() {
                             .padding(top = 8.dp)
                             .fillMaxHeight(),
                         onClick = {
-                            webSocketsExampleViewModel.sendMessage()
+                            viewModel.sendMessage()
                         }
                     ) {
                         TextR(Res.string.send)
@@ -128,7 +128,7 @@ class WebSocketsExampleScreen : NavigationScreen() {
                         verticalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
                         items(
-                            items = webSocketsExampleUiState.messages,
+                            items = uiState.messages,
                             key = { it.hashCode() }
                         ) { item ->
                             WebSocketMessageItem(item)
@@ -166,7 +166,7 @@ class WebSocketsExampleScreen : NavigationScreen() {
                         modifier = Modifier
                             .size(16.dp)
                             .background(
-                                color = if (webSocketsExampleUiState.connectionState == WebSocketConnectionState.CONNECTED) {
+                                color = if (uiState.connectionState == WebSocketConnectionState.CONNECTED) {
                                     Color.Green
                                 } else {
                                     Color.Red
