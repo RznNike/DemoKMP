@@ -32,8 +32,8 @@ class DBExampleScreen : NavigationScreen() {
     override fun Layout() {
         val navigator = getNavigator()
 
-        val dbExampleViewModel = viewModel { DBExampleViewModel() }
-        val dbExampleUiState by dbExampleViewModel.uiState.collectAsState()
+        val viewModel = viewModel { DBExampleViewModel() }
+        val uiState by viewModel.uiState.collectAsState()
 
         var showToolbarMenu by remember { mutableStateOf(false) }
 
@@ -67,7 +67,7 @@ class DBExampleScreen : NavigationScreen() {
                             },
                             onClick = {
                                 showToolbarMenu = false
-                                dbExampleViewModel.deleteAllData()
+                                viewModel.deleteAllData()
                             }
                         )
                     }
@@ -94,7 +94,7 @@ class DBExampleScreen : NavigationScreen() {
                         .height(IntrinsicSize.Min)
                 ) {
                     OutlinedTextField(
-                        value = dbExampleViewModel.nameInput,
+                        value = viewModel.nameInput,
                         singleLine = true,
                         label = {
                             TextR(Res.string.db_example_input_label)
@@ -104,13 +104,13 @@ class DBExampleScreen : NavigationScreen() {
                             .onKeyEvent { keyEvent ->
                                 when {
                                     (keyEvent.key.nativeKeyCode == Key.Enter.nativeKeyCode) && (keyEvent.type == KeyEventType.KeyUp) -> {
-                                        dbExampleViewModel.addData()
+                                        viewModel.addData()
                                         true
                                     }
                                     else -> false
                                 }
                             },
-                        onValueChange = dbExampleViewModel::onNameInput
+                        onValueChange = viewModel::onNameInput
                     )
                     Spacer(Modifier.width(16.dp))
                     Button(
@@ -118,7 +118,7 @@ class DBExampleScreen : NavigationScreen() {
                             .padding(top = 8.dp)
                             .fillMaxHeight(),
                         onClick = {
-                            dbExampleViewModel.addData()
+                            viewModel.addData()
                         }
                     ) {
                         TextR(Res.string.add)
@@ -151,16 +151,16 @@ class DBExampleScreen : NavigationScreen() {
                         verticalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
                         items(
-                            items = dbExampleUiState.data,
+                            items = uiState.data,
                             key = { it.id }
                         ) { item ->
                             DBExampleDataItem(item) {
-                                dbExampleViewModel.deleteData(item)
+                                viewModel.deleteData(item)
                             }
                         }
                     }
 
-                    if (dbExampleUiState.isLoading) {
+                    if (uiState.isLoading) {
                         Box(
                             modifier = Modifier
                                 .fillMaxSize()

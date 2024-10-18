@@ -34,4 +34,15 @@
     <string name="error_on_server">Ошибка на сервере</string>
     <string name="pdf_example">Пример PDF</string>
     <string name="error_file_loading">Ошибка загрузки файла</string>
+    <string name="search">Поиск</string>
+    <string name="nothing_found">Ничего не найдено</string>
+    <string name="custom_ui_elements">Пользовательские элементы UI</string>
+    <string name="button">Кнопка</string>
+    <string name="tab_1">Вкладка 1</string>
+    <string name="tab_2">Вкладка 2</string>
+    <string name="tab_3">Вкладка 3</string>
+    <string name="input_field">Поле ввода</string>
+    <string name="date_selection">Выбор даты</string>
+    <string name="dropdown">Список</string>
+    <string name="dropdown_with_filter">Список с фильтром</string>
 </resources>

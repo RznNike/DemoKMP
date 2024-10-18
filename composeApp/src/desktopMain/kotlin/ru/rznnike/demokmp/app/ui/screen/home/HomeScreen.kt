@@ -23,6 +23,7 @@ import ru.rznnike.demokmp.app.navigation.getNavigator
 import ru.rznnike.demokmp.app.ui.dialog.common.AlertDialogAction
 import ru.rznnike.demokmp.app.ui.dialog.common.AlertDialogType
 import ru.rznnike.demokmp.app.ui.dialog.common.CommonAlertDialog
+import ru.rznnike.demokmp.app.ui.screen.customui.CustomUIFlow
 import ru.rznnike.demokmp.app.ui.screen.dbexample.DBExampleFlow
 import ru.rznnike.demokmp.app.ui.screen.httpexample.HTTPExampleFlow
 import ru.rznnike.demokmp.app.ui.screen.pdfexample.PdfExampleFlow
@@ -43,7 +44,7 @@ class HomeScreen : NavigationScreen() {
         val navigator = getNavigator()
 
         val appConfigurationViewModel: AppConfigurationViewModel = koinInject()
-        val appConfiguration by appConfigurationViewModel.uiState.collectAsState()
+        val appConfigurationUiState by appConfigurationViewModel.uiState.collectAsState()
 
         val notifier: Notifier = koinInject()
 
@@ -118,6 +119,9 @@ class HomeScreen : NavigationScreen() {
                     MenuButton(Res.string.pdf_example) {
                         navigator.openFlow(PdfExampleFlow())
                     }
+                    MenuButton(Res.string.custom_ui_elements) {
+                        navigator.openFlow(CustomUIFlow())
+                    }
                     MenuButton(Res.string.about_app) {
                         showAboutDialog = true
                     }
@@ -158,7 +162,7 @@ class HomeScreen : NavigationScreen() {
                 stringResource(Res.string.mac),
                 macAddress,
                 stringResource(Res.string.launch_args),
-                appConfiguration.args.joinToString()
+                appConfigurationUiState.args.joinToString()
             )
             CommonAlertDialog(
                 type = AlertDialogType.HORIZONTAL,

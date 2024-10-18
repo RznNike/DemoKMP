@@ -48,3 +48,8 @@ val Typography.bodyLargeBold: TextStyle
     get() = bodyLarge.copy(
         fontWeight = FontWeight.Bold
     )
+
+val Typography.bodyMediumBold: TextStyle
+    get() = bodyMedium.copy(
+        fontWeight = FontWeight.Bold
+    )

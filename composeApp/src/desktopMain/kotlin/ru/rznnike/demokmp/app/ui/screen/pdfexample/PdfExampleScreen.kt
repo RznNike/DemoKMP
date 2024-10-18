@@ -17,8 +17,8 @@ import ru.rznnike.demokmp.app.ui.view.ToolbarButton
 import ru.rznnike.demokmp.app.viewmodel.pdfexample.PdfExampleViewModel
 import ru.rznnike.demokmp.domain.common.DispatcherProvider
 import ru.rznnike.demokmp.generated.resources.Res
-import ru.rznnike.demokmp.generated.resources.http_example
 import ru.rznnike.demokmp.generated.resources.ic_back
+import ru.rznnike.demokmp.generated.resources.pdf_example
 
 class PdfExampleScreen : NavigationScreen() {
     @Composable
@@ -27,7 +27,7 @@ class PdfExampleScreen : NavigationScreen() {
 
         val dispatcherProvider: DispatcherProvider = koinInject()
 
-        val pdfExampleViewModel = viewModel {
+        val viewModel = viewModel {
             PdfExampleViewModel { command ->
                 when (command) {
                     is PdfExampleViewModel.NavigationCommand.Back -> {
@@ -36,7 +36,7 @@ class PdfExampleScreen : NavigationScreen() {
                 }
             }
         }
-        val pdfExampleUiState by pdfExampleViewModel.uiState.collectAsState()
+        val uiState by viewModel.uiState.collectAsState()
 
         Column {
             Spacer(Modifier.height(16.dp))
@@ -44,9 +44,9 @@ class PdfExampleScreen : NavigationScreen() {
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 12.dp),
-                title = stringResource(Res.string.http_example),
+                title = stringResource(Res.string.pdf_example),
                 leftButton = ToolbarButton(Res.drawable.ic_back) {
-                    pdfExampleViewModel.onBackPressed()
+                    viewModel.onBackPressed()
                 }
             )
             Spacer(Modifier.height(16.dp))
@@ -58,8 +58,8 @@ class PdfExampleScreen : NavigationScreen() {
             ) {
                 PdfViewer(
                     modifier = Modifier.fillMaxSize(),
-                    file = pdfExampleUiState.pdf,
-                    isError = pdfExampleUiState.isError,
+                    file = uiState.pdf,
+                    isError = uiState.isError,
                     loadingContext = dispatcherProvider.io
                 )
             }

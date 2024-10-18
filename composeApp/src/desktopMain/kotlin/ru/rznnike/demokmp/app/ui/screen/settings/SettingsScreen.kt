@@ -36,9 +36,9 @@ class SettingsScreen : NavigationScreen() {
     override fun Layout() {
         val navigator = getNavigator()
 
+        val viewModel = viewModel { SettingsViewModel() }
+        val uiState by viewModel.uiState.collectAsState()
         val profileViewModel: ProfileViewModel = koinInject()
-        val settingsViewModel = viewModel { SettingsViewModel() }
-        val settingsUiState by settingsViewModel.uiState.collectAsState()
         val appConfigurationViewModel: AppConfigurationViewModel = koinInject()
         val appConfigurationUiState by appConfigurationViewModel.uiState.collectAsState()
 
@@ -137,18 +137,18 @@ class SettingsScreen : NavigationScreen() {
                                 )
                                 Spacer(Modifier.width(16.dp))
                                 CounterButton(Res.drawable.ic_minus) {
-                                    settingsViewModel.onCounterInput(settingsUiState.counter - 1)
+                                    viewModel.onCounterInput(uiState.counter - 1)
                                 }
                                 Spacer(Modifier.width(8.dp))
                                 Text(
-                                    text = settingsUiState.counter.toString(),
+                                    text = uiState.counter.toString(),
                                     modifier = Modifier
                                         .width(50.dp),
                                     textAlign = TextAlign.Center
                                 )
                                 Spacer(Modifier.width(8.dp))
                                 CounterButton(Res.drawable.ic_plus) {
-                                    settingsViewModel.onCounterInput(settingsUiState.counter + 1)
+                                    viewModel.onCounterInput(uiState.counter + 1)
                                 }
                             }
                         }

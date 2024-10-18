@@ -21,6 +21,7 @@ This is an example project with a set of solutions to typical problems, demonstr
 * Launch arguments
 * Screen-scoped hotkeys
 * Basic PDF viewer
+* Various custom UI elements
 
 ## Used libraries
 * [Voyager](https://voyager.adriel.cafe/)

@@ -32,8 +32,8 @@ class HTTPExampleScreen : NavigationScreen() {
     override fun Layout() {
         val navigator = getNavigator()
 
-        val httpExampleViewModel = viewModel { HTTPExampleViewModel() }
-        val httpExampleUiState by httpExampleViewModel.uiState.collectAsState()
+        val viewModel = viewModel { HTTPExampleViewModel() }
+        val uiState by viewModel.uiState.collectAsState()
 
         Column {
             Spacer(Modifier.height(16.dp))
@@ -46,7 +46,7 @@ class HTTPExampleScreen : NavigationScreen() {
                     navigator.closeScreen()
                 },
                 rightButton = ToolbarButton(Res.drawable.ic_refresh) {
-                    httpExampleViewModel.requestImages()
+                    viewModel.requestImages()
                 }
             )
             Spacer(Modifier.height(16.dp))
@@ -66,7 +66,7 @@ class HTTPExampleScreen : NavigationScreen() {
                     horizontalArrangement = Arrangement.spacedBy(16.dp),
                     verticalArrangement = Arrangement.spacedBy(16.dp),
                 ) {
-                    httpExampleUiState.images.forEach { image ->
+                    uiState.images.forEach { image ->
                         SubcomposeAsyncImage(
                             modifier = Modifier
                                 .size(200.dp)
@@ -92,7 +92,7 @@ class HTTPExampleScreen : NavigationScreen() {
                     adapter = rememberScrollbarAdapter(verticalScrollState)
                 )
 
-                if (httpExampleUiState.isLoading) {
+                if (uiState.isLoading) {
                     Box(
                         modifier = Modifier
                             .fillMaxSize()

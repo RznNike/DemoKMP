@@ -34,4 +34,15 @@
     <string name="error_on_server">Error on server</string>
     <string name="pdf_example">PDF example</string>
     <string name="error_file_loading">File loading error</string>
+    <string name="search">Search</string>
+    <string name="nothing_found">Nothing found</string>
+    <string name="custom_ui_elements">Custom UI elements</string>
+    <string name="button">Button</string>
+    <string name="tab_1">Tab 1</string>
+    <string name="tab_2">Tab 2</string>
+    <string name="tab_3">Tab 3</string>
+    <string name="input_field">Input field</string>
+    <string name="date_selection">Date selection</string>
+    <string name="dropdown">Dropdown</string>
+    <string name="dropdown_with_filter">Dropdown with filter</string>
 </resources>
