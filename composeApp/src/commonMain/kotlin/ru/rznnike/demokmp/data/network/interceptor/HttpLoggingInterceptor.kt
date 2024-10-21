@@ -101,7 +101,11 @@ class HttpLoggingInterceptor(
                     logBuilder.appendLine("--> END ${request.method} (${buffer.size}-byte, $gzippedLength-gzipped-byte body)")
                 } else {
                     val body = buffer.readString(charset)
-                    val formattedBody = formatter.encodeToString(formatter.parseToJsonElement(body))
+                    val formattedBody = try {
+                        formatter.encodeToString(formatter.parseToJsonElement(body))
+                    } catch (_: Exception) {
+                        body
+                    }
                     logBuilder.appendLine(formattedBody)
 
                     logBuilder.appendLine("--> END ${request.method} (${requestBody.contentLength()}-byte body)")
@@ -171,7 +175,11 @@ class HttpLoggingInterceptor(
                 if (contentLength != 0L) {
                     logBuilder.appendLine()
                     val body = buffer.clone().readString(charset)
-                    val formattedBody = formatter.encodeToString(formatter.parseToJsonElement(body))
+                    val formattedBody = try {
+                        formatter.encodeToString(formatter.parseToJsonElement(body))
+                    } catch (_: Exception) {
+                        body
+                    }
                     logBuilder.appendLine(formattedBody)
                 }
 
