@@ -4,11 +4,17 @@ import java.net.NetworkInterface
 
 actual val platformName: String = "Java ${System.getProperty("java.version")}"
 
-actual fun getMacAddress(): String =
+actual fun getMacAddress(): String? =
     NetworkInterface
         .getNetworkInterfaces()
         .toList()
-        .sortedByDescending { it.name.startsWith("ethernet") }
-        .firstNotNullOf { element ->
+        .filter { it.hardwareAddress != null }
+        .sortedWith(
+            compareBy(
+                { !it.displayName.contains(Regex("Ethernet|Wi-Fi", RegexOption.IGNORE_CASE)) },
+                { it.displayName.contains(Regex("Virtual", RegexOption.IGNORE_CASE)) }
+            )
+        )
+        .firstNotNullOfOrNull { element ->
             element.hardwareAddress?.joinToString(separator = "-") { "%02X".format(it) }
         }
