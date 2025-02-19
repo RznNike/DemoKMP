@@ -1,5 +1,5 @@
 import com.codingfeline.buildkonfig.compiler.FieldSpec
-import org.gradle.configurationcache.extensions.capitalized
+import org.gradle.internal.extensions.stdlib.capitalized
 import org.gradle.nativeplatform.platform.internal.DefaultNativePlatform
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 
@@ -85,7 +85,9 @@ dependencies {
 private val globalPackageName = "ru.rznnike.demokmp"
 private val globalVersionName = "1.0.0"
 private val globalVersionCode = 1
-private val debug = System.getenv("DEBUG")?.toBoolean() ?: false
+private val buildType = BuildType[System.getenv("BUILD_TYPE")]
+private val debug = buildType != BuildType.RELEASE
+private val runFromIDE = System.getenv("RUN_FROM_IDE").toBoolean()
 private val os = if (DefaultNativePlatform.getCurrentOperatingSystem().isWindows) "windows" else "linux"
 
 android {
@@ -131,7 +133,9 @@ buildkonfig {
     packageName = globalPackageName
 
     defaultConfigs {
+        buildConfigField(FieldSpec.Type.STRING, "BUILD_TYPE", buildType.tag)
         buildConfigField(FieldSpec.Type.BOOLEAN, "DEBUG", "$debug")
+        buildConfigField(FieldSpec.Type.BOOLEAN, "RUN_FROM_IDE", "$runFromIDE")
         buildConfigField(FieldSpec.Type.STRING, "OS", os)
         buildConfigField(FieldSpec.Type.STRING, "API_MAIN", "https://dog.ceo/")
         buildConfigField(FieldSpec.Type.STRING, "API_WEBSOCKETS", "wss://echo.websocket.org/")
@@ -140,20 +144,55 @@ buildkonfig {
     }
 }
 
-task("generateReleaseApp") {
-    dependsOn("createReleaseDistributable")
+task("clearAppBuildJarsDir") {
     doLast {
+        delete("${project.rootDir}/composeApp/build/compose/jars")
+    }
+}
+
+task("generateReleaseApp") {
+    dependsOn("clearAppBuildJarsDir", "packageReleaseUberJarForCurrentOS")
+    doLast {
+        val outputPath = "${project.rootDir}/distributableOutput/$globalVersionCode"
+        val executablePath = "$outputPath/application/$globalVersionCode"
+
+        delete(outputPath)
+        File(executablePath).mkdirs()
+        File("${project.rootDir}/composeApp/build/compose/jars")
+            .listFiles()
+            ?.firstOrNull()
+            ?.copyTo(File("$executablePath/app.jar"))
         copy {
-            from("${project.rootDir}/composeApp/build/compose/binaries/main-release/app/${globalPackageName}")
-            into("${project.rootDir}/distributableOutput/${globalVersionCode}/application")
+            from("${project.rootDir}/runScripts/${os}")
+            into(outputPath)
         }
+        File("$outputPath/launcher_configuration.ini").writeText(
+            """
+                java_path=
+                single_instance_port=62740
+            """.trimIndent()
+        )
     }
 }
 
 task<Zip>("generateReleaseArchive") {
     dependsOn("generateReleaseApp")
-    val buildType = if (debug) "debug" else "release"
-    archiveFileName = "DemoKMP_${os.capitalized()}_v${globalVersionName}.${globalVersionCode}_${buildType}.zip"
+    val flags = mutableListOf(buildType.tag)
+    archiveFileName = "DemoKMP_${os.capitalized()}_v${globalVersionName}.${globalVersionCode}_${flags.joinToString(separator = "_")}.zip"
     destinationDirectory = file("${project.rootDir}/distributableArchive")
     from("${project.rootDir}/distributableOutput/${globalVersionCode}")
+}
+
+private enum class BuildType(
+    val tag: String
+) {
+    DEBUG("debug"),
+    STAGING("staging"),
+    RELEASE("release");
+
+    companion object {
+        val default = DEBUG
+
+        operator fun get(tag: String?) = values().find { it.tag == tag } ?: default
+    }
 }
