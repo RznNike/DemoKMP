@@ -12,7 +12,8 @@ object DataConstants {
     val APP_DATA_DIR = "${ROOT_DIR}/data"
 
     val NETWORK_CACHE_PATH = "$APP_DATA_DIR/networkCache"
-    val PREFERENCES_PATH = "$APP_DATA_DIR/preferences/settings.preferences_pb"
+    val PREFERENCES_FOLDER_PATH = "$APP_DATA_DIR/preferences"
+    val PREFERENCES_PATH = "$PREFERENCES_FOLDER_PATH/settings.properties"
     val DB_PATH = "$APP_DATA_DIR/database/demokmp_main.db"
 
     const val HEADER_TEST = "Test"

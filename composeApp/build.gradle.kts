@@ -33,7 +33,7 @@ kotlin {
 
             implementation(libs.viewmodel.compose)
 
-            implementation(libs.datastore.preferences)
+            implementation(libs.multiplatform.settings)
 
             implementation(libs.coroutines.core)
 
