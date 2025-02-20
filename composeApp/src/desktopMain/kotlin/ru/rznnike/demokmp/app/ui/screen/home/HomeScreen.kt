@@ -160,7 +160,7 @@ class HomeScreen : NavigationScreen() {
                 stringResource(Res.string.environment),
                 platformName,
                 stringResource(Res.string.mac),
-                macAddress,
+                macAddress ?: "",
                 stringResource(Res.string.launch_args),
                 appConfigurationUiState.args.joinToString()
             )
