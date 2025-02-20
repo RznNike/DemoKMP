@@ -17,8 +17,8 @@
 -keep class androidx.sqlite.** { *; }
 
 # Ktor
--keep class io.ktor.client.** { *; }
--keep class io.ktor.serialization.**
+-keep class io.ktor.** { *; }
+-dontwarn io.ktor.**
 
 # PdfBox
 -dontwarn org.apache.commons.logging.**

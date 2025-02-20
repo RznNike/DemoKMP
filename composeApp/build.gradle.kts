@@ -122,6 +122,7 @@ compose {
             release {
                 proguard {
                     obfuscate.set(true)
+                    optimize.set(false)
                     configurationFiles.from(project.file("proguard-rules.pro"))
                 }
             }
@@ -154,7 +155,7 @@ task("generateReleaseApp") {
     dependsOn("clearAppBuildJarsDir", "packageReleaseUberJarForCurrentOS")
     doLast {
         val outputPath = "${project.rootDir}/distributableOutput/$globalVersionCode"
-        val executablePath = "$outputPath/application/$globalVersionCode"
+        val executablePath = "$outputPath/application"
 
         delete(outputPath)
         File(executablePath).mkdirs()
