@@ -45,4 +45,6 @@
     <string name="date_selection">Date selection</string>
     <string name="dropdown">Dropdown</string>
     <string name="dropdown_with_filter">Dropdown with filter</string>
+    <string name="error">Error</string>
+    <string name="error_app_multi_launch">Another app instance is already running</string>
 </resources>

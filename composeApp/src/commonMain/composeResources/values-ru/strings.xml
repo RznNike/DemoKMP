@@ -45,4 +45,6 @@
     <string name="date_selection">Выбор даты</string>
     <string name="dropdown">Список</string>
     <string name="dropdown_with_filter">Список с фильтром</string>
+    <string name="error">Ошибка</string>
+    <string name="error_app_multi_launch">Другая копия приложения уже запущена</string>
 </resources>

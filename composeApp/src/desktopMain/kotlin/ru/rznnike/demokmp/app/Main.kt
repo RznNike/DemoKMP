@@ -27,7 +27,7 @@ import ru.rznnike.demokmp.app.dispatcher.keyboard.KeyEventDispatcher
 import ru.rznnike.demokmp.app.ui.main.mainFrame
 import ru.rznnike.demokmp.app.ui.theme.backgroundDark
 import ru.rznnike.demokmp.app.ui.theme.backgroundLight
-import ru.rznnike.demokmp.app.viewmodel.configuration.AppConfigurationViewModel
+import ru.rznnike.demokmp.app.viewmodel.global.configuration.AppConfigurationViewModel
 import ru.rznnike.demokmp.generated.resources.Res
 import ru.rznnike.demokmp.generated.resources.ic_compose
 import ru.rznnike.demokmp.generated.resources.window_title

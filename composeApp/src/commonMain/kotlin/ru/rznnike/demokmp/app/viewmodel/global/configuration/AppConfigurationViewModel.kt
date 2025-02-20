@@ -1,4 +1,4 @@
-package ru.rznnike.demokmp.app.viewmodel.configuration
+package ru.rznnike.demokmp.app.viewmodel.global.configuration
 
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.update
@@ -6,6 +6,7 @@ import kotlinx.coroutines.launch
 import org.koin.core.component.inject
 import ru.rznnike.demokmp.app.common.viewmodel.BaseUiViewModel
 import ru.rznnike.demokmp.domain.common.DispatcherProvider
+import ru.rznnike.demokmp.domain.interactor.app.CloseAppSingleInstanceSocketUseCase
 import ru.rznnike.demokmp.domain.interactor.dbexample.CloseDBUseCase
 import ru.rznnike.demokmp.domain.interactor.preferences.GetLanguageUseCase
 import ru.rznnike.demokmp.domain.interactor.preferences.GetThemeUseCase
@@ -21,6 +22,7 @@ class AppConfigurationViewModel : BaseUiViewModel<AppConfigurationViewModel.UiSt
     private val getThemeUseCase: GetThemeUseCase by inject()
     private val setThemeUseCase: SetThemeUseCase by inject()
     private val closeDBUseCase: CloseDBUseCase by inject()
+    private val closeAppSingleInstanceSocketUseCase: CloseAppSingleInstanceSocketUseCase by inject()
 
     init {
         viewModelScope.launch(dispatcherProvider.default) {
@@ -79,6 +81,7 @@ class AppConfigurationViewModel : BaseUiViewModel<AppConfigurationViewModel.UiSt
     fun onCloseApplication(closeFunction: () -> Unit) {
         viewModelScope.launch {
             closeDBUseCase()
+            closeAppSingleInstanceSocketUseCase()
             closeFunction()
         }
     }
