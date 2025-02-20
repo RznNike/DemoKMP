@@ -24,7 +24,6 @@
     <string name="ws_example">Пример WebSockets</string>
     <string name="message">Сообщение</string>
     <string name="send">Отправить</string>
-    <string name="no_internet_connection">Нет доступа в Интернет</string>
     <string name="connection">Подключение</string>
     <string name="about_app">О приложении</string>
     <string name="version">Версия</string>
@@ -47,4 +46,5 @@
     <string name="dropdown_with_filter">Список с фильтром</string>
     <string name="error">Ошибка</string>
     <string name="error_app_multi_launch">Другая копия приложения уже запущена</string>
+    <string name="error_no_connection_to_server">Нет подключения к серверу</string>
 </resources>

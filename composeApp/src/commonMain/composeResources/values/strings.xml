@@ -24,7 +24,6 @@
     <string name="ws_example">WebSockets example</string>
     <string name="message">Message</string>
     <string name="send">Send</string>
-    <string name="no_internet_connection">No Internet connection</string>
     <string name="connection">Connection</string>
     <string name="about_app">About app</string>
     <string name="version">Version</string>
@@ -47,4 +46,5 @@
     <string name="dropdown_with_filter">Dropdown with filter</string>
     <string name="error">Error</string>
     <string name="error_app_multi_launch">Another app instance is already running</string>
+    <string name="error_no_connection_to_server">No connection to server</string>
 </resources>

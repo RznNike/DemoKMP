@@ -1,7 +1,6 @@
 package ru.rznnike.demokmp.data.network.interceptor
 
 import kotlinx.serialization.ExperimentalSerializationApi
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import okhttp3.Headers
 import okhttp3.Interceptor
@@ -10,23 +9,28 @@ import okhttp3.Response
 import okhttp3.internal.http.promisesBody
 import okio.Buffer
 import okio.GzipSource
-import ru.rznnike.demokmp.domain.utils.logger
+import ru.rznnike.demokmp.BuildKonfig
+import ru.rznnike.demokmp.domain.log.Logger
+import ru.rznnike.demokmp.domain.log.NetworkRequestState
 import java.io.EOFException
 import java.io.IOException
+import java.net.SocketException
 import java.nio.charset.Charset
 import java.util.concurrent.TimeUnit
 
+private const val MAX_RESPONSE_BODY_SIZE_TO_LOG = 100 * 1024 // 100 KB
+
 @OptIn(ExperimentalSerializationApi::class)
-class HttpLoggingInterceptor(
-    private val level: Level = Level.BODY
-) : Interceptor {
+class HttpLoggingInterceptor : Interceptor {
     private val formatter = Json {
         prettyPrint = true
         prettyPrintIndent = "    "
     }
 
+    @Suppress("KotlinConstantConditions")
     @Throws(IOException::class)
     override fun intercept(chain: Interceptor.Chain): Response {
+        val level = if (BuildKonfig.DEBUG) Level.BODY else Level.BASIC
         val logBuilder = StringBuilder()
 
         val request = chain.request()
@@ -100,7 +104,12 @@ class HttpLoggingInterceptor(
                 } else if (gzippedLength != null) {
                     logBuilder.appendLine("--> END ${request.method} (${buffer.size}-byte, $gzippedLength-gzipped-byte body)")
                 } else {
-                    val body = buffer.readString(charset)
+                    var body = buffer.readString(charset)
+
+                    if (request.url.toString().endsWith("authorization/sign-in")) {
+                        body = body.replace("\"password\" *: *\".*\"".toRegex(), "\"password\":\"***\"")
+                    }
+
                     val formattedBody = try {
                         formatter.encodeToString(formatter.parseToJsonElement(body))
                     } catch (_: Exception) {
@@ -112,7 +121,7 @@ class HttpLoggingInterceptor(
                 }
             }
         }
-        logger(logBuilder.toString())
+        val logRequestUuid = Logger.networkRequest(logBuilder.toString())
         logBuilder.clear()
 
         val startNs = System.nanoTime()
@@ -120,7 +129,16 @@ class HttpLoggingInterceptor(
         try {
             response = chain.proceed(request)
         } catch (e: Exception) {
-            logBuilder.appendLine("<-- HTTP FAILED: $e")
+            val state = when {
+                (e is IOException) && (e.message == "Canceled") -> NetworkRequestState.TIMEOUT
+                (e is SocketException) && (e.message == "Socket closed") -> NetworkRequestState.CANCELLED
+                else -> NetworkRequestState.ERROR
+            }
+            Logger.networkResponse(
+                requestUuid = logRequestUuid,
+                message = "<-- HTTP FAILED: $e",
+                state = state
+            )
             throw e
         }
 
@@ -164,23 +182,28 @@ class HttpLoggingInterceptor(
                     }
                 }
 
-                val charset: Charset = responseBody.contentType().charsetOrUtf8()
-
                 if (!buffer.isProbablyUtf8()) {
                     logBuilder.appendLine()
                     logBuilder.appendLine("<-- END HTTP (${totalMs}ms, binary ${buffer.size}-byte body omitted)")
                     return response
                 }
 
-                if (contentLength != 0L) {
-                    logBuilder.appendLine()
-                    val body = buffer.clone().readString(charset)
-                    val formattedBody = try {
-                        formatter.encodeToString(formatter.parseToJsonElement(body))
-                    } catch (_: Exception) {
-                        body
+                when {
+                    contentLength > MAX_RESPONSE_BODY_SIZE_TO_LOG -> {
+                        logBuilder.appendLine()
+                        logBuilder.appendLine("***Too big response body omitted***")
                     }
-                    logBuilder.appendLine(formattedBody)
+                    contentLength != 0L -> {
+                        logBuilder.appendLine()
+                        val charset: Charset = responseBody.contentType().charsetOrUtf8()
+                        val body = buffer.clone().readString(charset)
+                        val formattedBody = try {
+                            formatter.encodeToString(formatter.parseToJsonElement(body))
+                        } catch (_: Exception) {
+                            body
+                        }
+                        logBuilder.appendLine(formattedBody)
+                    }
                 }
 
                 logBuilder.append("<-- END HTTP (${totalMs}ms, ${buffer.size}-byte")
@@ -188,7 +211,11 @@ class HttpLoggingInterceptor(
                 logBuilder.appendLine(" body)")
             }
         }
-        logger(logBuilder.toString())
+        Logger.networkResponse(
+            requestUuid = logRequestUuid,
+            message = logBuilder.toString(),
+            state = if (response.isSuccessful) NetworkRequestState.SUCCESS else NetworkRequestState.ERROR
+        )
 
         return response
     }

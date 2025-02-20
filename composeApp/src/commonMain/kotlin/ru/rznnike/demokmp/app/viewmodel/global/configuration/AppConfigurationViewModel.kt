@@ -5,6 +5,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.koin.core.component.inject
 import ru.rznnike.demokmp.app.common.viewmodel.BaseUiViewModel
+import ru.rznnike.demokmp.data.utils.DataConstants
 import ru.rznnike.demokmp.domain.common.DispatcherProvider
 import ru.rznnike.demokmp.domain.interactor.app.CloseAppSingleInstanceSocketUseCase
 import ru.rznnike.demokmp.domain.interactor.dbexample.CloseDBUseCase
@@ -12,8 +13,11 @@ import ru.rznnike.demokmp.domain.interactor.preferences.GetLanguageUseCase
 import ru.rznnike.demokmp.domain.interactor.preferences.GetThemeUseCase
 import ru.rznnike.demokmp.domain.interactor.preferences.SetLanguageUseCase
 import ru.rznnike.demokmp.domain.interactor.preferences.SetThemeUseCase
+import ru.rznnike.demokmp.domain.log.Logger
 import ru.rznnike.demokmp.domain.model.common.Language
 import ru.rznnike.demokmp.domain.model.common.Theme
+import ru.rznnike.demokmp.domain.utils.OperatingSystem
+import java.io.File
 
 class AppConfigurationViewModel : BaseUiViewModel<AppConfigurationViewModel.UiState>() {
     private val dispatcherProvider: DispatcherProvider by inject()
@@ -23,6 +27,8 @@ class AppConfigurationViewModel : BaseUiViewModel<AppConfigurationViewModel.UiSt
     private val setThemeUseCase: SetThemeUseCase by inject()
     private val closeDBUseCase: CloseDBUseCase by inject()
     private val closeAppSingleInstanceSocketUseCase: CloseAppSingleInstanceSocketUseCase by inject()
+
+    private var closeAppCallback: (() -> Unit)? = null
 
     init {
         viewModelScope.launch(dispatcherProvider.default) {
@@ -78,18 +84,50 @@ class AppConfigurationViewModel : BaseUiViewModel<AppConfigurationViewModel.UiSt
         }
     }
 
-    fun onCloseApplication(closeFunction: () -> Unit) {
+    fun setWindowTitle(newValue: String) {
+        viewModelScope.launch {
+            mutableUiState.update { currentState ->
+                currentState.copy(
+                    windowTitle = newValue
+                )
+            }
+        }
+    }
+
+    fun setCloseAppCallback(newValue: () -> Unit) {
+        closeAppCallback = newValue
+    }
+
+    fun closeApplication(isRestart: Boolean = false) {
         viewModelScope.launch {
             closeDBUseCase()
             closeAppSingleInstanceSocketUseCase()
-            closeFunction()
+            Logger.i("Application finish")
+            closeAppCallback?.invoke()
+
+            if (isRestart) {
+                relaunchApplication()
+            }
         }
+    }
+
+    private fun relaunchApplication() {
+        ProcessBuilder(
+            if (OperatingSystem.isLinux) {
+                listOf("sh", "./${DataConstants.RUN_SCRIPT_NAME}")
+            } else {
+                listOf("wscript", DataConstants.RUN_SCRIPT_NAME)
+            }
+        )
+            .directory(File(DataConstants.ROOT_DIR))
+            .start()
     }
 
     data class UiState(
         val args: List<String> = emptyList(),
         val language: Language = Language.default,
         val theme: Theme = Theme.default,
-        val isLoaded: Boolean = false
+        val isLoaded: Boolean = false,
+        val windowTitle: String = ""
     )
 }

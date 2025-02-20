@@ -6,9 +6,9 @@ import ru.rznnike.demokmp.BuildKonfig
 import ru.rznnike.demokmp.data.utils.DataConstants
 import ru.rznnike.demokmp.domain.common.DispatcherProvider
 import ru.rznnike.demokmp.domain.gateway.AppGateway
+import ru.rznnike.demokmp.domain.log.Logger
 import ru.rznnike.demokmp.domain.model.common.LauncherConfig
 import ru.rznnike.demokmp.domain.model.common.toLauncherConfig
-import ru.rznnike.demokmp.domain.utils.logger
 import java.io.File
 import java.net.ServerSocket
 
@@ -20,13 +20,13 @@ class AppGatewayImpl(
     override suspend fun checkIfAppIsAlreadyRunning(): Boolean = withContext(dispatcherProvider.io) {
         if (BuildKonfig.RUN_FROM_IDE) return@withContext false
 
-        logger("Checking if app is already running")
+        Logger.d("Checking if app is already running")
         try {
             val port = getLauncherConfig().singleInstancePort
             singleInstanceSocket = ServerSocket(port)
             false
         } catch (e: Exception) {
-            logger("App is already running!")
+            Logger.e("App is already running!")
             true
         }
     }

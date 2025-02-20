@@ -8,7 +8,7 @@ import java.time.temporal.TemporalQueries
 import java.util.Locale
 import java.util.TimeZone
 
-fun Long.toDate(
+fun Long.toDateString(
     pattern: String = GlobalConstants.DATE_PATTERN_SIMPLE,
     zeroTimeZone: Boolean = false
 ): String {
@@ -37,6 +37,8 @@ fun Long.toDateTime(): ZonedDateTime = Instant.ofEpochMilli(this)
 
 fun Long.toLocalDate(): LocalDate = toDateTime().toLocalDate()
 
+fun Long.toLocalDateTime(): LocalDateTime = toDateTime().toLocalDateTime()
+
 fun ZonedDateTime.millis() = toInstant().toEpochMilli()
 
 fun LocalDateTime.millis() = atZone(ZoneId.systemDefault()).millis()
@@ -50,6 +52,11 @@ fun LocalDate.atEndOfDay(): LocalDateTime = atTime(23, 59, 59, 999_999_999)
 fun LocalDate.atStartOfMonth(): LocalDate = withDayOfMonth(1)
 
 fun LocalDate.atEndOfMonth(): LocalDate = withDayOfMonth(lengthOfMonth())
+
+fun YearMonth.toDateString(
+    pattern: String = GlobalConstants.DATE_PATTERN_TEXT_MONTH_YEAR,
+    zeroTimeZone: Boolean = false
+) = this.atDay(1).millis().toDateString(pattern, zeroTimeZone)
 
 fun currentTimeMillis() = Clock.systemUTC().millis()
 

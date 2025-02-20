@@ -4,10 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.key
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
@@ -22,12 +19,14 @@ import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.KoinContext
 import org.koin.compose.koinInject
 import org.koin.core.context.startKoin
+import org.koin.core.logger.Level
 import ru.rznnike.demokmp.app.di.appComponent
 import ru.rznnike.demokmp.app.dispatcher.keyboard.KeyEventDispatcher
 import ru.rznnike.demokmp.app.ui.main.mainFrame
 import ru.rznnike.demokmp.app.ui.theme.backgroundDark
 import ru.rznnike.demokmp.app.ui.theme.backgroundLight
 import ru.rznnike.demokmp.app.viewmodel.global.configuration.AppConfigurationViewModel
+import ru.rznnike.demokmp.domain.log.Logger
 import ru.rznnike.demokmp.generated.resources.Res
 import ru.rznnike.demokmp.generated.resources.ic_compose
 import ru.rznnike.demokmp.generated.resources.window_title
@@ -42,13 +41,27 @@ private val WINDOW_MIN_HEIGHT_DP = 500.dp
 
 fun main(args: Array<String>) = application {
     initKoin()
+    Logger.i("Application start")
     startUI(args)
 }
 
 fun initKoin() {
     startKoin {
         modules(appComponent)
-        printLogger()
+        val koinLogger = Logger.withTag("Koin")
+        logger(
+            object : org.koin.core.logger.Logger() {
+                override fun display(level: Level, msg: String) {
+                    when (level) {
+                        Level.DEBUG -> koinLogger.d(msg)
+                        Level.NONE,
+                        Level.INFO,
+                        Level.WARNING -> koinLogger.i(msg)
+                        Level.ERROR -> koinLogger.e(msg)
+                    }
+                }
+            }
+        )
     }
 }
 
@@ -58,6 +71,13 @@ private fun ApplicationScope.startUI(args: Array<String>) {
     KoinContext {
         val appConfigurationViewModel: AppConfigurationViewModel = koinInject()
         val appConfigurationUiState by appConfigurationViewModel.uiState.collectAsState()
+
+        val defaultWindowTitle = stringResource(Res.string.window_title)
+        LaunchedEffect("init") {
+            appConfigurationViewModel.setArgs(args)
+            appConfigurationViewModel.setWindowTitle(defaultWindowTitle)
+            appConfigurationViewModel.setCloseAppCallback(::exitApplication)
+        }
 
         val keyEventDispatcher: KeyEventDispatcher = koinInject()
 
@@ -74,7 +94,7 @@ private fun ApplicationScope.startUI(args: Array<String>) {
             icon = painterResource(Res.drawable.ic_compose),
             title = stringResource(Res.string.window_title),
             onCloseRequest = {
-                appConfigurationViewModel.onCloseApplication(::exitApplication)
+                appConfigurationViewModel.closeApplication()
             },
             state = state,
             onPreviewKeyEvent = { keyEvent ->
@@ -86,9 +106,9 @@ private fun ApplicationScope.startUI(args: Array<String>) {
                 width = WINDOW_MIN_WIDTH_DP,
                 height = WINDOW_MIN_HEIGHT_DP
             )
+//            window.title = appConfigurationUiState.windowTitle
             if (appConfigurationUiState.isLoaded) {
                 Locale.setDefault(Locale.forLanguageTag(appConfigurationUiState.language.tag))
-                window.title = stringResource(Res.string.window_title)
 
                 ProvideNavigatorLifecycleKMPSupport {
                     mainFrame()
@@ -113,8 +133,8 @@ fun FrameWindowScope.setMinimumSize(
 ) {
     val density = LocalDensity.current
     key(density) {
-        window.minimumSize = with(density) {
-            Dimension(width.toPx().toInt(), height.toPx().toInt())
-        }
+//        window.minimumSize = with(density) {
+//            Dimension(width.toPx().toInt(), height.toPx().toInt())
+//        }
     }
 }
