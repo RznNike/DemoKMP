@@ -47,4 +47,5 @@
     <string name="error">Ошибка</string>
     <string name="error_app_multi_launch">Другая копия приложения уже запущена</string>
     <string name="error_no_connection_to_server">Нет подключения к серверу</string>
+    <string name="logger">Логгер</string>
 </resources>

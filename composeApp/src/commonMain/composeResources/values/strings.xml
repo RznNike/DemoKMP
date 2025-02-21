@@ -47,4 +47,5 @@
     <string name="error">Error</string>
     <string name="error_app_multi_launch">Another app instance is already running</string>
     <string name="error_no_connection_to_server">No connection to server</string>
+    <string name="logger">Logger</string>
 </resources>

@@ -7,8 +7,6 @@ object DataConstants {
     val ROOT_DIR = if (BuildKonfig.RUN_FROM_IDE) "workDirectory" else "."
     private val APP_DATA_DIR = "$ROOT_DIR/data"
 
-    const val APP_FOLDER_NAME = "application"
-    val APP_FOLDER_PATH = "$ROOT_DIR/$APP_FOLDER_NAME"
     val NETWORK_CACHE_PATH = "$APP_DATA_DIR/networkCache"
     val PREFERENCES_FOLDER_PATH = "$APP_DATA_DIR/preferences"
     val PREFERENCES_PATH = "$PREFERENCES_FOLDER_PATH/settings.properties"
