@@ -48,6 +48,17 @@
     <string name="error_app_multi_launch">Another app instance is already running</string>
     <string name="error_no_connection_to_server">No connection to server</string>
     <string name="logger">Logger</string>
+    <string name="logs_all_header">All</string>
+    <string name="logs_network_header">Network</string>
+    <string name="filter">Filter</string>
+    <string name="filter_only_by_tag">Filter only by tag</string>
+    <string name="autoscroll">Autoscroll</string>
+    <string name="collapse_network_logs">Collapse network logs</string>
+    <string name="save_log">Save log</string>
     <string name="restart">Restart</string>
     <string name="error_restart_from_ide">Restart function is unavailable if app is launched from IDE</string>
+    <string name="two_sided_print">Two-sided print</string>
+    <string name="two_sided_print_disabled">No</string>
+    <string name="two_sided_print_long_edge">Long edge</string>
+    <string name="two_sided_print_short_edge">Short edge</string>
 </resources>

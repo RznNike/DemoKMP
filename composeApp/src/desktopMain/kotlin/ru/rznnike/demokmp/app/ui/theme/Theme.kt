@@ -91,18 +91,42 @@ private val darkScheme = darkColorScheme(
 
 @Immutable
 data class CustomColorScheme(
-    val surfaceContainerA50: Color = Color.Unspecified
+    val surfaceContainerA50: Color = Color.Unspecified,
+    val logDebug: Color = Color.Unspecified,
+    val logInfo: Color = Color.Unspecified,
+    val logError: Color = Color.Unspecified,
+    val logNetworkSent: Color = Color.Unspecified,
+    val logNetworkSuccess: Color = Color.Unspecified,
+    val logNetworkError: Color = Color.Unspecified,
+    val logNetworkCancelled: Color = Color.Unspecified,
+    val searchSelection: Color = Color.Unspecified
 )
 
 val lightCustomScheme = CustomColorScheme(
-    surfaceContainerA50 = surfaceContainerA50Light
+    surfaceContainerA50 = surfaceContainerA50Light,
+    logDebug = logDebugLight,
+    logInfo = logInfoLight,
+    logError = logErrorLight,
+    logNetworkSent = logNetworkSentLight,
+    logNetworkSuccess = logNetworkSuccessLight,
+    logNetworkError = logNetworkErrorLight,
+    logNetworkCancelled = logNetworkCancelledLight,
+    searchSelection = searchSelectionLight
 )
 
 val darkCustomScheme = CustomColorScheme(
-    surfaceContainerA50 = surfaceContainerA50Dark
+    surfaceContainerA50 = surfaceContainerA50Dark,
+    logDebug = logDebugDark,
+    logInfo = logInfoDark,
+    logError = logErrorDark,
+    logNetworkSent = logNetworkSentDark,
+    logNetworkSuccess = logNetworkSuccessDark,
+    logNetworkError = logNetworkErrorDark,
+    logNetworkCancelled = logNetworkCancelledDark,
+    searchSelection = searchSelectionDark
 )
 
-val localCustomColorScheme = staticCompositionLocalOf { CustomColorScheme() }
+val LocalCustomColorScheme = staticCompositionLocalOf { CustomColorScheme() }
 
 @Suppress("PropertyName")
 @Immutable
@@ -118,7 +142,7 @@ val darkCustomDrawables = CustomDrawables(
     ic_compose = Res.drawable.ic_compose_dark
 )
 
-val localCustomDrawables = staticCompositionLocalOf { lightCustomDrawables }
+val LocalCustomDrawables = staticCompositionLocalOf { lightCustomDrawables }
 
 @Composable
 fun AppTheme(
@@ -147,8 +171,8 @@ fun AppTheme(
     }
 
     CompositionLocalProvider(
-        localCustomColorScheme provides customColorScheme,
-        localCustomDrawables provides customDrawables,
+        LocalCustomColorScheme provides customColorScheme,
+        LocalCustomDrawables provides customDrawables,
         LocalMinimumInteractiveComponentSize provides Dp.Unspecified
     ) {
         MaterialTheme(

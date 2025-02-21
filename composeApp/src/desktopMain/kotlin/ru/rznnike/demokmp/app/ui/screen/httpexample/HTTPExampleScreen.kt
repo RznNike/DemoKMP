@@ -17,7 +17,7 @@ import coil3.compose.SubcomposeAsyncImage
 import org.jetbrains.compose.resources.stringResource
 import ru.rznnike.demokmp.app.navigation.NavigationScreen
 import ru.rznnike.demokmp.app.navigation.getNavigator
-import ru.rznnike.demokmp.app.ui.theme.localCustomColorScheme
+import ru.rznnike.demokmp.app.ui.theme.LocalCustomColorScheme
 import ru.rznnike.demokmp.app.ui.view.Toolbar
 import ru.rznnike.demokmp.app.ui.view.ToolbarButton
 import ru.rznnike.demokmp.app.viewmodel.httpexample.HTTPExampleViewModel
@@ -96,7 +96,7 @@ class HTTPExampleScreen : NavigationScreen() {
                     Box(
                         modifier = Modifier
                             .fillMaxSize()
-                            .background(localCustomColorScheme.current.surfaceContainerA50),
+                            .background(LocalCustomColorScheme.current.surfaceContainerA50),
                         contentAlignment = Alignment.Center
                     ) {
                         CircularProgressIndicator(

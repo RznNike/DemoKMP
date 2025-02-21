@@ -19,6 +19,8 @@ import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.KoinContext
 import org.koin.compose.koinInject
 import ru.rznnike.demokmp.app.dispatcher.keyboard.KeyEventDispatcher
+import ru.rznnike.demokmp.app.navigation.createNavigator
+import ru.rznnike.demokmp.app.ui.screen.logger.LoggerFlow
 import ru.rznnike.demokmp.app.ui.theme.AppTheme
 import ru.rznnike.demokmp.app.ui.window.*
 import ru.rznnike.demokmp.app.utils.clearFocusOnTap
@@ -93,7 +95,7 @@ fun LoggerWindow(
                             BackgroundBox(
                                 modifier = Modifier.clearFocusOnTap()
                             ) {
-//                                createNavigator(LoggerFlow())
+                                createNavigator(LoggerFlow())
                             }
                         }
                     }

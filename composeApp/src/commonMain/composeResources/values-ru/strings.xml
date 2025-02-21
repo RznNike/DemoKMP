@@ -48,6 +48,17 @@
     <string name="error_app_multi_launch">Другая копия приложения уже запущена</string>
     <string name="error_no_connection_to_server">Нет подключения к серверу</string>
     <string name="logger">Логгер</string>
+    <string name="logs_all_header">Все</string>
+    <string name="logs_network_header">Сеть</string>
+    <string name="filter">Фильтр</string>
+    <string name="filter_only_by_tag">Фильтр только по тегу</string>
+    <string name="autoscroll">Автопрокрутка</string>
+    <string name="collapse_network_logs">Сворачивать сетевые логи</string>
+    <string name="save_log">Сохранить лог</string>
     <string name="restart">Перезапуск</string>
     <string name="error_restart_from_ide">Функция перезапуска недоступна, если приложение запущено из IDE</string>
+    <string name="two_sided_print">Двусторонняя печать</string>
+    <string name="two_sided_print_disabled">Нет</string>
+    <string name="two_sided_print_long_edge">По длинному краю</string>
+    <string name="two_sided_print_short_edge">По короткому краю</string>
 </resources>

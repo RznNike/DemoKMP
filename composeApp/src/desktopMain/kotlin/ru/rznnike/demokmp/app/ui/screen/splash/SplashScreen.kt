@@ -22,7 +22,7 @@ import ru.rznnike.demokmp.app.ui.dialog.common.AlertDialogAction
 import ru.rznnike.demokmp.app.ui.dialog.common.AlertDialogType
 import ru.rznnike.demokmp.app.ui.dialog.common.CommonAlertDialog
 import ru.rznnike.demokmp.app.ui.screen.home.HomeFlow
-import ru.rznnike.demokmp.app.ui.theme.localCustomDrawables
+import ru.rznnike.demokmp.app.ui.theme.LocalCustomDrawables
 import ru.rznnike.demokmp.app.viewmodel.splash.SplashViewModel
 import ru.rznnike.demokmp.generated.resources.Res
 import ru.rznnike.demokmp.generated.resources.close
@@ -88,7 +88,7 @@ class SplashScreen : NavigationScreen() {
             Image(
                 modifier = Modifier.size(300.dp),
                 alpha = imageAlpha,
-                painter = painterResource(localCustomDrawables.current.ic_compose),
+                painter = painterResource(LocalCustomDrawables.current.ic_compose),
                 contentDescription = null
             )
         }
