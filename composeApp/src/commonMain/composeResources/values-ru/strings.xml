@@ -48,4 +48,6 @@
     <string name="error_app_multi_launch">Другая копия приложения уже запущена</string>
     <string name="error_no_connection_to_server">Нет подключения к серверу</string>
     <string name="logger">Логгер</string>
+    <string name="restart">Перезапуск</string>
+    <string name="error_restart_from_ide">Функция перезапуска недоступна, если приложение запущено из IDE</string>
 </resources>

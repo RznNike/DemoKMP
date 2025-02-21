@@ -4,7 +4,11 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.koin.core.component.inject
+import ru.rznnike.demokmp.BuildKonfig
 import ru.rznnike.demokmp.app.common.viewmodel.BaseUiViewModel
+import ru.rznnike.demokmp.app.dispatcher.event.AppEvent
+import ru.rznnike.demokmp.app.dispatcher.event.EventDispatcher
+import ru.rznnike.demokmp.app.dispatcher.notifier.Notifier
 import ru.rznnike.demokmp.data.utils.DataConstants
 import ru.rznnike.demokmp.domain.common.DispatcherProvider
 import ru.rznnike.demokmp.domain.interactor.app.CloseAppSingleInstanceSocketUseCase
@@ -17,9 +21,13 @@ import ru.rznnike.demokmp.domain.log.Logger
 import ru.rznnike.demokmp.domain.model.common.Language
 import ru.rznnike.demokmp.domain.model.common.Theme
 import ru.rznnike.demokmp.domain.utils.OperatingSystem
+import ru.rznnike.demokmp.generated.resources.Res
+import ru.rznnike.demokmp.generated.resources.error_restart_from_ide
 import java.io.File
 
 class AppConfigurationViewModel : BaseUiViewModel<AppConfigurationViewModel.UiState>() {
+    private val eventDispatcher: EventDispatcher by inject()
+    private val notifier: Notifier by inject()
     private val dispatcherProvider: DispatcherProvider by inject()
     private val getLanguageUseCase: GetLanguageUseCase by inject()
     private val setLanguageUseCase: SetLanguageUseCase by inject()
@@ -30,7 +38,19 @@ class AppConfigurationViewModel : BaseUiViewModel<AppConfigurationViewModel.UiSt
 
     private var closeAppCallback: (() -> Unit)? = null
 
+    private val eventListener = object : EventDispatcher.EventListener {
+        override fun onEvent(event: AppEvent) {
+            when (event) {
+                is AppEvent.RestartRequested -> {
+                    closeApplication(isRestart = true)
+                }
+                else -> Unit
+            }
+        }
+    }
+
     init {
+        subscribeToEvents()
         viewModelScope.launch(dispatcherProvider.default) {
             val selectedLanguage = getLanguageUseCase().data
             val selectedTheme = getThemeUseCase().data
@@ -42,6 +62,15 @@ class AppConfigurationViewModel : BaseUiViewModel<AppConfigurationViewModel.UiSt
                 )
             }
         }
+    }
+
+    private fun subscribeToEvents() {
+        eventDispatcher.addEventListener(
+            appEventClasses = listOf(
+                AppEvent.RestartRequested::class
+            ),
+            listener = eventListener
+        )
     }
 
     override fun provideDefaultUIState() = UiState()
@@ -100,6 +129,11 @@ class AppConfigurationViewModel : BaseUiViewModel<AppConfigurationViewModel.UiSt
 
     fun closeApplication(isRestart: Boolean = false) {
         viewModelScope.launch {
+            if (BuildKonfig.RUN_FROM_IDE && isRestart) {
+                notifier.sendAlert(Res.string.error_restart_from_ide)
+                return@launch
+            }
+
             closeDBUseCase()
             closeAppSingleInstanceSocketUseCase()
             Logger.i("Application finish")

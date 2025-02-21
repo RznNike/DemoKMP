@@ -48,4 +48,6 @@
     <string name="error_app_multi_launch">Another app instance is already running</string>
     <string name="error_no_connection_to_server">No connection to server</string>
     <string name="logger">Logger</string>
+    <string name="restart">Restart</string>
+    <string name="error_restart_from_ide">Restart function is unavailable if app is launched from IDE</string>
 </resources>

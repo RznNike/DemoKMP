@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.key.*
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
@@ -35,6 +36,7 @@ import ru.rznnike.demokmp.app.ui.view.Toolbar
 import ru.rznnike.demokmp.app.utils.getMacAddress
 import ru.rznnike.demokmp.app.utils.platformName
 import ru.rznnike.demokmp.app.viewmodel.global.configuration.AppConfigurationViewModel
+import ru.rznnike.demokmp.app.viewmodel.home.HomeViewModel
 import ru.rznnike.demokmp.generated.resources.*
 
 class HomeScreen : NavigationScreen() {
@@ -45,6 +47,8 @@ class HomeScreen : NavigationScreen() {
 
         val appConfigurationViewModel: AppConfigurationViewModel = koinInject()
         val appConfigurationUiState by appConfigurationViewModel.uiState.collectAsState()
+
+        val viewModel = viewModel { HomeViewModel() }
 
         val notifier: Notifier = koinInject()
 
@@ -124,6 +128,9 @@ class HomeScreen : NavigationScreen() {
                     }
                     MenuButton(Res.string.about_app) {
                         showAboutDialog = true
+                    }
+                    MenuButton(Res.string.restart) {
+                        viewModel.restartApp()
                     }
                     MenuButton(Res.string.test_dialog) {
                         notifier.sendAlert(Res.string.test_dialog)
