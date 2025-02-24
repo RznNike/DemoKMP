@@ -21,6 +21,8 @@ internal val interactorModule = module {
     single { SetLanguageUseCase(get(), get()) }
     single { GetThemeUseCase(get(), get()) }
     single { SetThemeUseCase(get(), get()) }
+    single { GetPrintSettingsUseCase(get(), get()) }
+    single { SetPrintSettingsUseCase(get(), get()) }
 
     single { GetRandomImageLinksUseCase(get(), get()) }
 

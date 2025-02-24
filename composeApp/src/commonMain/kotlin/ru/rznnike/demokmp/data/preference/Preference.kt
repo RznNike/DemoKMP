@@ -4,6 +4,7 @@ import com.russhwolf.settings.Settings
 import com.russhwolf.settings.set
 import ru.rznnike.demokmp.domain.model.common.Language
 import ru.rznnike.demokmp.domain.model.common.Theme
+import ru.rznnike.demokmp.domain.model.print.TwoSidedPrint
 import ru.rznnike.demokmp.domain.utils.toDoubleOrNullSmart
 
 sealed class Preference<Type>(
@@ -89,5 +90,15 @@ sealed class Preference<Type>(
         override fun Theme.serialize() = id.toString()
 
         override fun String.deserialize() = Theme[toIntOrNull() ?: 0]
+    }
+
+    class TwoSidedPrintPreference(
+        settings: Settings,
+        key: String,
+        defaultValue: TwoSidedPrint
+    ) : Preference<TwoSidedPrint>(settings, key, defaultValue) {
+        override fun TwoSidedPrint.serialize() = id.toString()
+
+        override fun String.deserialize() = TwoSidedPrint[toIntOrNull()]
     }
 }
