@@ -21,4 +21,6 @@ object DataConstants {
     val RUN_SCRIPT_NAME = if (OperatingSystem.isWindows) "run.vbs" else "run.sh"
 
     const val HEADER_TEST = "Test"
+
+    val TEST_PDF_PATH = "$ROOT_DIR/sample.pdf"
 }

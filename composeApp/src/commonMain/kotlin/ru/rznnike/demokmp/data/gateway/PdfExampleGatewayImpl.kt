@@ -10,7 +10,7 @@ class PdfExampleGatewayImpl(
     private val dispatcherProvider: DispatcherProvider
 ) : PdfExampleGateway {
     override suspend fun getSamplePdf(): File = withContext(dispatcherProvider.io) {
-        val result = File("${DataConstants.ROOT_DIR}/sample.pdf")
+        val result = File(DataConstants.TEST_PDF_PATH)
         if (!result.exists()) {
             throw NoSuchFileException(result)
         }

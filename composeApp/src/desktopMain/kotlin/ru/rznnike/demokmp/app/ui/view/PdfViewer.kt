@@ -9,10 +9,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollbarAdapter
-import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -32,6 +29,7 @@ import org.apache.pdfbox.Loader
 import org.apache.pdfbox.rendering.PDFRenderer
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 import ru.rznnike.demokmp.app.ui.theme.bodyLargeBold
 import ru.rznnike.demokmp.generated.resources.Res
 import ru.rznnike.demokmp.generated.resources.error_file_loading
@@ -53,6 +51,7 @@ fun PdfViewer(
     modifier: Modifier = Modifier,
     file: File?,
     isError: Boolean = false,
+    errorText: String? = null,
     dpi: Float = 300f,
     loadingContext: CoroutineContext = Dispatchers.IO
 ) = Box(
@@ -110,9 +109,9 @@ fun PdfViewer(
     )
     when {
         isError -> {
-            TextR(
+            Text(
                 modifier = Modifier.align(Alignment.Center),
-                textRes = Res.string.error_file_loading,
+                text = errorText ?: stringResource(Res.string.error_file_loading),
                 style = MaterialTheme.typography.bodyLargeBold
             )
         }

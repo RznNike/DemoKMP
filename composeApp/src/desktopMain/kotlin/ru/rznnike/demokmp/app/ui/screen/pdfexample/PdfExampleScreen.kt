@@ -15,7 +15,9 @@ import ru.rznnike.demokmp.app.ui.view.PdfViewer
 import ru.rznnike.demokmp.app.ui.view.Toolbar
 import ru.rznnike.demokmp.app.ui.view.ToolbarButton
 import ru.rznnike.demokmp.app.viewmodel.pdfexample.PdfExampleViewModel
+import ru.rznnike.demokmp.data.utils.DataConstants
 import ru.rznnike.demokmp.domain.common.DispatcherProvider
+import ru.rznnike.demokmp.generated.resources.*
 import ru.rznnike.demokmp.generated.resources.Res
 import ru.rznnike.demokmp.generated.resources.ic_back
 import ru.rznnike.demokmp.generated.resources.pdf_example
@@ -60,6 +62,11 @@ class PdfExampleScreen : NavigationScreen() {
                     modifier = Modifier.fillMaxSize(),
                     file = uiState.pdf,
                     isError = uiState.isError,
+                    errorText = if (uiState.isError) {
+                        stringResource(Res.string.error_file_not_found).format(DataConstants.TEST_PDF_PATH)
+                    } else {
+                        null
+                    },
                     loadingContext = dispatcherProvider.io
                 )
             }
