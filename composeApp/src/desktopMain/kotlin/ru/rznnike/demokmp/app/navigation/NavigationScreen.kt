@@ -5,23 +5,22 @@ import androidx.compose.ui.input.key.KeyEvent
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.core.screen.ScreenKey
 import cafe.adriel.voyager.core.screen.uniqueScreenKey
-import org.koin.compose.koinInject
 import ru.rznnike.demokmp.app.dispatcher.keyboard.KeyEventDispatcher
+import ru.rznnike.demokmp.app.ui.window.LocalKeyEventDispatcher
 
 abstract class NavigationScreen : Screen {
     override val key: ScreenKey = uniqueScreenKey
 
+    var screenKeyEventCallback: ((event: KeyEvent) -> Unit)? = null
     private val keyEventListener = object : KeyEventDispatcher.EventListener {
         override fun onEvent(event: KeyEvent) {
             screenKeyEventCallback?.invoke(event)
         }
     }
-    var screenKeyEventCallback: ((event: KeyEvent) -> Unit)? = null
 
     @Composable
     final override fun Content() {
-        val keyEventDispatcher: KeyEventDispatcher = koinInject()
-        keyEventDispatcher.screenEventListener = keyEventListener
+        LocalKeyEventDispatcher.current.screenEventListener = keyEventListener
         Layout()
     }
 

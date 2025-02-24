@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.key.*
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.delay
@@ -51,6 +52,14 @@ class SplashScreen : NavigationScreen() {
                 showMultiLaunchDialog.value = true
             }
         )
+
+        screenKeyEventCallback = { keyEvent ->
+            if (keyEvent.type == KeyEventType.KeyDown) {
+                when {
+                    keyEvent.isCtrlPressed && (keyEvent.key == Key.W) -> navigator.closeScreen()
+                }
+            }
+        }
 
         var imageVisible by remember { mutableStateOf(false) }
         val imageAlpha: Float by animateFloatAsState(

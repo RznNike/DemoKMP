@@ -56,7 +56,7 @@ class LoggerScreen : NavigationScreen() {
         screenKeyEventCallback = { keyEvent ->
             if (keyEvent.type == KeyEventType.KeyDown) {
                 when {
-                    keyEvent.isShiftPressed && (keyEvent.key == Key.Escape) -> navigator.closeScreen()
+                    keyEvent.isCtrlPressed && (keyEvent.key == Key.W) -> navigator.closeScreen()
                     keyEvent.isCtrlPressed && (keyEvent.key == Key.One) -> viewModel.onTabSelected(LoggerViewModel.Tab.ALL)
                     keyEvent.isCtrlPressed && (keyEvent.key == Key.Two) -> viewModel.onTabSelected(LoggerViewModel.Tab.NETWORK)
                 }

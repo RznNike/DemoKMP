@@ -10,6 +10,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.input.key.*
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -34,6 +35,14 @@ class HTTPExampleScreen : NavigationScreen() {
 
         val viewModel = viewModel { HTTPExampleViewModel() }
         val uiState by viewModel.uiState.collectAsState()
+
+        screenKeyEventCallback = { keyEvent ->
+            if (keyEvent.type == KeyEventType.KeyDown) {
+                when {
+                    keyEvent.isCtrlPressed && (keyEvent.key == Key.W) -> navigator.closeScreen()
+                }
+            }
+        }
 
         Column {
             Spacer(Modifier.height(16.dp))

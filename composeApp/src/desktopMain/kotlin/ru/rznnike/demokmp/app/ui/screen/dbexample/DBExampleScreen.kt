@@ -35,6 +35,14 @@ class DBExampleScreen : NavigationScreen() {
         val viewModel = viewModel { DBExampleViewModel() }
         val uiState by viewModel.uiState.collectAsState()
 
+        screenKeyEventCallback = { keyEvent ->
+            if (keyEvent.type == KeyEventType.KeyDown) {
+                when {
+                    keyEvent.isCtrlPressed && (keyEvent.key == Key.W) -> navigator.closeScreen()
+                }
+            }
+        }
+
         var showToolbarMenu by remember { mutableStateOf(false) }
 
         Column {

@@ -39,6 +39,14 @@ class WebSocketsExampleScreen : NavigationScreen() {
         val viewModel = viewModel { WebSocketsExampleViewModel() }
         val uiState by viewModel.uiState.collectAsState()
 
+        screenKeyEventCallback = { keyEvent ->
+            if (keyEvent.type == KeyEventType.KeyDown) {
+                when {
+                    keyEvent.isCtrlPressed && (keyEvent.key == Key.W) -> navigator.closeScreen()
+                }
+            }
+        }
+
         Column {
             Spacer(Modifier.height(16.dp))
             Toolbar(

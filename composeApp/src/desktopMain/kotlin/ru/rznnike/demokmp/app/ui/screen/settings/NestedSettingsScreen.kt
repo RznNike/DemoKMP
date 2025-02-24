@@ -10,6 +10,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.key.*
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
@@ -27,6 +28,14 @@ class NestedSettingsScreen : NavigationScreen() {
         val navigator = getNavigator()
 
         val profileViewModel: ProfileViewModel = koinInject()
+
+        screenKeyEventCallback = { keyEvent ->
+            if (keyEvent.type == KeyEventType.KeyDown) {
+                when {
+                    keyEvent.isCtrlPressed && (keyEvent.key == Key.W) -> navigator.closeScreen()
+                }
+            }
+        }
 
         Column {
             Spacer(Modifier.height(16.dp))

@@ -11,6 +11,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.input.key.*
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -50,6 +51,25 @@ class PdfExampleScreen : NavigationScreen() {
             }
         }
         val uiState by viewModel.uiState.collectAsState()
+
+        fun openPrintDialog() {
+            uiState.pdf?.let { pdf ->
+                val newPrinterName = printDialog(
+                    pdf = pdf,
+                    printSettings = uiState.printSettings
+                )
+                viewModel.onPrinterSelected(newPrinterName)
+            }
+        }
+
+        screenKeyEventCallback = { keyEvent ->
+            if (keyEvent.type == KeyEventType.KeyDown) {
+                when {
+                    keyEvent.isCtrlPressed && (keyEvent.key == Key.W) -> navigator.closeScreen()
+                    keyEvent.isCtrlPressed && (keyEvent.key == Key.P) -> openPrintDialog()
+                }
+            }
+        }
 
         Column {
             Spacer(Modifier.height(8.dp))
@@ -102,15 +122,7 @@ class PdfExampleScreen : NavigationScreen() {
                         .padding(vertical = 8.dp)
                         .size(40.dp),
                     iconRes = Res.drawable.ic_print,
-                    onClick = {
-                        uiState.pdf?.let { pdf ->
-                            val newPrinterName = printDialog(
-                                pdf = pdf,
-                                printSettings = uiState.printSettings
-                            )
-                            viewModel.onPrinterSelected(newPrinterName)
-                        }
-                    }
+                    onClick = ::openPrintDialog
                 )
                 Spacer(Modifier.width(4.dp))
             }

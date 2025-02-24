@@ -52,7 +52,7 @@ class NetworkLogDetailsScreen(
         screenKeyEventCallback = { keyEvent ->
             if (keyEvent.type == KeyEventType.KeyDown) {
                 when {
-                    keyEvent.isShiftPressed && (keyEvent.key == Key.Escape) -> navigator.closeScreen()
+                    keyEvent.isCtrlPressed && (keyEvent.key == Key.W) -> navigator.closeScreen()
                 }
             }
         }

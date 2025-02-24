@@ -10,6 +10,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.focusProperties
+import androidx.compose.ui.input.key.*
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -41,6 +42,14 @@ class SettingsScreen : NavigationScreen() {
         val profileViewModel: ProfileViewModel = koinInject()
         val appConfigurationViewModel: AppConfigurationViewModel = koinInject()
         val appConfigurationUiState by appConfigurationViewModel.uiState.collectAsState()
+
+        screenKeyEventCallback = { keyEvent ->
+            if (keyEvent.type == KeyEventType.KeyDown) {
+                when {
+                    keyEvent.isCtrlPressed && (keyEvent.key == Key.W) -> navigator.closeScreen()
+                }
+            }
+        }
 
         key(appConfigurationUiState.language.tag) {
             Column {

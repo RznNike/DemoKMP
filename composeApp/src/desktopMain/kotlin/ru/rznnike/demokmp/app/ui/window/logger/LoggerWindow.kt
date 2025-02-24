@@ -69,13 +69,8 @@ fun LoggerWindow(
                 onCloseRequest = { onCloseRequest() },
                 state = state,
                 onPreviewKeyEvent = { keyEvent ->
-                    if (keyEvent.isCtrlPressed && (keyEvent.type == KeyEventType.KeyDown) && (keyEvent.key == Key.W)) {
-                        onCloseRequest()
-                        true
-                    } else {
-                        keyEventDispatcher.sendEvent(keyEvent)
-                        false
-                    }
+                    keyEventDispatcher.sendEvent(keyEvent)
+                    false
                 }
             ) {
                 CompositionLocalProvider(

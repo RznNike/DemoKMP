@@ -55,8 +55,8 @@ class HomeScreen : NavigationScreen() {
         screenKeyEventCallback = { keyEvent ->
             if (keyEvent.type == KeyEventType.KeyDown) {
                 when {
+                    keyEvent.isCtrlPressed && (keyEvent.key == Key.W) -> navigator.closeScreen()
                     keyEvent.isCtrlPressed && (keyEvent.key == Key.F) -> notifier.sendMessage("Ctrl+F")
-                    keyEvent.isCtrlPressed && keyEvent.isAltPressed && (keyEvent.key == Key.D) -> notifier.sendMessage("Ctrl+Alt+D")
                 }
             }
         }
