@@ -1,7 +1,6 @@
 package ru.rznnike.demokmp.app.navigation
 
 import cafe.adriel.voyager.navigator.Navigator
-import kotlin.system.exitProcess
 
 class FlowNavigator(
     private val navigator: Navigator,

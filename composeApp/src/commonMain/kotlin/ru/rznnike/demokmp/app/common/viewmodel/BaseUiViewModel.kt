@@ -17,17 +17,15 @@ abstract class BaseUiViewModel<State> : BaseViewModel() {
     private var goalProgressState = false
 
     protected fun setProgress(show: Boolean, immediately: Boolean = false) {
-        if ((goalProgressState == show) && (progressTask != null)) return
+        if ((goalProgressState == show) && (progressTask != null) && (!immediately)) return
 
         goalProgressState = show
         progressTask?.cancel()
         if (immediately || (progressDelayMs <= 0)) {
             onProgressStateChanged(show)
-            progressTask = null
         } else {
             progressTask = Timer().schedule(progressDelayMs) {
                 onProgressStateChanged(show)
-                progressTask = null
             }
         }
     }
