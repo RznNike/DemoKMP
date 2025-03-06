@@ -47,7 +47,7 @@ class HTTPExampleScreen : NavigationScreen() {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp),
+                .padding(16.dp)
         ) {
             Toolbar(
                 modifier = Modifier.fillMaxWidth(),

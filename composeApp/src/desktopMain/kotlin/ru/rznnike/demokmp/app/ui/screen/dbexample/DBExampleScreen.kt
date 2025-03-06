@@ -24,6 +24,7 @@ import ru.rznnike.demokmp.app.ui.theme.LocalCustomColorScheme
 import ru.rznnike.demokmp.app.ui.view.TextR
 import ru.rznnike.demokmp.app.ui.view.Toolbar
 import ru.rznnike.demokmp.app.ui.view.ToolbarButton
+import ru.rznnike.demokmp.app.utils.onEnterKey
 import ru.rznnike.demokmp.app.viewmodel.dbexample.DBExampleViewModel
 import ru.rznnike.demokmp.generated.resources.*
 
@@ -109,14 +110,8 @@ class DBExampleScreen : NavigationScreen() {
                         },
                         modifier = Modifier
                             .weight(1f)
-                            .onKeyEvent { keyEvent ->
-                                when {
-                                    (keyEvent.key.nativeKeyCode == Key.Enter.nativeKeyCode) && (keyEvent.type == KeyEventType.KeyUp) -> {
-                                        viewModel.addData()
-                                        true
-                                    }
-                                    else -> false
-                                }
+                            .onEnterKey {
+                                viewModel.addData()
                             },
                         onValueChange = viewModel::onNameInput
                     )

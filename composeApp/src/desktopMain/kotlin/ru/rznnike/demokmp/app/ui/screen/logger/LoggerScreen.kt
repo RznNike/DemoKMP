@@ -278,7 +278,7 @@ class LoggerScreen : NavigationScreen() {
                             when (uiState.selectedTab) {
                                 LoggerViewModel.Tab.ALL -> {
                                     LaunchedEffect(uiState.filteredLog) {
-                                        allScrollState.scrollToItem(
+                                        allScrollState.animateScrollToItem(
                                             uiState.filteredLog.lastIndex.coerceAtLeast(0)
                                         )
                                         allScrollState.scrollBy(
@@ -288,7 +288,7 @@ class LoggerScreen : NavigationScreen() {
                                 }
                                 LoggerViewModel.Tab.NETWORK -> {
                                     LaunchedEffect(uiState.filteredNetworkLog) {
-                                        networkScrollState.scrollToItem(
+                                        networkScrollState.animateScrollToItem(
                                             uiState.filteredNetworkLog.lastIndex.coerceAtLeast(0)
                                         )
                                         networkScrollState.scrollBy(
