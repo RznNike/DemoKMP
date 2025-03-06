@@ -45,12 +45,13 @@ class CustomUIScreen : NavigationScreen() {
 
         val focusManager = LocalFocusManager.current
 
-        Column {
-            Spacer(Modifier.height(16.dp))
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp)
+        ) {
             Toolbar(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 12.dp),
+                modifier = Modifier.fillMaxWidth(),
                 title = stringResource(Res.string.custom_ui_elements),
                 leftButton = ToolbarButton(Res.drawable.ic_back) {
                     navigator.closeScreen()
@@ -60,20 +61,19 @@ class CustomUIScreen : NavigationScreen() {
 
             Box(
                 modifier = Modifier
-                    .fillMaxSize()
+                    .fillMaxWidth()
                     .weight(1f)
             ) {
                 val state = rememberScrollState()
                 Column(
                     modifier = Modifier
-                        .padding(horizontal = 16.dp)
                         .fillMaxSize()
                         .verticalScroll(state)
                 ) {
                     Surface(
                         modifier = Modifier.fillMaxWidth(),
                         shape = MaterialTheme.shapes.medium,
-                        color = MaterialTheme.colorScheme.surfaceContainer
+                        color = MaterialTheme.colorScheme.surface
                     ) {
                         Row(
                             modifier = Modifier
@@ -97,7 +97,7 @@ class CustomUIScreen : NavigationScreen() {
                     Surface(
                         modifier = Modifier.fillMaxWidth(),
                         shape = MaterialTheme.shapes.medium,
-                        color = MaterialTheme.colorScheme.surfaceContainer
+                        color = MaterialTheme.colorScheme.surface
                     ) {
                         FlowRow(
                             modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
@@ -138,7 +138,7 @@ class CustomUIScreen : NavigationScreen() {
                     Surface(
                         modifier = Modifier.fillMaxWidth(),
                         shape = MaterialTheme.shapes.medium,
-                        color = MaterialTheme.colorScheme.surfaceContainer
+                        color = MaterialTheme.colorScheme.surface
                     ) {
                         Column(
                             modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
@@ -202,6 +202,7 @@ class CustomUIScreen : NavigationScreen() {
                             Spacer(Modifier.height(8.dp))
                         }
                     }
+                    Spacer(Modifier.height(16.dp))
                 }
                 VerticalScrollbar(
                     modifier = Modifier

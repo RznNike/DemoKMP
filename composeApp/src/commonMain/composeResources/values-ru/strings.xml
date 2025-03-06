@@ -62,4 +62,5 @@
     <string name="two_sided_print_long_edge">По длинному краю</string>
     <string name="two_sided_print_short_edge">По короткому краю</string>
     <string name="error_file_not_found">Файл %s не найден</string>
+    <string name="option">Опция</string>
 </resources>

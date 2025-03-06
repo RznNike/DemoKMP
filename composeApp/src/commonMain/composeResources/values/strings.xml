@@ -62,4 +62,5 @@
     <string name="two_sided_print_long_edge">Long edge</string>
     <string name="two_sided_print_short_edge">Short edge</string>
     <string name="error_file_not_found">File %s not found</string>
+    <string name="option">Option</string>
 </resources>
