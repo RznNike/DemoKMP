@@ -10,6 +10,8 @@ import ru.rznnike.demokmp.app.error.ErrorHandler
 import ru.rznnike.demokmp.domain.common.DispatcherProvider
 import ru.rznnike.demokmp.domain.interactor.httpexample.GetRandomImageLinksUseCase
 
+private const val IMAGES_COUNT = 6
+
 class HTTPExampleViewModel : BaseUiViewModel<HTTPExampleViewModel.UiState>() {
     private val notifier: Notifier by inject()
     private val errorHandler: ErrorHandler by inject()
@@ -42,10 +44,11 @@ class HTTPExampleViewModel : BaseUiViewModel<HTTPExampleViewModel.UiState>() {
 
     fun requestImages() {
         viewModelScope.launch {
-            setProgress(true)
+            setProgress(show = true, immediately = true)
+            setImages(emptyList())
             getRandomImageLinksUseCase(
                 GetRandomImageLinksUseCase.Parameters(
-                    count = 3
+                    count = IMAGES_COUNT
                 )
             ).process(
                 { result ->
@@ -56,7 +59,7 @@ class HTTPExampleViewModel : BaseUiViewModel<HTTPExampleViewModel.UiState>() {
                     }
                 }
             )
-            setProgress(false)
+            setProgress(show = false, immediately = true)
         }
     }
 

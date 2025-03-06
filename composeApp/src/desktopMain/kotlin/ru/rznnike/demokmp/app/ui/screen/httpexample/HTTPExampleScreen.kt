@@ -4,6 +4,7 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -18,7 +19,6 @@ import coil3.compose.SubcomposeAsyncImage
 import org.jetbrains.compose.resources.stringResource
 import ru.rznnike.demokmp.app.navigation.NavigationScreen
 import ru.rznnike.demokmp.app.navigation.getNavigator
-import ru.rznnike.demokmp.app.ui.theme.LocalCustomColorScheme
 import ru.rznnike.demokmp.app.ui.view.Toolbar
 import ru.rznnike.demokmp.app.ui.view.ToolbarButton
 import ru.rznnike.demokmp.app.viewmodel.httpexample.HTTPExampleViewModel
@@ -44,12 +44,13 @@ class HTTPExampleScreen : NavigationScreen() {
             }
         }
 
-        Column {
-            Spacer(Modifier.height(16.dp))
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp),
+        ) {
             Toolbar(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 12.dp),
+                modifier = Modifier.fillMaxWidth(),
                 title = stringResource(Res.string.http_example),
                 leftButton = ToolbarButton(Res.drawable.ic_back) {
                     navigator.closeScreen()
@@ -60,56 +61,58 @@ class HTTPExampleScreen : NavigationScreen() {
             )
             Spacer(Modifier.height(16.dp))
 
-            Box(
+            Surface(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .weight(1f)
+                    .fillMaxWidth()
+                    .weight(1f),
+                shape = MaterialTheme.shapes.medium,
+                color = MaterialTheme.colorScheme.surface
             ) {
-                val verticalScrollState = rememberScrollState()
-                FlowRow(
-                    modifier = Modifier
-                        .padding(horizontal = 16.dp)
-                        .verticalScroll(verticalScrollState)
-                        .fillMaxSize()
-                        .padding(bottom = 16.dp),
-                    horizontalArrangement = Arrangement.spacedBy(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                Box(
+                    modifier = Modifier.fillMaxSize()
                 ) {
-                    uiState.images.forEach { image ->
-                        SubcomposeAsyncImage(
-                            modifier = Modifier
-                                .size(200.dp)
-                                .clip(MaterialTheme.shapes.medium),
-                            model = image,
-                            contentDescription = null,
-                            contentScale = ContentScale.Crop,
-                            loading = {
-                                CircularProgressIndicator(
-                                    modifier = Modifier
-                                        .clip(MaterialTheme.shapes.medium)
-                                        .background(MaterialTheme.colorScheme.surfaceContainer)
-                                        .padding(16.dp)
-                                )
-                            }
-                        )
-                    }
-                }
-                VerticalScrollbar(
-                    modifier = Modifier
-                        .align(Alignment.CenterEnd)
-                        .fillMaxHeight(),
-                    adapter = rememberScrollbarAdapter(verticalScrollState)
-                )
-
-                if (uiState.isLoading) {
-                    Box(
+                    val verticalScrollState = rememberScrollState()
+                    FlowRow(
                         modifier = Modifier
+                            .verticalScroll(verticalScrollState)
                             .fillMaxSize()
-                            .background(LocalCustomColorScheme.current.surfaceContainerA50),
-                        contentAlignment = Alignment.Center
+                            .padding(16.dp),
+                        horizontalArrangement = Arrangement.spacedBy(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(16.dp),
                     ) {
+                        uiState.images.forEach { image ->
+                            SubcomposeAsyncImage(
+                                modifier = Modifier
+                                    .size(200.dp)
+                                    .clip(MaterialTheme.shapes.medium)
+                                    .background(MaterialTheme.colorScheme.background),
+                                model = image,
+                                contentDescription = null,
+                                contentScale = ContentScale.Crop,
+                                loading = {
+                                    Box {
+                                        CircularProgressIndicator(
+                                            modifier = Modifier
+                                                .size(48.dp)
+                                                .align(Alignment.Center)
+                                        )
+                                    }
+                                }
+                            )
+                        }
+                    }
+                    VerticalScrollbar(
+                        modifier = Modifier
+                            .align(Alignment.CenterEnd)
+                            .fillMaxHeight(),
+                        adapter = rememberScrollbarAdapter(verticalScrollState)
+                    )
+
+                    if (uiState.isLoading) {
                         CircularProgressIndicator(
-                            modifier = Modifier.size(50.dp)
+                            modifier = Modifier
+                                .size(48.dp)
+                                .align(Alignment.Center)
                         )
                     }
                 }
