@@ -45,10 +45,8 @@ fun ApplicationScope.MainWindow(args: Array<String>) {
         val appConfigurationViewModel: AppConfigurationViewModel = koinInject()
         val appConfigurationUiState by appConfigurationViewModel.uiState.collectAsState()
 
-        val defaultWindowTitle = stringResource(Res.string.window_title)
         LaunchedEffect("init") {
             appConfigurationViewModel.setArgs(args)
-            appConfigurationViewModel.setWindowTitle(defaultWindowTitle)
             appConfigurationViewModel.setCloseAppCallback(::exitApplication)
         }
 
@@ -104,6 +102,10 @@ fun ApplicationScope.MainWindow(args: Array<String>) {
                     window.title = appConfigurationUiState.windowTitle
                     if (appConfigurationUiState.isLoaded) {
                         Locale.setDefault(Locale.forLanguageTag(appConfigurationUiState.language.tag))
+                        val defaultWindowTitle = stringResource(Res.string.window_title)
+                        LaunchedEffect(appConfigurationUiState.language) {
+                            appConfigurationViewModel.setWindowTitle(defaultWindowTitle)
+                        }
 
                         ProvideNavigatorLifecycleKMPSupport {
                             MainFrame()
