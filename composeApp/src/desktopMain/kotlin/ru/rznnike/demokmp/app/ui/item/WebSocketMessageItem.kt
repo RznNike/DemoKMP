@@ -23,13 +23,14 @@ fun WebSocketMessageItem(
             Surface(
                 modifier = Modifier.weight(7f),
                 shape = MaterialTheme.shapes.medium,
-                color = MaterialTheme.colorScheme.surfaceContainer
+                color = MaterialTheme.colorScheme.surfaceVariant
             ) {
                 Text(
                     modifier = Modifier
                         .padding(16.dp)
                         .fillMaxWidth(),
-                    text = message.text
+                    text = message.text,
+                    color = MaterialTheme.colorScheme.onBackground
                 )
             }
             Spacer(modifier = Modifier.weight(3f))
@@ -45,7 +46,8 @@ fun WebSocketMessageItem(
                         .padding(16.dp)
                         .fillMaxWidth(),
                     text = message.text,
-                    textAlign = TextAlign.End
+                    textAlign = TextAlign.End,
+                    color = MaterialTheme.colorScheme.onBackground
                 )
             }
         }
