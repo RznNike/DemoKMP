@@ -9,6 +9,8 @@
 * Инъекция зависимостей
 * Локальная база данных (SQL)
 * Хранилище настроек (с хранением пользовательских классов)
+* Сборка приложения в jar файл и запуск с помощью скрипта
+* Защита от запуска нескольких копий приложения одновременно
 * Использование HTTP API
 * Использование WebSocket API
 * Конфигурация Proguard (с обфускацией)
@@ -20,14 +22,35 @@
 * Локализация строк
 * Параметры запуска
 * Горячие клавиши в контексте экрана
-* Базовый просмотр PDF
+* Базовый просмотр PDF, диалог печати
 * Различные пользовательские элементы UI
+* Встроенный логгер с собственным UI
+
+## Скриншоты
+<details>
+    <summary>Основное приложение</summary>
+    <img src="/readmeFiles/ru/screenshot_1.png" alt="screenshot" width="500"/>
+    <img src="/readmeFiles/ru/screenshot_2.png" alt="screenshot" width="500"/>
+    <img src="/readmeFiles/ru/screenshot_3.png" alt="screenshot" width="500"/>
+    <img src="/readmeFiles/ru/screenshot_4.png" alt="screenshot" width="500"/>
+    <img src="/readmeFiles/ru/screenshot_5.png" alt="screenshot" width="500"/>
+    <img src="/readmeFiles/ru/screenshot_6.png" alt="screenshot" width="500"/>
+    <img src="/readmeFiles/ru/screenshot_7.png" alt="screenshot" width="500"/>
+    <img src="/readmeFiles/ru/screenshot_8.png" alt="screenshot" width="500"/>
+    <img src="/readmeFiles/ru/screenshot_9.png" alt="screenshot" width="500"/>
+</details>
+
+<details>
+    <summary>Логгер</summary>
+    <img src="/readmeFiles/ru/screenshot_10.png" alt="screenshot" width="750"/>
+    <img src="/readmeFiles/ru/screenshot_11.png" alt="screenshot" width="750"/>
+</details>
 
 ## Использованные библиотеки
 * [Voyager](https://voyager.adriel.cafe/)
 * [Koin](https://insert-koin.io/)
 * [Room](https://developer.android.com/jetpack/androidx/releases/room)
-* [DataStore](https://developer.android.com/jetpack/androidx/releases/datastore)
+* [Multiplatform Settings](https://github.com/russhwolf/multiplatform-settings)
 * [Kotlinx.serialization](https://github.com/Kotlin/kotlinx.serialization)
 * [Ktor](https://ktor.io/)
 * [Ktorfit](https://foso.github.io/Ktorfit/)
@@ -42,36 +65,37 @@
 ## Запуск проекта
 Этот проект был создан и протестирован при помощи [IntelliJ IDEA](https://www.jetbrains.com/idea/). Все дальнейшие инструкции представлены для этой IDE.
 
-### Стандартный запуск
-В IDE:
+### Запуск из IDE
+Для запуска приложения в проекте есть несколько уже созданных конфигураций:
+* ```run [debug]``` (с отладкой)
+* ```run [debug +args]``` (с отладкой и аргументами запуска)
+* ```run [staging]``` (с отладкой и proguard)
+* ```run [release]``` (с proguard)
+
+Вы также можете создавать свои конфигурации запуска по примеру уже добавленных. Для этого в IDE перейдите в меню:
 
 ```Run -> Edit Configurations -> + (Add New Configuration) -> Gradle```
 
-Под заголовком ```Run``` добавьте эти аргументы в поле ввода, затем сохраните конфигурацию:
+### Запуск собранного приложения
+Данный проект настроен на сборку приложения в jar файл. При этом на целевом компьютере требуется установленная JVM версии 17 или новее.
 
-```desktopRun -DmainClass=ru.rznnike.demokmp.app.MainKt --quiet```
+Для простоты запуска приложения в проекте присутствуют скрипты запуска (для Windows и Linux). Эти скрипты также производят дополнительные проверки, в частности - установлена ли JVM нужной версии.
 
-В строке ```Environment variables``` добавьте ```DEBUG=true```, чтобы автоматически менять флаг отладочного режима при запуске.
-
-### Запуск с параметрами
-Вы можете запустить Kotlin приложение с параметрами, которые будут переданы в функцию main().
-
-#### Запуск из IDE
-Создайте конфигурацию запуска с аргументами по примеру:
-
-```desktopRun --args="'foo foo2' bar" -DmainClass=ru.rznnike.demokmp.app.MainKt --quiet```
-
-Этот пример запустит программу с двумя аргументами: "foo foo2" и "bar".
-
-#### Запуск .exe из PowerShell
-```& ".\ru.rznnike.demokmp.exe" "foo foo2" bar```
+Для запуска собранного приложения запустите скрипт ```run.vbs``` (Windows) или ```run.sh``` (Linux), находящийся в корневом каталоге приложения. Также вы можете создать ярлык приложения на рабочем столе, запустив скрипт ```create_desktop_shortcut.vbs``` / ```create_desktop_shortcut.sh```.
 
 ## Сборка
-Этот проект настроен для создания сборок для Windows и Linux. Если вы хотите собрать его для macOS, обновите раздел ```nativeDistributions``` в ```build.gradle.kts``` соответствующим образом.
+Данный проект настроен для создания сборок для Windows и Linux. Если вы хотите собрать его для macOS, обновите раздел ```nativeDistributions``` в ```build.gradle.kts``` соответствующим образом.
 
-Чтобы создать распространяемую сборку, запустите задачу Gradle ```createDistributable``` (без Proguard) или ```createReleaseDistributable``` (с Proguard).
+Чтобы создать распространяемую сборку, используйте одну из конфигураций запуска:
+* ```archive [staging]``` (с отладкой и proguard)
+* ```archive [release]``` (с proguard)
 
-Чтобы создать установщик, запустите ```packageDistributionForCurrentOS``` или ```packageReleaseDistributionForCurrentOS``` соответственно.
+В результате работы будет создан архив с собранной версией приложения, готовый к распространению. Собранное приложение находится в папке ```distributableOutput```, а его архив - в папке ```distributableArchive```.
+
+Если у вас наблюдаются проблемы со сборкой приложения, рекомендуется выбрать JDK версии ```17```. Для этого:
+* Выберите JDK версии ```17``` по пути ```File -> Project Structure -> Project -> SDK```, а также в ```Language level``` под ним.
+* По пути ```Settings -> Build -> Compiler -> Java compiler -> Project bytecode version``` выберите ```17```.
+* По пути ```Settings -> Build -> Build tools -> Gradle -> Gradle JVM``` выберите ```Project JDK```.
 
 *Примечание: вы можете собрать приложение только для той ОС, которую используете в данный момент. Если, например, вы используете Windows и вам необходимо создать сборку для Linux, рассмотрите возможность сделать это в виртуальной машине.*
 
