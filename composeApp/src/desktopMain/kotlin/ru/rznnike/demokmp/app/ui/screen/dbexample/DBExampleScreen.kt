@@ -108,7 +108,7 @@ class DBExampleScreen : NavigationScreen() {
                             viewModel.addData()
                         }
                     ) {
-                        TextR(Res.string.send)
+                        TextR(Res.string.add)
                     }
                     Spacer(Modifier.width(12.dp))
                 }
