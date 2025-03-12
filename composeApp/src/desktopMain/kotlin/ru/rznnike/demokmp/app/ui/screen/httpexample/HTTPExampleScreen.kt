@@ -92,7 +92,7 @@ class HTTPExampleScreen : NavigationScreen() {
                                         .background(MaterialTheme.colorScheme.background),
                                     model = image,
                                     contentDescription = null,
-                                    contentScale = ContentScale.FillHeight,
+                                    contentScale = ContentScale.Crop,
                                     onState = { state ->
                                         showImageLoader = state is AsyncImagePainter.State.Loading
                                     }
