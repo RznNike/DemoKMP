@@ -5,9 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -15,7 +13,8 @@ import androidx.compose.ui.input.key.*
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import coil3.compose.SubcomposeAsyncImage
+import coil3.compose.AsyncImage
+import coil3.compose.AsyncImagePainter
 import org.jetbrains.compose.resources.stringResource
 import ru.rznnike.demokmp.app.navigation.NavigationScreen
 import ru.rznnike.demokmp.app.navigation.getNavigator
@@ -81,24 +80,29 @@ class HTTPExampleScreen : NavigationScreen() {
                         verticalArrangement = Arrangement.spacedBy(16.dp),
                     ) {
                         uiState.images.forEach { image ->
-                            SubcomposeAsyncImage(
-                                modifier = Modifier
-                                    .size(200.dp)
-                                    .clip(MaterialTheme.shapes.medium)
-                                    .background(MaterialTheme.colorScheme.background),
-                                model = image,
-                                contentDescription = null,
-                                contentScale = ContentScale.Crop,
-                                loading = {
-                                    Box {
-                                        CircularProgressIndicator(
-                                            modifier = Modifier
-                                                .size(48.dp)
-                                                .align(Alignment.Center)
-                                        )
+                            Box(
+                                modifier = Modifier.size(200.dp),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                var showImageLoader by remember { mutableStateOf(false) }
+                                AsyncImage(
+                                    modifier = Modifier
+                                        .fillMaxSize()
+                                        .clip(MaterialTheme.shapes.medium)
+                                        .background(MaterialTheme.colorScheme.background),
+                                    model = image,
+                                    contentDescription = null,
+                                    contentScale = ContentScale.FillHeight,
+                                    onState = { state ->
+                                        showImageLoader = state is AsyncImagePainter.State.Loading
                                     }
+                                )
+                                if (showImageLoader) {
+                                    CircularProgressIndicator(
+                                        modifier = Modifier.size(48.dp)
+                                    )
                                 }
-                            )
+                            }
                         }
                     }
                     VerticalScrollbar(
