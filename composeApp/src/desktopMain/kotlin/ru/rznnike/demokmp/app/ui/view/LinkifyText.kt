@@ -18,6 +18,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.TextUnit
+import ru.rznnike.demokmp.app.ui.theme.LocalCustomColorScheme
 import java.util.regex.Pattern
 
 private const val URL_ANNOTATION_TAG = "URL"
@@ -79,6 +80,7 @@ fun LinkifyText(
     )
 }
 
+@Composable
 private fun AnnotatedString.linkify(): AnnotatedString {
     val links = extractUrls(this)
     return buildAnnotatedString {
@@ -86,7 +88,7 @@ private fun AnnotatedString.linkify(): AnnotatedString {
         links.forEach {
             addStyle(
                 style = SpanStyle(
-                    color = Color.Blue,
+                    color = LocalCustomColorScheme.current.textLink,
                     textDecoration = TextDecoration.Underline
                 ),
                 start = it.start,

@@ -92,6 +92,7 @@ private val darkScheme = darkColorScheme(
 @Immutable
 data class CustomColorScheme(
     val surfaceContainerA50: Color = Color.Unspecified,
+    val textLink: Color = Color.Unspecified,
     val logDebug: Color = Color.Unspecified,
     val logInfo: Color = Color.Unspecified,
     val logError: Color = Color.Unspecified,
@@ -104,6 +105,7 @@ data class CustomColorScheme(
 
 val lightCustomScheme = CustomColorScheme(
     surfaceContainerA50 = surfaceContainerA50Light,
+    textLink = textLinkLight,
     logDebug = logDebugLight,
     logInfo = logInfoLight,
     logError = logErrorLight,
@@ -116,6 +118,7 @@ val lightCustomScheme = CustomColorScheme(
 
 val darkCustomScheme = CustomColorScheme(
     surfaceContainerA50 = surfaceContainerA50Dark,
+    textLink = textLinkDark,
     logDebug = logDebugDark,
     logInfo = logInfoDark,
     logError = logErrorDark,

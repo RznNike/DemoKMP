@@ -41,6 +41,7 @@ val surfaceContainerHighLight = Color(0xFFE5F0E8)
 val surfaceContainerHighestLight = Color(0xFFDFEBE2)
 // Custom colors
 val surfaceContainerA50Light = Color(0x80EEEFE3)
+val textLinkLight = Color(0xFF0000FF)
 val logDebugLight = Color(0xFFE5FFFF)
 val logInfoLight = Color(0xFFFFFFFF)
 val logErrorLight = Color(0xFFFFE5E5)
@@ -87,6 +88,7 @@ val surfaceContainerHighDark = Color(0xFF282B24)
 val surfaceContainerHighestDark = Color(0xFF33362E)
 // Custom colors
 val surfaceContainerA50Dark = Color(0x801E201A)
+val textLinkDark = Color(0xFF00FFFF)
 val logDebugDark = Color(0xFF000080)
 val logInfoDark = Color(0xFF202020)
 val logErrorDark = Color(0xFF800000)
@@ -94,4 +96,4 @@ val logNetworkSentDark = logInfoDark
 val logNetworkSuccessDark = Color(0xFF008000)
 val logNetworkErrorDark = logErrorDark
 val logNetworkCancelledDark = Color(0xFF8a8a8a)
-val searchSelectionDark = Color(0xFFFFFF00)
+val searchSelectionDark = Color(0x80FFBE00)
