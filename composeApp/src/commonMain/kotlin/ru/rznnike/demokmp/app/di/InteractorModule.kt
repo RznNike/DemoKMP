@@ -1,6 +1,8 @@
 package ru.rznnike.demokmp.app.di
 
 import org.koin.dsl.module
+import ru.rznnike.demokmp.domain.interactor.app.CheckIfAppIsAlreadyRunningUseCase
+import ru.rznnike.demokmp.domain.interactor.app.CloseAppSingleInstanceSocketUseCase
 import ru.rznnike.demokmp.domain.interactor.dbexample.*
 import ru.rznnike.demokmp.domain.interactor.httpexample.GetRandomImageLinksUseCase
 import ru.rznnike.demokmp.domain.interactor.pdfexample.GetSamplePdfUseCase
@@ -10,12 +12,17 @@ import ru.rznnike.demokmp.domain.interactor.wsexample.GetAppWSSessionUseCase
 import ru.rznnike.demokmp.domain.interactor.wsexample.SendAppWSMessageUseCase
 
 internal val interactorModule = module {
+    single { CheckIfAppIsAlreadyRunningUseCase(get(), get()) }
+    single { CloseAppSingleInstanceSocketUseCase(get(), get()) }
+
     single { GetTestCounterUseCase(get(), get()) }
     single { SetTestCounterUseCase(get(), get()) }
     single { GetLanguageUseCase(get(), get()) }
     single { SetLanguageUseCase(get(), get()) }
     single { GetThemeUseCase(get(), get()) }
     single { SetThemeUseCase(get(), get()) }
+    single { GetPrintSettingsUseCase(get(), get()) }
+    single { SetPrintSettingsUseCase(get(), get()) }
 
     single { GetRandomImageLinksUseCase(get(), get()) }
 

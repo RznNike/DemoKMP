@@ -1,13 +1,13 @@
 [versions]
-kotlin = "2.0.21"
-coroutines = "1.9.0"
+kotlin = "2.1.10"
+coroutines = "1.10.1"
 voyager = "1.1.0-beta03"
-koin = "4.0.0"
-ktorfit = "2.1.0"
-ktor = "2.3.12"
-coil = "3.0.0-rc01"
-room = "2.7.0-alpha10"
-sqlite = "2.5.0-alpha10"
+koin = "4.0.2"
+ktorfit = "2.4.0"
+ktor = "3.1.0"
+coil = "3.1.0"
+room = "2.7.0-rc01"
+sqlite = "2.5.0-rc01"
 
 
 [libraries]
@@ -18,7 +18,7 @@ coroutines-swing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", 
 
 # ViewModel
 # https://mvnrepository.com/artifact/org.jetbrains.androidx.lifecycle/lifecycle-viewmodel-compose
-viewmodel-compose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose", version = "2.8.3" }
+viewmodel-compose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose", version = "2.8.4" }
 
 # Navigation
 # https://github.com/adrielcafe/voyager
@@ -34,12 +34,12 @@ koin-compose = { module = "io.insert-koin:koin-compose", version.ref = "koin" }
 koin-compose-viewmodel = { module = "io.insert-koin:koin-compose-viewmodel", version.ref = "koin" }
 
 # Preferences
-# https://developer.android.com/jetpack/androidx/releases/datastore
-datastore-preferences = { module = "androidx.datastore:datastore-preferences-core", version = "1.1.1" }
+# https://github.com/russhwolf/multiplatform-settings
+multiplatform-settings = { module = "com.russhwolf:multiplatform-settings", version = "1.3.0" }
 
 # Serialization
 # https://github.com/Kotlin/kotlinx.serialization
-kotlinx-serialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version = "1.7.3" }
+kotlinx-serialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version = "1.8.0" }
 
 # Ktorfit - network
 # https://github.com/Foso/Ktorfit
@@ -56,7 +56,7 @@ ktor-websockets = { module = "io.ktor:ktor-client-websockets", version.ref = "kt
 
 # Logging (for Ktor)
 # https://mvnrepository.com/artifact/ch.qos.logback/logback-classic
-logback = { module = "ch.qos.logback:logback-classic", version = "1.5.10" }
+logback = { module = "ch.qos.logback:logback-classic", version = "1.5.17" }
 
 # Image loader
 # https://github.com/coil-kt/coil
@@ -75,24 +75,24 @@ sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version.ref = "sql
 
 # PDF renderer
 # https://mvnrepository.com/artifact/org.apache.pdfbox/pdfbox
-pdfbox = { module = "org.apache.pdfbox:pdfbox", version = "3.0.3" }
+pdfbox = { module = "org.apache.pdfbox:pdfbox", version = "3.0.4" }
 
 
 [plugins]
 # https://github.com/JetBrains/compose-multiplatform
-jetbrains-compose = { id = "org.jetbrains.compose", version = "1.7.0-rc01" }
+jetbrains-compose = { id = "org.jetbrains.compose", version = "1.7.3" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
-android-application = { id = "com.android.application", version = "8.5.2" }
+android-application = { id = "com.android.application", version = "8.7.3" }
 
 # BuildConfig
 # https://github.com/yshrsmz/BuildKonfig
-buildkonfig = { id = "com.codingfeline.buildkonfig", version = "0.15.2" }
+buildkonfig = { id = "com.codingfeline.buildkonfig", version = "0.17.0" }
 
 # KSP
 # https://mvnrepository.com/artifact/com.google.devtools.ksp/com.google.devtools.ksp.gradle.plugin?repo=central
-ksp = { id = "com.google.devtools.ksp", version = "2.0.21-1.0.25" }
+ksp = { id = "com.google.devtools.ksp", version = "2.1.10-1.0.31" }
 
 # Ktorfit - network
 ktorfit = { id = "de.jensklingenberg.ktorfit", version.ref = "ktorfit" }

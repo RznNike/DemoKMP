@@ -1,28 +1,56 @@
-package ru.rznnike.demokmp.app.viewmodel.configuration
+package ru.rznnike.demokmp.app.viewmodel.global.configuration
 
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.koin.core.component.inject
+import ru.rznnike.demokmp.BuildKonfig
 import ru.rznnike.demokmp.app.common.viewmodel.BaseUiViewModel
+import ru.rznnike.demokmp.app.dispatcher.event.AppEvent
+import ru.rznnike.demokmp.app.dispatcher.event.EventDispatcher
+import ru.rznnike.demokmp.app.dispatcher.notifier.Notifier
+import ru.rznnike.demokmp.data.utils.DataConstants
 import ru.rznnike.demokmp.domain.common.DispatcherProvider
+import ru.rznnike.demokmp.domain.interactor.app.CloseAppSingleInstanceSocketUseCase
 import ru.rznnike.demokmp.domain.interactor.dbexample.CloseDBUseCase
 import ru.rznnike.demokmp.domain.interactor.preferences.GetLanguageUseCase
 import ru.rznnike.demokmp.domain.interactor.preferences.GetThemeUseCase
 import ru.rznnike.demokmp.domain.interactor.preferences.SetLanguageUseCase
 import ru.rznnike.demokmp.domain.interactor.preferences.SetThemeUseCase
+import ru.rznnike.demokmp.domain.log.Logger
 import ru.rznnike.demokmp.domain.model.common.Language
 import ru.rznnike.demokmp.domain.model.common.Theme
+import ru.rznnike.demokmp.domain.utils.OperatingSystem
+import ru.rznnike.demokmp.generated.resources.Res
+import ru.rznnike.demokmp.generated.resources.error_restart_from_ide
+import java.io.File
 
 class AppConfigurationViewModel : BaseUiViewModel<AppConfigurationViewModel.UiState>() {
+    private val eventDispatcher: EventDispatcher by inject()
+    private val notifier: Notifier by inject()
     private val dispatcherProvider: DispatcherProvider by inject()
     private val getLanguageUseCase: GetLanguageUseCase by inject()
     private val setLanguageUseCase: SetLanguageUseCase by inject()
     private val getThemeUseCase: GetThemeUseCase by inject()
     private val setThemeUseCase: SetThemeUseCase by inject()
     private val closeDBUseCase: CloseDBUseCase by inject()
+    private val closeAppSingleInstanceSocketUseCase: CloseAppSingleInstanceSocketUseCase by inject()
+
+    private var closeAppCallback: (() -> Unit)? = null
+
+    private val eventListener = object : EventDispatcher.EventListener {
+        override fun onEvent(event: AppEvent) {
+            when (event) {
+                is AppEvent.RestartRequested -> {
+                    closeApplication(isRestart = true)
+                }
+                else -> Unit
+            }
+        }
+    }
 
     init {
+        subscribeToEvents()
         viewModelScope.launch(dispatcherProvider.default) {
             val selectedLanguage = getLanguageUseCase().data
             val selectedTheme = getThemeUseCase().data
@@ -34,6 +62,15 @@ class AppConfigurationViewModel : BaseUiViewModel<AppConfigurationViewModel.UiSt
                 )
             }
         }
+    }
+
+    private fun subscribeToEvents() {
+        eventDispatcher.addEventListener(
+            appEventClasses = listOf(
+                AppEvent.RestartRequested::class
+            ),
+            listener = eventListener
+        )
     }
 
     override fun provideDefaultUIState() = UiState()
@@ -76,17 +113,55 @@ class AppConfigurationViewModel : BaseUiViewModel<AppConfigurationViewModel.UiSt
         }
     }
 
-    fun onCloseApplication(closeFunction: () -> Unit) {
+    fun setWindowTitle(newValue: String) {
         viewModelScope.launch {
-            closeDBUseCase()
-            closeFunction()
+            mutableUiState.update { currentState ->
+                currentState.copy(
+                    windowTitle = newValue
+                )
+            }
         }
+    }
+
+    fun setCloseAppCallback(newValue: () -> Unit) {
+        closeAppCallback = newValue
+    }
+
+    fun closeApplication(isRestart: Boolean = false) {
+        viewModelScope.launch {
+            if (BuildKonfig.RUN_FROM_IDE && isRestart) {
+                notifier.sendAlert(Res.string.error_restart_from_ide)
+                return@launch
+            }
+
+            closeDBUseCase()
+            closeAppSingleInstanceSocketUseCase()
+            Logger.i("Application finish")
+            closeAppCallback?.invoke()
+
+            if (isRestart) {
+                relaunchApplication()
+            }
+        }
+    }
+
+    private fun relaunchApplication() {
+        ProcessBuilder(
+            if (OperatingSystem.isLinux) {
+                listOf("sh", "./${DataConstants.RUN_SCRIPT_NAME}")
+            } else {
+                listOf("wscript", DataConstants.RUN_SCRIPT_NAME)
+            }
+        )
+            .directory(File(DataConstants.ROOT_DIR))
+            .start()
     }
 
     data class UiState(
         val args: List<String> = emptyList(),
         val language: Language = Language.default,
         val theme: Theme = Theme.default,
-        val isLoaded: Boolean = false
+        val isLoaded: Boolean = false,
+        val windowTitle: String = ""
     )
 }

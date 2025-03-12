@@ -3,7 +3,7 @@
     <string name="main_screen">Главный экран</string>
     <string name="test_dialog">Тестовый диалог</string>
     <string name="test_message">Тестовое сообщение</string>
-    <string name="hotkeys_tip">Тест горячих клавиш: попробуйте нажать Ctrl+F или Ctrl+Alt+D</string>
+    <string name="hotkeys_tip">Тест горячих клавиш: попробуйте нажать F12 или Ctrl+F</string>
     <string name="close">Закрыть</string>
     <string name="db_example">Пример БД</string>
     <string name="db_example_input_label">Имя записи</string>
@@ -24,7 +24,6 @@
     <string name="ws_example">Пример WebSockets</string>
     <string name="message">Сообщение</string>
     <string name="send">Отправить</string>
-    <string name="no_internet_connection">Нет доступа в Интернет</string>
     <string name="connection">Подключение</string>
     <string name="about_app">О приложении</string>
     <string name="version">Версия</string>
@@ -45,4 +44,23 @@
     <string name="date_selection">Выбор даты</string>
     <string name="dropdown">Список</string>
     <string name="dropdown_with_filter">Список с фильтром</string>
+    <string name="error">Ошибка</string>
+    <string name="error_app_multi_launch">Другая копия приложения уже запущена</string>
+    <string name="error_no_connection_to_server">Нет подключения к серверу</string>
+    <string name="logger">Логгер</string>
+    <string name="logs_all_header">Все</string>
+    <string name="logs_network_header">Сеть</string>
+    <string name="filter">Фильтр</string>
+    <string name="filter_only_by_tag">Фильтр только по тегу</string>
+    <string name="autoscroll">Автопрокрутка</string>
+    <string name="collapse_network_logs">Сворачивать сетевые логи</string>
+    <string name="save_log">Сохранить лог</string>
+    <string name="restart">Перезапуск</string>
+    <string name="error_restart_from_ide">Функция перезапуска недоступна, если приложение запущено из IDE</string>
+    <string name="two_sided_print">Двусторонняя печать</string>
+    <string name="two_sided_print_disabled">Нет</string>
+    <string name="two_sided_print_long_edge">По длинному краю</string>
+    <string name="two_sided_print_short_edge">По короткому краю</string>
+    <string name="error_file_not_found">Файл %s не найден</string>
+    <string name="option">Опция</string>
 </resources>

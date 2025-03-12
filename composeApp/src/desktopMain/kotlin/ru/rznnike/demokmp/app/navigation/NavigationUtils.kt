@@ -7,6 +7,7 @@ import androidx.compose.runtime.staticCompositionLocalOf
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import ru.rznnike.demokmp.app.ui.window.LocalWindowCloseCallback
 
 val LocalNavigationFlows = staticCompositionLocalOf { mutableListOf<NavigationFlow>() }
 
@@ -23,5 +24,6 @@ fun createNavigator(flow: NavigationFlow) {
 @Composable
 fun getNavigator() = FlowNavigator(
     navigator = LocalNavigator.currentOrThrow,
-    navigationFlows = LocalNavigationFlows.current
+    navigationFlows = LocalNavigationFlows.current,
+    closeWindowCallback = LocalWindowCloseCallback.current
 )

@@ -13,21 +13,12 @@
     @kotlinx.serialization.SerialName <fields>;
 }
 
-# DataStore
--keepclassmembers class androidx.datastore.preferences.PreferencesProto$PreferenceMap {
-    private androidx.datastore.preferences.protobuf.MapFieldLite preferences_;
-}
--keepclassmembers class androidx.datastore.preferences.PreferencesProto$Value {
-     private java.lang.Object value_;
-     private int valueCase_;
-}
-
 # SQLite
 -keep class androidx.sqlite.** { *; }
 
 # Ktor
--keep class io.ktor.client.** { *; }
--keep class io.ktor.serialization.**
+-keep class io.ktor.** { *; }
+-dontwarn io.ktor.**
 
 # PdfBox
 -dontwarn org.apache.commons.logging.**

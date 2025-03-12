@@ -9,22 +9,19 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.focusProperties
+import androidx.compose.ui.input.key.*
+import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.StringResource
-import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import ru.rznnike.demokmp.app.navigation.NavigationScreen
 import ru.rznnike.demokmp.app.navigation.getNavigator
-import ru.rznnike.demokmp.app.ui.view.TextR
-import ru.rznnike.demokmp.app.ui.view.Toolbar
-import ru.rznnike.demokmp.app.ui.view.ToolbarButton
+import ru.rznnike.demokmp.app.ui.view.*
 import ru.rznnike.demokmp.app.utils.nameRes
-import ru.rznnike.demokmp.app.viewmodel.configuration.AppConfigurationViewModel
+import ru.rznnike.demokmp.app.viewmodel.global.configuration.AppConfigurationViewModel
 import ru.rznnike.demokmp.app.viewmodel.profile.ProfileViewModel
 import ru.rznnike.demokmp.app.viewmodel.settings.SettingsViewModel
 import ru.rznnike.demokmp.domain.model.common.Language
@@ -42,13 +39,23 @@ class SettingsScreen : NavigationScreen() {
         val appConfigurationViewModel: AppConfigurationViewModel = koinInject()
         val appConfigurationUiState by appConfigurationViewModel.uiState.collectAsState()
 
-        key(appConfigurationUiState.language.tag) {
-            Column {
+        screenKeyEventCallback = { keyEvent ->
+            if (keyEvent.type == KeyEventType.KeyDown) {
+                when {
+                    keyEvent.isCtrlPressed && (keyEvent.key == Key.W) -> navigator.closeScreen()
+                }
+            }
+        }
+
+        key(Locale.current) {
+            Column(
+                modifier = Modifier.fillMaxSize()
+            ) {
                 Spacer(Modifier.height(16.dp))
                 Toolbar(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 12.dp),
+                        .padding(horizontal = 16.dp),
                     title = stringResource(Res.string.settings),
                     leftButton = ToolbarButton(Res.drawable.ic_back) {
                         navigator.closeScreen()
@@ -58,7 +65,7 @@ class SettingsScreen : NavigationScreen() {
 
                 Box(
                     modifier = Modifier
-                        .fillMaxSize()
+                        .fillMaxWidth()
                         .weight(1f)
                 ) {
                     val state = rememberScrollState()
@@ -71,23 +78,23 @@ class SettingsScreen : NavigationScreen() {
                         Surface(
                             modifier = Modifier.fillMaxWidth(),
                             shape = MaterialTheme.shapes.medium,
-                            color = MaterialTheme.colorScheme.surfaceContainer
+                            color = MaterialTheme.colorScheme.surface
                         ) {
                             Row(
-                                modifier = Modifier.padding(16.dp),
+                                modifier = Modifier.padding(12.dp),
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
+                                Spacer(Modifier.width(4.dp))
                                 val nameString = "%s: %s".format(
                                     stringResource(Res.string.user_name),
                                     profileViewModel.nameInput
                                 )
                                 Text(
                                     text = nameString,
-                                    modifier = Modifier
-                                        .weight(1f)
+                                    modifier = Modifier.weight(1f)
                                 )
                                 Spacer(Modifier.width(16.dp))
-                                Button(
+                                SelectableButton(
                                     onClick = {
                                         navigator.openScreen(NestedSettingsScreen())
                                     }
@@ -101,44 +108,24 @@ class SettingsScreen : NavigationScreen() {
                         Surface(
                             modifier = Modifier.fillMaxWidth(),
                             shape = MaterialTheme.shapes.medium,
-                            color = MaterialTheme.colorScheme.surfaceContainer
+                            color = MaterialTheme.colorScheme.surface
                         ) {
                             Row(
                                 modifier = Modifier.padding(16.dp),
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
-                                @Composable
-                                fun CounterButton(
-                                    iconRes: DrawableResource,
-                                    onClick: () -> Unit
-                                ) = Button(
-                                    modifier = Modifier
-                                        .size(40.dp)
-                                        .focusProperties {
-                                            canFocus = false
-                                        },
-                                    contentPadding = PaddingValues(0.dp),
-                                    onClick = onClick
-                                ) {
-                                    Icon(
-                                        modifier = Modifier
-                                            .padding(vertical = 8.dp)
-                                            .size(24.dp),
-                                        painter = painterResource(iconRes),
-                                        tint = MaterialTheme.colorScheme.onPrimary,
-                                        contentDescription = null
-                                    )
-                                }
-
                                 TextR(
                                     textRes = Res.string.test_counter,
                                     modifier = Modifier
                                         .weight(1f)
                                 )
                                 Spacer(Modifier.width(16.dp))
-                                CounterButton(Res.drawable.ic_minus) {
-                                    viewModel.onCounterInput(uiState.counter - 1)
-                                }
+                                SelectableOutlinedIconButton(
+                                    iconRes = Res.drawable.ic_minus,
+                                    onClick = {
+                                        viewModel.onCounterInput(uiState.counter - 1)
+                                    }
+                                )
                                 Spacer(Modifier.width(8.dp))
                                 Text(
                                     text = uiState.counter.toString(),
@@ -147,9 +134,12 @@ class SettingsScreen : NavigationScreen() {
                                     textAlign = TextAlign.Center
                                 )
                                 Spacer(Modifier.width(8.dp))
-                                CounterButton(Res.drawable.ic_plus) {
-                                    viewModel.onCounterInput(uiState.counter + 1)
-                                }
+                                SelectableOutlinedIconButton(
+                                    iconRes = Res.drawable.ic_plus,
+                                    onClick = {
+                                        viewModel.onCounterInput(uiState.counter + 1)
+                                    }
+                                )
                             }
                         }
 
@@ -164,19 +154,20 @@ class SettingsScreen : NavigationScreen() {
                                 Surface(
                                     modifier = Modifier.weight(1f),
                                     shape = MaterialTheme.shapes.medium,
-                                    color = MaterialTheme.colorScheme.surfaceContainer
+                                    color = MaterialTheme.colorScheme.surface
                                 ) {
                                     Row(
-                                        modifier = Modifier.padding(16.dp),
+                                        modifier = Modifier.padding(12.dp),
                                         verticalAlignment = Alignment.CenterVertically
                                     ) {
+                                        Spacer(Modifier.width(4.dp))
                                         TextR(
                                             textRes = headerRes,
                                             modifier = Modifier.weight(1f),
                                         )
                                         Box {
                                             var showMenu by remember { mutableStateOf(false) }
-                                            Button(
+                                            SelectableButton(
                                                 onClick = {
                                                     showMenu = !showMenu
                                                 }
@@ -188,7 +179,8 @@ class SettingsScreen : NavigationScreen() {
                                             ) {
                                                 DropdownMenu(
                                                     expanded = showMenu,
-                                                    onDismissRequest = { showMenu = false }
+                                                    onDismissRequest = { showMenu = false },
+                                                    containerColor = MaterialTheme.colorScheme.surface
                                                 ) {
                                                     content {
                                                         showMenu = false
@@ -234,6 +226,7 @@ class SettingsScreen : NavigationScreen() {
                                 }
                             }
                         }
+                        Spacer(Modifier.height(16.dp))
                     }
                     VerticalScrollbar(
                         modifier = Modifier

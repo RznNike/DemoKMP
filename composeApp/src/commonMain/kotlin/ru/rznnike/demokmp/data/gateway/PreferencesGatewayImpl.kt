@@ -6,6 +6,7 @@ import ru.rznnike.demokmp.domain.common.DispatcherProvider
 import ru.rznnike.demokmp.domain.gateway.PreferencesGateway
 import ru.rznnike.demokmp.domain.model.common.Language
 import ru.rznnike.demokmp.domain.model.common.Theme
+import ru.rznnike.demokmp.domain.model.print.PrintSettings
 
 class PreferencesGatewayImpl(
     private val dispatcherProvider: DispatcherProvider,
@@ -33,5 +34,17 @@ class PreferencesGatewayImpl(
 
     override suspend fun setTheme(newValue: Theme) = withContext(dispatcherProvider.io) {
         preferencesManager.theme.set(newValue)
+    }
+
+    override suspend fun getPrintSettings(): PrintSettings = withContext(dispatcherProvider.io) {
+        PrintSettings(
+            printerName = preferencesManager.printerName.get(),
+            twoSidedPrint = preferencesManager.twoSidedPrint.get()
+        )
+    }
+
+    override suspend fun setPrintSettings(newValue: PrintSettings): Unit = withContext(dispatcherProvider.io) {
+        preferencesManager.printerName.set(newValue.printerName)
+        preferencesManager.twoSidedPrint.set(newValue.twoSidedPrint)
     }
 }

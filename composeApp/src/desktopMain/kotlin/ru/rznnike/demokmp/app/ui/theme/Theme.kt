@@ -7,7 +7,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import org.jetbrains.compose.resources.DrawableResource
 import org.koin.compose.koinInject
-import ru.rznnike.demokmp.app.viewmodel.configuration.AppConfigurationViewModel
+import ru.rznnike.demokmp.app.viewmodel.global.configuration.AppConfigurationViewModel
 import ru.rznnike.demokmp.domain.model.common.Theme
 import ru.rznnike.demokmp.generated.resources.Res
 import ru.rznnike.demokmp.generated.resources.ic_compose
@@ -91,18 +91,45 @@ private val darkScheme = darkColorScheme(
 
 @Immutable
 data class CustomColorScheme(
-    val surfaceContainerA50: Color = Color.Unspecified
+    val surfaceContainerA50: Color = Color.Unspecified,
+    val textLink: Color = Color.Unspecified,
+    val logDebug: Color = Color.Unspecified,
+    val logInfo: Color = Color.Unspecified,
+    val logError: Color = Color.Unspecified,
+    val logNetworkSent: Color = Color.Unspecified,
+    val logNetworkSuccess: Color = Color.Unspecified,
+    val logNetworkError: Color = Color.Unspecified,
+    val logNetworkCancelled: Color = Color.Unspecified,
+    val searchSelection: Color = Color.Unspecified
 )
 
 val lightCustomScheme = CustomColorScheme(
-    surfaceContainerA50 = surfaceContainerA50Light
+    surfaceContainerA50 = surfaceContainerA50Light,
+    textLink = textLinkLight,
+    logDebug = logDebugLight,
+    logInfo = logInfoLight,
+    logError = logErrorLight,
+    logNetworkSent = logNetworkSentLight,
+    logNetworkSuccess = logNetworkSuccessLight,
+    logNetworkError = logNetworkErrorLight,
+    logNetworkCancelled = logNetworkCancelledLight,
+    searchSelection = searchSelectionLight
 )
 
 val darkCustomScheme = CustomColorScheme(
-    surfaceContainerA50 = surfaceContainerA50Dark
+    surfaceContainerA50 = surfaceContainerA50Dark,
+    textLink = textLinkDark,
+    logDebug = logDebugDark,
+    logInfo = logInfoDark,
+    logError = logErrorDark,
+    logNetworkSent = logNetworkSentDark,
+    logNetworkSuccess = logNetworkSuccessDark,
+    logNetworkError = logNetworkErrorDark,
+    logNetworkCancelled = logNetworkCancelledDark,
+    searchSelection = searchSelectionDark
 )
 
-val localCustomColorScheme = staticCompositionLocalOf { CustomColorScheme() }
+val LocalCustomColorScheme = staticCompositionLocalOf { CustomColorScheme() }
 
 @Suppress("PropertyName")
 @Immutable
@@ -118,7 +145,7 @@ val darkCustomDrawables = CustomDrawables(
     ic_compose = Res.drawable.ic_compose_dark
 )
 
-val localCustomDrawables = staticCompositionLocalOf { lightCustomDrawables }
+val LocalCustomDrawables = staticCompositionLocalOf { lightCustomDrawables }
 
 @Composable
 fun AppTheme(
@@ -147,8 +174,8 @@ fun AppTheme(
     }
 
     CompositionLocalProvider(
-        localCustomColorScheme provides customColorScheme,
-        localCustomDrawables provides customDrawables,
+        LocalCustomColorScheme provides customColorScheme,
+        LocalCustomDrawables provides customDrawables,
         LocalMinimumInteractiveComponentSize provides Dp.Unspecified
     ) {
         MaterialTheme(

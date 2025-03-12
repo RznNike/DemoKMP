@@ -3,12 +3,16 @@ package ru.rznnike.demokmp.app.viewmodel.customui
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.StringResource
+import org.jetbrains.compose.resources.getString
 import org.koin.core.component.inject
 import ru.rznnike.demokmp.app.common.viewmodel.BaseUiViewModel
 import ru.rznnike.demokmp.domain.utils.toInputString
 import ru.rznnike.demokmp.domain.utils.toLocalDate
+import ru.rznnike.demokmp.generated.resources.*
 import ru.rznnike.demokmp.generated.resources.Res
 import ru.rznnike.demokmp.generated.resources.tab_1
 import ru.rznnike.demokmp.generated.resources.tab_2
@@ -31,6 +35,10 @@ class CustomUIViewModel : BaseUiViewModel<CustomUIViewModel.UiState>() {
     var dateError by mutableStateOf(false)
         private set
 
+    init {
+        setupDropdownOptions()
+    }
+
     override fun provideDefaultUIState(): UiState {
         val currentDate = clock.millis().toLocalDate()
         return UiState(
@@ -38,6 +46,21 @@ class CustomUIViewModel : BaseUiViewModel<CustomUIViewModel.UiState>() {
             dateMin = LocalDate.of(DATE_YEAR_MIN, 1, 1),
             dateMax = currentDate
         )
+    }
+
+    private fun setupDropdownOptions() {
+        viewModelScope.launch {
+            val name = getString(Res.string.option)
+            val options = (1..20).map { "$name $it" }
+
+            mutableUiState.update { currentState ->
+                currentState.copy(
+                    dropdownOptions = options,
+                    dropdownSelection = options.first(),
+                    dropdownQuerySelection = options.first()
+                )
+            }
+        }
     }
 
     fun onTabChanged(newValue: Tab) {
@@ -170,11 +193,9 @@ class CustomUIViewModel : BaseUiViewModel<CustomUIViewModel.UiState>() {
         val date: LocalDate,
         val dateMin: LocalDate,
         val dateMax: LocalDate,
-        val dropdownOptions: List<String> = (1..20).map {
-            "Option $it"
-        },
-        val dropdownSelection: String = dropdownOptions.first(),
-        val dropdownQuerySelection: String = dropdownOptions.first()
+        val dropdownOptions: List<String> = listOf(),
+        val dropdownSelection: String = "",
+        val dropdownQuerySelection: String = ""
     )
 
     enum class Tab(

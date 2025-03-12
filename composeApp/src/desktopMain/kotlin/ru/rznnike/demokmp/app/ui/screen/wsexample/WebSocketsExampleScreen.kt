@@ -8,14 +8,15 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollbarAdapter
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.CornerSize
-import androidx.compose.material3.*
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.key.*
 import androidx.compose.ui.unit.dp
@@ -24,9 +25,8 @@ import org.jetbrains.compose.resources.stringResource
 import ru.rznnike.demokmp.app.navigation.NavigationScreen
 import ru.rznnike.demokmp.app.navigation.getNavigator
 import ru.rznnike.demokmp.app.ui.item.WebSocketMessageItem
-import ru.rznnike.demokmp.app.ui.view.TextR
-import ru.rznnike.demokmp.app.ui.view.Toolbar
-import ru.rznnike.demokmp.app.ui.view.ToolbarButton
+import ru.rznnike.demokmp.app.ui.view.*
+import ru.rznnike.demokmp.app.utils.onEnterKey
 import ru.rznnike.demokmp.app.viewmodel.wsexample.WebSocketsExampleViewModel
 import ru.rznnike.demokmp.domain.model.websocket.WebSocketConnectionState
 import ru.rznnike.demokmp.generated.resources.*
@@ -39,12 +39,21 @@ class WebSocketsExampleScreen : NavigationScreen() {
         val viewModel = viewModel { WebSocketsExampleViewModel() }
         val uiState by viewModel.uiState.collectAsState()
 
-        Column {
-            Spacer(Modifier.height(16.dp))
+        screenKeyEventCallback = { keyEvent ->
+            if (keyEvent.type == KeyEventType.KeyDown) {
+                when {
+                    keyEvent.isCtrlPressed && (keyEvent.key == Key.W) -> navigator.closeScreen()
+                }
+            }
+        }
+
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp)
+        ) {
             Toolbar(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 12.dp),
+                modifier = Modifier.fillMaxWidth(),
                 title = stringResource(Res.string.ws_example),
                 leftButton = ToolbarButton(Res.drawable.ic_back) {
                     navigator.closeScreen()
@@ -53,127 +62,112 @@ class WebSocketsExampleScreen : NavigationScreen() {
             Spacer(Modifier.height(16.dp))
 
             Surface(
-                modifier = Modifier
-                    .padding(horizontal = 16.dp)
-                    .fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth(),
                 shape = MaterialTheme.shapes.medium,
-                color = MaterialTheme.colorScheme.surfaceContainerHigh
+                color = MaterialTheme.colorScheme.surface
             ) {
                 Row(
-                    modifier = Modifier
-                        .padding(
-                            start = 16.dp,
-                            end = 16.dp,
-                            top = 8.dp,
-                            bottom = 16.dp
-                        )
-                        .fillMaxWidth()
-                        .height(IntrinsicSize.Min)
+                    modifier = Modifier.fillMaxWidth()
                 ) {
-                    OutlinedTextField(
+                    Spacer(Modifier.width(16.dp))
+                    SlimOutlinedTextField(
+                        modifier = Modifier
+                            .padding(top = 8.dp, bottom = 16.dp)
+                            .weight(1f)
+                            .onEnterKey {
+                                viewModel.sendMessage()
+                            },
                         value = viewModel.messageInput,
                         singleLine = true,
                         label = {
                             TextR(Res.string.message)
                         },
-                        modifier = Modifier
-                            .weight(1f)
-                            .onKeyEvent { keyEvent ->
-                                when {
-                                    (keyEvent.key.nativeKeyCode == Key.Enter.nativeKeyCode) && (keyEvent.type == KeyEventType.KeyUp) -> {
-                                        viewModel.sendMessage()
-                                        true
-                                    }
-                                    else -> false
-                                }
-                            },
                         onValueChange = viewModel::onMessageInput
                     )
-                    Spacer(Modifier.width(16.dp))
-                    Button(
-                        modifier = Modifier
-                            .padding(top = 8.dp)
-                            .fillMaxHeight(),
+                    Spacer(Modifier.width(12.dp))
+                    SelectableButton(
+                        modifier = Modifier.padding(vertical = 12.dp),
                         onClick = {
                             viewModel.sendMessage()
                         }
                     ) {
                         TextR(Res.string.send)
                     }
+                    Spacer(Modifier.width(12.dp))
                 }
             }
 
             Spacer(Modifier.height(16.dp))
-            Box(
+            Surface(
                 modifier = Modifier
-                    .fillMaxSize()
                     .weight(1f)
+                    .fillMaxWidth(),
+                shape = MaterialTheme.shapes.medium,
+                color = MaterialTheme.colorScheme.surface
             ) {
-                val state = rememberLazyListState()
                 Box(
-                    modifier = Modifier
-                        .padding(horizontal = 16.dp)
-                        .fillMaxSize()
-                        .clip(
-                            MaterialTheme.shapes.medium.copy(
-                                bottomStart = CornerSize(0.dp),
-                                bottomEnd = CornerSize(0.dp)
-                            )
-                        )
+                    modifier = Modifier.fillMaxSize()
                 ) {
+                    val state = rememberLazyListState()
                     LazyColumn(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(horizontal = 16.dp),
                         state = state,
-                        modifier = Modifier.fillMaxSize(),
-                        contentPadding = PaddingValues(bottom = 64.dp),
+                        contentPadding = PaddingValues(top = 16.dp, bottom = 64.dp),
                         verticalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
                         items(
-                            items = uiState.messages,
-                            key = { it.hashCode() }
+                            items = uiState.messages
                         ) { item ->
                             WebSocketMessageItem(item)
                         }
                     }
-                }
-                VerticalScrollbar(
-                    modifier = Modifier
-                        .align(Alignment.CenterEnd)
-                        .fillMaxHeight(),
-                    adapter = rememberScrollbarAdapter(state)
-                )
-
-                Row(
-                    modifier = Modifier
-                        .padding(bottom = 16.dp)
-                        .background(
-                            color = MaterialTheme.colorScheme.surfaceContainerHigh,
-                            shape = MaterialTheme.shapes.medium
-                        )
-                        .padding(8.dp)
-                        .align(Alignment.BottomCenter),
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Text(
-                        text = "${stringResource(Res.string.connection)}:",
-                        style = MaterialTheme.typography.bodyLarge.let {
-                            it.copy(
-                                lineHeight = it.fontSize
-                            )
-                        }
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Box(
+                    VerticalScrollbar(
                         modifier = Modifier
-                            .size(16.dp)
-                            .background(
-                                color = if (uiState.connectionState == WebSocketConnectionState.CONNECTED) {
-                                    Color.Green
-                                } else {
-                                    Color.Red
-                                },
-                                shape = CircleShape
-                            )
+                            .align(Alignment.CenterEnd)
+                            .fillMaxHeight(),
+                        adapter = rememberScrollbarAdapter(state)
                     )
+
+                    LaunchedEffect(uiState.messages) {
+                        state.animateScrollToItem((state.layoutInfo.totalItemsCount - 1).coerceAtLeast(0))
+                    }
+
+                    Row(
+                        modifier = Modifier
+                            .padding(bottom = 16.dp)
+                            .background(
+                                color = MaterialTheme.colorScheme.primary,
+                                shape = MaterialTheme.shapes.medium
+                            )
+                            .padding(8.dp)
+                            .align(Alignment.BottomCenter),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Text(
+                            text = "${stringResource(Res.string.connection)}:",
+                            style = MaterialTheme.typography.bodyLarge.let {
+                                it.copy(
+                                    lineHeight = it.fontSize
+                                )
+                            },
+                            color = MaterialTheme.colorScheme.onPrimary
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Box(
+                            modifier = Modifier
+                                .size(16.dp)
+                                .background(
+                                    color = if (uiState.connectionState == WebSocketConnectionState.CONNECTED) {
+                                        Color.Green
+                                    } else {
+                                        Color.Red
+                                    },
+                                    shape = CircleShape
+                                )
+                        )
+                    }
                 }
             }
         }

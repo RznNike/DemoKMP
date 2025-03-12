@@ -5,6 +5,7 @@ import ru.rznnike.demokmp.data.gateway.*
 import ru.rznnike.demokmp.domain.gateway.*
 
 internal val gatewayModule = module {
+    single<AppGateway> { AppGatewayImpl(get()) }
     single<PreferencesGateway> { PreferencesGatewayImpl(get(), get()) }
     single<HTTPExampleGateway> { HTTPExampleGatewayImpl(get(), get()) }
     single<WebSocketExampleGateway> { WebSocketExampleGatewayImpl(get(), get()) }

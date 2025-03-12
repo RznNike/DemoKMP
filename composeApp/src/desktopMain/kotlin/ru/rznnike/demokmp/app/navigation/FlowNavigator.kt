@@ -1,11 +1,11 @@
 package ru.rznnike.demokmp.app.navigation
 
 import cafe.adriel.voyager.navigator.Navigator
-import kotlin.system.exitProcess
 
 class FlowNavigator(
     private val navigator: Navigator,
-    private val navigationFlows: MutableList<NavigationFlow>
+    private val navigationFlows: MutableList<NavigationFlow>,
+    private val closeWindowCallback: () -> Unit
 ) {
     // FLOWS
     fun openFlow(flow: NavigationFlow) {
@@ -39,7 +39,7 @@ class FlowNavigator(
                 navigator.pop()
             }
         } else {
-            exitProcess(0)
+            closeWindowCallback()
         }
     }
 

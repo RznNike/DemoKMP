@@ -1,6 +1,5 @@
 package ru.rznnike.demokmp.data.network.interceptor
 
-import kotlinx.coroutines.runBlocking
 import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import okhttp3.Interceptor
@@ -15,10 +14,8 @@ class HttpBaseUrlInterceptor(
     @Throws(IOException::class)
     override fun intercept(chain: Interceptor.Chain): Response {
         var request = chain.request()
-        val baseUrl = runBlocking {
-//            preferencesManager.httpServerUrl.get()
-            BuildKonfig.API_MAIN
-        }
+//        val baseUrl = preferencesManager.httpServerUrl.get()
+        val baseUrl = BuildKonfig.API_MAIN
         baseUrl.toHttpUrlOrNull()?.let {
             val newUrlBuilder: HttpUrl.Builder = it.newBuilder()
             for (segment in request.url.pathSegments) {
