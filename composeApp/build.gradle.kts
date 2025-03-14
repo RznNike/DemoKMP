@@ -2,6 +2,7 @@ import com.codingfeline.buildkonfig.compiler.FieldSpec
 import org.gradle.internal.extensions.stdlib.capitalized
 import org.gradle.nativeplatform.platform.internal.DefaultNativePlatform
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
@@ -16,7 +17,11 @@ plugins {
 }
 
 kotlin {
-    androidTarget()
+    androidTarget {
+        compilerOptions {
+            jvmTarget.set(JvmTarget.JVM_17)
+        }
+    }
 
     jvm("desktop")
 
@@ -55,6 +60,12 @@ kotlin {
             implementation(libs.room.runtime)
             implementation(libs.sqlite.bundled)
         }
+
+        androidMain.dependencies {
+            implementation(compose.preview)
+            implementation(libs.androidx.activity.compose)
+        }
+
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
 
@@ -91,7 +102,37 @@ private val os = if (DefaultNativePlatform.getCurrentOperatingSystem().isWindows
 
 android {
     namespace = globalPackageName
-    compileSdk = 34
+    compileSdk = libs.versions.android.targetSdk.get().toInt()
+
+    defaultConfig {
+        applicationId = globalPackageName
+        minSdk = libs.versions.android.minSdk.get().toInt()
+        targetSdk = libs.versions.android.targetSdk.get().toInt()
+        versionCode = globalVersionCode
+        versionName = globalVersionName
+    }
+    packaging {
+        resources {
+            excludes += "/META-INF/{AL2.0,LGPL2.1}"
+        }
+    }
+    buildTypes {
+        register("staging") {
+            isMinifyEnabled = true
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+        }
+        release {
+            isMinifyEnabled = true
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+        }
+    }
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+    kotlin {
+        jvmToolchain(17)
+    }
 }
 
 compose {

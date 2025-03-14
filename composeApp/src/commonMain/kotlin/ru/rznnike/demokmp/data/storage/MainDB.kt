@@ -15,5 +15,3 @@ import ru.rznnike.demokmp.data.storage.entity.DBExampleDataEntity
 abstract class MainDB : RoomDatabase() {
     abstract fun getDBExampleDataDao(): DBExampleDataDao
 }
-
-expect fun getDatabaseBuilder(): RoomDatabase.Builder<MainDB>
