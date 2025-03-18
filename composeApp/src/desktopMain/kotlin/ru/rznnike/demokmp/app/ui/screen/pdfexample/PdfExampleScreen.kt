@@ -1,6 +1,5 @@
 package ru.rznnike.demokmp.app.ui.screen.pdfexample
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface

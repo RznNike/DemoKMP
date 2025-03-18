@@ -1,6 +1,5 @@
 package ru.rznnike.demokmp.app.ui.item
 
-import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -52,15 +51,4 @@ fun WebSocketMessageItem(
             }
         }
     }
-}
-
-@Preview
-@Composable
-private fun WebSocketMessageItemPreview() {
-    WebSocketMessageItem(
-        WebSocketMessage(
-            text = "Test",
-            isIncoming = true
-        )
-    )
 }

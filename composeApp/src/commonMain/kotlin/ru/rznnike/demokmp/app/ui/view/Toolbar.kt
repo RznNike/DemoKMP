@@ -1,6 +1,5 @@
 package ru.rznnike.demokmp.app.ui.view
 
-import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -12,9 +11,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.DrawableResource
-import ru.rznnike.demokmp.generated.resources.Res
-import ru.rznnike.demokmp.generated.resources.ic_back
-import ru.rznnike.demokmp.generated.resources.ic_delete
 
 @Composable
 fun Toolbar(
@@ -68,13 +64,3 @@ data class ToolbarButton(
     val iconTint: Color? = null,
     val onClick: () -> Unit
 )
-
-@Preview
-@Composable
-private fun ToolbarPreview() {
-    Toolbar(
-        title = "Test title",
-        leftButton = ToolbarButton(Res.drawable.ic_back) { },
-        rightButton = ToolbarButton(Res.drawable.ic_delete) { }
-    )
-}

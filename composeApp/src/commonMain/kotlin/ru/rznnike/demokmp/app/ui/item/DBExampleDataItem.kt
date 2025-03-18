@@ -1,6 +1,5 @@
 package ru.rznnike.demokmp.app.ui.item
 
-import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -52,16 +51,4 @@ fun DBExampleDataItem(
             )
         }
     }
-}
-
-@Preview
-@Composable
-private fun DBExampleDataItemPreview() {
-    DBExampleDataItem(
-        data = DBExampleData(
-            id = 42,
-            name = "Preview name"
-        ),
-        onDeleteClick = {}
-    )
 }

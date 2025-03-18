@@ -59,6 +59,14 @@ kotlin {
 
             implementation(libs.room.runtime)
             implementation(libs.sqlite.bundled)
+
+            implementation(libs.voyager.navigator)
+            implementation(libs.voyager.transitions)
+            implementation(libs.voyager.lifecycle.kmp)
+
+            implementation(libs.coil)
+            implementation(libs.coil.compose)
+            implementation(libs.coil.okhttp)
         }
 
         androidMain.dependencies {
@@ -72,15 +80,7 @@ kotlin {
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
 
-            implementation(libs.voyager.navigator)
-            implementation(libs.voyager.transitions)
-            implementation(libs.voyager.lifecycle.kmp)
-
             implementation(libs.coroutines.swing)
-
-            implementation(libs.coil)
-            implementation(libs.coil.compose)
-            implementation(libs.coil.okhttp)
 
             implementation(libs.pdfbox)
         }

@@ -11,12 +11,9 @@ import androidx.compose.ui.awt.ComposeWindow
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.window.FrameWindowScope
-import ru.rznnike.demokmp.app.dispatcher.keyboard.KeyEventDispatcher
 import java.awt.Dimension
 
-val LocalKeyEventDispatcher = staticCompositionLocalOf { KeyEventDispatcher(null) }
 val LocalWindow = staticCompositionLocalOf { ComposeWindow() }
-val LocalWindowCloseCallback = staticCompositionLocalOf { { } }
 
 @Composable
 fun BackgroundBox(
