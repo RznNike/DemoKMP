@@ -9,9 +9,12 @@ import ru.rznnike.demokmp.app.dispatcher.keyboard.KeyEventDispatcher
 import ru.rznnike.demokmp.app.ui.window.LocalKeyEventDispatcher
 
 abstract class NavigationScreen : Screen {
+    @Transient
     override val key: ScreenKey = uniqueScreenKey
 
+    @Transient
     var screenKeyEventCallback: ((event: KeyEvent) -> Unit)? = null
+    @Transient
     private val keyEventListener = object : KeyEventDispatcher.EventListener {
         override fun onEvent(event: KeyEvent) {
             screenKeyEventCallback?.invoke(event)
