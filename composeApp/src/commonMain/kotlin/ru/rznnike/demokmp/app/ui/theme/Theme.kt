@@ -180,7 +180,7 @@ fun AppTheme(
     ) {
         MaterialTheme(
             colorScheme = colorScheme,
-            typography = appTypography,
+            typography = getAppTypography(),
             shapes = appShapes,
             content = content
         )

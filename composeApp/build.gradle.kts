@@ -64,6 +64,9 @@ kotlin {
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
+            implementation(libs.androidx.preference)
+
+            implementation(libs.koin.android)
         }
 
         desktopMain.dependencies {
@@ -113,7 +116,7 @@ android {
     }
     packaging {
         resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
+            excludes += "/META-INF/**"
         }
     }
     buildTypes {

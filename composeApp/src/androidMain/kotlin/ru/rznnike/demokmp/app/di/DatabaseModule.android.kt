@@ -1,6 +1,7 @@
 package ru.rznnike.demokmp.app.di
 
 import androidx.room.Room
+import org.koin.android.ext.koin.androidApplication
 import org.koin.dsl.module
 import ru.rznnike.demokmp.data.storage.MainDB
 import ru.rznnike.demokmp.domain.common.DispatcherProvider
