@@ -3,12 +3,20 @@ package ru.rznnike.demokmp.app.viewmodel.logger
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.awt.ComposeWindow
 import androidx.lifecycle.viewModelScope
+import io.github.vinceglb.filekit.FileKit
+import io.github.vinceglb.filekit.dialogs.FileKitDialogSettings
+import io.github.vinceglb.filekit.dialogs.openFileSaver
+import io.github.vinceglb.filekit.sink
+import io.ktor.utils.io.core.*
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.io.buffered
 import org.jetbrains.compose.resources.StringResource
 import org.koin.core.component.inject
 import ru.rznnike.demokmp.app.common.viewmodel.BaseUiViewModel
+import ru.rznnike.demokmp.data.utils.DataConstants
 import ru.rznnike.demokmp.domain.common.CoroutineScopeProvider
 import ru.rznnike.demokmp.domain.log.LogMessage
 import ru.rznnike.demokmp.domain.log.LogNetworkMessage
@@ -19,9 +27,10 @@ import ru.rznnike.demokmp.domain.utils.toDateString
 import ru.rznnike.demokmp.generated.resources.Res
 import ru.rznnike.demokmp.generated.resources.logs_all_header
 import ru.rznnike.demokmp.generated.resources.logs_network_header
-import java.io.File
+import java.time.Clock
 
 class LoggerViewModel : BaseUiViewModel<LoggerViewModel.UiState>() {
+    private val clock: Clock by inject()
     private val coroutineScopeProvider: CoroutineScopeProvider by inject()
 
     private val log = mutableListOf<LogMessage>()
@@ -158,17 +167,27 @@ class LoggerViewModel : BaseUiViewModel<LoggerViewModel.UiState>() {
         }
     }
 
-    fun saveLogToFile(file: File) {
+    fun openSaveLogDialog(window: ComposeWindow) {
         coroutineScopeProvider.io.launch {
-            file.bufferedWriter().use { writer ->
+            val saveFileName = DataConstants.LOG_FILE_NAME_TEMPLATE.format(
+                clock.millis().toDateString(GlobalConstants.DATE_PATTERN_FILE_NAME_MS)
+            )
+            val file = FileKit.openFileSaver(
+                suggestedName = saveFileName,
+                extension = DataConstants.LOG_FILE_NAME_EXTENSION,
+                dialogSettings = FileKitDialogSettings(
+                    parentWindow = window
+                )
+            )
+            file?.sink()?.buffered()?.use { writer ->
                 log.forEach { message ->
                     val text = "%s%s | %s".format(
                         message.timestamp.toDateString(GlobalConstants.DATE_PATTERN_TIME_MS),
                         if (message.tag.isNotBlank()) " | ${message.tag}" else "",
                         message.getFormattedMessage()
                     )
-                    writer.write(text)
-                    writer.newLine()
+                    writer.writeText(text)
+                    writer.writeText("\n")
                 }
             }
         }

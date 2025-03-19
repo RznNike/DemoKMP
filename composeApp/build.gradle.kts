@@ -60,6 +60,9 @@ kotlin {
             implementation(libs.room.runtime)
             implementation(libs.sqlite.bundled)
 
+            implementation(libs.filekit.core)
+            implementation(libs.filekit.dialogs.compose)
+
             implementation(libs.voyager.navigator)
             implementation(libs.voyager.transitions)
             implementation(libs.voyager.lifecycle.kmp)
