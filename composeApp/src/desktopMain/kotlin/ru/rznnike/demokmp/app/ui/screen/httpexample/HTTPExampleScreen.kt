@@ -2,6 +2,7 @@ package ru.rznnike.demokmp.app.ui.screen.httpexample
 
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.grid.*
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -27,7 +28,6 @@ import ru.rznnike.demokmp.generated.resources.ic_back
 import ru.rznnike.demokmp.generated.resources.ic_refresh
 
 class HTTPExampleScreen : NavigationScreen() {
-    @OptIn(ExperimentalLayoutApi::class)
     @Composable
     override fun Layout() {
         val navigator = getNavigator()
@@ -70,18 +70,27 @@ class HTTPExampleScreen : NavigationScreen() {
                 Box(
                     modifier = Modifier.fillMaxSize()
                 ) {
-                    val verticalScrollState = rememberScrollState()
-                    FlowRow(
+                    val scrollState = rememberLazyGridState()
+                    LazyVerticalGrid(
                         modifier = Modifier
-                            .verticalScroll(verticalScrollState)
                             .fillMaxSize()
-                            .padding(16.dp),
+                            .padding(horizontal = 16.dp),
+                        columns = GridCells.Adaptive(
+                            minSize = 250.dp
+                        ),
+                        state = scrollState,
                         horizontalArrangement = Arrangement.spacedBy(16.dp),
                         verticalArrangement = Arrangement.spacedBy(16.dp),
+                        contentPadding = PaddingValues(vertical = 16.dp)
                     ) {
-                        uiState.images.forEach { image ->
+                        items(
+                            items = uiState.images,
+                            key = { item -> item.hashCode() }
+                        ) { image ->
                             Box(
-                                modifier = Modifier.size(200.dp),
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .aspectRatio(1f),
                                 contentAlignment = Alignment.Center
                             ) {
                                 var showImageLoader by remember { mutableStateOf(false) }
@@ -109,7 +118,7 @@ class HTTPExampleScreen : NavigationScreen() {
                         modifier = Modifier
                             .align(Alignment.CenterEnd)
                             .fillMaxHeight(),
-                        adapter = rememberScrollbarAdapter(verticalScrollState)
+                        adapter = rememberScrollbarAdapter(scrollState)
                     )
 
                     if (uiState.isLoading) {
