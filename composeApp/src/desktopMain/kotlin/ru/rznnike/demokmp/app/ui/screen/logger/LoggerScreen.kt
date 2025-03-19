@@ -1,13 +1,11 @@
 package ru.rznnike.demokmp.app.ui.screen.logger
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.VerticalScrollbar
 import androidx.compose.foundation.gestures.scrollBy
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.onClick
 import androidx.compose.foundation.rememberScrollbarAdapter
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material3.Icon
@@ -35,11 +33,11 @@ import ru.rznnike.demokmp.app.ui.view.SlimOutlinedTextField
 import ru.rznnike.demokmp.app.ui.view.TabText
 import ru.rznnike.demokmp.app.ui.view.TextR
 import ru.rznnike.demokmp.app.ui.window.LocalWindow
+import ru.rznnike.demokmp.app.utils.onClick
 import ru.rznnike.demokmp.app.viewmodel.logger.LoggerViewModel
 import ru.rznnike.demokmp.generated.resources.*
 
 class LoggerScreen : NavigationScreen() {
-    @OptIn(ExperimentalFoundationApi::class)
     @Composable
     override fun Layout() {
         val navigator = getNavigator()
