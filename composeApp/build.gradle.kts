@@ -54,6 +54,9 @@ kotlin {
 
             implementation(libs.room.runtime)
             implementation(libs.sqlite.bundled)
+
+            implementation(libs.filekit.core)
+            implementation(libs.filekit.dialogs.compose)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)

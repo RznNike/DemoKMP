@@ -3,18 +3,23 @@ package ru.rznnike.demokmp.app.viewmodel.logger.network
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.awt.ComposeWindow
 import androidx.lifecycle.viewModelScope
+import io.github.vinceglb.filekit.FileKit
+import io.github.vinceglb.filekit.dialogs.FileKitDialogSettings
+import io.github.vinceglb.filekit.dialogs.openFileSaver
+import io.github.vinceglb.filekit.writeString
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.koin.core.component.inject
 import ru.rznnike.demokmp.app.common.viewmodel.BaseUiViewModel
+import ru.rznnike.demokmp.data.utils.DataConstants
 import ru.rznnike.demokmp.domain.common.CoroutineScopeProvider
 import ru.rznnike.demokmp.domain.log.LogNetworkMessage
 import ru.rznnike.demokmp.domain.log.Logger
 import ru.rznnike.demokmp.domain.utils.GlobalConstants
 import ru.rznnike.demokmp.domain.utils.toDateString
-import java.io.File
 
 class NetworkLogDetailsViewModel(
     private val initMessage: LogNetworkMessage
@@ -79,9 +84,23 @@ class NetworkLogDetailsViewModel(
         }
     }
 
-    fun saveLogToFile(file: File) {
+    fun openSaveLogDialog(window: ComposeWindow) {
         coroutineScopeProvider.io.launch {
-            file.writeText(getFullText())
+            val saveFileName = DataConstants.LOG_FILE_NAME_TEMPLATE.format(
+                mutableUiState.value
+                    .logNetworkMessage
+                    .request
+                    .timestamp
+                    .toDateString(GlobalConstants.DATE_PATTERN_FILE_NAME_MS)
+            )
+            val file = FileKit.openFileSaver(
+                suggestedName = saveFileName,
+                extension = DataConstants.LOG_FILE_NAME_EXTENSION,
+                dialogSettings = FileKitDialogSettings(
+                    parentWindow = window
+                )
+            )
+            file?.writeString(getFullText())
         }
     }
 
