@@ -9,7 +9,6 @@ import ru.rznnike.demokmp.app.dispatcher.keyboard.KeyEventDispatcher
 import ru.rznnike.demokmp.app.ui.window.LocalKeyEventDispatcher
 
 abstract class NavigationScreen : Screen {
-    @Transient
     override val key: ScreenKey = uniqueScreenKey
 
     @Transient
