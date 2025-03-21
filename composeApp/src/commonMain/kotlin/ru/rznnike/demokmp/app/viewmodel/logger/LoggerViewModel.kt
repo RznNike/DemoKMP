@@ -3,11 +3,8 @@ package ru.rznnike.demokmp.app.viewmodel.logger
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.awt.ComposeWindow
 import androidx.lifecycle.viewModelScope
-import io.github.vinceglb.filekit.FileKit
-import io.github.vinceglb.filekit.dialogs.FileKitDialogSettings
-import io.github.vinceglb.filekit.dialogs.openFileSaver
+import io.github.vinceglb.filekit.PlatformFile
 import io.github.vinceglb.filekit.sink
 import io.ktor.utils.io.core.*
 import kotlinx.coroutines.flow.update
@@ -167,18 +164,12 @@ class LoggerViewModel : BaseUiViewModel<LoggerViewModel.UiState>() {
         }
     }
 
-    fun openSaveLogDialog(window: ComposeWindow) {
+    fun openSaveLogDialog(showFileDialog: suspend (String) -> PlatformFile?) {
         coroutineScopeProvider.io.launch {
             val saveFileName = DataConstants.LOG_FILE_NAME_TEMPLATE.format(
                 clock.millis().toDateString(GlobalConstants.DATE_PATTERN_FILE_NAME_MS)
             )
-            val file = FileKit.openFileSaver(
-                suggestedName = saveFileName,
-                extension = DataConstants.LOG_FILE_NAME_EXTENSION,
-                dialogSettings = FileKitDialogSettings(
-                    parentWindow = window
-                )
-            )
+            val file = showFileDialog(saveFileName)
             file?.sink()?.buffered()?.use { writer ->
                 log.forEach { message ->
                     val text = "%s%s | %s".format(

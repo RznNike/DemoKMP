@@ -17,6 +17,9 @@ import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import io.github.vinceglb.filekit.FileKit
+import io.github.vinceglb.filekit.dialogs.FileKitDialogSettings
+import io.github.vinceglb.filekit.dialogs.openFileSaver
 import ru.rznnike.demokmp.app.navigation.NavigationScreen
 import ru.rznnike.demokmp.app.navigation.getNavigator
 import ru.rznnike.demokmp.app.ui.theme.bodyLargeBold
@@ -29,6 +32,7 @@ import ru.rznnike.demokmp.app.ui.window.LocalWindow
 import ru.rznnike.demokmp.app.utils.backgroundColor
 import ru.rznnike.demokmp.app.utils.highlightSubstrings
 import ru.rznnike.demokmp.app.viewmodel.logger.network.NetworkLogDetailsViewModel
+import ru.rznnike.demokmp.data.utils.DataConstants
 import ru.rznnike.demokmp.domain.log.LogMessage
 import ru.rznnike.demokmp.domain.log.LogNetworkMessage
 import ru.rznnike.demokmp.domain.utils.GlobalConstants
@@ -120,7 +124,15 @@ class NetworkLogDetailsScreen(
                             modifier = Modifier.size(40.dp),
                             iconRes = Res.drawable.ic_save,
                             onClick = {
-                                viewModel.openSaveLogDialog(window)
+                                viewModel.openSaveLogDialog { fileName ->
+                                    FileKit.openFileSaver(
+                                        suggestedName = fileName,
+                                        extension = DataConstants.LOG_FILE_NAME_EXTENSION,
+                                        dialogSettings = FileKitDialogSettings(
+                                            parentWindow = window
+                                        )
+                                    )
+                                }
                             }
                         )
                     }

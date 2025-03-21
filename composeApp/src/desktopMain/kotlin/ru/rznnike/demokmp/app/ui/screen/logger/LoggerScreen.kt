@@ -20,6 +20,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.key.*
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import io.github.vinceglb.filekit.FileKit
+import io.github.vinceglb.filekit.dialogs.FileKitDialogSettings
+import io.github.vinceglb.filekit.dialogs.openFileSaver
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.painterResource
 import ru.rznnike.demokmp.BuildKonfig
@@ -35,6 +38,7 @@ import ru.rznnike.demokmp.app.ui.view.TextR
 import ru.rznnike.demokmp.app.ui.window.LocalWindow
 import ru.rznnike.demokmp.app.utils.onClick
 import ru.rznnike.demokmp.app.viewmodel.logger.LoggerViewModel
+import ru.rznnike.demokmp.data.utils.DataConstants
 import ru.rznnike.demokmp.generated.resources.*
 
 class LoggerScreen : NavigationScreen() {
@@ -159,7 +163,15 @@ class LoggerScreen : NavigationScreen() {
                             modifier = Modifier.size(40.dp),
                             iconRes = Res.drawable.ic_save,
                             onClick = {
-                                viewModel.openSaveLogDialog(window)
+                                viewModel.openSaveLogDialog { fileName ->
+                                    FileKit.openFileSaver(
+                                        suggestedName = fileName,
+                                        extension = DataConstants.LOG_FILE_NAME_EXTENSION,
+                                        dialogSettings = FileKitDialogSettings(
+                                            parentWindow = window
+                                        )
+                                    )
+                                }
                             }
                         )
                     }
