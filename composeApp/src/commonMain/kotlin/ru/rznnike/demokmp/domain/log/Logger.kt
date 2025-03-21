@@ -37,13 +37,15 @@ class Logger private constructor(
     fun networkRequest(message: String): UUID {
         val uuid = UUID.randomUUID()
         val request = addMessage(message, LogLevel.INFO, LogType.NETWORK)
-        val logNetworkMessage = LogNetworkMessage(
-            uuid = uuid,
-            request = request
-        )
-        networkLog.add(logNetworkMessage)
-        coroutineScopeProvider.io.launch {
-            networkLogUpdatesFlow.emit(logNetworkMessage)
+        if (OperatingSystem.isDesktop) {
+            val logNetworkMessage = LogNetworkMessage(
+                uuid = uuid,
+                request = request
+            )
+            networkLog.add(logNetworkMessage)
+            coroutineScopeProvider.io.launch {
+                networkLogUpdatesFlow.emit(logNetworkMessage)
+            }
         }
         return uuid
     }
@@ -54,15 +56,17 @@ class Logger private constructor(
         state: NetworkRequestState
     ) {
         val response = addMessage(message, LogLevel.INFO, LogType.NETWORK)
-        networkLog.firstOrNull { it.uuid == requestUuid }?.let { logNetworkMessage ->
-            val updatedMessage = logNetworkMessage.copy(
-                response = response,
-                state = if (state == NetworkRequestState.SENT) NetworkRequestState.SUCCESS else state
-            )
-            val index = networkLog.lastIndexOf(logNetworkMessage)
-            networkLog[index] = updatedMessage
-            coroutineScopeProvider.io.launch {
-                networkLogUpdatesFlow.emit(updatedMessage)
+        if (OperatingSystem.isDesktop) {
+            networkLog.firstOrNull { it.uuid == requestUuid }?.let { logNetworkMessage ->
+                val updatedMessage = logNetworkMessage.copy(
+                    response = response,
+                    state = if (state == NetworkRequestState.SENT) NetworkRequestState.SUCCESS else state
+                )
+                val index = networkLog.lastIndexOf(logNetworkMessage)
+                networkLog[index] = updatedMessage
+                coroutineScopeProvider.io.launch {
+                    networkLogUpdatesFlow.emit(updatedMessage)
+                }
             }
         }
     }
@@ -107,10 +111,6 @@ class Logger private constructor(
             tag = tag,
             message = message
         )
-        log.add(logMessage)
-        coroutineScopeProvider.io.launch {
-            logUpdatesFlow.emit(logMessage)
-        }
 
         val formattedMessage = "%s%s | %s".format(
             logMessage.timestamp.toDateString(GlobalConstants.DATE_PATTERN_TIME_MS),
@@ -122,7 +122,14 @@ class Logger private constructor(
         } else {
             println(formattedMessage)
         }
-        writeToFile(formattedMessage)
+
+        if (OperatingSystem.isDesktop) {
+            log.add(logMessage)
+            coroutineScopeProvider.io.launch {
+                logUpdatesFlow.emit(logMessage)
+            }
+            writeToFile(formattedMessage)
+        }
 
         return logMessage
     }
