@@ -16,6 +16,14 @@ plugins {
     alias(libs.plugins.room)
 }
 
+private val globalPackageName = "ru.rznnike.demokmp"
+private val globalVersionName = "1.0.0"
+private val globalVersionCode = 1
+private val buildType = BuildType[System.getenv("BUILD_TYPE")]
+private val debug = buildType != BuildType.RELEASE
+private val runFromIDE = System.getenv("RUN_FROM_IDE").toBoolean()
+private val os = if (DefaultNativePlatform.getCurrentOperatingSystem().isWindows) "windows" else "linux"
+
 kotlin {
     androidTarget {
         compilerOptions {
@@ -98,14 +106,6 @@ dependencies {
     add("kspDesktop", libs.room.compiler)
 }
 
-private val globalPackageName = "ru.rznnike.demokmp"
-private val globalVersionName = "1.0.0"
-private val globalVersionCode = 1
-private val buildType = BuildType[System.getenv("BUILD_TYPE")]
-private val debug = buildType != BuildType.RELEASE
-private val runFromIDE = System.getenv("RUN_FROM_IDE").toBoolean()
-private val os = if (DefaultNativePlatform.getCurrentOperatingSystem().isWindows) "windows" else "linux"
-
 android {
     namespace = globalPackageName
     compileSdk = libs.versions.android.targetSdk.get().toInt()
@@ -183,11 +183,19 @@ buildkonfig {
         buildConfigField(FieldSpec.Type.STRING, "BUILD_TYPE", buildType.tag)
         buildConfigField(FieldSpec.Type.BOOLEAN, "DEBUG", "$debug")
         buildConfigField(FieldSpec.Type.BOOLEAN, "RUN_FROM_IDE", "$runFromIDE")
-        buildConfigField(FieldSpec.Type.STRING, "OS", os)
+        buildConfigField(FieldSpec.Type.STRING, "OS", "")
         buildConfigField(FieldSpec.Type.STRING, "API_MAIN", "https://dog.ceo/")
         buildConfigField(FieldSpec.Type.STRING, "API_WEBSOCKETS", "wss://echo.websocket.org/")
         buildConfigField(FieldSpec.Type.STRING, "VERSION_NAME", globalVersionName)
         buildConfigField(FieldSpec.Type.INT, "VERSION_CODE", globalVersionCode.toString())
+    }
+    targetConfigs {
+        create("android") {
+            buildConfigField(FieldSpec.Type.STRING, "OS", "android")
+        }
+        create("desktop") {
+            buildConfigField(FieldSpec.Type.STRING, "OS", os)
+        }
     }
 }
 
