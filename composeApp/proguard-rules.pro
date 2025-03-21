@@ -1,5 +1,8 @@
 #noinspection ShrinkerUnresolvedReference
 
+# Common
+-keepattributes Exceptions,InnerClasses,Signature,*Annotation*,EnclosingMethod
+
 # Project classes
 -keep class ru.rznnike.demokmp.data.network.model.** { *; }
 -keep class ru.rznnike.demokmp.domain.model.** { *; }
@@ -23,6 +26,12 @@
 # PdfBox
 -dontwarn org.apache.commons.logging.**
 -dontwarn org.apache.pdfbox.io.IOUtils
+
+# FileKit
+-keep class com.sun.jna.** { *; }
+-keep class * implements com.sun.jna.** { *; }
+-keep class org.freedesktop.** { *; }
+-keep class io.github.vinceglb.filekit.** { *; }
 
 
 ### OkHttp ###
