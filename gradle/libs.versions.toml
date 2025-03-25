@@ -1,9 +1,9 @@
 [versions]
-kotlin = "2.1.10"
+kotlin = "2.1.20"
 coroutines = "1.10.1"
 voyager = "1.1.0-beta03"
 koin = "4.0.2"
-ktorfit = "2.4.0"
+ktorfit = "2.4.1"
 ktor = "3.1.0"
 coil = "3.1.0"
 room = "2.7.0-rc02"
@@ -60,7 +60,7 @@ ktor-websockets = { module = "io.ktor:ktor-client-websockets", version.ref = "kt
 
 # Logging (for Ktor)
 # https://mvnrepository.com/artifact/ch.qos.logback/logback-classic
-logback = { module = "ch.qos.logback:logback-classic", version = "1.5.17" }
+logback = { module = "ch.qos.logback:logback-classic", version = "1.5.18" }
 
 # Image loader
 # https://github.com/coil-kt/coil
@@ -105,7 +105,7 @@ buildkonfig = { id = "com.codingfeline.buildkonfig", version = "0.17.0" }
 
 # KSP
 # https://mvnrepository.com/artifact/com.google.devtools.ksp/com.google.devtools.ksp.gradle.plugin?repo=central
-ksp = { id = "com.google.devtools.ksp", version = "2.1.10-1.0.31" }
+ksp = { id = "com.google.devtools.ksp", version = "2.1.20-1.0.31" }
 
 # Ktorfit - network
 ktorfit = { id = "de.jensklingenberg.ktorfit", version.ref = "ktorfit" }
