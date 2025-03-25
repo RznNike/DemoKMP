@@ -6,7 +6,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -21,12 +20,10 @@ import ru.rznnike.demokmp.app.navigation.getNavigator
 import ru.rznnike.demokmp.app.ui.dialog.common.AlertDialogAction
 import ru.rznnike.demokmp.app.ui.dialog.common.AlertDialogType
 import ru.rznnike.demokmp.app.ui.dialog.common.CommonAlertDialog
-import ru.rznnike.demokmp.app.ui.theme.bodyLargeItalic
-import ru.rznnike.demokmp.app.ui.view.SelectableButton
+import ru.rznnike.demokmp.app.ui.view.FilledButton
 import ru.rznnike.demokmp.app.ui.view.TextR
 import ru.rznnike.demokmp.app.ui.view.Toolbar
 import ru.rznnike.demokmp.app.utils.platformName
-import ru.rznnike.demokmp.app.viewmodel.global.configuration.AppConfigurationViewModel
 import ru.rznnike.demokmp.app.viewmodel.home.HomeViewModel
 import ru.rznnike.demokmp.generated.resources.*
 
@@ -34,9 +31,6 @@ class HomeScreen : NavigationScreen() {
     @Composable
     override fun Layout() {
         val navigator = getNavigator()
-
-        val appConfigurationViewModel: AppConfigurationViewModel = koinInject()
-        val appConfigurationUiState by appConfigurationViewModel.uiState.collectAsState()
 
         val viewModel = viewModel { HomeViewModel() }
 
@@ -70,15 +64,15 @@ class HomeScreen : NavigationScreen() {
                         modifier = Modifier
                             .verticalScroll(verticalScrollState)
                             .fillMaxSize()
-                            .padding(12.dp),
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                            .padding(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
                         @Composable
                         fun MenuButton(text: StringResource, onClick: () -> Unit) {
-                            SelectableButton(
+                            FilledButton(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .height(70.dp),
+                                    .height(60.dp),
                                 onClick = onClick
                             ) {
                                 TextR(
@@ -101,9 +95,6 @@ class HomeScreen : NavigationScreen() {
                         MenuButton(Res.string.db_example) {
 //                            navigator.openFlow(DBExampleFlow())
                         }
-                        MenuButton(Res.string.pdf_example) {
-//                            navigator.openFlow(PdfExampleFlow())
-                        }
                         MenuButton(Res.string.custom_ui_elements) {
 //                            navigator.openFlow(CustomUIFlow())
                         }
@@ -122,27 +113,17 @@ class HomeScreen : NavigationScreen() {
                     }
                 }
             }
-            Spacer(Modifier.height(8.dp))
-            TextR(
-                modifier = Modifier.align(Alignment.CenterHorizontally),
-                textRes = Res.string.hotkeys_tip,
-                textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.bodyLargeItalic,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-            Spacer(Modifier.height(8.dp))
+            Spacer(Modifier.height(16.dp))
         }
 
         if (showAboutDialog) {
-            val details = "%s: %s.%d%s\n%s: %s\n%s: %s".format(
+            val details = "%s: %s.%d%s\n%s: %s".format(
                 stringResource(Res.string.version),
                 BuildKonfig.VERSION_NAME,
                 BuildKonfig.VERSION_CODE,
                 if (BuildKonfig.DEBUG) " debug" else "",
                 stringResource(Res.string.environment),
-                platformName,
-                stringResource(Res.string.launch_args),
-                appConfigurationUiState.args.joinToString()
+                platformName
             )
             CommonAlertDialog(
                 type = AlertDialogType.HORIZONTAL,

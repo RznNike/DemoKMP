@@ -1,9 +1,11 @@
 package ru.rznnike.demokmp.app.ui.activity
 
+import android.app.ActivityManager
+import android.graphics.BitmapFactory
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.clickable
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -11,6 +13,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.core.view.WindowCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import cafe.adriel.voyager.core.annotation.ExperimentalVoyagerApi
 import cafe.adriel.voyager.jetpack.ProvideNavigatorLifecycleKMPSupport
@@ -26,16 +29,20 @@ import ru.rznnike.demokmp.app.ui.dialog.common.AlertDialogType
 import ru.rznnike.demokmp.app.ui.dialog.common.CommonAlertDialog
 import ru.rznnike.demokmp.app.ui.screen.splash.SplashFlow
 import ru.rznnike.demokmp.app.ui.theme.AppTheme
+import ru.rznnike.demokmp.app.utils.onClick
 import ru.rznnike.demokmp.app.utils.restartApp
 import ru.rznnike.demokmp.app.viewmodel.app.ActivityViewModel
 import ru.rznnike.demokmp.domain.common.CoroutineScopeProvider
 import ru.rznnike.demokmp.generated.resources.Res
 import ru.rznnike.demokmp.generated.resources.close
+import ru.rznnike.demokmp.R
 
 class AppActivity : ComponentActivity() {
     @OptIn(ExperimentalVoyagerApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        initWindowFlags()
+        updateTaskDescription()
 
         setContent {
             KoinContext {
@@ -125,14 +132,14 @@ class AppActivity : ComponentActivity() {
         AppTheme {
             val focusManager = LocalFocusManager.current
             Scaffold(
-                modifier = Modifier.clickable {
+                modifier = Modifier.onClick {
                     focusManager.clearFocus()
                 },
                 snackbarHost = {
                     SnackbarHost(hostState = snackbarHostState) {
                         Snackbar(
                             modifier = Modifier
-                                .clickable {
+                                .onClick {
                                     snackbarHostState.currentSnackbarData?.dismiss()
                                 },
                             snackbarData = it,
@@ -147,5 +154,39 @@ class AppActivity : ComponentActivity() {
                 NotifierDialog()
             }
         }
+    }
+
+    private fun initWindowFlags() {
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+    }
+
+    private fun updateTaskDescription() {
+        val taskDesc = when {
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU -> {
+                ActivityManager.TaskDescription.Builder()
+                    .setLabel(resources.getString(R.string.window_title))
+                    .setIcon(R.mipmap.ic_launcher)
+                    .setPrimaryColor(getColor(R.color.colorBackground))
+                    .build()
+            }
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.P -> {
+                @Suppress("DEPRECATION")
+                ActivityManager.TaskDescription(
+                    resources.getString(R.string.window_title),
+                    R.mipmap.ic_launcher,
+                    getColor(R.color.colorBackground)
+                )
+            }
+            else -> {
+                @Suppress("DEPRECATION")
+                ActivityManager.TaskDescription(
+                    resources.getString(R.string.window_title),
+                    BitmapFactory.decodeResource(resources, R.mipmap.ic_launcher),
+                    getColor(R.color.colorBackground)
+                )
+            }
+        }
+
+        setTaskDescription(taskDesc)
     }
 }
