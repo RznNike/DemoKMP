@@ -103,6 +103,7 @@ kotlin {
 }
 
 dependencies {
+    add("kspAndroid", libs.room.compiler)
     add("kspDesktop", libs.room.compiler)
 }
 
