@@ -25,7 +25,6 @@ import ru.rznnike.demokmp.app.ui.theme.bodyLargeItalic
 import ru.rznnike.demokmp.app.ui.view.SelectableButton
 import ru.rznnike.demokmp.app.ui.view.TextR
 import ru.rznnike.demokmp.app.ui.view.Toolbar
-import ru.rznnike.demokmp.app.utils.getMacAddress
 import ru.rznnike.demokmp.app.utils.platformName
 import ru.rznnike.demokmp.app.viewmodel.global.configuration.AppConfigurationViewModel
 import ru.rznnike.demokmp.app.viewmodel.home.HomeViewModel
@@ -44,8 +43,6 @@ class HomeScreen : NavigationScreen() {
         val notifier: Notifier = koinInject()
 
         var showAboutDialog by remember { mutableStateOf(false) }
-
-        val macAddress = remember { getMacAddress() }
 
         Column(
             modifier = Modifier
@@ -137,15 +134,13 @@ class HomeScreen : NavigationScreen() {
         }
 
         if (showAboutDialog) {
-            val details = "%s: %s.%d%s\n%s: %s\n%s: %s\n%s: %s".format(
+            val details = "%s: %s.%d%s\n%s: %s\n%s: %s".format(
                 stringResource(Res.string.version),
                 BuildKonfig.VERSION_NAME,
                 BuildKonfig.VERSION_CODE,
                 if (BuildKonfig.DEBUG) " debug" else "",
                 stringResource(Res.string.environment),
                 platformName,
-                stringResource(Res.string.mac),
-                macAddress ?: "",
                 stringResource(Res.string.launch_args),
                 appConfigurationUiState.args.joinToString()
             )

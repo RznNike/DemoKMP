@@ -48,7 +48,7 @@ class AppActivity : ComponentActivity() {
 
     @Composable
     fun MainFrame() {
-        val viewModel = viewModel {
+        viewModel {
             ActivityViewModel {
                 restartApp()
             }
