@@ -22,6 +22,7 @@ import ru.rznnike.demokmp.app.navigation.getNavigator
 import ru.rznnike.demokmp.app.ui.dialog.common.AlertDialogAction
 import ru.rznnike.demokmp.app.ui.dialog.common.AlertDialogType
 import ru.rznnike.demokmp.app.ui.dialog.common.CommonAlertDialog
+import ru.rznnike.demokmp.app.ui.screen.home.HomeFlow
 import ru.rznnike.demokmp.app.ui.theme.LocalCustomDrawables
 import ru.rznnike.demokmp.app.viewmodel.splash.SplashViewModel
 import ru.rznnike.demokmp.generated.resources.Res
@@ -41,9 +42,9 @@ class SplashScreen : NavigationScreen() {
 
         val viewModel = viewModel {
             SplashViewModel { command ->
-//                when (command) {
-//                    SplashViewModel.NavigationCommand.MAIN -> navigator.newRootFlow(HomeFlow())
-//                }
+                when (command) {
+                    SplashViewModel.NavigationCommand.MAIN -> navigator.newRootFlow(HomeFlow())
+                }
             }
         }
         viewModel.setDialogCallbacks(
