@@ -14,13 +14,13 @@ import androidx.compose.ui.input.key.*
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
-import ru.rznnike.demokmp.app.navigation.NavigationScreen
+import ru.rznnike.demokmp.app.navigation.DesktopNavigationScreen
 import ru.rznnike.demokmp.app.navigation.getNavigator
 import ru.rznnike.demokmp.app.ui.view.*
 import ru.rznnike.demokmp.app.viewmodel.profile.ProfileViewModel
 import ru.rznnike.demokmp.generated.resources.*
 
-class NestedSettingsScreen : NavigationScreen() {
+class NestedSettingsScreen : DesktopNavigationScreen() {
     @Composable
     override fun Layout() {
         val navigator = getNavigator()

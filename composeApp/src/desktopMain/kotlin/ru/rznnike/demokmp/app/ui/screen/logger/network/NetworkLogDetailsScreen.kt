@@ -20,7 +20,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.vinceglb.filekit.FileKit
 import io.github.vinceglb.filekit.dialogs.FileKitDialogSettings
 import io.github.vinceglb.filekit.dialogs.openFileSaver
-import ru.rznnike.demokmp.app.navigation.NavigationScreen
+import ru.rznnike.demokmp.app.navigation.DesktopNavigationScreen
 import ru.rznnike.demokmp.app.navigation.getNavigator
 import ru.rznnike.demokmp.app.ui.theme.bodyLargeBold
 import ru.rznnike.demokmp.app.ui.theme.bodyMediumMono
@@ -28,10 +28,10 @@ import ru.rznnike.demokmp.app.ui.view.LinkifyText
 import ru.rznnike.demokmp.app.ui.view.SelectableOutlinedIconButton
 import ru.rznnike.demokmp.app.ui.view.SlimOutlinedTextField
 import ru.rznnike.demokmp.app.ui.view.TextR
+import ru.rznnike.demokmp.app.ui.viewmodel.logger.network.NetworkLogDetailsViewModel
 import ru.rznnike.demokmp.app.ui.window.LocalWindow
 import ru.rznnike.demokmp.app.utils.backgroundColor
 import ru.rznnike.demokmp.app.utils.highlightSubstrings
-import ru.rznnike.demokmp.app.ui.viewmodel.logger.network.NetworkLogDetailsViewModel
 import ru.rznnike.demokmp.data.utils.DataConstants
 import ru.rznnike.demokmp.domain.log.LogMessage
 import ru.rznnike.demokmp.domain.log.LogNetworkMessage
@@ -41,7 +41,7 @@ import ru.rznnike.demokmp.generated.resources.*
 
 class NetworkLogDetailsScreen(
     private val message: LogNetworkMessage
-) : NavigationScreen() {
+) : DesktopNavigationScreen() {
     @Composable
     override fun Layout() {
         val navigator = getNavigator()

@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
-import ru.rznnike.demokmp.app.navigation.NavigationScreen
+import ru.rznnike.demokmp.app.navigation.DesktopNavigationScreen
 import ru.rznnike.demokmp.app.navigation.getNavigator
 import ru.rznnike.demokmp.app.ui.view.DropdownSelector
 import ru.rznnike.demokmp.app.ui.view.PdfViewer
@@ -28,7 +28,7 @@ import ru.rznnike.demokmp.domain.common.DispatcherProvider
 import ru.rznnike.demokmp.domain.model.print.TwoSidedPrint
 import ru.rznnike.demokmp.generated.resources.*
 
-class PdfExampleScreen : NavigationScreen() {
+class PdfExampleScreen : DesktopNavigationScreen() {
     @Composable
     override fun Layout() {
         val navigator = getNavigator()

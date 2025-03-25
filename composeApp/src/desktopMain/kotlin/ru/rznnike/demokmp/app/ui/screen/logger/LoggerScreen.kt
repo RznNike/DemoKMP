@@ -26,7 +26,7 @@ import io.github.vinceglb.filekit.dialogs.openFileSaver
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.painterResource
 import ru.rznnike.demokmp.BuildKonfig
-import ru.rznnike.demokmp.app.navigation.NavigationScreen
+import ru.rznnike.demokmp.app.navigation.DesktopNavigationScreen
 import ru.rznnike.demokmp.app.navigation.getNavigator
 import ru.rznnike.demokmp.app.ui.item.LogMessageItem
 import ru.rznnike.demokmp.app.ui.item.LogNetworkMessageItem
@@ -35,13 +35,13 @@ import ru.rznnike.demokmp.app.ui.view.SelectableOutlinedIconButton
 import ru.rznnike.demokmp.app.ui.view.SlimOutlinedTextField
 import ru.rznnike.demokmp.app.ui.view.TabText
 import ru.rznnike.demokmp.app.ui.view.TextR
+import ru.rznnike.demokmp.app.ui.viewmodel.logger.LoggerViewModel
 import ru.rznnike.demokmp.app.ui.window.LocalWindow
 import ru.rznnike.demokmp.app.utils.onClick
-import ru.rznnike.demokmp.app.ui.viewmodel.logger.LoggerViewModel
 import ru.rznnike.demokmp.data.utils.DataConstants
 import ru.rznnike.demokmp.generated.resources.*
 
-class LoggerScreen : NavigationScreen() {
+class LoggerScreen : DesktopNavigationScreen() {
     @Composable
     override fun Layout() {
         val navigator = getNavigator()
