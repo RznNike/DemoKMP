@@ -31,7 +31,7 @@ import ru.rznnike.demokmp.app.ui.view.TextR
 import ru.rznnike.demokmp.app.ui.window.LocalWindow
 import ru.rznnike.demokmp.app.utils.backgroundColor
 import ru.rznnike.demokmp.app.utils.highlightSubstrings
-import ru.rznnike.demokmp.app.viewmodel.logger.network.NetworkLogDetailsViewModel
+import ru.rznnike.demokmp.app.ui.viewmodel.logger.network.NetworkLogDetailsViewModel
 import ru.rznnike.demokmp.data.utils.DataConstants
 import ru.rznnike.demokmp.domain.log.LogMessage
 import ru.rznnike.demokmp.domain.log.LogNetworkMessage

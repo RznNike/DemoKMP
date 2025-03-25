@@ -37,7 +37,7 @@ import ru.rznnike.demokmp.app.ui.view.TabText
 import ru.rznnike.demokmp.app.ui.view.TextR
 import ru.rznnike.demokmp.app.ui.window.LocalWindow
 import ru.rznnike.demokmp.app.utils.onClick
-import ru.rznnike.demokmp.app.viewmodel.logger.LoggerViewModel
+import ru.rznnike.demokmp.app.ui.viewmodel.logger.LoggerViewModel
 import ru.rznnike.demokmp.data.utils.DataConstants
 import ru.rznnike.demokmp.generated.resources.*
 

@@ -146,15 +146,19 @@ class AppConfigurationViewModel : BaseUiViewModel<AppConfigurationViewModel.UiSt
     }
 
     private fun relaunchApplication() {
-        ProcessBuilder(
-            if (OperatingSystem.isLinux) {
-                listOf("sh", "./${DataConstants.RUN_SCRIPT_NAME}")
-            } else {
-                listOf("wscript", DataConstants.RUN_SCRIPT_NAME)
-            }
-        )
-            .directory(File(DataConstants.ROOT_DIR))
-            .start()
+        if (OperatingSystem.isAndroid) {
+            eventDispatcher.sendEvent(AppEvent.ActivityRestartRequested)
+        } else {
+            ProcessBuilder(
+                if (OperatingSystem.isLinux) {
+                    listOf("sh", "./${DataConstants.RUN_SCRIPT_NAME}")
+                } else {
+                    listOf("wscript", DataConstants.RUN_SCRIPT_NAME)
+                }
+            )
+                .directory(File(DataConstants.ROOT_DIR))
+                .start()
+        }
     }
 
     data class UiState(

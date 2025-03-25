@@ -11,6 +11,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.lifecycle.viewmodel.compose.viewModel
 import cafe.adriel.voyager.core.annotation.ExperimentalVoyagerApi
 import cafe.adriel.voyager.jetpack.ProvideNavigatorLifecycleKMPSupport
 import kotlinx.coroutines.launch
@@ -25,6 +26,8 @@ import ru.rznnike.demokmp.app.ui.dialog.common.AlertDialogType
 import ru.rznnike.demokmp.app.ui.dialog.common.CommonAlertDialog
 import ru.rznnike.demokmp.app.ui.screen.splash.SplashFlow
 import ru.rznnike.demokmp.app.ui.theme.AppTheme
+import ru.rznnike.demokmp.app.utils.restartApp
+import ru.rznnike.demokmp.app.viewmodel.app.ActivityViewModel
 import ru.rznnike.demokmp.domain.common.CoroutineScopeProvider
 import ru.rznnike.demokmp.generated.resources.Res
 import ru.rznnike.demokmp.generated.resources.close
@@ -45,6 +48,12 @@ class AppActivity : ComponentActivity() {
 
     @Composable
     fun MainFrame() {
+        val viewModel = viewModel {
+            ActivityViewModel {
+                restartApp()
+            }
+        }
+
         val notifier = koinInject<Notifier>()
         val coroutineScopeProvider = koinInject<CoroutineScopeProvider>()
 

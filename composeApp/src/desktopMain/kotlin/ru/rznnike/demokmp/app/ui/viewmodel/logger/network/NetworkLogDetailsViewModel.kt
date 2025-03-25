@@ -1,4 +1,4 @@
-package ru.rznnike.demokmp.app.viewmodel.logger.network
+package ru.rznnike.demokmp.app.ui.viewmodel.logger.network
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
