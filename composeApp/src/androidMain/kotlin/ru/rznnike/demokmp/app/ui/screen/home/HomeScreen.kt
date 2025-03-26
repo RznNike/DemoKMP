@@ -20,6 +20,7 @@ import ru.rznnike.demokmp.app.navigation.getNavigator
 import ru.rznnike.demokmp.app.ui.dialog.common.AlertDialogAction
 import ru.rznnike.demokmp.app.ui.dialog.common.AlertDialogType
 import ru.rznnike.demokmp.app.ui.dialog.common.CommonAlertDialog
+import ru.rznnike.demokmp.app.ui.screen.customui.CustomUIFlow
 import ru.rznnike.demokmp.app.ui.screen.dbexample.DBExampleFlow
 import ru.rznnike.demokmp.app.ui.screen.httpexample.HTTPExampleFlow
 import ru.rznnike.demokmp.app.ui.screen.settings.SettingsFlow
@@ -101,7 +102,7 @@ class HomeScreen : AndroidNavigationScreen() {
                             navigator.openFlow(DBExampleFlow())
                         }
                         MenuButton(Res.string.custom_ui_elements) {
-//                            navigator.openFlow(CustomUIFlow())
+                            navigator.openFlow(CustomUIFlow())
                         }
                         MenuButton(Res.string.about_app) {
                             showAboutDialog = true
