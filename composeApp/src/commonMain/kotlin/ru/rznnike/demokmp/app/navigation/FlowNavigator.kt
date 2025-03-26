@@ -19,7 +19,7 @@ class FlowNavigator(
     }
 
     fun replaceFlow(flow: NavigationFlow) {
-        val oldFlow = navigationFlows.removeLast()
+        val oldFlow = navigationFlows.removeAt(navigationFlows.lastIndex)
         repeat(oldFlow.screens.size) {
             navigator.pop()
         }
@@ -34,7 +34,7 @@ class FlowNavigator(
 
     fun closeFlow() {
         if (navigationFlows.size > 1) {
-            val oldFlow = navigationFlows.removeLast()
+            val oldFlow = navigationFlows.removeAt(navigationFlows.lastIndex)
             repeat(oldFlow.screens.size) {
                 navigator.pop()
             }
@@ -56,7 +56,7 @@ class FlowNavigator(
 
     fun replaceScreen(screen: NavigationScreen) {
         val flowScreens = navigationFlows.last().screens
-        flowScreens.removeLast()
+        flowScreens.removeAt(flowScreens.lastIndex)
         flowScreens.add(screen)
         navigator.replace(screen)
     }
@@ -74,7 +74,7 @@ class FlowNavigator(
     fun closeScreen() {
         val flow = navigationFlows.last()
         if (flow.screens.size > 1) {
-            flow.screens.removeLast()
+            flow.screens.removeAt(flow.screens.lastIndex)
             navigator.pop()
         } else {
             closeFlow()
