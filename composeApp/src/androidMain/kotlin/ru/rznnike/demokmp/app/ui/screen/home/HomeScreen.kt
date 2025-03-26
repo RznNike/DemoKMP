@@ -40,6 +40,7 @@ class HomeScreen : NavigationScreen() {
 
         Column(
             modifier = Modifier
+                .systemBarsPadding()
                 .padding(horizontal = 16.dp)
                 .fillMaxSize()
         ) {
