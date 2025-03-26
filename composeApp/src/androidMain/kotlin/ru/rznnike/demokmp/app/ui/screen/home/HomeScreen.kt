@@ -22,6 +22,7 @@ import ru.rznnike.demokmp.app.ui.dialog.common.AlertDialogType
 import ru.rznnike.demokmp.app.ui.dialog.common.CommonAlertDialog
 import ru.rznnike.demokmp.app.ui.screen.httpexample.HTTPExampleFlow
 import ru.rznnike.demokmp.app.ui.screen.settings.SettingsFlow
+import ru.rznnike.demokmp.app.ui.screen.wsexample.WebSocketsExampleFlow
 import ru.rznnike.demokmp.app.ui.view.FilledButton
 import ru.rznnike.demokmp.app.ui.view.TextR
 import ru.rznnike.demokmp.app.ui.view.Toolbar
@@ -93,7 +94,7 @@ class HomeScreen : AndroidNavigationScreen() {
                             navigator.openFlow(HTTPExampleFlow())
                         }
                         MenuButton(Res.string.ws_example) {
-//                            navigator.openFlow(WebSocketsExampleFlow())
+                            navigator.openFlow(WebSocketsExampleFlow())
                         }
                         MenuButton(Res.string.db_example) {
 //                            navigator.openFlow(DBExampleFlow())
