@@ -4,13 +4,12 @@ import android.app.ActivityManager
 import android.graphics.BitmapFactory
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.core.view.WindowCompat
@@ -36,6 +35,11 @@ import ru.rznnike.demokmp.domain.common.CoroutineScopeProvider
 import ru.rznnike.demokmp.generated.resources.Res
 import ru.rznnike.demokmp.generated.resources.close
 import ru.rznnike.demokmp.R
+import ru.rznnike.demokmp.app.ui.window.LocalWindowCloseCallback
+import ru.rznnike.demokmp.app.utils.AppConstants
+import ru.rznnike.demokmp.app.viewmodel.global.configuration.AppConfigurationViewModel
+import ru.rznnike.demokmp.generated.resources.double_back_to_exit
+import kotlin.system.exitProcess
 
 class AppActivity : ComponentActivity() {
     @OptIn(ExperimentalVoyagerApi::class)
@@ -58,6 +62,14 @@ class AppActivity : ComponentActivity() {
         viewModel {
             ActivityViewModel {
                 restartApp()
+            }
+        }
+
+        val appConfigurationViewModel: AppConfigurationViewModel = koinInject()
+
+        LaunchedEffect("init") {
+            appConfigurationViewModel.setCloseAppCallback {
+                exitProcess(0)
             }
         }
 
@@ -129,29 +141,48 @@ class AppActivity : ComponentActivity() {
             }
         }
 
-        AppTheme {
-            val focusManager = LocalFocusManager.current
-            Scaffold(
-                modifier = Modifier.onClick {
-                    focusManager.clearFocus()
-                },
-                snackbarHost = {
-                    SnackbarHost(hostState = snackbarHostState) {
-                        Snackbar(
-                            modifier = Modifier
-                                .onClick {
-                                    snackbarHostState.currentSnackbarData?.dismiss()
-                                },
-                            snackbarData = it,
-                            containerColor = MaterialTheme.colorScheme.primary,
-                            contentColor = MaterialTheme.colorScheme.onPrimary,
-                            actionColor = MaterialTheme.colorScheme.onPrimary
-                        )
-                    }
+        var doubleBackToExitPressedOnce by remember { mutableStateOf(false) }
+        val onBackPressedCallback: () -> Unit = remember {
+            {
+                if (doubleBackToExitPressedOnce) {
+                    appConfigurationViewModel.closeApplication()
+                } else {
+                    doubleBackToExitPressedOnce = true
+                    notifier.sendMessage(Res.string.double_back_to_exit)
+                    Handler(Looper.getMainLooper()).postDelayed(
+                        { doubleBackToExitPressedOnce = false },
+                        AppConstants.APP_EXIT_DURATION_MS
+                    )
                 }
-            ) {
-                createNavigator(SplashFlow())
-                NotifierDialog()
+            }
+        }
+        CompositionLocalProvider(
+            LocalWindowCloseCallback provides onBackPressedCallback
+        ) {
+            AppTheme {
+                val focusManager = LocalFocusManager.current
+                Scaffold(
+                    modifier = Modifier.onClick {
+                        focusManager.clearFocus()
+                    },
+                    snackbarHost = {
+                        SnackbarHost(hostState = snackbarHostState) {
+                            Snackbar(
+                                modifier = Modifier
+                                    .onClick {
+                                        snackbarHostState.currentSnackbarData?.dismiss()
+                                    },
+                                snackbarData = it,
+                                containerColor = MaterialTheme.colorScheme.primary,
+                                contentColor = MaterialTheme.colorScheme.onPrimary,
+                                actionColor = MaterialTheme.colorScheme.onPrimary
+                            )
+                        }
+                    }
+                ) {
+                    createNavigator(SplashFlow())
+                    NotifierDialog()
+                }
             }
         }
     }
