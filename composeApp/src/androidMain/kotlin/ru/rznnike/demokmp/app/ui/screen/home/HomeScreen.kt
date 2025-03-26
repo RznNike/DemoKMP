@@ -20,6 +20,7 @@ import ru.rznnike.demokmp.app.navigation.getNavigator
 import ru.rznnike.demokmp.app.ui.dialog.common.AlertDialogAction
 import ru.rznnike.demokmp.app.ui.dialog.common.AlertDialogType
 import ru.rznnike.demokmp.app.ui.dialog.common.CommonAlertDialog
+import ru.rznnike.demokmp.app.ui.screen.httpexample.HTTPExampleFlow
 import ru.rznnike.demokmp.app.ui.screen.settings.SettingsFlow
 import ru.rznnike.demokmp.app.ui.view.FilledButton
 import ru.rznnike.demokmp.app.ui.view.TextR
@@ -89,7 +90,7 @@ class HomeScreen : AndroidNavigationScreen() {
                             navigator.openFlow(SettingsFlow())
                         }
                         MenuButton(Res.string.http_example) {
-//                            navigator.openFlow(HTTPExampleFlow())
+                            navigator.openFlow(HTTPExampleFlow())
                         }
                         MenuButton(Res.string.ws_example) {
 //                            navigator.openFlow(WebSocketsExampleFlow())

@@ -63,7 +63,6 @@ kotlin {
             implementation(libs.ktor.json)
             implementation(libs.ktor.logging)
             implementation(libs.ktor.websockets)
-            implementation(libs.logback)
 
             implementation(libs.room.runtime)
             implementation(libs.sqlite.bundled)
@@ -94,6 +93,8 @@ kotlin {
             implementation(libs.coroutines.swing)
 
             implementation(libs.pdfbox)
+
+            implementation(libs.logback)
         }
     }
 
