@@ -71,21 +71,21 @@ class SettingsScreen : AndroidNavigationScreen() {
                             shape = MaterialTheme.shapes.medium,
                             color = MaterialTheme.colorScheme.surface
                         ) {
-                            Row(
-                                modifier = Modifier.padding(12.dp),
-                                verticalAlignment = Alignment.CenterVertically
+                            Column(
+                                modifier = Modifier.padding(16.dp)
                             ) {
-                                Spacer(Modifier.width(4.dp))
                                 val nameString = "%s: %s".format(
                                     stringResource(Res.string.user_name),
                                     profileViewModel.nameInput
                                 )
                                 Text(
+                                    modifier = Modifier.fillMaxWidth(),
                                     text = nameString,
-                                    modifier = Modifier.weight(1f)
+                                    textAlign = TextAlign.Center,
                                 )
-                                Spacer(Modifier.width(16.dp))
-                                SelectableButton(
+                                Spacer(Modifier.height(16.dp))
+                                FilledButton(
+                                    modifier = Modifier.align(Alignment.CenterHorizontally),
                                     onClick = {
                                         navigator.openScreen(NestedSettingsScreen())
                                     }
@@ -134,87 +134,85 @@ class SettingsScreen : AndroidNavigationScreen() {
                             }
                         }
 
-                        Spacer(Modifier.height(16.dp))
-                        Row {
-                            @Composable
-                            fun OptionsSelector(
-                                headerRes: StringResource,
-                                buttonText: String,
-                                content: @Composable (ColumnScope.(closeMenu: () -> Unit) -> Unit)
+                        @Composable
+                        fun OptionsSelector(
+                            headerRes: StringResource,
+                            buttonText: String,
+                            content: @Composable (ColumnScope.(closeMenu: () -> Unit) -> Unit)
+                        ) {
+                            Surface(
+                                modifier = Modifier.fillMaxWidth(),
+                                shape = MaterialTheme.shapes.medium,
+                                color = MaterialTheme.colorScheme.surface
                             ) {
-                                Surface(
-                                    modifier = Modifier.weight(1f),
-                                    shape = MaterialTheme.shapes.medium,
-                                    color = MaterialTheme.colorScheme.surface
+                                Row(
+                                    modifier = Modifier.padding(12.dp),
+                                    verticalAlignment = Alignment.CenterVertically
                                 ) {
-                                    Row(
-                                        modifier = Modifier.padding(12.dp),
-                                        verticalAlignment = Alignment.CenterVertically
-                                    ) {
-                                        Spacer(Modifier.width(4.dp))
-                                        TextR(
-                                            textRes = headerRes,
-                                            modifier = Modifier.weight(1f),
-                                        )
-                                        Box {
-                                            var showMenu by remember { mutableStateOf(false) }
-                                            SelectableButton(
-                                                onClick = {
-                                                    showMenu = !showMenu
-                                                }
-                                            ) {
-                                                Text(buttonText)
+                                    Spacer(Modifier.width(4.dp))
+                                    TextR(
+                                        textRes = headerRes,
+                                        modifier = Modifier.weight(1f),
+                                    )
+                                    Box {
+                                        var showMenu by remember { mutableStateOf(false) }
+                                        SelectableButton(
+                                            onClick = {
+                                                showMenu = !showMenu
                                             }
-                                            Box(
-                                                modifier = Modifier.padding(end = 16.dp)
+                                        ) {
+                                            Text(buttonText)
+                                        }
+                                        Box(
+                                            modifier = Modifier.padding(end = 16.dp)
+                                        ) {
+                                            DropdownMenu(
+                                                expanded = showMenu,
+                                                onDismissRequest = { showMenu = false },
+                                                containerColor = MaterialTheme.colorScheme.surface
                                             ) {
-                                                DropdownMenu(
-                                                    expanded = showMenu,
-                                                    onDismissRequest = { showMenu = false },
-                                                    containerColor = MaterialTheme.colorScheme.surface
-                                                ) {
-                                                    content {
-                                                        showMenu = false
-                                                    }
+                                                content {
+                                                    showMenu = false
                                                 }
                                             }
                                         }
                                     }
                                 }
                             }
+                        }
 
-                            OptionsSelector(
-                                headerRes = Res.string.language,
-                                buttonText = appConfigurationUiState.language.localizedName
-                            ) { closeMenu ->
-                                Language.entries.forEach { language ->
-                                    DropdownMenuItem(
-                                        text = {
-                                            Text(language.localizedName)
-                                        },
-                                        onClick = {
-                                            appConfigurationViewModel.setLanguage(language)
-                                            closeMenu()
-                                        }
-                                    )
-                                }
+                        Spacer(Modifier.height(16.dp))
+                        OptionsSelector(
+                            headerRes = Res.string.language,
+                            buttonText = appConfigurationUiState.language.localizedName
+                        ) { closeMenu ->
+                            Language.entries.forEach { language ->
+                                DropdownMenuItem(
+                                    text = {
+                                        Text(language.localizedName)
+                                    },
+                                    onClick = {
+                                        appConfigurationViewModel.setLanguage(language)
+                                        closeMenu()
+                                    }
+                                )
                             }
-                            Spacer(Modifier.width(16.dp))
-                            OptionsSelector(
-                                headerRes = Res.string.theme,
-                                buttonText = stringResource(appConfigurationUiState.theme.nameRes)
-                            ) { closeMenu ->
-                                Theme.entries.forEach { theme ->
-                                    DropdownMenuItem(
-                                        text = {
-                                            TextR(theme.nameRes)
-                                        },
-                                        onClick = {
-                                            appConfigurationViewModel.setTheme(theme)
-                                            closeMenu()
-                                        }
-                                    )
-                                }
+                        }
+                        Spacer(Modifier.height(16.dp))
+                        OptionsSelector(
+                            headerRes = Res.string.theme,
+                            buttonText = stringResource(appConfigurationUiState.theme.nameRes)
+                        ) { closeMenu ->
+                            Theme.entries.forEach { theme ->
+                                DropdownMenuItem(
+                                    text = {
+                                        TextR(theme.nameRes)
+                                    },
+                                    onClick = {
+                                        appConfigurationViewModel.setTheme(theme)
+                                        closeMenu()
+                                    }
+                                )
                             }
                         }
                         Spacer(Modifier.height(16.dp))

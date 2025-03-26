@@ -25,15 +25,16 @@ fun Toolbar(
 ) {
     Row(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp),
+            .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {
         @Composable
         fun ImageButton(
             button: ToolbarButton?
         ) = Box(
-            modifier = Modifier.size(40.dp)
+            modifier = Modifier
+                .padding(16.dp)
+                .size(40.dp)
         ) {
             button?.let {
                 SelectableOutlinedIconButton(
@@ -49,9 +50,13 @@ fun Toolbar(
         ImageButton(leftButton)
         Spacer(Modifier.width(16.dp))
         Text(
+            modifier = Modifier
+                .weight(1f)
+                .padding(vertical = 8.dp),
             text = title,
-            style = MaterialTheme.typography.titleLarge,
-            modifier = Modifier.weight(1f),
+            style = MaterialTheme.typography.titleLarge.let {
+                it.copy(lineHeight = it.fontSize)
+            },
             textAlign = TextAlign.Center
         )
         Spacer(Modifier.width(16.dp))
