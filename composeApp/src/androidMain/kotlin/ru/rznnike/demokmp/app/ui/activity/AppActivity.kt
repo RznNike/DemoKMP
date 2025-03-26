@@ -6,8 +6,8 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -20,6 +20,7 @@ import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.KoinContext
 import org.koin.compose.koinInject
+import ru.rznnike.demokmp.R
 import ru.rznnike.demokmp.app.dispatcher.notifier.Notifier
 import ru.rznnike.demokmp.app.dispatcher.notifier.SystemMessage
 import ru.rznnike.demokmp.app.navigation.createNavigator
@@ -28,20 +29,19 @@ import ru.rznnike.demokmp.app.ui.dialog.common.AlertDialogType
 import ru.rznnike.demokmp.app.ui.dialog.common.CommonAlertDialog
 import ru.rznnike.demokmp.app.ui.screen.splash.SplashFlow
 import ru.rznnike.demokmp.app.ui.theme.AppTheme
+import ru.rznnike.demokmp.app.ui.window.LocalWindowCloseCallback
+import ru.rznnike.demokmp.app.utils.AppConstants
 import ru.rznnike.demokmp.app.utils.onClick
 import ru.rznnike.demokmp.app.utils.restartApp
 import ru.rznnike.demokmp.app.viewmodel.app.ActivityViewModel
+import ru.rznnike.demokmp.app.viewmodel.global.configuration.AppConfigurationViewModel
 import ru.rznnike.demokmp.domain.common.CoroutineScopeProvider
 import ru.rznnike.demokmp.generated.resources.Res
 import ru.rznnike.demokmp.generated.resources.close
-import ru.rznnike.demokmp.R
-import ru.rznnike.demokmp.app.ui.window.LocalWindowCloseCallback
-import ru.rznnike.demokmp.app.utils.AppConstants
-import ru.rznnike.demokmp.app.viewmodel.global.configuration.AppConfigurationViewModel
 import ru.rznnike.demokmp.generated.resources.double_back_to_exit
 import kotlin.system.exitProcess
 
-class AppActivity : ComponentActivity() {
+class AppActivity : AppCompatActivity() {
     @OptIn(ExperimentalVoyagerApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

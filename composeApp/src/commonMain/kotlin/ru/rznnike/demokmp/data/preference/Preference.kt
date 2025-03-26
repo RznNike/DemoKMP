@@ -77,7 +77,7 @@ sealed class Preference<Type>(
         key: String,
         defaultValue: Language
     ) : Preference<Language>(settings, key, defaultValue) {
-        override fun Language.serialize() = tag
+        override fun Language.serialize() = fullTag
 
         override fun String.deserialize() = Language[this]
     }
