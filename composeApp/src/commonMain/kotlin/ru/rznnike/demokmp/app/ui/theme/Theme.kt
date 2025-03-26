@@ -129,6 +129,8 @@ val darkCustomScheme = CustomColorScheme(
     searchSelection = searchSelectionDark
 )
 
+val LocalIsDarkTheme = staticCompositionLocalOf { false }
+
 val LocalCustomColorScheme = staticCompositionLocalOf { CustomColorScheme() }
 
 @Suppress("PropertyName")
@@ -158,12 +160,12 @@ fun AppTheme(
     val customColorScheme: CustomColorScheme
     val customDrawables: CustomDrawables
 
-    val darkTheme = when (appConfigurationUiState.theme) {
+    val isDarkTheme = when (appConfigurationUiState.theme) {
         Theme.AUTO -> isSystemInDarkTheme()
         Theme.LIGHT -> false
         Theme.DARK -> true
     }
-    if (darkTheme) {
+    if (isDarkTheme) {
         colorScheme = darkScheme
         customColorScheme = darkCustomScheme
         customDrawables = darkCustomDrawables
@@ -174,6 +176,7 @@ fun AppTheme(
     }
 
     CompositionLocalProvider(
+        LocalIsDarkTheme provides isDarkTheme,
         LocalCustomColorScheme provides customColorScheme,
         LocalCustomDrawables provides customDrawables,
         LocalMinimumInteractiveComponentSize provides Dp.Unspecified

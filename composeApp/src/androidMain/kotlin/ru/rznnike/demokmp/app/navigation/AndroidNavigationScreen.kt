@@ -2,19 +2,19 @@ package ru.rznnike.demokmp.app.navigation
 
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.view.WindowCompat
+import ru.rznnike.demokmp.app.ui.theme.LocalIsDarkTheme
 
 abstract class AndroidNavigationScreen : NavigationScreen() {
     open val isLightStatusBar: Boolean
         @Composable
-        get() = !isSystemInDarkTheme()
+        get() = !LocalIsDarkTheme.current
     open val isLightNavigationBar: Boolean
         @Composable
-        get() = !isSystemInDarkTheme()
+        get() = !LocalIsDarkTheme.current
 
     private val activity: ComponentActivity?
         @Composable
