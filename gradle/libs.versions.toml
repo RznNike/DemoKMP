@@ -9,6 +9,7 @@ coil = "3.1.0"
 room = "2.7.0-rc02"
 sqlite = "2.5.0-rc02"
 filekit = "0.10.0-beta01"
+desugaring = "2.1.5"
 
 android-minSdk = "26"
 android-targetSdk = "35"
@@ -89,6 +90,10 @@ filekit-dialogs-compose = { module = "io.github.vinceglb:filekit-dialogs-compose
 # AndroidX
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version = "1.10.1" }
 androidx-preference = { module = "androidx.preference:preference-ktx", version = "1.2.1" }
+
+# Desugaring
+# https://mvnrepository.com/artifact/com.android.tools/desugar_jdk_libs
+desugaring = { module = "com.android.tools:desugar_jdk_libs", version.ref = "desugaring" }
 
 
 [plugins]
