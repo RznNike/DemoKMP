@@ -16,7 +16,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
-import ru.rznnike.demokmp.app.navigation.NavigationScreen
+import ru.rznnike.demokmp.app.navigation.AndroidNavigationScreen
 import ru.rznnike.demokmp.app.navigation.getNavigator
 import ru.rznnike.demokmp.app.ui.dialog.common.AlertDialogAction
 import ru.rznnike.demokmp.app.ui.dialog.common.AlertDialogType
@@ -32,7 +32,7 @@ import ru.rznnike.demokmp.generated.resources.error_app_multi_launch
 private const val ANIMATION_DURATION_MS = 1000
 private const val SPLASH_DURATION_MS = 1500L
 
-class SplashScreen : NavigationScreen() {
+class SplashScreen : AndroidNavigationScreen() {
     @Composable
     override fun Layout() {
         val navigator = getNavigator()
