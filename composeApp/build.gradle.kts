@@ -3,6 +3,7 @@ import org.gradle.internal.extensions.stdlib.capitalized
 import org.gradle.nativeplatform.platform.internal.DefaultNativePlatform
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import java.util.*
 
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
@@ -251,6 +252,14 @@ compose {
     }
 }
 
+val localProperties = Properties().apply {
+    rootProject.file("local.properties").reader().use(::load)
+}
+val buildConfigFlavorKey = "buildkonfig.flavor"
+if (localProperties.containsKey(buildConfigFlavorKey)) {
+    project.setProperty(buildConfigFlavorKey, localProperties.getProperty(buildConfigFlavorKey))
+}
+
 buildkonfig {
     packageName = globalPackageName
 
@@ -264,12 +273,32 @@ buildkonfig {
         buildConfigField(FieldSpec.Type.STRING, "VERSION_NAME", globalVersionName)
         buildConfigField(FieldSpec.Type.INT, "VERSION_CODE", globalVersionCode.toString())
     }
+
     targetConfigs {
         create("android") {
             buildConfigField(FieldSpec.Type.STRING, "OS", "android")
         }
         create("desktop") {
             buildConfigField(FieldSpec.Type.STRING, "OS", os)
+        }
+    }
+
+    targetConfigs("debug") {
+        create("android") {
+            buildConfigField(FieldSpec.Type.STRING, "BUILD_TYPE", BuildType.DEBUG.tag)
+            buildConfigField(FieldSpec.Type.BOOLEAN, "DEBUG", "true")
+        }
+    }
+    targetConfigs("staging") {
+        create("android") {
+            buildConfigField(FieldSpec.Type.STRING, "BUILD_TYPE", BuildType.STAGING.tag)
+            buildConfigField(FieldSpec.Type.BOOLEAN, "DEBUG", "true")
+        }
+    }
+    targetConfigs("release") {
+        create("android") {
+            buildConfigField(FieldSpec.Type.STRING, "BUILD_TYPE", BuildType.RELEASE.tag)
+            buildConfigField(FieldSpec.Type.BOOLEAN, "DEBUG", "false")
         }
     }
 }
