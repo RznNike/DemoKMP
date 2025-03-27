@@ -154,19 +154,16 @@ android {
         debug {
             isMinifyEnabled = false
             signingConfig = signingConfigs.getByName("config")
-            versionNameSuffix = " debug"
         }
         register("staging") {
             isMinifyEnabled = true
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-android.pro")
             signingConfig = signingConfigs.getByName("config")
-            versionNameSuffix = " staging"
         }
         release {
             isMinifyEnabled = true
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-android.pro")
             signingConfig = signingConfigs.getByName("config")
-            versionNameSuffix = ""
         }
     }
 
@@ -188,7 +185,7 @@ android {
         outputs
             .map { it as com.android.build.gradle.internal.api.BaseVariantOutputImpl }
             .forEach {
-                it.outputFileName = "$apkName ${versionName}.apk"
+                it.outputFileName = "${apkName}_${globalVersionName}.${globalVersionCode}_${buildType.name}.apk"
             }
     }
     afterEvaluate {
@@ -241,7 +238,7 @@ compose {
                 proguard {
                     obfuscate.set(true)
                     optimize.set(false)
-                    configurationFiles.from(project.file("proguard-rules.pro"))
+                    configurationFiles.from(project.file("proguard-desktop.pro"))
                 }
             }
         }

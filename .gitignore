@@ -20,3 +20,6 @@ captures
 composeApp/workDirectory/
 distributableOutput/
 distributableArchive/
+
+composeApp/release/
+composeApp/staging/
