@@ -10,7 +10,9 @@ import io.ktor.client.request.*
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import okhttp3.Cache
+import okhttp3.Interceptor
 import okhttp3.OkHttpClient
+import org.koin.core.scope.Scope
 import org.koin.dsl.module
 import ru.rznnike.demokmp.BuildKonfig
 import ru.rznnike.demokmp.data.network.AppWebSocketManager
@@ -78,6 +80,9 @@ internal val networkModule = module {
                         addInterceptor(HttpHeaderInterceptor(get()))
                         addInterceptor(HttpErrorResponseInterceptor())
                         addLoggingInterceptor()
+                        getPlatformHttpInterceptors().forEach {
+                            addInterceptor(it)
+                        }
                     }
                     installJson()
                 }
@@ -99,3 +104,5 @@ internal val networkModule = module {
         )
     }
 }
+
+expect fun Scope.getPlatformHttpInterceptors(): List<Interceptor>

@@ -6,10 +6,11 @@ koin = "4.0.2"
 ktorfit = "2.4.1"
 ktor = "3.1.0"
 coil = "3.1.0"
-room = "2.7.0-rc02"
-sqlite = "2.5.0-rc02"
+room = "2.7.0-rc03"
+sqlite = "2.5.0-rc03"
 filekit = "0.10.0-beta01"
 desugaring = "2.1.5"
+chucker = "4.1.0"
 
 android-minSdk = "26"
 android-targetSdk = "35"
@@ -62,6 +63,11 @@ ktor-websockets = { module = "io.ktor:ktor-client-websockets", version.ref = "kt
 # Logging (for Ktor)
 # https://mvnrepository.com/artifact/ch.qos.logback/logback-classic
 logback = { module = "ch.qos.logback:logback-classic", version = "1.5.18" }
+
+# Network logger (Android only)
+# https://github.com/ChuckerTeam/chucker
+chucker = { module = "com.github.chuckerteam.chucker:library", version.ref = "chucker" }
+chucker-noop = { module = "com.github.chuckerteam.chucker:library-no-op", version.ref = "chucker" }
 
 # Image loader
 # https://github.com/coil-kt/coil

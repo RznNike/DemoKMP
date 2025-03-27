@@ -85,6 +85,12 @@ kotlin {
             implementation(libs.androidx.preference)
 
             implementation(libs.koin.android)
+
+            if (debug) {
+                implementation(libs.chucker)
+            } else {
+                implementation(libs.chucker.noop)
+            }
         }
 
         desktopMain.dependencies {
