@@ -1,8 +1,5 @@
 package ru.rznnike.demokmp.app.ui.activity
 
-import android.app.ActivityManager
-import android.graphics.BitmapFactory
-import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -20,7 +17,6 @@ import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.KoinContext
 import org.koin.compose.koinInject
-import ru.rznnike.demokmp.R
 import ru.rznnike.demokmp.app.dispatcher.notifier.Notifier
 import ru.rznnike.demokmp.app.dispatcher.notifier.SystemMessage
 import ru.rznnike.demokmp.app.navigation.createNavigator
@@ -46,7 +42,6 @@ class AppActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initWindowFlags()
-        updateTaskDescription()
 
         setContent {
             KoinContext {
@@ -189,35 +184,5 @@ class AppActivity : AppCompatActivity() {
 
     private fun initWindowFlags() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
-    }
-
-    private fun updateTaskDescription() {
-        val taskDesc = when {
-            Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU -> {
-                ActivityManager.TaskDescription.Builder()
-                    .setLabel(resources.getString(R.string.window_title))
-                    .setIcon(R.mipmap.ic_launcher)
-                    .setPrimaryColor(getColor(R.color.colorBackground))
-                    .build()
-            }
-            Build.VERSION.SDK_INT >= Build.VERSION_CODES.P -> {
-                @Suppress("DEPRECATION")
-                ActivityManager.TaskDescription(
-                    resources.getString(R.string.window_title),
-                    R.mipmap.ic_launcher,
-                    getColor(R.color.colorBackground)
-                )
-            }
-            else -> {
-                @Suppress("DEPRECATION")
-                ActivityManager.TaskDescription(
-                    resources.getString(R.string.window_title),
-                    BitmapFactory.decodeResource(resources, R.mipmap.ic_launcher),
-                    getColor(R.color.colorBackground)
-                )
-            }
-        }
-
-        setTaskDescription(taskDesc)
     }
 }
