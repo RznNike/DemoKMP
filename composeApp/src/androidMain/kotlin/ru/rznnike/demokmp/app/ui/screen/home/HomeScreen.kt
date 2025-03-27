@@ -10,6 +10,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberPermissionState
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
@@ -33,6 +36,7 @@ import ru.rznnike.demokmp.app.viewmodel.home.HomeViewModel
 import ru.rznnike.demokmp.generated.resources.*
 
 class HomeScreen : AndroidNavigationScreen() {
+    @OptIn(ExperimentalPermissionsApi::class)
     @Composable
     override fun Layout() {
         val navigator = getNavigator()
@@ -42,6 +46,12 @@ class HomeScreen : AndroidNavigationScreen() {
         val notifier: Notifier = koinInject()
 
         var showAboutDialog by remember { mutableStateOf(false) }
+
+        val notificationsPermissionState = rememberPermissionState(android.Manifest.permission.POST_NOTIFICATIONS) { permissionsGranted ->
+            notifier.sendMessage(
+                if (permissionsGranted) Res.string.notifications_permission_is_granted else Res.string.notifications_permission_is_not_granted
+            )
+        }
 
         Column(
             modifier = Modifier
@@ -103,6 +113,13 @@ class HomeScreen : AndroidNavigationScreen() {
                         }
                         MenuButton(Res.string.custom_ui_elements) {
                             navigator.openFlow(CustomUIFlow())
+                        }
+                        MenuButton(Res.string.request_notifications_permission) {
+                            if (notificationsPermissionState.status.isGranted) {
+                                notifier.sendMessage(Res.string.notifications_permission_is_granted)
+                            } else {
+                                notificationsPermissionState.launchPermissionRequest()
+                            }
                         }
                         MenuButton(Res.string.about_app) {
                             showAboutDialog = true

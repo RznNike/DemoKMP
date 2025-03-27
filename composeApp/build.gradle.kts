@@ -91,6 +91,8 @@ kotlin {
             } else {
                 implementation(libs.chucker.noop)
             }
+
+            implementation(libs.permissions)
         }
 
         desktopMain.dependencies {

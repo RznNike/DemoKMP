@@ -60,15 +60,6 @@ ktor-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = 
 ktor-logging = { module = "io.ktor:ktor-client-logging", version.ref = "ktor" }
 ktor-websockets = { module = "io.ktor:ktor-client-websockets", version.ref = "ktor" }
 
-# Logging (for Ktor)
-# https://mvnrepository.com/artifact/ch.qos.logback/logback-classic
-logback = { module = "ch.qos.logback:logback-classic", version = "1.5.18" }
-
-# Network logger (Android only)
-# https://github.com/ChuckerTeam/chucker
-chucker = { module = "com.github.chuckerteam.chucker:library", version.ref = "chucker" }
-chucker-noop = { module = "com.github.chuckerteam.chucker:library-no-op", version.ref = "chucker" }
-
 # Image loader
 # https://github.com/coil-kt/coil
 coil = { module = "io.coil-kt.coil3:coil", version.ref = "coil" }
@@ -84,6 +75,13 @@ room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 # https://developer.android.com/jetpack/androidx/releases/sqlite
 sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version.ref = "sqlite" }
 
+
+### Desktop-specific libs ###
+
+# Logging (for Ktor)
+# https://mvnrepository.com/artifact/ch.qos.logback/logback-classic
+logback = { module = "ch.qos.logback:logback-classic", version = "1.5.18" }
+
 # PDF renderer
 # https://mvnrepository.com/artifact/org.apache.pdfbox/pdfbox
 pdfbox = { module = "org.apache.pdfbox:pdfbox", version = "3.0.4" }
@@ -93,13 +91,25 @@ pdfbox = { module = "org.apache.pdfbox:pdfbox", version = "3.0.4" }
 filekit-core = { module = "io.github.vinceglb:filekit-core", version.ref = "filekit" }
 filekit-dialogs-compose = { module = "io.github.vinceglb:filekit-dialogs-compose", version.ref = "filekit" }
 
-# AndroidX
-androidx-activity-compose = { module = "androidx.activity:activity-compose", version = "1.10.1" }
-androidx-preference = { module = "androidx.preference:preference-ktx", version = "1.2.1" }
+
+### Android-specific libs ###
 
 # Desugaring
 # https://mvnrepository.com/artifact/com.android.tools/desugar_jdk_libs
 desugaring = { module = "com.android.tools:desugar_jdk_libs", version.ref = "desugaring" }
+
+# AndroidX
+androidx-activity-compose = { module = "androidx.activity:activity-compose", version = "1.10.1" }
+androidx-preference = { module = "androidx.preference:preference-ktx", version = "1.2.1" }
+
+# Network logger
+# https://github.com/ChuckerTeam/chucker
+chucker = { module = "com.github.chuckerteam.chucker:library", version.ref = "chucker" }
+chucker-noop = { module = "com.github.chuckerteam.chucker:library-no-op", version.ref = "chucker" }
+
+# Permissions
+# https://github.com/google/accompanist
+permissions = { module = "com.google.accompanist:accompanist-permissions", version = "0.37.2" }
 
 
 [plugins]
