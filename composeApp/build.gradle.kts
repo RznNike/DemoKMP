@@ -147,16 +147,19 @@ android {
         debug {
             isMinifyEnabled = false
             signingConfig = signingConfigs.getByName("config")
+            versionNameSuffix = ".${globalVersionCode} debug"
         }
         register("staging") {
             isMinifyEnabled = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-android.pro")
             signingConfig = signingConfigs.getByName("config")
+            versionNameSuffix = ".${globalVersionCode} staging"
         }
         release {
             isMinifyEnabled = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-android.pro")
             signingConfig = signingConfigs.getByName("config")
+            versionNameSuffix = ".${globalVersionCode}"
         }
     }
 

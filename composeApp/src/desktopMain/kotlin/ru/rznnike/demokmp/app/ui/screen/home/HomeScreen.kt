@@ -170,7 +170,7 @@ class HomeScreen : DesktopNavigationScreen() {
                 stringResource(Res.string.version),
                 BuildKonfig.VERSION_NAME,
                 BuildKonfig.VERSION_CODE,
-                if (BuildKonfig.DEBUG) " debug" else "",
+                if (BuildKonfig.DEBUG) " ${BuildKonfig.BUILD_TYPE}" else "",
                 stringResource(Res.string.environment),
                 platformName,
                 stringResource(Res.string.mac),
