@@ -10,9 +10,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.isGranted
-import com.google.accompanist.permissions.rememberPermissionState
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
@@ -20,6 +17,7 @@ import ru.rznnike.demokmp.BuildKonfig
 import ru.rznnike.demokmp.app.dispatcher.notifier.Notifier
 import ru.rznnike.demokmp.app.navigation.AndroidNavigationScreen
 import ru.rznnike.demokmp.app.navigation.getNavigator
+import ru.rznnike.demokmp.app.permission.rememberNotificationsPermissionHandler
 import ru.rznnike.demokmp.app.ui.dialog.common.AlertDialogAction
 import ru.rznnike.demokmp.app.ui.dialog.common.AlertDialogType
 import ru.rznnike.demokmp.app.ui.dialog.common.CommonAlertDialog
@@ -36,7 +34,6 @@ import ru.rznnike.demokmp.app.viewmodel.home.HomeViewModel
 import ru.rznnike.demokmp.generated.resources.*
 
 class HomeScreen : AndroidNavigationScreen() {
-    @OptIn(ExperimentalPermissionsApi::class)
     @Composable
     override fun Layout() {
         val navigator = getNavigator()
@@ -47,11 +44,7 @@ class HomeScreen : AndroidNavigationScreen() {
 
         var showAboutDialog by remember { mutableStateOf(false) }
 
-        val notificationsPermissionState = rememberPermissionState(android.Manifest.permission.POST_NOTIFICATIONS) { permissionsGranted ->
-            notifier.sendMessage(
-                if (permissionsGranted) Res.string.notifications_permission_is_granted else Res.string.notifications_permission_is_not_granted
-            )
-        }
+        val notificationsPermissionHandler = rememberNotificationsPermissionHandler()
 
         Column(
             modifier = Modifier
@@ -115,10 +108,12 @@ class HomeScreen : AndroidNavigationScreen() {
                             navigator.openFlow(CustomUIFlow())
                         }
                         MenuButton(Res.string.request_notifications_permission) {
-                            if (notificationsPermissionState.status.isGranted) {
-                                notifier.sendMessage(Res.string.notifications_permission_is_granted)
-                            } else {
-                                notificationsPermissionState.launchPermissionRequest()
+                            notificationsPermissionHandler.checkPermissions { permissionsGranted ->
+                                if (permissionsGranted) {
+                                    notifier.sendMessage(Res.string.notifications_permission_is_granted)
+                                } else {
+                                    notifier.sendMessage(Res.string.notifications_permission_is_not_granted)
+                                }
                             }
                         }
                         MenuButton(Res.string.about_app) {
