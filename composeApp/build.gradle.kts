@@ -1,9 +1,9 @@
 import com.codingfeline.buildkonfig.compiler.FieldSpec
 import org.gradle.internal.extensions.stdlib.capitalized
+import org.gradle.internal.extensions.stdlib.toDefaultLowerCase
 import org.gradle.nativeplatform.platform.internal.DefaultNativePlatform
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import java.util.*
 
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
@@ -252,13 +252,7 @@ compose {
     }
 }
 
-val localProperties = Properties().apply {
-    rootProject.file("local.properties").reader().use(::load)
-}
-val buildConfigFlavorKey = "buildkonfig.flavor"
-if (localProperties.containsKey(buildConfigFlavorKey)) {
-    project.setProperty(buildConfigFlavorKey, localProperties.getProperty(buildConfigFlavorKey))
-}
+configureBuildKonfigFlavorFromAndroidTasks()
 
 buildkonfig {
     packageName = globalPackageName
@@ -299,6 +293,18 @@ buildkonfig {
         create("android") {
             buildConfigField(FieldSpec.Type.STRING, "BUILD_TYPE", BuildType.RELEASE.tag)
             buildConfigField(FieldSpec.Type.BOOLEAN, "DEBUG", "false")
+        }
+    }
+}
+
+fun configureBuildKonfigFlavorFromAndroidTasks() {
+    val pattern = ":composeApp:[assemble|install|generate].*(Debug|Staging|Release)"
+    val runningTasks = project.gradle.startParameter.taskNames
+    runningTasks.firstOrNull { it.matches(pattern.toRegex()) }?.let { matchingTask ->
+        val matcher = pattern.toPattern().matcher(matchingTask)
+        if (matcher.find()) {
+            val flavor = matcher.group(1).toDefaultLowerCase()
+            project.setProperty("buildkonfig.flavor", flavor)
         }
     }
 }
