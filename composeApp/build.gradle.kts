@@ -87,12 +87,6 @@ kotlin {
 
             implementation(libs.koin.android)
 
-            if (debug) {
-                implementation(libs.chucker)
-            } else {
-                implementation(libs.chucker.noop)
-            }
-
             implementation(libs.permissions)
         }
 
@@ -113,7 +107,6 @@ kotlin {
 }
 
 dependencies {
-    coreLibraryDesugaring(libs.desugaring)
     add("kspAndroid", libs.room.compiler)
     add("kspDesktop", libs.room.compiler)
 }
@@ -208,6 +201,16 @@ android {
 
     @Suppress("UnstableApiUsage")
     bundle.language.enableSplit = false
+
+    dependencies {
+        val stagingImplementation by configurations
+
+        coreLibraryDesugaring(libs.desugaring)
+
+        debugImplementation(libs.chucker)
+        stagingImplementation(libs.chucker)
+        releaseImplementation(libs.chucker.noop)
+    }
 }
 
 compose {
