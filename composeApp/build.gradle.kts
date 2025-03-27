@@ -23,6 +23,7 @@ private val buildType = BuildType[System.getenv("BUILD_TYPE")]
 private val debug = buildType != BuildType.RELEASE
 private val runFromIDE = System.getenv("RUN_FROM_IDE").toBoolean()
 private val os = if (DefaultNativePlatform.getCurrentOperatingSystem().isWindows) "windows" else "linux"
+private val apkName = "DemoKMP"
 
 kotlin {
     androidTarget {
@@ -120,6 +121,20 @@ dependencies {
 android {
     namespace = globalPackageName
     compileSdk = libs.versions.android.targetSdk.get().toInt()
+    buildToolsVersion = "35.0.0"
+
+    signingConfigs {
+        create("config") {
+            storeFile = file("../demokmp.jks")
+            keyAlias = "demoKey"
+            if (project.hasProperty("PROJECT_KEY_PASSWORD") && project.hasProperty("PROJECT_KEYSTORE_PASSWORD")) {
+                keyPassword = project.property("PROJECT_KEY_PASSWORD") as String
+                storePassword = project.property("PROJECT_KEYSTORE_PASSWORD") as String
+            } else {
+                throw GradleException("Not found signing config password properties")
+            }
+        }
+    }
 
     defaultConfig {
         applicationId = globalPackageName
@@ -128,21 +143,63 @@ android {
         versionCode = globalVersionCode
         versionName = globalVersionName
     }
+
     packaging {
         resources {
             excludes += "/META-INF/**"
         }
     }
+
     buildTypes {
+        debug {
+            isMinifyEnabled = false
+            signingConfig = signingConfigs.getByName("config")
+            versionNameSuffix = " debug"
+        }
         register("staging") {
             isMinifyEnabled = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            signingConfig = signingConfigs.getByName("config")
+            versionNameSuffix = " staging"
         }
         release {
             isMinifyEnabled = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            signingConfig = signingConfigs.getByName("config")
+            versionNameSuffix = ""
         }
     }
+
+    lint {
+        abortOnError = true
+        checkAllWarnings = true
+        ignoreWarnings = false
+        warningsAsErrors = false
+        checkDependencies = true
+        htmlReport = true
+        explainIssues = true
+        noLines = false
+        textOutput = file("stdout")
+        disable.add("MissingClass")
+        disable.add("NewApi")
+    }
+
+    applicationVariants.all {
+        outputs
+            .map { it as com.android.build.gradle.internal.api.BaseVariantOutputImpl }
+            .forEach {
+                it.outputFileName = "$apkName ${versionName}.apk"
+            }
+    }
+    afterEvaluate {
+        applicationVariants.configureEach {
+            val variantName = name.capitalized()
+            if (variantName != "Debug") {
+                project.tasks["compile${variantName}Sources"].dependsOn(project.tasks["lint${variantName}"])
+            }
+        }
+    }
+
     compileOptions {
         isCoreLibraryDesugaringEnabled = true
         sourceCompatibility = JavaVersion.VERSION_17
@@ -151,6 +208,9 @@ android {
     kotlin {
         jvmToolchain(17)
     }
+
+    @Suppress("UnstableApiUsage")
+    bundle.language.enableSplit = false
 }
 
 compose {
