@@ -1,4 +1,4 @@
-# Demo Kotlin Multiplatform project for Desktop (JVM)
+# Demo Kotlin Multiplatform project for Desktop (JVM) and Android
 [English](https://github.com/RznNike/DemoKMP#readme) | [Русский](/README.ru.md)
 
 <img src="/readmeFiles/KMP_logo.png" alt="logo" width="300"/>
