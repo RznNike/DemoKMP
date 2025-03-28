@@ -4,38 +4,38 @@ import cafe.adriel.voyager.navigator.Navigator
 
 class FlowNavigator(
     private val navigator: Navigator,
-    private val navigationFlows: MutableList<NavigationFlow>,
+    private val navigationStructure: MutableList<Int>,
     private val closeWindowCallback: () -> Unit
 ) {
     // FLOWS
     fun openFlow(flow: NavigationFlow) {
-        navigationFlows.add(flow)
+        navigationStructure.add(flow.screens.size)
         navigator.push(flow.screens)
     }
 
     fun openFlows(flows: List<NavigationFlow>) {
-        navigationFlows.addAll(flows)
+        navigationStructure.addAll(flows.map { it.screens.size })
         navigator.push(flows.flatMap { it.screens })
     }
 
     fun replaceFlow(flow: NavigationFlow) {
-        val oldFlow = navigationFlows.removeAt(navigationFlows.lastIndex)
-        repeat(oldFlow.screens.size) {
+        val oldFlowSize = navigationStructure.removeAt(navigationStructure.lastIndex)
+        repeat(oldFlowSize) {
             navigator.pop()
         }
         openFlow(flow)
     }
 
     fun newRootFlow(flow: NavigationFlow) {
-        navigationFlows.clear()
-        navigationFlows.add(flow)
+        navigationStructure.clear()
+        navigationStructure.add(flow.screens.size)
         navigator.replaceAll(flow.screens)
     }
 
     fun closeFlow() {
-        if (navigationFlows.size > 1) {
-            val oldFlow = navigationFlows.removeAt(navigationFlows.lastIndex)
-            repeat(oldFlow.screens.size) {
+        if (navigationStructure.size > 1) {
+            val oldFlowSize = navigationStructure.removeAt(navigationStructure.lastIndex)
+            repeat(oldFlowSize) {
                 navigator.pop()
             }
         } else {
@@ -45,36 +45,32 @@ class FlowNavigator(
 
     // SCREENS
     fun openScreen(screen: NavigationScreen) {
-        navigationFlows.last().screens.add(screen)
+        navigationStructure[navigationStructure.lastIndex] = navigationStructure.last() + 1
         navigator.push(screen)
     }
 
     fun openScreens(screens: List<NavigationScreen>) {
-        navigationFlows.last().screens.addAll(screens)
+        navigationStructure[navigationStructure.lastIndex] = navigationStructure.last() + screens.size
         navigator.push(screens)
     }
 
     fun replaceScreen(screen: NavigationScreen) {
-        val flowScreens = navigationFlows.last().screens
-        flowScreens.removeAt(flowScreens.lastIndex)
-        flowScreens.add(screen)
         navigator.replace(screen)
     }
 
     fun newRootScreen(screen: NavigationScreen) {
-        val flowScreens = navigationFlows.last().screens
-        repeat(flowScreens.size) {
+        val flowSize = navigationStructure.last()
+        repeat(flowSize) {
             navigator.pop()
         }
-        flowScreens.clear()
-        flowScreens.add(screen)
+        navigationStructure[navigationStructure.lastIndex] = 1
         navigator.push(screen)
     }
 
     fun closeScreen() {
-        val flow = navigationFlows.last()
-        if (flow.screens.size > 1) {
-            flow.screens.removeAt(flow.screens.lastIndex)
+        val flowSize = navigationStructure.last()
+        if (flowSize > 1) {
+            navigationStructure[navigationStructure.lastIndex] = navigationStructure.last() - 1
             navigator.pop()
         } else {
             closeFlow()
