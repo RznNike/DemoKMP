@@ -37,7 +37,7 @@ This is a sample project with a set of solutions to typical problems, demonstrat
 
 ## Screenshots
 <details>
-    <summary>Main app</summary>
+    <summary>PC - main app</summary>
     <img src="/readmeFiles/en/screenshots/pc/screenshot_1.png" alt="screenshot" width="500"/>
     <img src="/readmeFiles/en/screenshots/pc/screenshot_2.png" alt="screenshot" width="500"/>
     <img src="/readmeFiles/en/screenshots/pc/screenshot_3.png" alt="screenshot" width="500"/>
@@ -50,7 +50,7 @@ This is a sample project with a set of solutions to typical problems, demonstrat
 </details>
 
 <details>
-    <summary>Logger</summary>
+    <summary>PC - logger</summary>
     <img src="/readmeFiles/en/screenshots/pc/screenshot_10.png" alt="screenshot" width="750"/>
     <img src="/readmeFiles/en/screenshots/pc/screenshot_11.png" alt="screenshot" width="750"/>
 </details>
