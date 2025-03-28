@@ -63,4 +63,8 @@
     <string name="two_sided_print_short_edge">Short edge</string>
     <string name="error_file_not_found">File %s not found</string>
     <string name="option">Option</string>
+    <string name="double_back_to_exit">Press again to exit</string>
+    <string name="request_notifications_permission">Request notifications permission</string>
+    <string name="notifications_permission_is_granted">Notifications permission is granted</string>
+    <string name="notifications_permission_is_not_granted">Notifications permission is NOT granted</string>
 </resources>

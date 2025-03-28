@@ -1,14 +1,19 @@
 [versions]
-kotlin = "2.1.10"
+kotlin = "2.1.20"
 coroutines = "1.10.1"
 voyager = "1.1.0-beta03"
 koin = "4.0.2"
-ktorfit = "2.4.0"
+ktorfit = "2.4.1"
 ktor = "3.1.0"
 coil = "3.1.0"
-room = "2.7.0-rc02"
-sqlite = "2.5.0-rc02"
+room = "2.7.0-rc03"
+sqlite = "2.5.0-rc03"
 filekit = "0.10.0-beta01"
+desugaring = "2.1.5"
+chucker = "4.1.0"
+
+android-minSdk = "26"
+android-targetSdk = "35"
 
 
 [libraries]
@@ -32,6 +37,7 @@ voyager-lifecycle-kmp = { module = "cafe.adriel.voyager:voyager-lifecycle-kmp", 
 koin-core = { module = "io.insert-koin:koin-core", version = "koin" }
 koin-compose = { module = "io.insert-koin:koin-compose", version.ref = "koin" }
 koin-compose-viewmodel = { module = "io.insert-koin:koin-compose-viewmodel", version.ref = "koin" }
+koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
 
 # Preferences
 # https://github.com/russhwolf/multiplatform-settings
@@ -54,10 +60,6 @@ ktor-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = 
 ktor-logging = { module = "io.ktor:ktor-client-logging", version.ref = "ktor" }
 ktor-websockets = { module = "io.ktor:ktor-client-websockets", version.ref = "ktor" }
 
-# Logging (for Ktor)
-# https://mvnrepository.com/artifact/ch.qos.logback/logback-classic
-logback = { module = "ch.qos.logback:logback-classic", version = "1.5.17" }
-
 # Image loader
 # https://github.com/coil-kt/coil
 coil = { module = "io.coil-kt.coil3:coil", version.ref = "coil" }
@@ -73,6 +75,13 @@ room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 # https://developer.android.com/jetpack/androidx/releases/sqlite
 sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version.ref = "sqlite" }
 
+
+### Desktop-specific libs ###
+
+# Logging (for Ktor)
+# https://mvnrepository.com/artifact/ch.qos.logback/logback-classic
+logback = { module = "ch.qos.logback:logback-classic", version = "1.5.18" }
+
 # PDF renderer
 # https://mvnrepository.com/artifact/org.apache.pdfbox/pdfbox
 pdfbox = { module = "org.apache.pdfbox:pdfbox", version = "3.0.4" }
@@ -81,6 +90,26 @@ pdfbox = { module = "org.apache.pdfbox:pdfbox", version = "3.0.4" }
 # https://github.com/vinceglb/FileKit
 filekit-core = { module = "io.github.vinceglb:filekit-core", version.ref = "filekit" }
 filekit-dialogs-compose = { module = "io.github.vinceglb:filekit-dialogs-compose", version.ref = "filekit" }
+
+
+### Android-specific libs ###
+
+# Desugaring
+# https://mvnrepository.com/artifact/com.android.tools/desugar_jdk_libs
+desugaring = { module = "com.android.tools:desugar_jdk_libs", version.ref = "desugaring" }
+
+# AndroidX
+androidx-activity-compose = { module = "androidx.activity:activity-compose", version = "1.10.1" }
+androidx-preference = { module = "androidx.preference:preference-ktx", version = "1.2.1" }
+
+# Network logger
+# https://github.com/ChuckerTeam/chucker
+chucker = { module = "com.github.chuckerteam.chucker:library", version.ref = "chucker" }
+chucker-noop = { module = "com.github.chuckerteam.chucker:library-no-op", version.ref = "chucker" }
+
+# Permissions
+# https://github.com/google/accompanist
+permissions = { module = "com.google.accompanist:accompanist-permissions", version = "0.37.2" }
 
 
 [plugins]
@@ -97,7 +126,7 @@ buildkonfig = { id = "com.codingfeline.buildkonfig", version = "0.17.0" }
 
 # KSP
 # https://mvnrepository.com/artifact/com.google.devtools.ksp/com.google.devtools.ksp.gradle.plugin?repo=central
-ksp = { id = "com.google.devtools.ksp", version = "2.1.10-1.0.31" }
+ksp = { id = "com.google.devtools.ksp", version = "2.1.20-1.0.31" }
 
 # Ktorfit - network
 ktorfit = { id = "de.jensklingenberg.ktorfit", version.ref = "ktorfit" }

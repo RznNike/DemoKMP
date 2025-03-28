@@ -1,7 +1,10 @@
 package ru.rznnike.demokmp.app.ui.screen.customui
 
-import androidx.compose.foundation.*
+import androidx.compose.foundation.VerticalScrollbar
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.rememberScrollbarAdapter
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -15,19 +18,16 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import org.jetbrains.compose.resources.stringResource
-import ru.rznnike.demokmp.app.navigation.NavigationScreen
+import ru.rznnike.demokmp.app.navigation.DesktopNavigationScreen
 import ru.rznnike.demokmp.app.navigation.getNavigator
 import ru.rznnike.demokmp.app.ui.view.*
+import ru.rznnike.demokmp.app.utils.onClick
 import ru.rznnike.demokmp.app.utils.onEnterKey
 import ru.rznnike.demokmp.app.viewmodel.customui.CustomUIViewModel
 import ru.rznnike.demokmp.generated.resources.*
-import ru.rznnike.demokmp.generated.resources.Res
-import ru.rznnike.demokmp.generated.resources.button
-import ru.rznnike.demokmp.generated.resources.custom_ui_elements
-import ru.rznnike.demokmp.generated.resources.ic_back
 
-class CustomUIScreen : NavigationScreen() {
-    @OptIn(ExperimentalLayoutApi::class, ExperimentalFoundationApi::class)
+class CustomUIScreen : DesktopNavigationScreen() {
+    @OptIn(ExperimentalLayoutApi::class)
     @Composable
     override fun Layout() {
         val navigator = getNavigator()
