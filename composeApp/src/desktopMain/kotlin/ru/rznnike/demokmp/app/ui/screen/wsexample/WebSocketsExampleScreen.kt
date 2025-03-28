@@ -22,7 +22,7 @@ import androidx.compose.ui.input.key.*
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import org.jetbrains.compose.resources.stringResource
-import ru.rznnike.demokmp.app.navigation.NavigationScreen
+import ru.rznnike.demokmp.app.navigation.DesktopNavigationScreen
 import ru.rznnike.demokmp.app.navigation.getNavigator
 import ru.rznnike.demokmp.app.ui.item.WebSocketMessageItem
 import ru.rznnike.demokmp.app.ui.view.*
@@ -31,7 +31,7 @@ import ru.rznnike.demokmp.app.viewmodel.wsexample.WebSocketsExampleViewModel
 import ru.rznnike.demokmp.domain.model.websocket.WebSocketConnectionState
 import ru.rznnike.demokmp.generated.resources.*
 
-class WebSocketsExampleScreen : NavigationScreen() {
+class WebSocketsExampleScreen : DesktopNavigationScreen() {
     @Composable
     override fun Layout() {
         val navigator = getNavigator()

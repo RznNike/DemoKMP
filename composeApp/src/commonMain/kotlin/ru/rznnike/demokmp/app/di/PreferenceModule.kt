@@ -1,10 +1,5 @@
 package ru.rznnike.demokmp.app.di
 
-import org.koin.dsl.module
-import ru.rznnike.demokmp.data.preference.PreferencesManager
-import ru.rznnike.demokmp.data.preference.createSettings
+import org.koin.core.module.Module
 
-internal val preferenceModule = module {
-    single { createSettings() }
-    single { PreferencesManager(get()) }
-}
+internal expect fun getPreferenceModule(): Module

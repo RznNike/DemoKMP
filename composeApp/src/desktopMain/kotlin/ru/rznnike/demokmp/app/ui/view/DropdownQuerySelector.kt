@@ -1,15 +1,12 @@
 package ru.rznnike.demokmp.app.ui.view
 
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.VerticalScrollbar
+import androidx.compose.foundation.*
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.onClick
-import androidx.compose.foundation.rememberScrollbarAdapter
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -41,7 +38,7 @@ import ru.rznnike.demokmp.generated.resources.search
 
 private val MAX_HEIGHT_DP = 500.dp
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun <ItemType> DropdownQuerySelector(
     modifier: Modifier = Modifier,
@@ -79,7 +76,7 @@ fun <ItemType> DropdownQuerySelector(
                 .onEnterKey {
                     expand()
                 }
-                .onClick {
+                .clickable {
                     expand()
                 },
             contentPadding = PaddingValues(start = 16.dp, top = 8.dp, bottom = 8.dp),

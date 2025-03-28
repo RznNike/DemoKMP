@@ -10,7 +10,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.key.*
@@ -18,8 +17,10 @@ import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import org.jetbrains.compose.resources.stringResource
-import ru.rznnike.demokmp.app.navigation.NavigationScreen
+import io.github.vinceglb.filekit.FileKit
+import io.github.vinceglb.filekit.dialogs.FileKitDialogSettings
+import io.github.vinceglb.filekit.dialogs.openFileSaver
+import ru.rznnike.demokmp.app.navigation.DesktopNavigationScreen
 import ru.rznnike.demokmp.app.navigation.getNavigator
 import ru.rznnike.demokmp.app.ui.theme.bodyLargeBold
 import ru.rznnike.demokmp.app.ui.theme.bodyMediumMono
@@ -27,11 +28,10 @@ import ru.rznnike.demokmp.app.ui.view.LinkifyText
 import ru.rznnike.demokmp.app.ui.view.SelectableOutlinedIconButton
 import ru.rznnike.demokmp.app.ui.view.SlimOutlinedTextField
 import ru.rznnike.demokmp.app.ui.view.TextR
+import ru.rznnike.demokmp.app.ui.viewmodel.logger.network.NetworkLogDetailsViewModel
 import ru.rznnike.demokmp.app.ui.window.LocalWindow
 import ru.rznnike.demokmp.app.utils.backgroundColor
 import ru.rznnike.demokmp.app.utils.highlightSubstrings
-import ru.rznnike.demokmp.app.utils.saveFileDialog
-import ru.rznnike.demokmp.app.viewmodel.logger.network.NetworkLogDetailsViewModel
 import ru.rznnike.demokmp.data.utils.DataConstants
 import ru.rznnike.demokmp.domain.log.LogMessage
 import ru.rznnike.demokmp.domain.log.LogNetworkMessage
@@ -41,7 +41,7 @@ import ru.rznnike.demokmp.generated.resources.*
 
 class NetworkLogDetailsScreen(
     private val message: LogNetworkMessage
-) : NavigationScreen() {
+) : DesktopNavigationScreen() {
     @Composable
     override fun Layout() {
         val navigator = getNavigator()
@@ -118,28 +118,20 @@ class NetworkLogDetailsScreen(
                             }
                         )
 
-                        val window = LocalWindow.current
-                        val saveDialogTitle = stringResource(Res.string.save_log)
-                        val saveFileNameTemplate = DataConstants.LOG_FILE_NAME_TEMPLATE
-                        val saveFileName = remember {
-                            saveFileNameTemplate.format(
-                                uiState.logNetworkMessage
-                                    .request
-                                    .timestamp
-                                    .toDateString(GlobalConstants.DATE_PATTERN_FILE_NAME_MS)
-                            )
-                        }
                         Spacer(Modifier.width(16.dp))
+                        val window = LocalWindow.current
                         SelectableOutlinedIconButton(
                             modifier = Modifier.size(40.dp),
                             iconRes = Res.drawable.ic_save,
                             onClick = {
-                                saveFileDialog(
-                                    window = window,
-                                    title = saveDialogTitle,
-                                    fileName = saveFileName
-                                )?.let { file ->
-                                    viewModel.saveLogToFile(file)
+                                viewModel.openSaveLogDialog { fileName ->
+                                    FileKit.openFileSaver(
+                                        suggestedName = fileName,
+                                        extension = DataConstants.LOG_FILE_NAME_EXTENSION,
+                                        dialogSettings = FileKitDialogSettings(
+                                            parentWindow = window
+                                        )
+                                    )
                                 }
                             }
                         )

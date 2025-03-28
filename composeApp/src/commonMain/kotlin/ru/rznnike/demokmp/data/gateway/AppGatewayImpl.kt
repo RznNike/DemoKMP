@@ -9,6 +9,7 @@ import ru.rznnike.demokmp.domain.gateway.AppGateway
 import ru.rznnike.demokmp.domain.log.Logger
 import ru.rznnike.demokmp.domain.model.common.LauncherConfig
 import ru.rznnike.demokmp.domain.model.common.toLauncherConfig
+import ru.rznnike.demokmp.domain.utils.OperatingSystem
 import java.io.File
 import java.net.ServerSocket
 
@@ -18,7 +19,7 @@ class AppGatewayImpl(
     private var singleInstanceSocket: ServerSocket? = null
 
     override suspend fun checkIfAppIsAlreadyRunning(): Boolean = withContext(dispatcherProvider.io) {
-        if (BuildKonfig.RUN_FROM_IDE) return@withContext false
+        if (BuildKonfig.RUN_FROM_IDE || OperatingSystem.isAndroid) return@withContext false
 
         Logger.d("Checking if app is already running")
         try {
@@ -39,7 +40,7 @@ class AppGatewayImpl(
     }
 
     override suspend fun closeAppSingleInstanceSocket(): Unit = withContext(dispatcherProvider.io) {
-        if (BuildKonfig.RUN_FROM_IDE) return@withContext
+        if (BuildKonfig.RUN_FROM_IDE || OperatingSystem.isAndroid) return@withContext
 
         singleInstanceSocket?.closeQuietly()
     }

@@ -63,4 +63,8 @@
     <string name="two_sided_print_short_edge">По короткому краю</string>
     <string name="error_file_not_found">Файл %s не найден</string>
     <string name="option">Опция</string>
+    <string name="double_back_to_exit">Нажмите еще раз для выхода</string>
+    <string name="request_notifications_permission">Запросить разрешение на уведомления</string>
+    <string name="notifications_permission_is_granted">Разрешение на уведомления предоставлено</string>
+    <string name="notifications_permission_is_not_granted">Разрешение на уведомления НЕ предоставлено</string>
 </resources>

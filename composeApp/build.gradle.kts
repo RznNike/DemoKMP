@@ -1,7 +1,9 @@
 import com.codingfeline.buildkonfig.compiler.FieldSpec
 import org.gradle.internal.extensions.stdlib.capitalized
+import org.gradle.internal.extensions.stdlib.toDefaultLowerCase
 import org.gradle.nativeplatform.platform.internal.DefaultNativePlatform
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
@@ -15,8 +17,21 @@ plugins {
     alias(libs.plugins.room)
 }
 
+private val globalPackageName = "ru.rznnike.demokmp"
+private val globalVersionName = "1.0.0"
+private val globalVersionCode = 1
+private val buildType = BuildType[System.getenv("BUILD_TYPE")]
+private val debug = buildType != BuildType.RELEASE
+private val runFromIDE = System.getenv("RUN_FROM_IDE").toBoolean()
+private val os = if (DefaultNativePlatform.getCurrentOperatingSystem().isWindows) "windows" else "linux"
+private val apkName = "DemoKMP"
+
 kotlin {
-    androidTarget()
+    androidTarget {
+        compilerOptions {
+            jvmTarget.set(JvmTarget.JVM_17)
+        }
+    }
 
     jvm("desktop")
 
@@ -50,25 +65,40 @@ kotlin {
             implementation(libs.ktor.json)
             implementation(libs.ktor.logging)
             implementation(libs.ktor.websockets)
-            implementation(libs.logback)
 
             implementation(libs.room.runtime)
             implementation(libs.sqlite.bundled)
-        }
-        desktopMain.dependencies {
-            implementation(compose.desktop.currentOs)
+
+            implementation(libs.filekit.core)
+            implementation(libs.filekit.dialogs.compose)
 
             implementation(libs.voyager.navigator)
             implementation(libs.voyager.transitions)
             implementation(libs.voyager.lifecycle.kmp)
 
-            implementation(libs.coroutines.swing)
-
             implementation(libs.coil)
             implementation(libs.coil.compose)
             implementation(libs.coil.okhttp)
+        }
+
+        androidMain.dependencies {
+            implementation(compose.preview)
+            implementation(libs.androidx.activity.compose)
+            implementation(libs.androidx.preference)
+
+            implementation(libs.koin.android)
+
+            implementation(libs.permissions)
+        }
+
+        desktopMain.dependencies {
+            implementation(compose.desktop.currentOs)
+
+            implementation(libs.coroutines.swing)
 
             implementation(libs.pdfbox)
+
+            implementation(libs.logback)
         }
     }
 
@@ -78,20 +108,113 @@ kotlin {
 }
 
 dependencies {
+    add("kspAndroid", libs.room.compiler)
     add("kspDesktop", libs.room.compiler)
 }
 
-private val globalPackageName = "ru.rznnike.demokmp"
-private val globalVersionName = "1.0.0"
-private val globalVersionCode = 1
-private val buildType = BuildType[System.getenv("BUILD_TYPE")]
-private val debug = buildType != BuildType.RELEASE
-private val runFromIDE = System.getenv("RUN_FROM_IDE").toBoolean()
-private val os = if (DefaultNativePlatform.getCurrentOperatingSystem().isWindows) "windows" else "linux"
-
 android {
     namespace = globalPackageName
-    compileSdk = 34
+    compileSdk = libs.versions.android.targetSdk.get().toInt()
+    buildToolsVersion = "35.0.0"
+
+    signingConfigs {
+        create("config") {
+            storeFile = file("../demokmp.jks")
+            keyAlias = "demoKey"
+            if (project.hasProperty("PROJECT_KEY_PASSWORD") && project.hasProperty("PROJECT_KEYSTORE_PASSWORD")) {
+                keyPassword = project.property("PROJECT_KEY_PASSWORD") as String
+                storePassword = project.property("PROJECT_KEYSTORE_PASSWORD") as String
+            } else {
+                throw GradleException("Not found signing config password properties")
+            }
+        }
+    }
+
+    defaultConfig {
+        applicationId = globalPackageName
+        minSdk = libs.versions.android.minSdk.get().toInt()
+        targetSdk = libs.versions.android.targetSdk.get().toInt()
+        versionCode = globalVersionCode
+        versionName = globalVersionName
+    }
+
+    packaging {
+        resources {
+            excludes += "/META-INF/**"
+        }
+    }
+
+    buildTypes {
+        debug {
+            isMinifyEnabled = false
+            signingConfig = signingConfigs.getByName("config")
+            versionNameSuffix = ".${globalVersionCode} debug"
+        }
+        register("staging") {
+            isMinifyEnabled = true
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-android.pro")
+            signingConfig = signingConfigs.getByName("config")
+            versionNameSuffix = ".${globalVersionCode} staging"
+        }
+        release {
+            isMinifyEnabled = true
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-android.pro")
+            signingConfig = signingConfigs.getByName("config")
+            versionNameSuffix = ".${globalVersionCode}"
+        }
+    }
+
+    lint {
+        abortOnError = true
+        checkAllWarnings = true
+        ignoreWarnings = false
+        warningsAsErrors = false
+        checkDependencies = true
+        htmlReport = true
+        explainIssues = true
+        noLines = false
+        textOutput = file("stdout")
+        disable.add("MissingClass")
+        disable.add("NewApi")
+    }
+
+    applicationVariants.all {
+        outputs
+            .map { it as com.android.build.gradle.internal.api.BaseVariantOutputImpl }
+            .forEach {
+                it.outputFileName = "${apkName}_${globalVersionName}.${globalVersionCode}_${buildType.name}.apk"
+            }
+    }
+    afterEvaluate {
+        applicationVariants.configureEach {
+            val variantName = name.capitalized()
+            if (variantName != "Debug") {
+                project.tasks["compile${variantName}Sources"].dependsOn(project.tasks["lint${variantName}"])
+            }
+        }
+    }
+
+    compileOptions {
+        isCoreLibraryDesugaringEnabled = true
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+    kotlin {
+        jvmToolchain(17)
+    }
+
+    @Suppress("UnstableApiUsage")
+    bundle.language.enableSplit = false
+
+    dependencies {
+        val stagingImplementation by configurations
+
+        coreLibraryDesugaring(libs.desugaring)
+
+        debugImplementation(libs.chucker)
+        stagingImplementation(libs.chucker)
+        releaseImplementation(libs.chucker.noop)
+    }
 }
 
 compose {
@@ -122,12 +245,14 @@ compose {
                 proguard {
                     obfuscate.set(true)
                     optimize.set(false)
-                    configurationFiles.from(project.file("proguard-rules.pro"))
+                    configurationFiles.from(project.file("proguard-desktop.pro"))
                 }
             }
         }
     }
 }
+
+configureBuildKonfigFlavorFromAndroidTasks()
 
 buildkonfig {
     packageName = globalPackageName
@@ -136,11 +261,51 @@ buildkonfig {
         buildConfigField(FieldSpec.Type.STRING, "BUILD_TYPE", buildType.tag)
         buildConfigField(FieldSpec.Type.BOOLEAN, "DEBUG", "$debug")
         buildConfigField(FieldSpec.Type.BOOLEAN, "RUN_FROM_IDE", "$runFromIDE")
-        buildConfigField(FieldSpec.Type.STRING, "OS", os)
+        buildConfigField(FieldSpec.Type.STRING, "OS", "")
         buildConfigField(FieldSpec.Type.STRING, "API_MAIN", "https://dog.ceo/")
         buildConfigField(FieldSpec.Type.STRING, "API_WEBSOCKETS", "wss://echo.websocket.org/")
         buildConfigField(FieldSpec.Type.STRING, "VERSION_NAME", globalVersionName)
         buildConfigField(FieldSpec.Type.INT, "VERSION_CODE", globalVersionCode.toString())
+    }
+
+    targetConfigs {
+        create("android") {
+            buildConfigField(FieldSpec.Type.STRING, "OS", "android")
+        }
+        create("desktop") {
+            buildConfigField(FieldSpec.Type.STRING, "OS", os)
+        }
+    }
+
+    targetConfigs("debug") {
+        create("android") {
+            buildConfigField(FieldSpec.Type.STRING, "BUILD_TYPE", BuildType.DEBUG.tag)
+            buildConfigField(FieldSpec.Type.BOOLEAN, "DEBUG", "true")
+        }
+    }
+    targetConfigs("staging") {
+        create("android") {
+            buildConfigField(FieldSpec.Type.STRING, "BUILD_TYPE", BuildType.STAGING.tag)
+            buildConfigField(FieldSpec.Type.BOOLEAN, "DEBUG", "true")
+        }
+    }
+    targetConfigs("release") {
+        create("android") {
+            buildConfigField(FieldSpec.Type.STRING, "BUILD_TYPE", BuildType.RELEASE.tag)
+            buildConfigField(FieldSpec.Type.BOOLEAN, "DEBUG", "false")
+        }
+    }
+}
+
+fun configureBuildKonfigFlavorFromAndroidTasks() {
+    val pattern = ":composeApp:[assemble|install|generate].*(Debug|Staging|Release)"
+    val runningTasks = project.gradle.startParameter.taskNames
+    runningTasks.firstOrNull { it.matches(pattern.toRegex()) }?.let { matchingTask ->
+        val matcher = pattern.toPattern().matcher(matchingTask)
+        if (matcher.find()) {
+            val flavor = matcher.group(1).toDefaultLowerCase()
+            project.setProperty("buildkonfig.flavor", flavor)
+        }
     }
 }
 

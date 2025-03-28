@@ -101,7 +101,7 @@ fun ApplicationScope.MainWindow(args: Array<String>) {
                     )
                     window.title = appConfigurationUiState.windowTitle
                     if (appConfigurationUiState.isLoaded) {
-                        Locale.setDefault(Locale.forLanguageTag(appConfigurationUiState.language.tag))
+                        Locale.setDefault(Locale.forLanguageTag(appConfigurationUiState.language.fullTag))
                         val defaultWindowTitle = stringResource(Res.string.window_title)
                         LaunchedEffect(appConfigurationUiState.language) {
                             appConfigurationViewModel.setWindowTitle(defaultWindowTitle)

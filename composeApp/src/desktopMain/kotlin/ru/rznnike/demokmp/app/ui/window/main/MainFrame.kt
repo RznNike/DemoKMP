@@ -1,8 +1,6 @@
 package ru.rznnike.demokmp.app.ui.window.main
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.onClick
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -23,11 +21,11 @@ import ru.rznnike.demokmp.app.ui.screen.splash.SplashFlow
 import ru.rznnike.demokmp.app.ui.theme.AppTheme
 import ru.rznnike.demokmp.app.ui.window.BackgroundBox
 import ru.rznnike.demokmp.app.utils.clearFocusOnTap
+import ru.rznnike.demokmp.app.utils.onClick
 import ru.rznnike.demokmp.domain.common.CoroutineScopeProvider
 import ru.rznnike.demokmp.generated.resources.Res
 import ru.rznnike.demokmp.generated.resources.close
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MainFrame() {
     val notifier = koinInject<Notifier>()

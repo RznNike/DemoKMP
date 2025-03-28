@@ -1,33 +1,16 @@
 package ru.rznnike.demokmp.app.utils
 
-import androidx.compose.ui.awt.ComposeWindow
 import org.apache.pdfbox.Loader
 import org.apache.pdfbox.printing.PDFPageable
 import ru.rznnike.demokmp.domain.log.Logger
 import ru.rznnike.demokmp.domain.model.print.PrintSettings
 import ru.rznnike.demokmp.domain.model.print.TwoSidedPrint
-import java.awt.FileDialog
 import java.awt.print.PrinterException
 import java.awt.print.PrinterJob
 import java.io.File
 import javax.print.attribute.HashPrintRequestAttributeSet
 import javax.print.attribute.standard.DialogTypeSelection
 import javax.print.attribute.standard.Sides
-
-fun saveFileDialog(
-    window: ComposeWindow,
-    title: String,
-    fileName: String
-): File? {
-    return FileDialog(window, title, FileDialog.SAVE).apply {
-        file = fileName
-        val extension = fileName.substringAfterLast('.')
-        setFilenameFilter { _, name ->
-            name.endsWith(extension)
-        }
-        isVisible = true
-    }.files.firstOrNull()
-}
 
 fun printDialog(
     pdf: File,

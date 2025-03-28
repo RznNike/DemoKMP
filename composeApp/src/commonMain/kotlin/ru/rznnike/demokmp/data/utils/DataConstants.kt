@@ -12,11 +12,12 @@ object DataConstants {
     val PREFERENCES_PATH = "$PREFERENCES_FOLDER_PATH/settings.properties"
     val DB_PATH = "$APP_DATA_DIR/database/demokmp_main.db"
 
-    const val LAUNCHER_CONFIGURATION_NAME = "launcher_configuration.ini"
+    private const val LAUNCHER_CONFIGURATION_NAME = "launcher_configuration.ini"
     val LAUNCHER_CONFIGURATION_PATH = "$ROOT_DIR/$LAUNCHER_CONFIGURATION_NAME"
 
     val LOGS_PATH = "$ROOT_DIR/logs"
-    const val LOG_FILE_NAME_TEMPLATE = "log_%s.txt"
+    const val LOG_FILE_NAME_TEMPLATE = "log_%s"
+    const val LOG_FILE_NAME_EXTENSION = "txt"
 
     val RUN_SCRIPT_NAME = if (OperatingSystem.isWindows) "run.vbs" else "run.sh"
 

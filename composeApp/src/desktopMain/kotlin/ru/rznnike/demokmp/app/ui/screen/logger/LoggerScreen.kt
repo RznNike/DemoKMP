@@ -1,30 +1,32 @@
 package ru.rznnike.demokmp.app.ui.screen.logger
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.VerticalScrollbar
 import androidx.compose.foundation.gestures.scrollBy
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.onClick
 import androidx.compose.foundation.rememberScrollbarAdapter
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.key.*
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import io.github.vinceglb.filekit.FileKit
+import io.github.vinceglb.filekit.dialogs.FileKitDialogSettings
+import io.github.vinceglb.filekit.dialogs.openFileSaver
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.koinInject
 import ru.rznnike.demokmp.BuildKonfig
-import ru.rznnike.demokmp.app.navigation.NavigationScreen
+import ru.rznnike.demokmp.app.navigation.DesktopNavigationScreen
 import ru.rznnike.demokmp.app.navigation.getNavigator
 import ru.rznnike.demokmp.app.ui.item.LogMessageItem
 import ru.rznnike.demokmp.app.ui.item.LogNetworkMessageItem
@@ -33,25 +35,19 @@ import ru.rznnike.demokmp.app.ui.view.SelectableOutlinedIconButton
 import ru.rznnike.demokmp.app.ui.view.SlimOutlinedTextField
 import ru.rznnike.demokmp.app.ui.view.TabText
 import ru.rznnike.demokmp.app.ui.view.TextR
+import ru.rznnike.demokmp.app.ui.viewmodel.logger.LoggerViewModel
 import ru.rznnike.demokmp.app.ui.window.LocalWindow
-import ru.rznnike.demokmp.app.utils.saveFileDialog
-import ru.rznnike.demokmp.app.viewmodel.logger.LoggerViewModel
+import ru.rznnike.demokmp.app.utils.onClick
 import ru.rznnike.demokmp.data.utils.DataConstants
-import ru.rznnike.demokmp.domain.utils.GlobalConstants
-import ru.rznnike.demokmp.domain.utils.toDateString
 import ru.rznnike.demokmp.generated.resources.*
-import java.time.Clock
 
-class LoggerScreen : NavigationScreen() {
-    @OptIn(ExperimentalFoundationApi::class)
+class LoggerScreen : DesktopNavigationScreen() {
     @Composable
     override fun Layout() {
         val navigator = getNavigator()
 
         val viewModel = viewModel { LoggerViewModel() }
         val uiState by viewModel.uiState.collectAsState()
-
-        val clock: Clock = koinInject()
 
         screenKeyEventCallback = { keyEvent ->
             if (keyEvent.type == KeyEventType.KeyDown) {
@@ -161,25 +157,20 @@ class LoggerScreen : NavigationScreen() {
                     )
 
                     if (uiState.selectedTab == LoggerViewModel.Tab.ALL) {
-                        val window = LocalWindow.current
-                        val saveDialogTitle = stringResource(Res.string.save_log)
-                        val saveFileNameTemplate = DataConstants.LOG_FILE_NAME_TEMPLATE
-                        val saveFileName = remember {
-                            saveFileNameTemplate.format(
-                                clock.millis().toDateString(GlobalConstants.DATE_PATTERN_FILE_NAME_MS)
-                            )
-                        }
                         Spacer(Modifier.width(16.dp))
+                        val window = LocalWindow.current
                         SelectableOutlinedIconButton(
                             modifier = Modifier.size(40.dp),
                             iconRes = Res.drawable.ic_save,
                             onClick = {
-                                saveFileDialog(
-                                    window = window,
-                                    title = saveDialogTitle,
-                                    fileName = saveFileName
-                                )?.let { file ->
-                                    viewModel.saveLogToFile(file)
+                                viewModel.openSaveLogDialog { fileName ->
+                                    FileKit.openFileSaver(
+                                        suggestedName = fileName,
+                                        extension = DataConstants.LOG_FILE_NAME_EXTENSION,
+                                        dialogSettings = FileKitDialogSettings(
+                                            parentWindow = window
+                                        )
+                                    )
                                 }
                             }
                         )

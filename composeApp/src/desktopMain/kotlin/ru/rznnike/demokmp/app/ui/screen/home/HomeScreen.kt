@@ -19,7 +19,7 @@ import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import ru.rznnike.demokmp.BuildKonfig
 import ru.rznnike.demokmp.app.dispatcher.notifier.Notifier
-import ru.rznnike.demokmp.app.navigation.NavigationScreen
+import ru.rznnike.demokmp.app.navigation.DesktopNavigationScreen
 import ru.rznnike.demokmp.app.navigation.getNavigator
 import ru.rznnike.demokmp.app.ui.dialog.common.AlertDialogAction
 import ru.rznnike.demokmp.app.ui.dialog.common.AlertDialogType
@@ -40,7 +40,7 @@ import ru.rznnike.demokmp.app.viewmodel.global.configuration.AppConfigurationVie
 import ru.rznnike.demokmp.app.viewmodel.home.HomeViewModel
 import ru.rznnike.demokmp.generated.resources.*
 
-class HomeScreen : NavigationScreen() {
+class HomeScreen : DesktopNavigationScreen() {
     @OptIn(ExperimentalLayoutApi::class)
     @Composable
     override fun Layout() {
@@ -84,7 +84,7 @@ class HomeScreen : NavigationScreen() {
             ) {
                 Box(
                     modifier = Modifier
-                        .fillMaxSize()
+                        .fillMaxWidth()
                         .weight(1f)
                 ) {
                     val verticalScrollState = rememberScrollState()
@@ -170,7 +170,7 @@ class HomeScreen : NavigationScreen() {
                 stringResource(Res.string.version),
                 BuildKonfig.VERSION_NAME,
                 BuildKonfig.VERSION_CODE,
-                if (BuildKonfig.DEBUG) " debug" else "",
+                if (BuildKonfig.DEBUG) " ${BuildKonfig.BUILD_TYPE}" else "",
                 stringResource(Res.string.environment),
                 platformName,
                 stringResource(Res.string.mac),

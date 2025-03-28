@@ -1,7 +1,9 @@
 # Demo Kotlin Multiplatform project for Desktop (JVM)
 [English](https://github.com/RznNike/DemoKMP#readme) | [Русский](/README.ru.md)
 
-This is an example project with a set of solutions to typical problems, demonstrating the creation of an application for the desktop (JVM) using [Kotlin Multiplatform](https://www.jetbrains.com/kotlin-multiplatform/).
+<img src="/readmeFiles/KMP_logo.png" alt="logo" width="300"/>
+
+This is a sample project with a set of solutions to typical problems, demonstrating the creation of a cross-platform application for PC (JVM - Windows/Linux) and Android using [Kotlin Multiplatform](https://www.jetbrains.com/kotlin-multiplatform/).
 
 ## Implemented solutions
 * Project architecture - [Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)
@@ -9,8 +11,6 @@ This is an example project with a set of solutions to typical problems, demonstr
 * Dependency Injection
 * Local database (SQL)
 * Shared preferences (with custom classes storage)
-* App building to jar file and launch using script
-* Protection from launching several copies of app simultaneously
 * HTTP API usage
 * WebSocket API usage
 * Proguard configuration (with obfuscation)
@@ -20,30 +20,51 @@ This is an example project with a set of solutions to typical problems, demonstr
 * Material 3 theme configuration
 * Dark/Light theme with auto and manual selection
 * Strings localization
+* Various custom UI elements
+* Dynamic BuildConfig with platform and build type information
+
+#### PC only
+* App building to jar file and launch using script
+* Protection from launching several copies of app simultaneously
 * Launch arguments
 * Screen-scoped hotkeys
 * Basic PDF viewer, print dialog
-* Various custom UI elements
 * Built-in logger with UI
+
+#### Android only
+* UI for viewing network logs from a device
+* Convenient permissions requests
 
 ## Screenshots
 <details>
     <summary>Main app</summary>
-    <img src="/readmeFiles/en/screenshot_1.png" alt="screenshot" width="500"/>
-    <img src="/readmeFiles/en/screenshot_2.png" alt="screenshot" width="500"/>
-    <img src="/readmeFiles/en/screenshot_3.png" alt="screenshot" width="500"/>
-    <img src="/readmeFiles/en/screenshot_4.png" alt="screenshot" width="500"/>
-    <img src="/readmeFiles/en/screenshot_5.png" alt="screenshot" width="500"/>
-    <img src="/readmeFiles/en/screenshot_6.png" alt="screenshot" width="500"/>
-    <img src="/readmeFiles/en/screenshot_7.png" alt="screenshot" width="500"/>
-    <img src="/readmeFiles/en/screenshot_8.png" alt="screenshot" width="500"/>
-    <img src="/readmeFiles/en/screenshot_9.png" alt="screenshot" width="500"/>
+    <img src="/readmeFiles/en/screenshots/pc/screenshot_1.png" alt="screenshot" width="500"/>
+    <img src="/readmeFiles/en/screenshots/pc/screenshot_2.png" alt="screenshot" width="500"/>
+    <img src="/readmeFiles/en/screenshots/pc/screenshot_3.png" alt="screenshot" width="500"/>
+    <img src="/readmeFiles/en/screenshots/pc/screenshot_4.png" alt="screenshot" width="500"/>
+    <img src="/readmeFiles/en/screenshots/pc/screenshot_5.png" alt="screenshot" width="500"/>
+    <img src="/readmeFiles/en/screenshots/pc/screenshot_6.png" alt="screenshot" width="500"/>
+    <img src="/readmeFiles/en/screenshots/pc/screenshot_7.png" alt="screenshot" width="500"/>
+    <img src="/readmeFiles/en/screenshots/pc/screenshot_8.png" alt="screenshot" width="500"/>
+    <img src="/readmeFiles/en/screenshots/pc/screenshot_9.png" alt="screenshot" width="500"/>
 </details>
 
 <details>
     <summary>Logger</summary>
-    <img src="/readmeFiles/en/screenshot_10.png" alt="screenshot" width="750"/>
-    <img src="/readmeFiles/en/screenshot_11.png" alt="screenshot" width="750"/>
+    <img src="/readmeFiles/en/screenshots/pc/screenshot_10.png" alt="screenshot" width="750"/>
+    <img src="/readmeFiles/en/screenshots/pc/screenshot_11.png" alt="screenshot" width="750"/>
+</details>
+
+<details>
+    <summary>Android</summary>
+    <img src="/readmeFiles/en/screenshots/android/screenshot_1.jpg" alt="screenshot" width="250"/>
+    <img src="/readmeFiles/en/screenshots/android/screenshot_2.jpg" alt="screenshot" width="250"/>
+    <img src="/readmeFiles/en/screenshots/android/screenshot_3.jpg" alt="screenshot" width="250"/>
+    <img src="/readmeFiles/en/screenshots/android/screenshot_4.jpg" alt="screenshot" width="250"/>
+    <img src="/readmeFiles/en/screenshots/android/screenshot_5.jpg" alt="screenshot" width="250"/>
+    <img src="/readmeFiles/en/screenshots/android/screenshot_6.jpg" alt="screenshot" width="250"/>
+    <img src="/readmeFiles/en/screenshots/android/screenshot_7.jpg" alt="screenshot" width="250"/>
+    <img src="/readmeFiles/en/screenshots/android/screenshot_8.jpg" alt="screenshot" width="250"/>
 </details>
 
 ## Used libraries
@@ -56,7 +77,14 @@ This is an example project with a set of solutions to typical problems, demonstr
 * [Ktorfit](https://foso.github.io/Ktorfit/)
 * [Coil](https://coil-kt.github.io/coil/)
 * [BuildKonfig](https://github.com/yshrsmz/BuildKonfig)
+
+#### PC only
 * [PDFBox](https://pdfbox.apache.org/)
+* [FileKit](https://github.com/vinceglb/FileKit)
+
+#### Android only
+* [Chucker](https://github.com/ChuckerTeam/chucker)
+* [Accompanist (permissions)](https://github.com/google/accompanist/tree/main/permissions)
 
 ## Used example APIs
 * HTTP - [dog.ceo](https://dog.ceo/dog-api/)
@@ -65,8 +93,8 @@ This is an example project with a set of solutions to typical problems, demonstr
 ## Project launch
 This project was created and tested using [IntelliJ IDEA](https://www.jetbrains.com/idea/). All further instructions are provided for this IDE.
 
-### Launch from IDE
-To run this app, the project has several already created configurations:
+#### Launch from IDE (PC)
+To run this app on a PC, the project has several already created configurations:
 * ```run [debug]``` (with debug)
 * ```run [debug +args]``` (with debug and launch args)
 * ```run [staging]``` (with debug and proguard)
@@ -76,7 +104,11 @@ You can also create your own launch configurations based on the ones already add
 
 ```Run -> Edit Configurations -> + (Add New Configuration) -> Gradle```
 
-### App build launch
+#### Launch from IDE (Android)
+
+To run this app on Android, use the standard ```composeApp``` configuration. The build type can be selected in the ```Build Variants``` menu in the sidebar (also available under ```Build -> Select Build Variant```).
+
+#### App build launch (PC)
 This project is configured to build the application into a jar file. The target computer requires JVM version 17 or later to be installed.
 
 To make the application easier to launch, the project includes launch scripts (for Windows and Linux). These scripts also perform additional checks, in particular - whether the required version of the JVM is installed.
@@ -84,6 +116,8 @@ To make the application easier to launch, the project includes launch scripts (f
 To run the compiled application, run the ```run.vbs``` (Windows) or ```run.sh``` (Linux) script located in the application's root directory. You can also create a shortcut to the application on your desktop by running the script ```create_desktop_shortcut.vbs``` / ```create_desktop_shortcut.sh```.
 
 ## Building
+
+#### For PC
 This project is configured to create builds for Windows and Linux. If you want to build it for macOS, update the ```nativeDistributions``` section in ```build.gradle.kts``` accordingly.
 
 To create a distributable build, use one of the launch configurations:
@@ -99,4 +133,7 @@ If you have problems building your application, it is recommended to select JDK 
 
 *Note: you can build your application only for the OS you are currently using. If, for example, you use Windows and need to create a build for Linux, consider doing it in a virtual machine.*
 
-*Note 2: there is a dummy ```android``` target in the project configuration. It's not configured correctly (and doesn't have the proper sources to work). This target is only added to fix a bug in the KSP plugin where it will not work if there is only one target in the project configuration.*
+#### For Android
+Use the standard tools provided by the IDE to build an Android application. You can build a signed APK or Bundle by going to ```Build -> Generate Signed App Bundle / APK```.
+
+*Note: don't forget to create your own signing key and replace the stub key from this project with it. Also, don't publish the signing key (don't put it in a repository, as this project does for simplicity) if you plan to release the source code of your application to the public. You can add the ```.jks``` key file to ```gitignore```, and move its passwords from ```gradle.properties``` to ```local.properties``` (by changing the ```signingConfigs``` block in ```build.gradle.kts```).*

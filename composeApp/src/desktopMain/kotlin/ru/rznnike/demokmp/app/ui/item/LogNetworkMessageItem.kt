@@ -1,10 +1,8 @@
 package ru.rznnike.demokmp.app.ui.item
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.onClick
 import androidx.compose.foundation.text.selection.DisableSelection
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -16,13 +14,13 @@ import ru.rznnike.demokmp.app.ui.theme.AppTheme
 import ru.rznnike.demokmp.app.ui.theme.bodyMediumMono
 import ru.rznnike.demokmp.app.utils.backgroundColor
 import ru.rznnike.demokmp.app.utils.highlightSubstrings
+import ru.rznnike.demokmp.app.utils.onClick
 import ru.rznnike.demokmp.domain.log.*
 import ru.rznnike.demokmp.domain.utils.GlobalConstants
 import ru.rznnike.demokmp.domain.utils.currentTimeMillis
 import ru.rznnike.demokmp.domain.utils.toDateString
 import java.util.*
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun LogNetworkMessageItem(
     message: LogNetworkMessage,
@@ -35,7 +33,7 @@ fun LogNetworkMessageItem(
                 .fillMaxWidth()
                 .padding(vertical = 1.dp)
                 .background(message.state.backgroundColor)
-                .onClick { onClick() }
+                .onClick(onClick)
                 .padding(horizontal = 8.dp, vertical = 3.dp)
         ) {
             @Composable
