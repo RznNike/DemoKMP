@@ -71,7 +71,7 @@ class SplashScreen : DesktopNavigationScreen() {
         )
 
         @Composable
-        fun AppUpdateDialog() {
+        fun MultiLaunchDialog() {
             if (showMultiLaunchDialog.value) {
                 CommonAlertDialog(
                     type = AlertDialogType.HORIZONTAL,
@@ -101,7 +101,7 @@ class SplashScreen : DesktopNavigationScreen() {
                 contentDescription = null
             )
         }
-        AppUpdateDialog()
+        MultiLaunchDialog()
 
         LaunchedEffect("init") {
             imageVisible = true
