@@ -2,9 +2,9 @@
 kotlin = "2.1.20"
 coroutines = "1.10.1"
 voyager = "1.1.0-beta03"
-koin = "4.0.3"
-ktorfit = "2.4.1"
-ktor = "3.1.0"
+koin = "4.0.4"
+ktorfit = "2.5.0"
+ktor = "3.1.2"
 coil = "3.1.0"
 room = "2.7.0-rc03"
 sqlite = "2.5.0-rc03"
@@ -45,7 +45,7 @@ multiplatform-settings = { module = "com.russhwolf:multiplatform-settings", vers
 
 # Serialization
 # https://github.com/Kotlin/kotlinx.serialization
-kotlinx-serialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version = "1.8.0" }
+kotlinx-serialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version = "1.8.1" }
 
 # Ktorfit - network
 # https://github.com/Foso/Ktorfit
