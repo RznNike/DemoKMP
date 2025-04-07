@@ -165,12 +165,12 @@ class CustomUIScreen : DesktopNavigationScreen() {
                                         .width(155.dp)
                                         .height(48.dp),
                                     labelRes = Res.string.date_selection,
-                                    value = viewModel.dateInput,
-                                    isError = viewModel.dateError,
-                                    calendarInitialDate = uiState.date,
-                                    calendarMinDate = uiState.dateMin,
-                                    calendarMaxDate = uiState.dateMax,
-                                    onValueChange = viewModel::onDateInput,
+                                    value = viewModel.dateInputManager.inputString,
+                                    isError = viewModel.dateInputManager.isError,
+                                    calendarInitialDate = uiState.dateFilter.value,
+                                    calendarMinDate = uiState.dateFilter.dateMin,
+                                    calendarMaxDate = uiState.dateFilter.dateMax,
+                                    onValueChange = viewModel.dateInputManager::setInput,
                                     onDateChange = viewModel::onDateChange,
                                     onSave = viewModel::confirmDateInput
                                 )
