@@ -30,6 +30,7 @@ import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
 import kotlinx.coroutines.launch
 import ru.rznnike.demokmp.app.ui.theme.bodyMediumBold
+import ru.rznnike.demokmp.app.utils.onClick
 import ru.rznnike.demokmp.app.utils.onEnterKey
 import ru.rznnike.demokmp.domain.utils.smartFilter
 import ru.rznnike.demokmp.generated.resources.Res
@@ -76,7 +77,7 @@ fun <ItemType> DropdownQuerySelector(
                 .onEnterKey {
                     expand()
                 }
-                .clickable {
+                .onClick {
                     expand()
                 },
             contentPadding = PaddingValues(start = 16.dp, top = 8.dp, bottom = 8.dp),
