@@ -189,3 +189,26 @@ fun AppTheme(
         )
     }
 }
+
+@Composable
+fun PreviewAppTheme(
+    content: @Composable () -> Unit
+) {
+    val colorScheme = lightScheme
+    val customColorScheme = lightCustomScheme
+    val customDrawables = lightCustomDrawables
+
+    CompositionLocalProvider(
+        LocalIsDarkTheme provides false,
+        LocalCustomColorScheme provides customColorScheme,
+        LocalCustomDrawables provides customDrawables,
+        LocalMinimumInteractiveComponentSize provides Dp.Unspecified
+    ) {
+        MaterialTheme(
+            colorScheme = colorScheme,
+            typography = getAppTypography(),
+            shapes = appShapes,
+            content = content
+        )
+    }
+}

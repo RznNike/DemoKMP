@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.min
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
 import org.jetbrains.compose.resources.painterResource
+import ru.rznnike.demokmp.app.utils.onClick
 import ru.rznnike.demokmp.app.utils.onEnterKey
 import ru.rznnike.demokmp.generated.resources.Res
 import ru.rznnike.demokmp.generated.resources.ic_expand
@@ -97,7 +98,7 @@ fun <ItemType> DropdownSelector(
                 .onEnterKey {
                     expand()
                 }
-                .clickable {
+                .onClick {
                     expand()
                 },
             contentPadding = PaddingValues(start = 16.dp, top = 8.dp, bottom = 8.dp),

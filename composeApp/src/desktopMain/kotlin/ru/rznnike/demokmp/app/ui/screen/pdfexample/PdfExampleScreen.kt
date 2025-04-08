@@ -16,17 +16,19 @@ import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import ru.rznnike.demokmp.app.navigation.DesktopNavigationScreen
 import ru.rznnike.demokmp.app.navigation.getNavigator
-import ru.rznnike.demokmp.app.ui.view.DropdownSelector
+import ru.rznnike.demokmp.app.ui.view.PdfPrintControls
 import ru.rznnike.demokmp.app.ui.view.PdfViewer
 import ru.rznnike.demokmp.app.ui.view.SelectableOutlinedIconButton
 import ru.rznnike.demokmp.app.ui.view.TextR
-import ru.rznnike.demokmp.app.utils.nameRes
+import ru.rznnike.demokmp.app.ui.viewmodel.common.print.FilePrintViewModel
 import ru.rznnike.demokmp.app.utils.printDialog
 import ru.rznnike.demokmp.app.viewmodel.pdfexample.PdfExampleViewModel
 import ru.rznnike.demokmp.data.utils.DataConstants
 import ru.rznnike.demokmp.domain.common.DispatcherProvider
-import ru.rznnike.demokmp.domain.model.print.TwoSidedPrint
-import ru.rznnike.demokmp.generated.resources.*
+import ru.rznnike.demokmp.generated.resources.Res
+import ru.rznnike.demokmp.generated.resources.error_file_not_found
+import ru.rznnike.demokmp.generated.resources.ic_back
+import ru.rznnike.demokmp.generated.resources.pdf_example
 
 class PdfExampleScreen : DesktopNavigationScreen() {
     @Composable
@@ -46,21 +48,24 @@ class PdfExampleScreen : DesktopNavigationScreen() {
         }
         val uiState by viewModel.uiState.collectAsState()
 
-        fun openPrintDialog() {
-            uiState.pdf?.let { pdf ->
-                val newPrinterName = printDialog(
-                    pdf = pdf,
-                    printSettings = uiState.printSettings
-                )
-                viewModel.onPrinterSelected(newPrinterName)
-            }
+        val filePrintViewModel = viewModel {
+            FilePrintViewModel()
         }
+        val filePrintUiState by filePrintViewModel.uiState.collectAsState()
 
         screenKeyEventCallback = { keyEvent ->
             if (keyEvent.type == KeyEventType.KeyDown) {
                 when {
                     keyEvent.isCtrlPressed && (keyEvent.key == Key.W) -> navigator.closeScreen()
-                    keyEvent.isCtrlPressed && (keyEvent.key == Key.P) -> openPrintDialog()
+                    keyEvent.isCtrlPressed && (keyEvent.key == Key.P) -> {
+                        uiState.pdf?.let { pdf ->
+                            val newPrinterName = printDialog(
+                                pdf = pdf,
+                                printSettings = filePrintUiState.printSettings
+                            )
+                            filePrintViewModel.onPrinterSelected(newPrinterName)
+                        }
+                    }
                 }
             }
         }
@@ -100,23 +105,12 @@ class PdfExampleScreen : DesktopNavigationScreen() {
                         textAlign = TextAlign.Center
                     )
                     Spacer(Modifier.width(8.dp))
-                    DropdownSelector(
-                        modifier = Modifier
-                            .padding(top = 8.dp, bottom = 16.dp)
-                            .width(210.dp),
-                        label = stringResource(Res.string.two_sided_print),
-                        items = TwoSidedPrint.entries,
-                        selectedItem = uiState.printSettings.twoSidedPrint,
-                        itemNameRetriever = { it?.let { stringResource(it.nameRes) } ?: "" },
-                        onItemSelected = viewModel::onTwoSidedPrintChanged
-                    )
-                    Spacer(Modifier.width(16.dp))
-                    SelectableOutlinedIconButton(
-                        modifier = Modifier
-                            .padding(vertical = 16.dp)
-                            .size(40.dp),
-                        iconRes = Res.drawable.ic_print,
-                        onClick = ::openPrintDialog
+                    PdfPrintControls(
+                        modifier = Modifier.padding(vertical = 8.dp),
+                        pdf = uiState.pdf,
+                        printSettings = filePrintUiState.printSettings,
+                        onTwoSidedPrintChanged = filePrintViewModel::onTwoSidedPrintChanged,
+                        onPrinterSelected = filePrintViewModel::onPrinterSelected
                     )
                     Spacer(Modifier.width(16.dp))
                 }
