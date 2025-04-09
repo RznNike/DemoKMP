@@ -8,8 +8,8 @@ import ru.rznnike.demokmp.app.ui.window.main.MainWindow
 import ru.rznnike.demokmp.domain.log.Logger
 
 fun main(args: Array<String>) = application {
-    initKoin()
     Logger.i("Application start")
+    initKoin()
     MainWindow(args)
 }
 

@@ -1,12 +1,11 @@
 package ru.rznnike.demokmp.domain.log
 
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 import ru.rznnike.demokmp.BuildKonfig
 import ru.rznnike.demokmp.data.utils.DataConstants
-import ru.rznnike.demokmp.domain.common.CoroutineScopeProvider
 import ru.rznnike.demokmp.domain.utils.*
 import java.io.File
 import java.time.Clock
@@ -15,10 +14,7 @@ import java.util.*
 
 class Logger private constructor(
     private val tag: String
-) : KoinComponent {
-    private val clock: Clock by inject()
-    private val coroutineScopeProvider: CoroutineScopeProvider by inject()
-
+) {
     fun d(message: String) {
         if (BuildKonfig.DEBUG) {
             addMessage(message, LogLevel.DEBUG)
@@ -43,7 +39,7 @@ class Logger private constructor(
                 request = request
             )
             networkLog.add(logNetworkMessage)
-            coroutineScopeProvider.io.launch {
+            coroutineScope.launch {
                 networkLogUpdatesFlow.emit(logNetworkMessage)
             }
         }
@@ -64,7 +60,7 @@ class Logger private constructor(
                 )
                 val index = networkLog.lastIndexOf(logNetworkMessage)
                 networkLog[index] = updatedMessage
-                coroutineScopeProvider.io.launch {
+                coroutineScope.launch {
                     networkLogUpdatesFlow.emit(updatedMessage)
                 }
             }
@@ -125,7 +121,7 @@ class Logger private constructor(
 
         if (OperatingSystem.isDesktop) {
             log.add(logMessage)
-            coroutineScopeProvider.io.launch {
+            coroutineScope.launch {
                 logUpdatesFlow.emit(logMessage)
             }
             writeToFile(formattedMessage)
@@ -135,7 +131,7 @@ class Logger private constructor(
     }
 
     private fun writeToFile(formattedMessage: String) {
-        coroutineScopeProvider.io.launch {
+        coroutineScope.launch {
             synchronized(Companion) {
                 try {
                     val currentDate = clock.millis().toLocalDate()
@@ -157,13 +153,29 @@ class Logger private constructor(
     }
 
     companion object {
+        private var initClock: Clock? = null
+        private val clock: Clock by lazy { initClock ?: Clock.systemUTC() }
+        private var initCoroutineScope: CoroutineScope? = null
+        private val coroutineScope: CoroutineScope by lazy { initCoroutineScope ?: CoroutineScope(Dispatchers.IO) }
+
         private val defaultLogger = Logger("")
+
         private val log: MutableList<LogMessage> = mutableListOf()
         private val logUpdatesFlow = MutableSharedFlow<LogMessage>()
+
         private val networkLog: MutableList<LogNetworkMessage> = mutableListOf()
         private val networkLogUpdatesFlow = MutableSharedFlow<LogNetworkMessage>()
+
         private var logFile: File? = null
         private var logFileDate: LocalDate? = null
+
+        fun init(
+            clock: Clock = Clock.systemUTC(),
+            coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.IO)
+        ) {
+            initClock = clock
+            initCoroutineScope = coroutineScope
+        }
 
         fun withTag(tag: String): Logger {
             return Logger(tag)
