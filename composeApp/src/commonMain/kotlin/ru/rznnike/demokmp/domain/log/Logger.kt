@@ -4,6 +4,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Semaphore
+import kotlinx.coroutines.sync.withPermit
 import ru.rznnike.demokmp.BuildKonfig
 import ru.rznnike.demokmp.data.utils.DataConstants
 import ru.rznnike.demokmp.domain.utils.*
@@ -105,54 +107,52 @@ class Logger private constructor(
         val logMessage = LogMessage(
             type = type,
             level = level,
-            timestamp = currentTimeMillis(),
+            timestamp = clock.millis(),
             tag = tag,
             message = message
         )
 
-        val formattedMessage = "%s | %s%s | %s".format(
-            logMessage.timestamp.toDateString(GlobalConstants.DATE_PATTERN_TIME_MS),
-            logMessage.level.label,
-            if (logMessage.tag.isNotBlank()) " | ${logMessage.tag}" else "",
-            logMessage.message
-        )
-        if (logMessage.level == LogLevel.ERROR) {
-            System.err.println(formattedMessage)
-        } else {
-            println(formattedMessage)
-        }
+        coroutineScope.launch {
+            outputLock.withPermit {
+                val formattedMessage = "%s | %s%s | %s".format(
+                    logMessage.timestamp.toDateString(GlobalConstants.DATE_PATTERN_TIME_MS),
+                    logMessage.level.label,
+                    if (logMessage.tag.isNotBlank()) " | ${logMessage.tag}" else "",
+                    logMessage.message
+                )
+                if (logMessage.level == LogLevel.ERROR) {
+                    System.err.println(formattedMessage)
+                } else {
+                    println(formattedMessage)
+                }
 
-        if (OperatingSystem.isDesktop) {
-            log.add(logMessage)
-            coroutineScope.launch {
-                logUpdatesFlow.emit(logMessage)
+                if (OperatingSystem.isDesktop) {
+                    log.add(logMessage)
+                    logUpdatesFlow.emit(logMessage)
+                    writeToFile(formattedMessage)
+                }
             }
-            writeToFile(formattedMessage)
         }
 
         return logMessage
     }
 
     private fun writeToFile(formattedMessage: String) {
-        coroutineScope.launch {
-            synchronized(Companion) {
-                try {
-                    val currentDate = clock.millis().toLocalDate()
-                    if (logFileDate != currentDate) {
-                        logFileDate = currentDate
-                        logFile = null
-                    }
-
-                    if (logFile == null) {
-                        File(DataConstants.LOGS_PATH).mkdirs()
-                        val logFileName = "${currentDate.millis().toDateString(GlobalConstants.DATE_PATTERN_FILE_NAME_DAY)}.txt"
-                        logFile = File("${DataConstants.LOGS_PATH}/$logFileName")
-                    }
-                    logFile?.appendText(formattedMessage)
-                    logFile?.appendText("\n")
-                } catch (_: Exception) { }
+        try {
+            val currentDate = clock.millis().toLocalDate()
+            if (logFileDate != currentDate) {
+                logFileDate = currentDate
+                logFile = null
             }
-        }
+
+            if (logFile == null) {
+                File(DataConstants.LOGS_PATH).mkdirs()
+                val logFileName = "${currentDate.millis().toDateString(GlobalConstants.DATE_PATTERN_FILE_NAME_DAY)}.txt"
+                logFile = File("${DataConstants.LOGS_PATH}/$logFileName")
+            }
+            logFile?.appendText(formattedMessage)
+            logFile?.appendText("\n")
+        } catch (_: Exception) { }
     }
 
     companion object {
@@ -171,6 +171,8 @@ class Logger private constructor(
 
         private var logFile: File? = null
         private var logFileDate: LocalDate? = null
+
+        private val outputLock = Semaphore(1)
 
         fun init(
             clock: Clock = Clock.systemUTC(),
