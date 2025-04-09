@@ -31,6 +31,7 @@ val LogLevel.backgroundColor: Color
     get() = when (this) {
         LogLevel.DEBUG -> LocalCustomColorScheme.current.logDebug
         LogLevel.INFO -> LocalCustomColorScheme.current.logInfo
+        LogLevel.WARNING -> LocalCustomColorScheme.current.logWarning
         LogLevel.ERROR -> LocalCustomColorScheme.current.logError
     }
 

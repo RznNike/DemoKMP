@@ -23,6 +23,8 @@ class Logger private constructor(
 
     fun i(message: String) = addMessage(message, LogLevel.INFO)
 
+    fun w(message: String) = addMessage(message, LogLevel.WARNING)
+
     fun e(message: String) = addMessage(message, LogLevel.ERROR)
 
     fun e(exception: Throwable, message: String = "") {
@@ -184,6 +186,8 @@ class Logger private constructor(
         fun d(message: String) = defaultLogger.d(message)
 
         fun i(message: String) = defaultLogger.i(message)
+
+        fun w(message: String) = defaultLogger.w(message)
 
         fun e(message: String) = defaultLogger.e(message)
 
