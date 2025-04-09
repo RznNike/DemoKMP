@@ -8,8 +8,8 @@ import ru.rznnike.demokmp.app.ui.window.main.MainWindow
 import ru.rznnike.demokmp.domain.log.Logger
 
 fun main(args: Array<String>) = application {
-    initKoin()
     Logger.i("Application start")
+    initKoin()
     MainWindow(args)
 }
 
@@ -23,8 +23,8 @@ fun initKoin() {
                     when (level) {
                         Level.DEBUG -> koinLogger.d(msg)
                         Level.NONE,
-                        Level.INFO,
-                        Level.WARNING -> koinLogger.i(msg)
+                        Level.INFO -> koinLogger.i(msg)
+                        Level.WARNING -> koinLogger.w(msg)
                         Level.ERROR -> koinLogger.e(msg)
                     }
                 }
