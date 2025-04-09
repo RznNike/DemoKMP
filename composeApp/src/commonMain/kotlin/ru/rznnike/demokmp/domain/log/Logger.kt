@@ -110,8 +110,9 @@ class Logger private constructor(
             message = message
         )
 
-        val formattedMessage = "%s%s | %s".format(
+        val formattedMessage = "%s | %s%s | %s".format(
             logMessage.timestamp.toDateString(GlobalConstants.DATE_PATTERN_TIME_MS),
+            logMessage.level.label,
             if (logMessage.tag.isNotBlank()) " | ${logMessage.tag}" else "",
             logMessage.message
         )
