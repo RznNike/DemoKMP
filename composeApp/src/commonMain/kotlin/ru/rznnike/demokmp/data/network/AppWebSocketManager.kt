@@ -64,7 +64,7 @@ class AppWebSocketManager(
                     )
                 }
             }.retry { error ->
-                logger.i("Connection error")
+                logger.w("Connection error")
                 (error is IOException).also {
                     connectionState.value = WebSocketConnectionState.DISCONNECTED
                     session = null
