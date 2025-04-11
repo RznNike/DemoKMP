@@ -16,3 +16,8 @@ actual inline fun <reified VM : ViewModel> windowViewModel(
     key = key,
     initializer = initializer
 )
+
+@Composable
+actual inline fun <reified VM : ViewModel> windowViewModel(): VM = viewModel(
+    viewModelStoreOwner = LocalActivity.current as ComponentActivity
+)

@@ -25,7 +25,7 @@ class NestedSettingsScreen : DesktopNavigationScreen() {
     override fun Layout() {
         val navigator = getNavigator()
 
-        val profileViewModel = windowViewModel { ProfileViewModel() }
+        val profileViewModel = windowViewModel<ProfileViewModel>()
 
         screenKeyEventCallback = { keyEvent ->
             if (keyEvent.type == KeyEventType.KeyDown) {

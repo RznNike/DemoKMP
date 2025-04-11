@@ -156,7 +156,7 @@ val LocalCustomDrawables = staticCompositionLocalOf { lightCustomDrawables }
 fun AppTheme(
     content: @Composable () -> Unit
 ) {
-    val appConfigurationViewModel = windowViewModel { AppConfigurationViewModel() }
+    val appConfigurationViewModel = windowViewModel<AppConfigurationViewModel>()
     val appConfigurationUiState by appConfigurationViewModel.uiState.collectAsState()
 
     val colorScheme: ColorScheme

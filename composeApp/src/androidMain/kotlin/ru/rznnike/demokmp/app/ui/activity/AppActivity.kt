@@ -61,7 +61,7 @@ class AppActivity : AppCompatActivity() {
             }
         }
 
-        val appConfigurationViewModel = windowViewModel { AppConfigurationViewModel() }
+        val appConfigurationViewModel = windowViewModel<AppConfigurationViewModel>()
 
         LaunchedEffect("init") {
             appConfigurationViewModel.setCloseAppCallback {

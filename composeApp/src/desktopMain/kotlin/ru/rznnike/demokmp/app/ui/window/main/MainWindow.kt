@@ -44,7 +44,7 @@ private val WINDOW_MIN_HEIGHT_DP = 500.dp
 @Composable
 fun ApplicationScope.MainWindow(args: Array<String>) = KoinContext {
     WithWindowViewModelStoreOwner {
-        val appConfigurationViewModel = windowViewModel { AppConfigurationViewModel() }
+        val appConfigurationViewModel = windowViewModel<AppConfigurationViewModel>()
         val appConfigurationUiState by appConfigurationViewModel.uiState.collectAsState()
 
         LaunchedEffect("init") {

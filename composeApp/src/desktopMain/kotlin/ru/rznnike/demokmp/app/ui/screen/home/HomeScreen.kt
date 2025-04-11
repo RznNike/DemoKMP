@@ -47,7 +47,7 @@ class HomeScreen : DesktopNavigationScreen() {
     override fun Layout() {
         val navigator = getNavigator()
 
-        val appConfigurationViewModel = windowViewModel { AppConfigurationViewModel() }
+        val appConfigurationViewModel = windowViewModel<AppConfigurationViewModel>()
         val appConfigurationUiState by appConfigurationViewModel.uiState.collectAsState()
 
         val viewModel = viewModel { HomeViewModel() }

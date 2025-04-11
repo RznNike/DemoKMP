@@ -35,8 +35,8 @@ class SettingsScreen : DesktopNavigationScreen() {
 
         val viewModel = viewModel { SettingsViewModel() }
         val uiState by viewModel.uiState.collectAsState()
-        val profileViewModel = windowViewModel { ProfileViewModel() }
-        val appConfigurationViewModel = windowViewModel { AppConfigurationViewModel() }
+        val profileViewModel = windowViewModel<ProfileViewModel>()
+        val appConfigurationViewModel = windowViewModel<AppConfigurationViewModel>()
         val appConfigurationUiState by appConfigurationViewModel.uiState.collectAsState()
 
         screenKeyEventCallback = { keyEvent ->

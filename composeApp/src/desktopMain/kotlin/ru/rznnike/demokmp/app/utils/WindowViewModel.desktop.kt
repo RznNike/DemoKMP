@@ -21,6 +21,12 @@ actual inline fun <reified VM : ViewModel> windowViewModel(
     initializer = initializer
 )
 
+@Composable
+actual inline fun <reified VM : ViewModel> windowViewModel(): VM = viewModel(
+    viewModelStoreOwner = checkNotNull(LocalWindowViewModelStoreOwner.current) {
+        "No ViewModelStoreOwner was provided via LocalWindowViewModelStoreOwner"
+    }
+)
 
 private class WindowViewModelStoreOwner: ViewModelStoreOwner {
     override val viewModelStore: ViewModelStore = ViewModelStore()

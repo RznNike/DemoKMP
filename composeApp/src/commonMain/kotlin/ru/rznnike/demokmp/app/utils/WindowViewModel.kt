@@ -9,3 +9,6 @@ expect inline fun <reified VM : ViewModel> windowViewModel(
     key: String? = null,
     noinline initializer: CreationExtras.() -> VM
 ): VM
+
+@Composable
+expect inline fun <reified VM : ViewModel> windowViewModel(): VM
