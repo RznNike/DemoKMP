@@ -113,16 +113,6 @@ class AppConfigurationViewModel : BaseUiViewModel<AppConfigurationViewModel.UiSt
         }
     }
 
-    fun setWindowTitle(newValue: String) {
-        viewModelScope.launch {
-            mutableUiState.update { currentState ->
-                currentState.copy(
-                    windowTitle = newValue
-                )
-            }
-        }
-    }
-
     fun setCloseAppCallback(newValue: () -> Unit) {
         closeAppCallback = newValue
     }
@@ -167,7 +157,6 @@ class AppConfigurationViewModel : BaseUiViewModel<AppConfigurationViewModel.UiSt
         val args: List<String> = emptyList(),
         val language: Language = Language.default,
         val theme: Theme = Theme.default,
-        val isLoaded: Boolean = false,
-        val windowTitle: String = ""
+        val isLoaded: Boolean = false
     )
 }

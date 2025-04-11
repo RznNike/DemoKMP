@@ -1,4 +1,4 @@
-package ru.rznnike.demokmp.app.viewmodel.profile
+package ru.rznnike.demokmp.app.viewmodel.global.profile
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf

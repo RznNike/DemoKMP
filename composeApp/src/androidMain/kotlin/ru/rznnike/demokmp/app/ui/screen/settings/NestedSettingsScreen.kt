@@ -14,7 +14,7 @@ import ru.rznnike.demokmp.app.navigation.AndroidNavigationScreen
 import ru.rznnike.demokmp.app.navigation.getNavigator
 import ru.rznnike.demokmp.app.ui.view.*
 import ru.rznnike.demokmp.app.utils.windowViewModel
-import ru.rznnike.demokmp.app.viewmodel.profile.ProfileViewModel
+import ru.rznnike.demokmp.app.viewmodel.global.profile.ProfileViewModel
 import ru.rznnike.demokmp.generated.resources.*
 
 class NestedSettingsScreen : AndroidNavigationScreen() {

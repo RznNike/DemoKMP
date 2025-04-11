@@ -19,16 +19,17 @@ import cafe.adriel.voyager.jetpack.ProvideNavigatorLifecycleKMPSupport
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.KoinContext
+import org.koin.compose.koinInject
 import ru.rznnike.demokmp.app.ui.theme.backgroundDark
 import ru.rznnike.demokmp.app.ui.theme.backgroundLight
 import ru.rznnike.demokmp.app.ui.window.LocalWindow
-import ru.rznnike.demokmp.app.ui.window.LocalWindowCloseCallback
 import ru.rznnike.demokmp.app.ui.window.WindowFocusRequester
 import ru.rznnike.demokmp.app.ui.window.logger.LoggerWindow
 import ru.rznnike.demokmp.app.ui.window.setMinimumSize
 import ru.rznnike.demokmp.app.utils.WithWindowViewModelStoreOwner
 import ru.rznnike.demokmp.app.utils.windowViewModel
 import ru.rznnike.demokmp.app.viewmodel.global.configuration.AppConfigurationViewModel
+import ru.rznnike.demokmp.app.viewmodel.global.configuration.WindowConfigurationViewModel
 import ru.rznnike.demokmp.app.viewmodel.global.hotkeys.HotKeysViewModel
 import ru.rznnike.demokmp.generated.resources.Res
 import ru.rznnike.demokmp.generated.resources.icon_linux
@@ -45,10 +46,12 @@ private val WINDOW_MIN_HEIGHT_DP = 500.dp
 @Composable
 fun ApplicationScope.MainWindow(args: Array<String>) = KoinContext {
     WithWindowViewModelStoreOwner {
-        val appConfigurationViewModel = windowViewModel<AppConfigurationViewModel>()
+        val appConfigurationViewModel: AppConfigurationViewModel = koinInject()
         val appConfigurationUiState by appConfigurationViewModel.uiState.collectAsState()
-
-        LaunchedEffect("init") {
+        val windowConfigurationViewModel = windowViewModel<WindowConfigurationViewModel>()
+        val windowConfigurationUiState by windowConfigurationViewModel.uiState.collectAsState()
+        LaunchedEffect(Unit) {
+            windowConfigurationViewModel.setCloseWindowCallback(appConfigurationViewModel::closeApplication)
             appConfigurationViewModel.setArgs(args)
             appConfigurationViewModel.setCloseAppCallback(::exitApplication)
         }
@@ -87,19 +90,18 @@ fun ApplicationScope.MainWindow(args: Array<String>) = KoinContext {
             }
         ) {
             CompositionLocalProvider(
-                LocalWindow provides window,
-                LocalWindowCloseCallback provides appConfigurationViewModel::closeApplication
+                LocalWindow provides window
             ) {
                 setMinimumSize(
                     width = WINDOW_MIN_WIDTH_DP,
                     height = WINDOW_MIN_HEIGHT_DP
                 )
-                window.title = appConfigurationUiState.windowTitle
+                window.title = windowConfigurationUiState.windowTitle
                 if (appConfigurationUiState.isLoaded) {
                     Locale.setDefault(Locale.forLanguageTag(appConfigurationUiState.language.fullTag))
                     val defaultWindowTitle = stringResource(Res.string.window_title)
                     LaunchedEffect(appConfigurationUiState.language) {
-                        appConfigurationViewModel.setWindowTitle(defaultWindowTitle)
+                        windowConfigurationViewModel.setWindowTitle(defaultWindowTitle)
                     }
 
                     ProvideNavigatorLifecycleKMPSupport {

@@ -2,6 +2,7 @@ package ru.rznnike.demokmp.app.ui.window.logger
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.DpSize
@@ -22,6 +23,7 @@ import ru.rznnike.demokmp.app.ui.window.*
 import ru.rznnike.demokmp.app.utils.WithWindowViewModelStoreOwner
 import ru.rznnike.demokmp.app.utils.clearFocusOnTap
 import ru.rznnike.demokmp.app.utils.windowViewModel
+import ru.rznnike.demokmp.app.viewmodel.global.configuration.WindowConfigurationViewModel
 import ru.rznnike.demokmp.app.viewmodel.global.hotkeys.HotKeysViewModel
 import ru.rznnike.demokmp.generated.resources.Res
 import ru.rznnike.demokmp.generated.resources.icon_linux
@@ -41,6 +43,11 @@ fun LoggerWindow(
     onCloseRequest: () -> Unit
 ) = KoinContext {
     WithWindowViewModelStoreOwner {
+        val windowConfigurationViewModel = windowViewModel<WindowConfigurationViewModel>()
+        LaunchedEffect(Unit) {
+            windowConfigurationViewModel.setCloseWindowCallback(onCloseRequest)
+        }
+
         val state = rememberWindowState(
             size = DpSize(
                 width = WINDOW_START_WIDTH_DP,
@@ -64,8 +71,7 @@ fun LoggerWindow(
             }
         ) {
             CompositionLocalProvider(
-                LocalWindow provides window,
-                LocalWindowCloseCallback provides onCloseRequest
+                LocalWindow provides window
             ) {
                 focusRequester.onFocusRequested = {
                     window.toFront()

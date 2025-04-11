@@ -36,7 +36,6 @@ import ru.rznnike.demokmp.app.ui.view.TextR
 import ru.rznnike.demokmp.app.ui.view.Toolbar
 import ru.rznnike.demokmp.app.utils.getMacAddress
 import ru.rznnike.demokmp.app.utils.platformName
-import ru.rznnike.demokmp.app.utils.windowViewModel
 import ru.rznnike.demokmp.app.viewmodel.global.configuration.AppConfigurationViewModel
 import ru.rznnike.demokmp.app.viewmodel.home.HomeViewModel
 import ru.rznnike.demokmp.generated.resources.*
@@ -47,7 +46,7 @@ class HomeScreen : DesktopNavigationScreen() {
     override fun Layout() {
         val navigator = getNavigator()
 
-        val appConfigurationViewModel = windowViewModel<AppConfigurationViewModel>()
+        val appConfigurationViewModel: AppConfigurationViewModel = koinInject()
         val appConfigurationUiState by appConfigurationViewModel.uiState.collectAsState()
 
         val viewModel = viewModel { HomeViewModel() }
