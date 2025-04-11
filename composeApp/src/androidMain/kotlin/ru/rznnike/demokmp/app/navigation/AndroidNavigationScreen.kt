@@ -2,6 +2,7 @@ package ru.rznnike.demokmp.app.navigation
 
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
+import androidx.activity.compose.LocalActivity
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
@@ -16,9 +17,9 @@ abstract class AndroidNavigationScreen : NavigationScreen() {
         @Composable
         get() = !LocalIsDarkTheme.current
 
-    private val activity: ComponentActivity?
+    private val activity: ComponentActivity
         @Composable
-        get() = LocalContext.current as ComponentActivity?
+        get() = LocalActivity.current as ComponentActivity
 
     @Transient
     var onBackPressedCallback: (navigator: FlowNavigator) -> Unit = { navigator ->
@@ -34,7 +35,7 @@ abstract class AndroidNavigationScreen : NavigationScreen() {
 
     @Composable
     private fun setSystemBarsColors() {
-        activity?.window?.let { window ->
+        activity.window?.let { window ->
             val isLightSB = isLightStatusBar
             val isLightNB = isLightNavigationBar
             LaunchedEffect(isLightSB, isLightNB) {

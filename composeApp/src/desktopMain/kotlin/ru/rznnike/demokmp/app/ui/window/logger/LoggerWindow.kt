@@ -22,6 +22,7 @@ import ru.rznnike.demokmp.app.navigation.createNavigator
 import ru.rznnike.demokmp.app.ui.screen.logger.LoggerFlow
 import ru.rznnike.demokmp.app.ui.theme.AppTheme
 import ru.rznnike.demokmp.app.ui.window.*
+import ru.rznnike.demokmp.app.utils.WithWindowViewModelStoreOwner
 import ru.rznnike.demokmp.app.utils.clearFocusOnTap
 import ru.rznnike.demokmp.domain.common.CoroutineScopeProvider
 import ru.rznnike.demokmp.generated.resources.Res
@@ -40,8 +41,8 @@ private val WINDOW_MIN_HEIGHT_DP = 700.dp
 fun LoggerWindow(
     focusRequester: WindowFocusRequester,
     onCloseRequest: () -> Unit
-) {
-    KoinContext {
+) = KoinContext {
+    WithWindowViewModelStoreOwner {
         val state = rememberWindowState(
             size = DpSize(
                 width = WINDOW_START_WIDTH_DP,

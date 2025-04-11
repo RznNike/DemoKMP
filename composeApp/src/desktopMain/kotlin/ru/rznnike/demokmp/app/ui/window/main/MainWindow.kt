@@ -25,6 +25,8 @@ import ru.rznnike.demokmp.app.ui.theme.backgroundDark
 import ru.rznnike.demokmp.app.ui.theme.backgroundLight
 import ru.rznnike.demokmp.app.ui.window.*
 import ru.rznnike.demokmp.app.ui.window.logger.LoggerWindow
+import ru.rznnike.demokmp.app.utils.WithWindowViewModelStoreOwner
+import ru.rznnike.demokmp.app.utils.windowViewModel
 import ru.rznnike.demokmp.app.viewmodel.global.configuration.AppConfigurationViewModel
 import ru.rznnike.demokmp.domain.common.CoroutineScopeProvider
 import ru.rznnike.demokmp.generated.resources.Res
@@ -40,9 +42,9 @@ private val WINDOW_MIN_HEIGHT_DP = 500.dp
 
 @OptIn(ExperimentalVoyagerApi::class)
 @Composable
-fun ApplicationScope.MainWindow(args: Array<String>) {
-    KoinContext {
-        val appConfigurationViewModel: AppConfigurationViewModel = koinInject()
+fun ApplicationScope.MainWindow(args: Array<String>) = KoinContext {
+    WithWindowViewModelStoreOwner {
+        val appConfigurationViewModel = windowViewModel { AppConfigurationViewModel() }
         val appConfigurationUiState by appConfigurationViewModel.uiState.collectAsState()
 
         LaunchedEffect("init") {

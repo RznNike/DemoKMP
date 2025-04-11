@@ -5,7 +5,6 @@ val appComponent = listOf(
     getPreferenceModule(),
     gatewayModule,
     interactorModule,
-    viewModelModule,
     networkModule,
     getDatabaseModule()
 )

@@ -29,6 +29,7 @@ import ru.rznnike.demokmp.app.ui.window.LocalWindowCloseCallback
 import ru.rznnike.demokmp.app.utils.AppConstants
 import ru.rznnike.demokmp.app.utils.onClick
 import ru.rznnike.demokmp.app.utils.restartApp
+import ru.rznnike.demokmp.app.utils.windowViewModel
 import ru.rznnike.demokmp.app.viewmodel.app.ActivityViewModel
 import ru.rznnike.demokmp.app.viewmodel.global.configuration.AppConfigurationViewModel
 import ru.rznnike.demokmp.domain.common.CoroutineScopeProvider
@@ -60,7 +61,7 @@ class AppActivity : AppCompatActivity() {
             }
         }
 
-        val appConfigurationViewModel: AppConfigurationViewModel = koinInject()
+        val appConfigurationViewModel = windowViewModel { AppConfigurationViewModel() }
 
         LaunchedEffect("init") {
             appConfigurationViewModel.setCloseAppCallback {

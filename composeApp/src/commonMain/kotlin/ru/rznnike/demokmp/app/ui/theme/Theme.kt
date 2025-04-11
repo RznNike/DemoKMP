@@ -6,7 +6,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import org.jetbrains.compose.resources.DrawableResource
-import org.koin.compose.koinInject
+import ru.rznnike.demokmp.app.utils.windowViewModel
 import ru.rznnike.demokmp.app.viewmodel.global.configuration.AppConfigurationViewModel
 import ru.rznnike.demokmp.domain.model.common.Theme
 import ru.rznnike.demokmp.generated.resources.Res
@@ -156,7 +156,7 @@ val LocalCustomDrawables = staticCompositionLocalOf { lightCustomDrawables }
 fun AppTheme(
     content: @Composable () -> Unit
 ) {
-    val appConfigurationViewModel: AppConfigurationViewModel = koinInject()
+    val appConfigurationViewModel = windowViewModel { AppConfigurationViewModel() }
     val appConfigurationUiState by appConfigurationViewModel.uiState.collectAsState()
 
     val colorScheme: ColorScheme

@@ -10,10 +10,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.koinInject
 import ru.rznnike.demokmp.app.navigation.AndroidNavigationScreen
 import ru.rznnike.demokmp.app.navigation.getNavigator
 import ru.rznnike.demokmp.app.ui.view.*
+import ru.rznnike.demokmp.app.utils.windowViewModel
 import ru.rznnike.demokmp.app.viewmodel.profile.ProfileViewModel
 import ru.rznnike.demokmp.generated.resources.*
 
@@ -22,7 +22,7 @@ class NestedSettingsScreen : AndroidNavigationScreen() {
     override fun Layout() {
         val navigator = getNavigator()
 
-        val profileViewModel: ProfileViewModel = koinInject()
+        val profileViewModel = windowViewModel { ProfileViewModel() }
 
         Column(
             modifier = Modifier

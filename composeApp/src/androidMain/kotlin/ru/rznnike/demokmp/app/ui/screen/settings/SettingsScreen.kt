@@ -12,13 +12,13 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.koinInject
 import ru.rznnike.demokmp.app.navigation.AndroidNavigationScreen
 import ru.rznnike.demokmp.app.navigation.getNavigator
 import ru.rznnike.demokmp.app.ui.view.*
 import ru.rznnike.demokmp.app.utils.getSelectedLanguage
 import ru.rznnike.demokmp.app.utils.nameRes
 import ru.rznnike.demokmp.app.utils.setSelectedLanguage
+import ru.rznnike.demokmp.app.utils.windowViewModel
 import ru.rznnike.demokmp.app.viewmodel.global.configuration.AppConfigurationViewModel
 import ru.rznnike.demokmp.app.viewmodel.profile.ProfileViewModel
 import ru.rznnike.demokmp.app.viewmodel.settings.SettingsViewModel
@@ -33,8 +33,8 @@ class SettingsScreen : AndroidNavigationScreen() {
 
         val viewModel = viewModel { SettingsViewModel() }
         val uiState by viewModel.uiState.collectAsState()
-        val profileViewModel: ProfileViewModel = koinInject()
-        val appConfigurationViewModel: AppConfigurationViewModel = koinInject()
+        val profileViewModel = windowViewModel { ProfileViewModel() }
+        val appConfigurationViewModel = windowViewModel { AppConfigurationViewModel() }
         val appConfigurationUiState by appConfigurationViewModel.uiState.collectAsState()
 
         Column(
