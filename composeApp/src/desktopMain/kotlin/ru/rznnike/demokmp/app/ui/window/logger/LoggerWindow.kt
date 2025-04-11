@@ -2,7 +2,6 @@ package ru.rznnike.demokmp.app.ui.window.logger
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.DpSize
@@ -16,15 +15,14 @@ import cafe.adriel.voyager.jetpack.ProvideNavigatorLifecycleKMPSupport
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.KoinContext
-import org.koin.compose.koinInject
-import ru.rznnike.demokmp.app.dispatcher.keyboard.KeyEventDispatcher
 import ru.rznnike.demokmp.app.navigation.createNavigator
 import ru.rznnike.demokmp.app.ui.screen.logger.LoggerFlow
 import ru.rznnike.demokmp.app.ui.theme.AppTheme
 import ru.rznnike.demokmp.app.ui.window.*
 import ru.rznnike.demokmp.app.utils.WithWindowViewModelStoreOwner
 import ru.rznnike.demokmp.app.utils.clearFocusOnTap
-import ru.rznnike.demokmp.domain.common.CoroutineScopeProvider
+import ru.rznnike.demokmp.app.utils.windowViewModel
+import ru.rznnike.demokmp.app.viewmodel.global.hotkeys.HotKeysViewModel
 import ru.rznnike.demokmp.generated.resources.Res
 import ru.rznnike.demokmp.generated.resources.icon_linux
 import ru.rznnike.demokmp.generated.resources.logger
@@ -51,47 +49,38 @@ fun LoggerWindow(
             position = WindowPosition(Alignment.Center),
             placement = WindowPlacement.Floating
         )
-        val coroutineScopeProvider: CoroutineScopeProvider = koinInject()
-        val keyEventDispatcher = remember {
-            KeyEventDispatcher(
-                coroutineScopeProvider = coroutineScopeProvider
-            )
-        }
-        CompositionLocalProvider(
-            LocalKeyEventDispatcher provides keyEventDispatcher
+        val hotKeysViewModel = windowViewModel<HotKeysViewModel>()
+        Window(
+            icon = painterResource(Res.drawable.icon_linux),
+            title = "%s | %s".format(
+                stringResource(Res.string.logger),
+                stringResource(Res.string.window_title)
+            ),
+            onCloseRequest = { onCloseRequest() },
+            state = state,
+            onPreviewKeyEvent = { keyEvent ->
+                hotKeysViewModel.sendEvent(keyEvent)
+                false
+            }
         ) {
-            Window(
-                icon = painterResource(Res.drawable.icon_linux),
-                title = "%s | %s".format(
-                    stringResource(Res.string.logger),
-                    stringResource(Res.string.window_title)
-                ),
-                onCloseRequest = { onCloseRequest() },
-                state = state,
-                onPreviewKeyEvent = { keyEvent ->
-                    keyEventDispatcher.sendEvent(keyEvent)
-                    false
-                }
+            CompositionLocalProvider(
+                LocalWindow provides window,
+                LocalWindowCloseCallback provides onCloseRequest
             ) {
-                CompositionLocalProvider(
-                    LocalWindow provides window,
-                    LocalWindowCloseCallback provides onCloseRequest
-                ) {
-                    focusRequester.onFocusRequested = {
-                        window.toFront()
-                    }
-                    setMinimumSize(
-                        width = WINDOW_MIN_WIDTH_DP,
-                        height = WINDOW_MIN_HEIGHT_DP
-                    )
+                focusRequester.onFocusRequested = {
+                    window.toFront()
+                }
+                setMinimumSize(
+                    width = WINDOW_MIN_WIDTH_DP,
+                    height = WINDOW_MIN_HEIGHT_DP
+                )
 
-                    ProvideNavigatorLifecycleKMPSupport {
-                        AppTheme {
-                            BackgroundBox(
-                                modifier = Modifier.clearFocusOnTap()
-                            ) {
-                                createNavigator(LoggerFlow())
-                            }
+                ProvideNavigatorLifecycleKMPSupport {
+                    AppTheme {
+                        BackgroundBox(
+                            modifier = Modifier.clearFocusOnTap()
+                        ) {
+                            createNavigator(LoggerFlow())
                         }
                     }
                 }
