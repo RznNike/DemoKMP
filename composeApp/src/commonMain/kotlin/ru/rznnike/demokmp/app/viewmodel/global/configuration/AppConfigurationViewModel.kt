@@ -55,7 +55,7 @@ class AppConfigurationViewModel : BaseUiViewModel<AppConfigurationViewModel.UiSt
         viewModelScope.launch(dispatcherProvider.default) {
             val selectedLanguage = getLanguageUseCase().data ?: Language.default
             val selectedTheme = getThemeUseCase().data ?: Theme.default
-            Locale.setDefault(Locale.forLanguageTag(selectedLanguage.fullTag))
+            applySelectedLanguage(selectedLanguage)
 
             mutableUiState.update { currentState ->
                 currentState.copy(
@@ -82,7 +82,7 @@ class AppConfigurationViewModel : BaseUiViewModel<AppConfigurationViewModel.UiSt
         viewModelScope.launch {
             if (newValue != mutableUiState.value.language) {
                 setLanguageUseCase(newValue)
-                Locale.setDefault(Locale.forLanguageTag(newValue.fullTag))
+                applySelectedLanguage(newValue)
 
                 mutableUiState.update { currentState ->
                     currentState.copy(
@@ -154,6 +154,12 @@ class AppConfigurationViewModel : BaseUiViewModel<AppConfigurationViewModel.UiSt
             )
                 .directory(File(DataConstants.ROOT_DIR))
                 .start()
+        }
+    }
+
+    private fun applySelectedLanguage(language: Language) {
+        if (OperatingSystem.isDesktop) {
+            Locale.setDefault(Locale.forLanguageTag(language.fullTag))
         }
     }
 
