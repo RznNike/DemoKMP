@@ -1,8 +1,6 @@
 package ru.rznnike.demokmp.app.ui.window.logger
 
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.DpSize
@@ -16,6 +14,7 @@ import cafe.adriel.voyager.jetpack.ProvideNavigatorLifecycleKMPSupport
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.KoinContext
+import org.koin.compose.koinInject
 import ru.rznnike.demokmp.app.navigation.createNavigator
 import ru.rznnike.demokmp.app.ui.screen.logger.LoggerFlow
 import ru.rznnike.demokmp.app.ui.theme.AppTheme
@@ -23,6 +22,7 @@ import ru.rznnike.demokmp.app.ui.window.*
 import ru.rznnike.demokmp.app.utils.WithWindowViewModelStoreOwner
 import ru.rznnike.demokmp.app.utils.clearFocusOnTap
 import ru.rznnike.demokmp.app.utils.windowViewModel
+import ru.rznnike.demokmp.app.viewmodel.global.configuration.AppConfigurationViewModel
 import ru.rznnike.demokmp.app.viewmodel.global.configuration.WindowConfigurationViewModel
 import ru.rznnike.demokmp.app.viewmodel.global.hotkeys.HotKeysViewModel
 import ru.rznnike.demokmp.generated.resources.Res
@@ -43,7 +43,10 @@ fun LoggerWindow(
     onCloseRequest: () -> Unit
 ) = KoinContext {
     WithWindowViewModelStoreOwner {
+        val appConfigurationViewModel: AppConfigurationViewModel = koinInject()
+        val appConfigurationUiState by appConfigurationViewModel.uiState.collectAsState()
         val windowConfigurationViewModel = windowViewModel<WindowConfigurationViewModel>()
+        val windowConfigurationUiState by windowConfigurationViewModel.uiState.collectAsState()
         LaunchedEffect(Unit) {
             windowConfigurationViewModel.setCloseWindowCallback(onCloseRequest)
         }
@@ -57,13 +60,16 @@ fun LoggerWindow(
             placement = WindowPlacement.Floating
         )
         val hotKeysViewModel = windowViewModel<HotKeysViewModel>()
+
+        val loggerName = stringResource(Res.string.logger)
+        val appName = stringResource(Res.string.window_title)
+        val defaultWindowTitle = remember(appConfigurationUiState.language) {
+            "$loggerName | $appName"
+        }
         Window(
             icon = painterResource(Res.drawable.icon_linux),
-            title = "%s | %s".format(
-                stringResource(Res.string.logger),
-                stringResource(Res.string.window_title)
-            ),
-            onCloseRequest = { onCloseRequest() },
+            title = defaultWindowTitle,
+            onCloseRequest = windowConfigurationUiState.closeWindowCallback,
             state = state,
             onPreviewKeyEvent = { keyEvent ->
                 hotKeysViewModel.sendEvent(keyEvent)
@@ -80,6 +86,10 @@ fun LoggerWindow(
                     width = WINDOW_MIN_WIDTH_DP,
                     height = WINDOW_MIN_HEIGHT_DP
                 )
+                window.title = windowConfigurationUiState.windowTitle
+                LaunchedEffect(appConfigurationUiState.language) {
+                    windowConfigurationViewModel.setWindowTitle(defaultWindowTitle)
+                }
 
                 ProvideNavigatorLifecycleKMPSupport {
                     AppTheme {

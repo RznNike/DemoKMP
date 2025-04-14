@@ -24,6 +24,7 @@ import ru.rznnike.demokmp.domain.utils.OperatingSystem
 import ru.rznnike.demokmp.generated.resources.Res
 import ru.rznnike.demokmp.generated.resources.error_restart_from_ide
 import java.io.File
+import java.util.*
 
 class AppConfigurationViewModel : BaseUiViewModel<AppConfigurationViewModel.UiState>() {
     private val eventDispatcher: EventDispatcher by inject()
@@ -52,12 +53,14 @@ class AppConfigurationViewModel : BaseUiViewModel<AppConfigurationViewModel.UiSt
     init {
         subscribeToEvents()
         viewModelScope.launch(dispatcherProvider.default) {
-            val selectedLanguage = getLanguageUseCase().data
-            val selectedTheme = getThemeUseCase().data
+            val selectedLanguage = getLanguageUseCase().data ?: Language.default
+            val selectedTheme = getThemeUseCase().data ?: Theme.default
+            Locale.setDefault(Locale.forLanguageTag(selectedLanguage.fullTag))
+
             mutableUiState.update { currentState ->
                 currentState.copy(
-                    language = selectedLanguage ?: currentState.language,
-                    theme = selectedTheme ?: currentState.theme,
+                    language = selectedLanguage,
+                    theme = selectedTheme,
                     isLoaded = true
                 )
             }
@@ -79,6 +82,7 @@ class AppConfigurationViewModel : BaseUiViewModel<AppConfigurationViewModel.UiSt
         viewModelScope.launch {
             if (newValue != mutableUiState.value.language) {
                 setLanguageUseCase(newValue)
+                Locale.setDefault(Locale.forLanguageTag(newValue.fullTag))
 
                 mutableUiState.update { currentState ->
                     currentState.copy(

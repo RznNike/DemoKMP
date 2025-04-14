@@ -34,7 +34,6 @@ import ru.rznnike.demokmp.app.viewmodel.global.hotkeys.HotKeysViewModel
 import ru.rznnike.demokmp.generated.resources.Res
 import ru.rznnike.demokmp.generated.resources.icon_linux
 import ru.rznnike.demokmp.generated.resources.window_title
-import java.util.*
 
 private val WINDOW_START_WIDTH_DP = 600.dp
 private val WINDOW_START_HEIGHT_DP = 600.dp
@@ -68,12 +67,11 @@ fun ApplicationScope.MainWindow(args: Array<String>) = KoinContext {
             placement = WindowPlacement.Floating
         )
         val hotKeysViewModel = windowViewModel<HotKeysViewModel>()
+        val defaultWindowTitle = stringResource(Res.string.window_title)
         Window(
             icon = painterResource(Res.drawable.icon_linux),
-            title = stringResource(Res.string.window_title),
-            onCloseRequest = {
-                appConfigurationViewModel.closeApplication()
-            },
+            title = defaultWindowTitle,
+            onCloseRequest = windowConfigurationUiState.closeWindowCallback,
             state = state,
             onPreviewKeyEvent = { keyEvent ->
                 if ((keyEvent.type == KeyEventType.KeyDown) && (keyEvent.key == Key.F12)) {
@@ -98,8 +96,6 @@ fun ApplicationScope.MainWindow(args: Array<String>) = KoinContext {
                 )
                 window.title = windowConfigurationUiState.windowTitle
                 if (appConfigurationUiState.isLoaded) {
-                    Locale.setDefault(Locale.forLanguageTag(appConfigurationUiState.language.fullTag))
-                    val defaultWindowTitle = stringResource(Res.string.window_title)
                     LaunchedEffect(appConfigurationUiState.language) {
                         windowConfigurationViewModel.setWindowTitle(defaultWindowTitle)
                     }
