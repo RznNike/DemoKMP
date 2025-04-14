@@ -1,8 +1,6 @@
 package ru.rznnike.demokmp.app.ui.window.logger
 
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.DpSize
@@ -17,13 +15,16 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.KoinContext
 import org.koin.compose.koinInject
-import ru.rznnike.demokmp.app.dispatcher.keyboard.KeyEventDispatcher
 import ru.rznnike.demokmp.app.navigation.createNavigator
 import ru.rznnike.demokmp.app.ui.screen.logger.LoggerFlow
 import ru.rznnike.demokmp.app.ui.theme.AppTheme
 import ru.rznnike.demokmp.app.ui.window.*
+import ru.rznnike.demokmp.app.utils.WithWindowViewModelStoreOwner
 import ru.rznnike.demokmp.app.utils.clearFocusOnTap
-import ru.rznnike.demokmp.domain.common.CoroutineScopeProvider
+import ru.rznnike.demokmp.app.utils.windowViewModel
+import ru.rznnike.demokmp.app.viewmodel.global.configuration.AppConfigurationViewModel
+import ru.rznnike.demokmp.app.viewmodel.global.configuration.WindowConfigurationViewModel
+import ru.rznnike.demokmp.app.viewmodel.global.hotkeys.HotKeysViewModel
 import ru.rznnike.demokmp.generated.resources.Res
 import ru.rznnike.demokmp.generated.resources.icon_linux
 import ru.rznnike.demokmp.generated.resources.logger
@@ -40,8 +41,16 @@ private val WINDOW_MIN_HEIGHT_DP = 700.dp
 fun LoggerWindow(
     focusRequester: WindowFocusRequester,
     onCloseRequest: () -> Unit
-) {
-    KoinContext {
+) = KoinContext {
+    WithWindowViewModelStoreOwner {
+        val appConfigurationViewModel: AppConfigurationViewModel = koinInject()
+        val appConfigurationUiState by appConfigurationViewModel.uiState.collectAsState()
+        val windowConfigurationViewModel = windowViewModel<WindowConfigurationViewModel>()
+        val windowConfigurationUiState by windowConfigurationViewModel.uiState.collectAsState()
+        LaunchedEffect(Unit) {
+            windowConfigurationViewModel.setCloseWindowCallback(onCloseRequest)
+        }
+
         val state = rememberWindowState(
             size = DpSize(
                 width = WINDOW_START_WIDTH_DP,
@@ -50,47 +59,44 @@ fun LoggerWindow(
             position = WindowPosition(Alignment.Center),
             placement = WindowPlacement.Floating
         )
-        val coroutineScopeProvider: CoroutineScopeProvider = koinInject()
-        val keyEventDispatcher = remember {
-            KeyEventDispatcher(
-                coroutineScopeProvider = coroutineScopeProvider
-            )
-        }
-        CompositionLocalProvider(
-            LocalKeyEventDispatcher provides keyEventDispatcher
-        ) {
-            Window(
-                icon = painterResource(Res.drawable.icon_linux),
-                title = "%s | %s".format(
-                    stringResource(Res.string.logger),
-                    stringResource(Res.string.window_title)
-                ),
-                onCloseRequest = { onCloseRequest() },
-                state = state,
-                onPreviewKeyEvent = { keyEvent ->
-                    keyEventDispatcher.sendEvent(keyEvent)
-                    false
-                }
-            ) {
-                CompositionLocalProvider(
-                    LocalWindow provides window,
-                    LocalWindowCloseCallback provides onCloseRequest
-                ) {
-                    focusRequester.onFocusRequested = {
-                        window.toFront()
-                    }
-                    setMinimumSize(
-                        width = WINDOW_MIN_WIDTH_DP,
-                        height = WINDOW_MIN_HEIGHT_DP
-                    )
+        val hotKeysViewModel = windowViewModel<HotKeysViewModel>()
 
-                    ProvideNavigatorLifecycleKMPSupport {
-                        AppTheme {
-                            BackgroundBox(
-                                modifier = Modifier.clearFocusOnTap()
-                            ) {
-                                createNavigator(LoggerFlow())
-                            }
+        val loggerName = stringResource(Res.string.logger)
+        val appName = stringResource(Res.string.window_title)
+        val defaultWindowTitle = remember(appConfigurationUiState.language) {
+            "$loggerName | $appName"
+        }
+        Window(
+            icon = painterResource(Res.drawable.icon_linux),
+            title = defaultWindowTitle,
+            onCloseRequest = windowConfigurationUiState.closeWindowCallback,
+            state = state,
+            onPreviewKeyEvent = { keyEvent ->
+                hotKeysViewModel.sendEvent(keyEvent)
+                false
+            }
+        ) {
+            CompositionLocalProvider(
+                LocalWindow provides window
+            ) {
+                focusRequester.onFocusRequested = {
+                    window.toFront()
+                }
+                setMinimumSize(
+                    width = WINDOW_MIN_WIDTH_DP,
+                    height = WINDOW_MIN_HEIGHT_DP
+                )
+                window.title = windowConfigurationUiState.windowTitle
+                LaunchedEffect(appConfigurationUiState.language) {
+                    windowConfigurationViewModel.setWindowTitle(defaultWindowTitle)
+                }
+
+                ProvideNavigatorLifecycleKMPSupport {
+                    AppTheme {
+                        BackgroundBox(
+                            modifier = Modifier.clearFocusOnTap()
+                        ) {
+                            createNavigator(LoggerFlow())
                         }
                     }
                 }

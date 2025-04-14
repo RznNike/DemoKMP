@@ -126,7 +126,7 @@ fun CommonAlertDialog(
         }
     }
 
-    LaunchedEffect("init") {
+    LaunchedEffect(Unit) {
         focusRequester.requestFocus()
     }
 }

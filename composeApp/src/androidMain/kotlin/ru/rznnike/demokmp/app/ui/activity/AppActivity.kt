@@ -25,12 +25,13 @@ import ru.rznnike.demokmp.app.ui.dialog.common.AlertDialogType
 import ru.rznnike.demokmp.app.ui.dialog.common.CommonAlertDialog
 import ru.rznnike.demokmp.app.ui.screen.splash.SplashFlow
 import ru.rznnike.demokmp.app.ui.theme.AppTheme
-import ru.rznnike.demokmp.app.ui.window.LocalWindowCloseCallback
 import ru.rznnike.demokmp.app.utils.AppConstants
 import ru.rznnike.demokmp.app.utils.onClick
 import ru.rznnike.demokmp.app.utils.restartApp
+import ru.rznnike.demokmp.app.utils.windowViewModel
 import ru.rznnike.demokmp.app.viewmodel.app.ActivityViewModel
 import ru.rznnike.demokmp.app.viewmodel.global.configuration.AppConfigurationViewModel
+import ru.rznnike.demokmp.app.viewmodel.global.configuration.WindowConfigurationViewModel
 import ru.rznnike.demokmp.domain.common.CoroutineScopeProvider
 import ru.rznnike.demokmp.generated.resources.Res
 import ru.rznnike.demokmp.generated.resources.close
@@ -61,15 +62,33 @@ class AppActivity : AppCompatActivity() {
         }
 
         val appConfigurationViewModel: AppConfigurationViewModel = koinInject()
+        val windowConfigurationViewModel = windowViewModel<WindowConfigurationViewModel>()
 
-        LaunchedEffect("init") {
+        val notifier = koinInject<Notifier>()
+        val coroutineScopeProvider = koinInject<CoroutineScopeProvider>()
+
+        var doubleBackToExitPressedOnce by remember { mutableStateOf(false) }
+        val onBackPressedCallback: () -> Unit = remember {
+            {
+                if (doubleBackToExitPressedOnce) {
+                    appConfigurationViewModel.closeApplication()
+                } else {
+                    doubleBackToExitPressedOnce = true
+                    notifier.sendMessage(Res.string.double_back_to_exit)
+                    Handler(Looper.getMainLooper()).postDelayed(
+                        { doubleBackToExitPressedOnce = false },
+                        AppConstants.APP_EXIT_DURATION_MS
+                    )
+                }
+            }
+        }
+
+        LaunchedEffect(Unit) {
+            windowConfigurationViewModel.setCloseWindowCallback(onBackPressedCallback)
             appConfigurationViewModel.setCloseAppCallback {
                 exitProcess(0)
             }
         }
-
-        val notifier = koinInject<Notifier>()
-        val coroutineScopeProvider = koinInject<CoroutineScopeProvider>()
 
         val snackbarHostState = remember { SnackbarHostState() }
         val activeDialogs = remember { mutableStateListOf<SystemMessage>() }
@@ -135,49 +154,29 @@ class AppActivity : AppCompatActivity() {
                 )
             }
         }
-
-        var doubleBackToExitPressedOnce by remember { mutableStateOf(false) }
-        val onBackPressedCallback: () -> Unit = remember {
-            {
-                if (doubleBackToExitPressedOnce) {
-                    appConfigurationViewModel.closeApplication()
-                } else {
-                    doubleBackToExitPressedOnce = true
-                    notifier.sendMessage(Res.string.double_back_to_exit)
-                    Handler(Looper.getMainLooper()).postDelayed(
-                        { doubleBackToExitPressedOnce = false },
-                        AppConstants.APP_EXIT_DURATION_MS
-                    )
-                }
-            }
-        }
-        CompositionLocalProvider(
-            LocalWindowCloseCallback provides onBackPressedCallback
-        ) {
-            AppTheme {
-                val focusManager = LocalFocusManager.current
-                Scaffold(
-                    modifier = Modifier.onClick {
-                        focusManager.clearFocus()
-                    },
-                    snackbarHost = {
-                        SnackbarHost(hostState = snackbarHostState) {
-                            Snackbar(
-                                modifier = Modifier
-                                    .onClick {
-                                        snackbarHostState.currentSnackbarData?.dismiss()
-                                    },
-                                snackbarData = it,
-                                containerColor = MaterialTheme.colorScheme.primary,
-                                contentColor = MaterialTheme.colorScheme.onPrimary,
-                                actionColor = MaterialTheme.colorScheme.onPrimary
-                            )
-                        }
+        AppTheme {
+            val focusManager = LocalFocusManager.current
+            Scaffold(
+                modifier = Modifier.onClick {
+                    focusManager.clearFocus()
+                },
+                snackbarHost = {
+                    SnackbarHost(hostState = snackbarHostState) {
+                        Snackbar(
+                            modifier = Modifier
+                                .onClick {
+                                    snackbarHostState.currentSnackbarData?.dismiss()
+                                },
+                            snackbarData = it,
+                            containerColor = MaterialTheme.colorScheme.primary,
+                            contentColor = MaterialTheme.colorScheme.onPrimary,
+                            actionColor = MaterialTheme.colorScheme.onPrimary
+                        )
                     }
-                ) {
-                    createNavigator(SplashFlow())
-                    NotifierDialog()
                 }
+            ) {
+                createNavigator(SplashFlow())
+                NotifierDialog()
             }
         }
     }

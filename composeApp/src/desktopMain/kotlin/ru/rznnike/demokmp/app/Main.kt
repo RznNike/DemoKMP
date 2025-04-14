@@ -7,13 +7,31 @@ import ru.rznnike.demokmp.app.di.appComponent
 import ru.rznnike.demokmp.app.ui.window.main.MainWindow
 import ru.rznnike.demokmp.domain.log.Logger
 
-fun main(args: Array<String>) = application {
+fun main(args: Array<String>) {
+    initLogger()
     Logger.i("Application start")
-    initKoin()
-    MainWindow(args)
+    application {
+        initKoin()
+        MainWindow(args)
+    }
 }
 
-fun initKoin() {
+private fun initLogger() {
+    Thread.setDefaultUncaughtExceptionHandler(
+        object : Thread.UncaughtExceptionHandler {
+            var isCrashing = false
+
+            override fun uncaughtException(thread: Thread, throwable: Throwable) {
+                if (!isCrashing) {
+                    isCrashing = true
+                    Logger.e(throwable)
+                }
+            }
+        }
+    )
+}
+
+private fun initKoin() {
     startKoin {
         modules(appComponent)
         val koinLogger = Logger.withTag("Koin")

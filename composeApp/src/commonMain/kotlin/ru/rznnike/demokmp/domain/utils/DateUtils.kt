@@ -53,6 +53,8 @@ fun LocalDate.atStartOfMonth(): LocalDate = withDayOfMonth(1)
 
 fun LocalDate.atEndOfMonth(): LocalDate = withDayOfMonth(lengthOfMonth())
 
+fun YearMonth.atStartOfMonth(): LocalDate = atDay(1)
+
 fun YearMonth.toDateString(
     pattern: String = GlobalConstants.DATE_PATTERN_TEXT_MONTH_YEAR,
     zeroTimeZone: Boolean = false

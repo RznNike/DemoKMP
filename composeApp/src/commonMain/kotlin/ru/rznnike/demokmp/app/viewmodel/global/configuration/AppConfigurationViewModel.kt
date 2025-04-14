@@ -24,6 +24,7 @@ import ru.rznnike.demokmp.domain.utils.OperatingSystem
 import ru.rznnike.demokmp.generated.resources.Res
 import ru.rznnike.demokmp.generated.resources.error_restart_from_ide
 import java.io.File
+import java.util.*
 
 class AppConfigurationViewModel : BaseUiViewModel<AppConfigurationViewModel.UiState>() {
     private val eventDispatcher: EventDispatcher by inject()
@@ -52,12 +53,14 @@ class AppConfigurationViewModel : BaseUiViewModel<AppConfigurationViewModel.UiSt
     init {
         subscribeToEvents()
         viewModelScope.launch(dispatcherProvider.default) {
-            val selectedLanguage = getLanguageUseCase().data
-            val selectedTheme = getThemeUseCase().data
+            val selectedLanguage = getLanguageUseCase().data ?: Language.default
+            val selectedTheme = getThemeUseCase().data ?: Theme.default
+            applySelectedLanguage(selectedLanguage)
+
             mutableUiState.update { currentState ->
                 currentState.copy(
-                    language = selectedLanguage ?: currentState.language,
-                    theme = selectedTheme ?: currentState.theme,
+                    language = selectedLanguage,
+                    theme = selectedTheme,
                     isLoaded = true
                 )
             }
@@ -79,6 +82,7 @@ class AppConfigurationViewModel : BaseUiViewModel<AppConfigurationViewModel.UiSt
         viewModelScope.launch {
             if (newValue != mutableUiState.value.language) {
                 setLanguageUseCase(newValue)
+                applySelectedLanguage(newValue)
 
                 mutableUiState.update { currentState ->
                     currentState.copy(
@@ -108,16 +112,6 @@ class AppConfigurationViewModel : BaseUiViewModel<AppConfigurationViewModel.UiSt
             mutableUiState.update { currentState ->
                 currentState.copy(
                     args = newValue.toList()
-                )
-            }
-        }
-    }
-
-    fun setWindowTitle(newValue: String) {
-        viewModelScope.launch {
-            mutableUiState.update { currentState ->
-                currentState.copy(
-                    windowTitle = newValue
                 )
             }
         }
@@ -163,11 +157,16 @@ class AppConfigurationViewModel : BaseUiViewModel<AppConfigurationViewModel.UiSt
         }
     }
 
+    private fun applySelectedLanguage(language: Language) {
+        if (OperatingSystem.isDesktop) {
+            Locale.setDefault(Locale.forLanguageTag(language.fullTag))
+        }
+    }
+
     data class UiState(
         val args: List<String> = emptyList(),
         val language: Language = Language.default,
         val theme: Theme = Theme.default,
-        val isLoaded: Boolean = false,
-        val windowTitle: String = ""
+        val isLoaded: Boolean = false
     )
 }

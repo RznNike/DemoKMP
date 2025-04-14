@@ -21,8 +21,9 @@ import ru.rznnike.demokmp.app.navigation.DesktopNavigationScreen
 import ru.rznnike.demokmp.app.navigation.getNavigator
 import ru.rznnike.demokmp.app.ui.view.*
 import ru.rznnike.demokmp.app.utils.nameRes
+import ru.rznnike.demokmp.app.utils.windowViewModel
 import ru.rznnike.demokmp.app.viewmodel.global.configuration.AppConfigurationViewModel
-import ru.rznnike.demokmp.app.viewmodel.profile.ProfileViewModel
+import ru.rznnike.demokmp.app.viewmodel.global.profile.ProfileViewModel
 import ru.rznnike.demokmp.app.viewmodel.settings.SettingsViewModel
 import ru.rznnike.demokmp.domain.model.common.Language
 import ru.rznnike.demokmp.domain.model.common.Theme
@@ -35,7 +36,7 @@ class SettingsScreen : DesktopNavigationScreen() {
 
         val viewModel = viewModel { SettingsViewModel() }
         val uiState by viewModel.uiState.collectAsState()
-        val profileViewModel: ProfileViewModel = koinInject()
+        val profileViewModel = windowViewModel<ProfileViewModel>()
         val appConfigurationViewModel: AppConfigurationViewModel = koinInject()
         val appConfigurationUiState by appConfigurationViewModel.uiState.collectAsState()
 
