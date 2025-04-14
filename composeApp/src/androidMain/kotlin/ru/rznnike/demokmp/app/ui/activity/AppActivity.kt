@@ -63,8 +63,7 @@ class AppActivity : AppCompatActivity() {
 
         val appConfigurationViewModel: AppConfigurationViewModel = koinInject()
         val windowConfigurationViewModel = windowViewModel<WindowConfigurationViewModel>()
-
-        LaunchedEffect("init") {
+        LaunchedEffect(Unit) {
             appConfigurationViewModel.setCloseAppCallback {
                 exitProcess(0)
             }

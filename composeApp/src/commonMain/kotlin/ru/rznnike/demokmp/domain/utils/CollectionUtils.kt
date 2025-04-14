@@ -18,16 +18,3 @@ fun <T> List<T>.smartFilter(
 fun String.prepareTextForSearch() = trim()
     .lowercase()
     .replace("ё", "е")
-
-fun List<Any>?.getNewSelectionIndex(
-    currentIndex: Int,
-    offset: Int
-): Int {
-    var newIndex = currentIndex + offset
-    val lastIndex = this?.lastIndex ?: 0
-    when {
-        newIndex < 0 -> newIndex = lastIndex
-        newIndex > lastIndex -> newIndex = 0
-    }
-    return newIndex
-}

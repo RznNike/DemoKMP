@@ -103,7 +103,7 @@ class SplashScreen : DesktopNavigationScreen() {
         }
         MultiLaunchDialog()
 
-        LaunchedEffect("init") {
+        LaunchedEffect(Unit) {
             imageVisible = true
 
             delay(SPLASH_DURATION_MS)
