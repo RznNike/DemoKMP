@@ -114,22 +114,11 @@ class Logger private constructor(
 
         coroutineScope.launch {
             outputLock.withPermit {
-                val formattedMessage = "%s | %s%s | %s".format(
-                    logMessage.timestamp.toDateString(GlobalConstants.DATE_PATTERN_TIME_MS),
-                    logMessage.level.label,
-                    if (logMessage.tag.isNotBlank()) " | ${logMessage.tag}" else "",
-                    logMessage.message
-                )
-                if (logMessage.level == LogLevel.ERROR) {
-                    System.err.println(formattedMessage)
-                } else {
-                    println(formattedMessage)
-                }
-
+                printLog(logMessage)
                 if (OperatingSystem.isDesktop) {
                     log.add(logMessage)
                     logUpdatesFlow.emit(logMessage)
-                    writeToFile(formattedMessage)
+                    writeToFile(formatLogMessage(logMessage))
                 }
             }
         }
@@ -229,3 +218,7 @@ class Logger private constructor(
         fun clearNetworkLog() = defaultLogger.clearNetworkLog()
     }
 }
+
+expect fun formatLogMessage(message: LogMessage): String
+
+expect fun printLog(message: LogMessage)
