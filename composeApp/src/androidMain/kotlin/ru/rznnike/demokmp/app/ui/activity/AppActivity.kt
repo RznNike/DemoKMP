@@ -63,14 +63,32 @@ class AppActivity : AppCompatActivity() {
 
         val appConfigurationViewModel: AppConfigurationViewModel = koinInject()
         val windowConfigurationViewModel = windowViewModel<WindowConfigurationViewModel>()
+
+        val notifier = koinInject<Notifier>()
+        val coroutineScopeProvider = koinInject<CoroutineScopeProvider>()
+
+        var doubleBackToExitPressedOnce by remember { mutableStateOf(false) }
+        val onBackPressedCallback: () -> Unit = remember {
+            {
+                if (doubleBackToExitPressedOnce) {
+                    appConfigurationViewModel.closeApplication()
+                } else {
+                    doubleBackToExitPressedOnce = true
+                    notifier.sendMessage(Res.string.double_back_to_exit)
+                    Handler(Looper.getMainLooper()).postDelayed(
+                        { doubleBackToExitPressedOnce = false },
+                        AppConstants.APP_EXIT_DURATION_MS
+                    )
+                }
+            }
+        }
+
         LaunchedEffect(Unit) {
+            windowConfigurationViewModel.setCloseWindowCallback(onBackPressedCallback)
             appConfigurationViewModel.setCloseAppCallback {
                 exitProcess(0)
             }
         }
-
-        val notifier = koinInject<Notifier>()
-        val coroutineScopeProvider = koinInject<CoroutineScopeProvider>()
 
         val snackbarHostState = remember { SnackbarHostState() }
         val activeDialogs = remember { mutableStateListOf<SystemMessage>() }
@@ -135,25 +153,6 @@ class AppActivity : AppCompatActivity() {
                     )
                 )
             }
-        }
-
-        var doubleBackToExitPressedOnce by remember { mutableStateOf(false) }
-        val onBackPressedCallback: () -> Unit = remember {
-            {
-                if (doubleBackToExitPressedOnce) {
-                    appConfigurationViewModel.closeApplication()
-                } else {
-                    doubleBackToExitPressedOnce = true
-                    notifier.sendMessage(Res.string.double_back_to_exit)
-                    Handler(Looper.getMainLooper()).postDelayed(
-                        { doubleBackToExitPressedOnce = false },
-                        AppConstants.APP_EXIT_DURATION_MS
-                    )
-                }
-            }
-        }
-        LaunchedEffect(Unit) {
-            windowConfigurationViewModel.setCloseWindowCallback(onBackPressedCallback)
         }
         AppTheme {
             val focusManager = LocalFocusManager.current
