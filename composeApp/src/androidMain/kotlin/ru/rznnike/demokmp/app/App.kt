@@ -6,6 +6,7 @@ import org.koin.core.context.startKoin
 import org.koin.core.logger.Level
 import ru.rznnike.demokmp.app.di.appComponent
 import ru.rznnike.demokmp.domain.log.Logger
+import kotlin.system.exitProcess
 
 class App : Application() {
     override fun onCreate() {
@@ -25,6 +26,7 @@ class App : Application() {
                         isCrashing = true
                         Logger.e(throwable)
                     }
+                    exitProcess(42)
                 }
             }
         )
