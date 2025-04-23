@@ -11,6 +11,7 @@ sqlite = "2.5.0"
 filekit = "0.10.0-beta02"
 desugaring = "2.1.5"
 chucker = "4.1.0"
+vico = "2.1.2"
 
 android-minSdk = "26"
 android-targetSdk = "35"
@@ -73,6 +74,11 @@ room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 # SQLite (Room dependency)
 # https://developer.android.com/jetpack/androidx/releases/sqlite
 sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version.ref = "sqlite" }
+
+# Charts
+# https://github.com/patrykandpatrick/vico
+vico-multiplatform = { group = "com.patrykandpatrick.vico", name = "multiplatform", version.ref = "vico" }
+vico-multiplatform-m3 = { group = "com.patrykandpatrick.vico", name = "multiplatform-m3", version.ref = "vico" }
 
 
 ### Desktop-specific libs ###
