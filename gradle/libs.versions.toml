@@ -3,14 +3,15 @@ kotlin = "2.1.20"
 coroutines = "1.10.2"
 voyager = "1.1.0-beta03"
 koin = "4.0.4"
-ktorfit = "2.5.0"
+ktorfit = "2.5.1"
 ktor = "3.1.2"
 coil = "3.1.0"
 room = "2.7.0"
 sqlite = "2.5.0"
-filekit = "0.10.0-beta01"
+filekit = "0.10.0-beta02"
 desugaring = "2.1.5"
 chucker = "4.1.0"
+vico = "2.1.2"
 
 android-minSdk = "26"
 android-targetSdk = "35"
@@ -74,6 +75,11 @@ room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 # https://developer.android.com/jetpack/androidx/releases/sqlite
 sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version.ref = "sqlite" }
 
+# Charts
+# https://github.com/patrykandpatrick/vico
+vico-multiplatform = { group = "com.patrykandpatrick.vico", name = "multiplatform", version.ref = "vico" }
+vico-multiplatform-m3 = { group = "com.patrykandpatrick.vico", name = "multiplatform-m3", version.ref = "vico" }
+
 
 ### Desktop-specific libs ###
 
@@ -117,11 +123,11 @@ jetbrains-compose = { id = "org.jetbrains.compose", version = "1.7.3" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
-android-application = { id = "com.android.application", version = "8.7.3" }
+android-application = { id = "com.android.application", version = "8.9.2" }
 
 # BuildConfig
 # https://github.com/yshrsmz/BuildKonfig
-buildkonfig = { id = "com.codingfeline.buildkonfig", version = "0.17.0" }
+buildkonfig = { id = "com.codingfeline.buildkonfig", version = "0.17.1" }
 
 # KSP
 # https://mvnrepository.com/artifact/com.google.devtools.ksp/com.google.devtools.ksp.gradle.plugin?repo=central
