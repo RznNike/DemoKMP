@@ -9,9 +9,7 @@ import ru.rznnike.demokmp.app.error.ErrorHandler
 import ru.rznnike.demokmp.domain.interactor.pdfexample.GetSamplePdfUseCase
 import java.io.File
 
-class PdfExampleViewModel(
-    private val navigationCallback: (NavigationCommand) -> Unit
-) : BaseUiViewModel<PdfExampleViewModel.UiState>() {
+class PdfExampleViewModel : BaseUiViewModel<PdfExampleViewModel.UiState>() {
     private val errorHandler: ErrorHandler by inject()
     private val getSamplePdfUseCase: GetSamplePdfUseCase by inject()
 
@@ -44,16 +42,8 @@ class PdfExampleViewModel(
         }
     }
 
-    fun onBackPressed() {
-        navigationCallback(NavigationCommand.Back)
-    }
-
     data class UiState(
         val pdf: File? = null,
         val isError: Boolean = false
     )
-
-    sealed class NavigationCommand {
-        data object Back : NavigationCommand()
-    }
 }

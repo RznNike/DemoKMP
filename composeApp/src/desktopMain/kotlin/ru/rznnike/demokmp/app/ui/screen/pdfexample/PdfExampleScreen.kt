@@ -37,15 +37,7 @@ class PdfExampleScreen : DesktopNavigationScreen() {
 
         val dispatcherProvider: DispatcherProvider = koinInject()
 
-        val viewModel = viewModel {
-            PdfExampleViewModel { command ->
-                when (command) {
-                    is PdfExampleViewModel.NavigationCommand.Back -> {
-                        navigator.closeScreen()
-                    }
-                }
-            }
-        }
+        val viewModel = viewModel { PdfExampleViewModel() }
         val uiState by viewModel.uiState.collectAsState()
 
         val filePrintViewModel = viewModel {
@@ -92,7 +84,7 @@ class PdfExampleScreen : DesktopNavigationScreen() {
                             .size(40.dp),
                         iconRes = Res.drawable.ic_back,
                         onClick = {
-                            viewModel.onBackPressed()
+                            navigator.closeScreen()
                         }
                     )
                     Spacer(Modifier.width(16.dp))

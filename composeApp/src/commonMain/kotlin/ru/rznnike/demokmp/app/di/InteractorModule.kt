@@ -3,6 +3,7 @@ package ru.rznnike.demokmp.app.di
 import org.koin.dsl.module
 import ru.rznnike.demokmp.domain.interactor.app.CheckIfAppIsAlreadyRunningUseCase
 import ru.rznnike.demokmp.domain.interactor.app.CloseAppSingleInstanceSocketUseCase
+import ru.rznnike.demokmp.domain.interactor.chartexample.GetChartSampleDataUseCase
 import ru.rznnike.demokmp.domain.interactor.dbexample.*
 import ru.rznnike.demokmp.domain.interactor.httpexample.GetRandomImageLinksUseCase
 import ru.rznnike.demokmp.domain.interactor.pdfexample.GetSamplePdfUseCase
@@ -38,4 +39,6 @@ internal val interactorModule = module {
     single { SendAppWSMessageUseCase(get(), get()) }
 
     single { GetSamplePdfUseCase(get(), get()) }
+
+    single { GetChartSampleDataUseCase(get(), get()) }
 }
