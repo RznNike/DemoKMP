@@ -78,6 +78,9 @@ kotlin {
             implementation(libs.coil)
             implementation(libs.coil.compose)
             implementation(libs.coil.okhttp)
+
+            implementation(libs.vico.multiplatform)
+            implementation(libs.vico.multiplatform.m3)
         }
 
         androidMain.dependencies {
@@ -202,7 +205,6 @@ android {
         jvmToolchain(17)
     }
 
-    @Suppress("UnstableApiUsage")
     bundle.language.enableSplit = false
 
     dependencies {

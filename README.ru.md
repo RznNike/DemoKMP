@@ -22,6 +22,7 @@
 * Локализация строк
 * Различные пользовательские элементы UI
 * Динамический BuildConfig с информацией о платформе и типе сборки
+* Графики
 
 #### Только для ПК
 * Сборка приложения в jar файл и запуск с помощью скрипта
@@ -77,6 +78,7 @@
 * [Ktorfit](https://foso.github.io/Ktorfit/)
 * [Coil](https://coil-kt.github.io/coil/)
 * [BuildKonfig](https://github.com/yshrsmz/BuildKonfig)
+* [Vico](https://github.com/patrykandpatrick/vico)
 
 #### Только для ПК
 * [PDFBox](https://pdfbox.apache.org/)

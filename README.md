@@ -22,6 +22,7 @@ This is a sample project with a set of solutions to typical problems, demonstrat
 * Strings localization
 * Various custom UI elements
 * Dynamic BuildConfig with platform and build type information
+* Charts
 
 #### PC only
 * App building to jar file and launch using script
@@ -77,6 +78,7 @@ This is a sample project with a set of solutions to typical problems, demonstrat
 * [Ktorfit](https://foso.github.io/Ktorfit/)
 * [Coil](https://coil-kt.github.io/coil/)
 * [BuildKonfig](https://github.com/yshrsmz/BuildKonfig)
+* [Vico](https://github.com/patrykandpatrick/vico)
 
 #### PC only
 * [PDFBox](https://pdfbox.apache.org/)
