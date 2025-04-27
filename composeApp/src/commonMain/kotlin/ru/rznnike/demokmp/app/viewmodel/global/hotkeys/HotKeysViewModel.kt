@@ -2,7 +2,6 @@ package ru.rznnike.demokmp.app.viewmodel.global.hotkeys
 
 import androidx.compose.ui.input.key.KeyEvent
 import ru.rznnike.demokmp.app.common.viewmodel.BaseViewModel
-import ru.rznnike.demokmp.app.viewmodel.global.hotkeys.HotKeysViewModel.EventListener
 
 class HotKeysViewModel : BaseViewModel() {
     private var screenEventListener = EventListener {  }
