@@ -12,7 +12,7 @@ internal actual fun getDatabaseModule() = module {
         Room
             .databaseBuilder<MainDB>(
                 context = androidApplication(),
-                name = DataConstants.DB_PATH
+                name = DataConstants.DB_NAME
             )
             .fallbackToDestructiveMigration(
                 dropAllTables = true
