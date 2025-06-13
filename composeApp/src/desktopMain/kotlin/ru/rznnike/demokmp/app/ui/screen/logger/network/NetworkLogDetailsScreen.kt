@@ -22,6 +22,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.vinceglb.filekit.FileKit
 import io.github.vinceglb.filekit.dialogs.FileKitDialogSettings
 import io.github.vinceglb.filekit.dialogs.openFileSaver
+import kotlinx.serialization.Serializable
 import ru.rznnike.demokmp.app.navigation.DesktopNavigationScreen
 import ru.rznnike.demokmp.app.navigation.getNavigator
 import ru.rznnike.demokmp.app.ui.theme.bodyLargeBold
@@ -41,6 +42,7 @@ import ru.rznnike.demokmp.domain.utils.GlobalConstants
 import ru.rznnike.demokmp.domain.utils.toDateString
 import ru.rznnike.demokmp.generated.resources.*
 
+@Serializable
 class NetworkLogDetailsScreen(
     private val message: LogNetworkMessage
 ) : DesktopNavigationScreen() {

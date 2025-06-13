@@ -21,6 +21,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.vinceglb.filekit.FileKit
 import io.github.vinceglb.filekit.dialogs.FileKitDialogSettings
 import io.github.vinceglb.filekit.dialogs.openFileSaver
+import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.painterResource
 import ru.rznnike.demokmp.BuildKonfig
@@ -39,6 +40,7 @@ import ru.rznnike.demokmp.app.utils.onClick
 import ru.rznnike.demokmp.data.utils.DataConstants
 import ru.rznnike.demokmp.generated.resources.*
 
+@Serializable
 class LoggerScreen : DesktopNavigationScreen() {
     @Composable
     override fun Layout() {

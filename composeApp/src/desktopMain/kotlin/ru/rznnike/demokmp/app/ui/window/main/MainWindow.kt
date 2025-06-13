@@ -14,8 +14,6 @@ import androidx.compose.ui.input.key.type
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.*
-import cafe.adriel.voyager.core.annotation.ExperimentalVoyagerApi
-import cafe.adriel.voyager.jetpack.ProvideNavigatorLifecycleKMPSupport
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.KoinContext
@@ -41,7 +39,6 @@ private val WINDOW_START_HEIGHT_DP = 600.dp
 private val WINDOW_MIN_WIDTH_DP = 500.dp
 private val WINDOW_MIN_HEIGHT_DP = 500.dp
 
-@OptIn(ExperimentalVoyagerApi::class)
 @Composable
 fun ApplicationScope.MainWindow(args: Array<String>) = KoinContext {
     WithWindowViewModelStoreOwner {
@@ -100,9 +97,7 @@ fun ApplicationScope.MainWindow(args: Array<String>) = KoinContext {
                         windowConfigurationViewModel.setWindowTitle(defaultWindowTitle)
                     }
 
-                    ProvideNavigatorLifecycleKMPSupport {
-                        MainFrame()
-                    }
+                    MainFrame()
                 } else { // default background while the theme has not yet loaded
                     Box(
                         modifier = Modifier

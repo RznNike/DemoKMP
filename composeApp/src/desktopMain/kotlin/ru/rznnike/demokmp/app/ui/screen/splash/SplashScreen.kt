@@ -15,6 +15,7 @@ import androidx.compose.ui.input.key.*
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.delay
+import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import ru.rznnike.demokmp.app.navigation.DesktopNavigationScreen
@@ -33,6 +34,7 @@ import ru.rznnike.demokmp.generated.resources.error_app_multi_launch
 private const val ANIMATION_DURATION_MS = 1000
 private const val SPLASH_DURATION_MS = 1500L
 
+@Serializable
 class SplashScreen : DesktopNavigationScreen() {
     @Composable
     override fun Layout() {

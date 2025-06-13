@@ -9,13 +9,11 @@ import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.WindowPlacement
 import androidx.compose.ui.window.WindowPosition
 import androidx.compose.ui.window.rememberWindowState
-import cafe.adriel.voyager.core.annotation.ExperimentalVoyagerApi
-import cafe.adriel.voyager.jetpack.ProvideNavigatorLifecycleKMPSupport
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.KoinContext
 import org.koin.compose.koinInject
-import ru.rznnike.demokmp.app.navigation.createNavigator
+import ru.rznnike.demokmp.app.navigation.createNavHost
 import ru.rznnike.demokmp.app.ui.screen.logger.LoggerFlow
 import ru.rznnike.demokmp.app.ui.theme.AppTheme
 import ru.rznnike.demokmp.app.ui.window.*
@@ -36,7 +34,6 @@ private val WINDOW_START_HEIGHT_DP = 700.dp
 private val WINDOW_MIN_WIDTH_DP = 1024.dp
 private val WINDOW_MIN_HEIGHT_DP = 700.dp
 
-@OptIn(ExperimentalVoyagerApi::class)
 @Composable
 fun LoggerWindow(
     focusRequester: WindowFocusRequester,
@@ -91,13 +88,11 @@ fun LoggerWindow(
                     windowConfigurationViewModel.setWindowTitle(defaultWindowTitle)
                 }
 
-                ProvideNavigatorLifecycleKMPSupport {
-                    AppTheme {
-                        BackgroundBox(
-                            modifier = Modifier.clearFocusOnTap()
-                        ) {
-                            createNavigator(LoggerFlow())
-                        }
+                AppTheme {
+                    BackgroundBox(
+                        modifier = Modifier.clearFocusOnTap()
+                    ) {
+                        createNavHost(LoggerFlow())
                     }
                 }
             }

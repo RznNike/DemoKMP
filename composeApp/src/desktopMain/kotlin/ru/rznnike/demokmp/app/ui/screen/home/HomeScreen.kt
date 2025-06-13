@@ -14,6 +14,7 @@ import androidx.compose.ui.input.key.*
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
@@ -41,6 +42,7 @@ import ru.rznnike.demokmp.app.viewmodel.global.configuration.AppConfigurationVie
 import ru.rznnike.demokmp.app.viewmodel.home.HomeViewModel
 import ru.rznnike.demokmp.generated.resources.*
 
+@Serializable
 class HomeScreen : DesktopNavigationScreen() {
     @OptIn(ExperimentalLayoutApi::class)
     @Composable

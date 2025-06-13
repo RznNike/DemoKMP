@@ -12,6 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.key.*
 import androidx.compose.ui.unit.dp
+import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.stringResource
 import ru.rznnike.demokmp.app.navigation.DesktopNavigationScreen
 import ru.rznnike.demokmp.app.navigation.getNavigator
@@ -20,6 +21,7 @@ import ru.rznnike.demokmp.app.utils.windowViewModel
 import ru.rznnike.demokmp.app.viewmodel.global.profile.ProfileViewModel
 import ru.rznnike.demokmp.generated.resources.*
 
+@Serializable
 class NestedSettingsScreen : DesktopNavigationScreen() {
     @Composable
     override fun Layout() {
