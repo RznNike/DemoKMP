@@ -7,15 +7,14 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
-import ru.rznnike.demokmp.app.navigation.navtype.LogNetworkMessageNavType
 import ru.rznnike.demokmp.app.utils.windowViewModel
 import ru.rznnike.demokmp.app.viewmodel.global.configuration.WindowConfigurationViewModel
-import ru.rznnike.demokmp.domain.log.LogNetworkMessage
-import kotlin.reflect.typeOf
+import kotlin.reflect.KType
 
 private const val SCREEN_ANIMATION_DURATION_MS = 500
 
@@ -63,13 +62,11 @@ fun getNavigator(): FlowNavigator {
 
 expect fun NavGraphBuilder.buildNavGraph()
 
-val navGraphTypeMap = mapOf(
-    typeOf<LogNetworkMessage>() to LogNetworkMessageNavType
-)
-
-inline fun <reified T : NavigationScreen> NavGraphBuilder.addToNavGraph() {
+inline fun <reified T : NavigationScreen> NavGraphBuilder.addToNavGraph(
+    typeMap: Map<KType, @JvmSuppressWildcards NavType<*>> = emptyMap()
+) {
     composable<T>(
-        typeMap = navGraphTypeMap
+        typeMap = typeMap
     ) { backStackEntry ->
         val screen: T = backStackEntry.toRoute()
         screen.Content()

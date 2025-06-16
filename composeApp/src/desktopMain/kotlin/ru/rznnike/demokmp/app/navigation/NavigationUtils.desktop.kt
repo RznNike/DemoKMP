@@ -16,7 +16,7 @@ import ru.rznnike.demokmp.app.ui.screen.wsexample.WebSocketsExampleScreen
 
 actual fun NavGraphBuilder.buildNavGraph() {
     addToNavGraph<LoggerScreen>()
-    addToNavGraph<NetworkLogDetailsScreen>()
+    addToNavGraph<NetworkLogDetailsScreen>(NetworkLogDetailsScreen.typeMap)
     addToNavGraph<SplashScreen>()
     addToNavGraph<HomeScreen>()
     addToNavGraph<SettingsScreen>()
