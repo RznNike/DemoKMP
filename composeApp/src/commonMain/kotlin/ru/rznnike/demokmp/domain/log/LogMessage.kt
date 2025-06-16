@@ -1,5 +1,8 @@
 package ru.rznnike.demokmp.domain.log
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class LogMessage(
     val type: LogType,
     val level: LogLevel,

@@ -69,4 +69,10 @@
     <string name="notifications_permission_is_not_granted">Notifications permission is NOT granted</string>
     <string name="chart_example">Chart example</string>
     <string name="test_data">Test data</string>
+    <string name="navigation_example">Navigation example</string>
+    <string name="screen_number_in_flow">Screen number in flow</string>
+    <string name="open_new_screen">Open new screen</string>
+    <string name="close_screen">Close screen</string>
+    <string name="close_flow">Close flow</string>
+    <string name="test_counter_local">Test counter (local)</string>
 </resources>

@@ -14,6 +14,7 @@ import androidx.compose.ui.input.key.*
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
@@ -28,6 +29,7 @@ import ru.rznnike.demokmp.app.ui.screen.chartexample.ChartExampleFlow
 import ru.rznnike.demokmp.app.ui.screen.customui.CustomUIFlow
 import ru.rznnike.demokmp.app.ui.screen.dbexample.DBExampleFlow
 import ru.rznnike.demokmp.app.ui.screen.httpexample.HTTPExampleFlow
+import ru.rznnike.demokmp.app.ui.screen.navigation.NavigationExampleFlow
 import ru.rznnike.demokmp.app.ui.screen.pdfexample.PdfExampleFlow
 import ru.rznnike.demokmp.app.ui.screen.settings.SettingsFlow
 import ru.rznnike.demokmp.app.ui.screen.wsexample.WebSocketsExampleFlow
@@ -41,6 +43,7 @@ import ru.rznnike.demokmp.app.viewmodel.global.configuration.AppConfigurationVie
 import ru.rznnike.demokmp.app.viewmodel.home.HomeViewModel
 import ru.rznnike.demokmp.generated.resources.*
 
+@Serializable
 class HomeScreen : DesktopNavigationScreen() {
     @OptIn(ExperimentalLayoutApi::class)
     @Composable
@@ -136,6 +139,9 @@ class HomeScreen : DesktopNavigationScreen() {
                         }
                         MenuButton(Res.string.custom_ui_elements) {
                             navigator.openFlow(CustomUIFlow())
+                        }
+                        MenuButton(Res.string.navigation_example) {
+                            navigator.openFlow(NavigationExampleFlow())
                         }
                         MenuButton(Res.string.about_app) {
                             showAboutDialog = true

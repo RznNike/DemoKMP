@@ -11,6 +11,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.stringResource
 import ru.rznnike.demokmp.app.navigation.AndroidNavigationScreen
 import ru.rznnike.demokmp.app.navigation.getNavigator
@@ -19,6 +20,7 @@ import ru.rznnike.demokmp.app.utils.onClick
 import ru.rznnike.demokmp.app.viewmodel.customui.CustomUIViewModel
 import ru.rznnike.demokmp.generated.resources.*
 
+@Serializable
 class CustomUIScreen : AndroidNavigationScreen() {
     @OptIn(ExperimentalLayoutApi::class)
     @Composable

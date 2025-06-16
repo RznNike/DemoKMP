@@ -74,7 +74,7 @@ class DateInputManager(
                             isError = isError
                                     || ((inputString.length == 8) && (year < dateMin.year))
                                     || (!(dateMin..dateMax).contains(parsedDate))
-                        } catch (e: Exception) {
+                        } catch (_: Exception) {
                             isError = true
                         }
                     }

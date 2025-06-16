@@ -7,19 +7,17 @@ import org.koin.core.component.inject
 import ru.rznnike.demokmp.app.common.viewmodel.BaseUiViewModel
 import ru.rznnike.demokmp.app.dispatcher.notifier.Notifier
 import ru.rznnike.demokmp.app.error.ErrorHandler
-import ru.rznnike.demokmp.domain.common.DispatcherProvider
 import ru.rznnike.demokmp.domain.interactor.preferences.GetTestCounterUseCase
 import ru.rznnike.demokmp.domain.interactor.preferences.SetTestCounterUseCase
 
 class SettingsViewModel : BaseUiViewModel<SettingsViewModel.UiState>() {
     private val notifier: Notifier by inject()
     private val errorHandler: ErrorHandler by inject()
-    private val dispatcherProvider: DispatcherProvider by inject()
     private val getTestCounterUseCase: GetTestCounterUseCase by inject()
     private val setTestCounterUseCase: SetTestCounterUseCase by inject()
 
     init {
-        viewModelScope.launch(dispatcherProvider.default) {
+        viewModelScope.launch {
             getTestCounterUseCase().process(
                 { result ->
                     mutableUiState.update { currentState ->

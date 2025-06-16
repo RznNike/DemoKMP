@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.delay
+import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.painterResource
 import ru.rznnike.demokmp.app.navigation.AndroidNavigationScreen
 import ru.rznnike.demokmp.app.navigation.getNavigator
@@ -24,6 +25,7 @@ import ru.rznnike.demokmp.app.viewmodel.splash.SplashViewModel
 private const val ANIMATION_DURATION_MS = 1000
 private const val SPLASH_DURATION_MS = 1500L
 
+@Serializable
 class SplashScreen : AndroidNavigationScreen() {
     @Composable
     override fun Layout() {

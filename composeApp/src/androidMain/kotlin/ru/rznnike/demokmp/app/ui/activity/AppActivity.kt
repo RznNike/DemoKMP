@@ -1,5 +1,6 @@
 package ru.rznnike.demokmp.app.ui.activity
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -11,15 +12,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
-import cafe.adriel.voyager.core.annotation.ExperimentalVoyagerApi
-import cafe.adriel.voyager.jetpack.ProvideNavigatorLifecycleKMPSupport
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.KoinContext
 import org.koin.compose.koinInject
 import ru.rznnike.demokmp.app.dispatcher.notifier.Notifier
 import ru.rznnike.demokmp.app.dispatcher.notifier.SystemMessage
-import ru.rznnike.demokmp.app.navigation.createNavigator
+import ru.rznnike.demokmp.app.navigation.createNavHost
 import ru.rznnike.demokmp.app.ui.dialog.common.AlertDialogAction
 import ru.rznnike.demokmp.app.ui.dialog.common.AlertDialogType
 import ru.rznnike.demokmp.app.ui.dialog.common.CommonAlertDialog
@@ -39,20 +37,16 @@ import ru.rznnike.demokmp.generated.resources.double_back_to_exit
 import kotlin.system.exitProcess
 
 class AppActivity : AppCompatActivity() {
-    @OptIn(ExperimentalVoyagerApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initWindowFlags()
 
         setContent {
-            KoinContext {
-                ProvideNavigatorLifecycleKMPSupport {
-                    MainFrame()
-                }
-            }
+            MainFrame()
         }
     }
 
+    @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     @Composable
     fun MainFrame() {
         viewModel {
@@ -175,7 +169,7 @@ class AppActivity : AppCompatActivity() {
                     }
                 }
             ) {
-                createNavigator(SplashFlow())
+                createNavHost(SplashFlow())
                 NotifierDialog()
             }
         }

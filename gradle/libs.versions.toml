@@ -1,8 +1,8 @@
 [versions]
 kotlin = "2.1.21"
+compose = "1.8.1"
 coroutines = "1.10.2"
-voyager = "1.1.0-beta03"
-koin = "4.0.4"
+koin = "4.1.0"
 ktorfit = "2.5.2"
 ktor = "3.1.3"
 coil = "3.2.0"
@@ -11,13 +11,17 @@ sqlite = "2.5.1"
 filekit = "0.10.0-beta04"
 desugaring = "2.1.5"
 chucker = "4.1.0"
-vico = "2.1.2"
+vico = "2.1.3"
 
 android-minSdk = "26"
 android-targetSdk = "35"
 
 
 [libraries]
+# Compose
+# https://github.com/JetBrains/compose-multiplatform
+ui-backhandler = { module = "org.jetbrains.compose.ui:ui-backhandler", version.ref = "compose" }
+
 # Coroutines
 # https://github.com/Kotlin/kotlinx.coroutines
 coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
@@ -25,13 +29,11 @@ coroutines-swing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", 
 
 # ViewModel
 # https://mvnrepository.com/artifact/org.jetbrains.androidx.lifecycle/lifecycle-viewmodel-compose
-viewmodel-compose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose", version = "2.8.4" }
+viewmodel-compose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose", version = "2.9.0" }
 
 # Navigation
-# https://github.com/adrielcafe/voyager
-voyager-navigator = { module = "cafe.adriel.voyager:voyager-navigator", version.ref = "voyager" }
-voyager-transitions = { module = "cafe.adriel.voyager:voyager-transitions", version.ref = "voyager" }
-voyager-lifecycle-kmp = { module = "cafe.adriel.voyager:voyager-lifecycle-kmp", version.ref = "voyager" }
+# https://mvnrepository.com/artifact/org.jetbrains.androidx.navigation/navigation-compose
+navigation = { module = "org.jetbrains.androidx.navigation:navigation-compose", version = "2.9.0-beta02" }
 
 # DI
 # https://github.com/InsertKoinIO/koin
@@ -118,12 +120,11 @@ permissions = { module = "com.google.accompanist:accompanist-permissions", versi
 
 
 [plugins]
-# https://github.com/JetBrains/compose-multiplatform
-jetbrains-compose = { id = "org.jetbrains.compose", version = "1.8.0" }
+jetbrains-compose = { id = "org.jetbrains.compose", version.ref = "compose" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
-android-application = { id = "com.android.application", version = "8.9.3" }
+android-application = { id = "com.android.application", version = "8.10.1" }
 
 # BuildConfig
 # https://github.com/yshrsmz/BuildKonfig
@@ -131,7 +132,7 @@ buildkonfig = { id = "com.codingfeline.buildkonfig", version = "0.17.1" }
 
 # KSP
 # https://mvnrepository.com/artifact/com.google.devtools.ksp/com.google.devtools.ksp.gradle.plugin?repo=central
-ksp = { id = "com.google.devtools.ksp", version = "2.1.21-2.0.1" }
+ksp = { id = "com.google.devtools.ksp", version = "2.1.21-2.0.2" }
 
 # Ktorfit - network
 ktorfit = { id = "de.jensklingenberg.ktorfit", version.ref = "ktorfit" }
