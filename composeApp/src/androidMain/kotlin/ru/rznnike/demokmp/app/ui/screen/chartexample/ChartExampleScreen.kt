@@ -28,6 +28,7 @@ import com.patrykandpatrick.vico.multiplatform.common.component.rememberTextComp
 import com.patrykandpatrick.vico.multiplatform.common.fill
 import com.patrykandpatrick.vico.multiplatform.common.rememberHorizontalLegend
 import com.patrykandpatrick.vico.multiplatform.common.shape.CorneredShape
+import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.stringResource
 import ru.rznnike.demokmp.app.navigation.AndroidNavigationScreen
 import ru.rznnike.demokmp.app.navigation.getNavigator
@@ -39,6 +40,7 @@ import ru.rznnike.demokmp.generated.resources.chart_example
 import ru.rznnike.demokmp.generated.resources.ic_back
 import ru.rznnike.demokmp.generated.resources.test_data
 
+@Serializable
 class ChartExampleScreen : AndroidNavigationScreen() {
     @Composable
     override fun Layout() {

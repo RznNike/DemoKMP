@@ -1,33 +1,57 @@
 package ru.rznnike.demokmp.app.navigation
 
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import cafe.adriel.voyager.core.annotation.ExperimentalVoyagerApi
-import cafe.adriel.voyager.navigator.LocalNavigator
-import cafe.adriel.voyager.navigator.Navigator
-import cafe.adriel.voyager.navigator.NavigatorDisposeBehavior
-import cafe.adriel.voyager.navigator.currentOrThrow
-import cafe.adriel.voyager.transitions.FadeTransition
+import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.backhandler.BackHandler
+import androidx.navigation.NavController
+import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavType
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import ru.rznnike.demokmp.app.utils.windowViewModel
 import ru.rznnike.demokmp.app.viewmodel.global.configuration.WindowConfigurationViewModel
+import ru.rznnike.demokmp.domain.utils.OperatingSystem
+import kotlin.reflect.KType
 
+private const val SCREEN_ANIMATION_DURATION_MS = 500
+
+val LocalNavController = staticCompositionLocalOf<NavController?> { null }
 val LocalNavigationStructure = staticCompositionLocalOf { mutableListOf<Int>() }
 
-@OptIn(ExperimentalVoyagerApi::class)
 @Composable
-fun createNavigator(flow: NavigationFlow) {
+fun createNavHost(flow: NavigationFlow) {
+    val navController = rememberNavController()
     val navigationStructure = rememberSaveable { mutableListOf(flow.screens.size) }
     CompositionLocalProvider(
+        LocalNavController provides navController,
         LocalNavigationStructure provides navigationStructure
     ) {
-        Navigator(
-            screens = flow.screens,
-            disposeBehavior = NavigatorDisposeBehavior(disposeSteps = false)
-        ) { navigator ->
-            FadeTransition(
-                navigator = navigator,
-                disposeScreenAfterTransitionEnd = true
-            )
+        NavHost(
+            navController = navController,
+            startDestination = flow.screens.first(),
+            enterTransition = { fadeIn(animationSpec = tween(SCREEN_ANIMATION_DURATION_MS)) },
+            exitTransition = { fadeOut(animationSpec = tween(SCREEN_ANIMATION_DURATION_MS)) }
+        ) {
+            buildNavGraph()
+        }
+        if (OperatingSystem.isDesktop) {
+            @OptIn(ExperimentalComposeUiApi::class)
+            BackHandler {} // Disable default Esc handling in favor of custom hotkeys listener
+        }
+
+        val navigator = getNavigator()
+        LaunchedEffect(Unit) {
+            if (flow.screens.size > 1) {
+                navigator.openScreens(
+                    flow.screens.subList(1, flow.screens.size)
+                )
+            }
         }
     }
 }
@@ -37,8 +61,19 @@ fun getNavigator(): FlowNavigator {
     val windowConfigurationViewModel = windowViewModel<WindowConfigurationViewModel>()
     val windowConfigurationUiState by windowConfigurationViewModel.uiState.collectAsState()
     return FlowNavigator(
-        navigator = LocalNavigator.currentOrThrow,
+        navController = LocalNavController.current!!,
         navigationStructure = LocalNavigationStructure.current,
         closeWindowCallback = windowConfigurationUiState.closeWindowCallback
     )
+}
+
+expect fun NavGraphBuilder.buildNavGraph()
+
+inline fun <reified T : NavigationScreen> NavGraphBuilder.addToNavGraph(
+    typeMap: Map<KType, @JvmSuppressWildcards NavType<*>> = emptyMap()
+) {
+    composable<T>(typeMap = typeMap) { backStackEntry ->
+        val screen: T = backStackEntry.toRoute()
+        screen.Content()
+    }
 }

@@ -14,11 +14,8 @@ import androidx.compose.ui.input.key.type
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.*
-import cafe.adriel.voyager.core.annotation.ExperimentalVoyagerApi
-import cafe.adriel.voyager.jetpack.ProvideNavigatorLifecycleKMPSupport
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.KoinContext
 import org.koin.compose.koinInject
 import ru.rznnike.demokmp.app.ui.theme.backgroundDark
 import ru.rznnike.demokmp.app.ui.theme.backgroundLight
@@ -41,89 +38,84 @@ private val WINDOW_START_HEIGHT_DP = 600.dp
 private val WINDOW_MIN_WIDTH_DP = 500.dp
 private val WINDOW_MIN_HEIGHT_DP = 500.dp
 
-@OptIn(ExperimentalVoyagerApi::class)
 @Composable
-fun ApplicationScope.MainWindow(args: Array<String>) = KoinContext {
-    WithWindowViewModelStoreOwner {
-        val appConfigurationViewModel: AppConfigurationViewModel = koinInject()
-        val appConfigurationUiState by appConfigurationViewModel.uiState.collectAsState()
-        val windowConfigurationViewModel = windowViewModel<WindowConfigurationViewModel>()
-        val windowConfigurationUiState by windowConfigurationViewModel.uiState.collectAsState()
-        LaunchedEffect(Unit) {
-            windowConfigurationViewModel.setCloseWindowCallback(appConfigurationViewModel::closeApplication)
-            appConfigurationViewModel.setArgs(args)
-            appConfigurationViewModel.setCloseAppCallback(::exitApplication)
-        }
+fun ApplicationScope.MainWindow(args: Array<String>) = WithWindowViewModelStoreOwner {
+    val appConfigurationViewModel: AppConfigurationViewModel = koinInject()
+    val appConfigurationUiState by appConfigurationViewModel.uiState.collectAsState()
+    val windowConfigurationViewModel = windowViewModel<WindowConfigurationViewModel>()
+    val windowConfigurationUiState by windowConfigurationViewModel.uiState.collectAsState()
+    LaunchedEffect(Unit) {
+        windowConfigurationViewModel.setCloseWindowCallback(appConfigurationViewModel::closeApplication)
+        appConfigurationViewModel.setArgs(args)
+        appConfigurationViewModel.setCloseAppCallback(::exitApplication)
+    }
 
-        var showLoggerWindow by remember { mutableStateOf(false) }
-        val loggerWindowFocusRequester = remember { WindowFocusRequester() }
+    var showLoggerWindow by remember { mutableStateOf(false) }
+    val loggerWindowFocusRequester = remember { WindowFocusRequester() }
 
-        val state = rememberWindowState(
-            size = DpSize(
-                width = WINDOW_START_WIDTH_DP,
-                height = WINDOW_START_HEIGHT_DP
-            ),
-            position = WindowPosition(Alignment.Center),
-            placement = WindowPlacement.Floating
-        )
-        val hotKeysViewModel = windowViewModel<HotKeysViewModel>()
-        val defaultWindowTitle = stringResource(Res.string.window_title)
-        Window(
-            icon = painterResource(Res.drawable.icon_linux),
-            title = defaultWindowTitle,
-            onCloseRequest = windowConfigurationUiState.closeWindowCallback,
-            state = state,
-            onPreviewKeyEvent = { keyEvent ->
-                if ((keyEvent.type == KeyEventType.KeyDown) && (keyEvent.key == Key.F12)) {
-                    if (showLoggerWindow) {
-                        loggerWindowFocusRequester.onFocusRequested()
-                    } else {
-                        showLoggerWindow = true
-                    }
-                    true
+    val state = rememberWindowState(
+        size = DpSize(
+            width = WINDOW_START_WIDTH_DP,
+            height = WINDOW_START_HEIGHT_DP
+        ),
+        position = WindowPosition(Alignment.Center),
+        placement = WindowPlacement.Floating
+    )
+    val hotKeysViewModel = windowViewModel<HotKeysViewModel>()
+    val defaultWindowTitle = stringResource(Res.string.window_title)
+    Window(
+        icon = painterResource(Res.drawable.icon_linux),
+        title = defaultWindowTitle,
+        onCloseRequest = windowConfigurationUiState.closeWindowCallback,
+        state = state,
+        onPreviewKeyEvent = { keyEvent ->
+            if ((keyEvent.type == KeyEventType.KeyDown) && (keyEvent.key == Key.F12)) {
+                if (showLoggerWindow) {
+                    loggerWindowFocusRequester.onFocusRequested()
                 } else {
-                    hotKeysViewModel.sendEvent(keyEvent)
-                    false
+                    showLoggerWindow = true
                 }
+                true
+            } else {
+                hotKeysViewModel.sendEvent(keyEvent)
+                false
             }
+        }
+    ) {
+        CompositionLocalProvider(
+            LocalWindow provides window
         ) {
-            CompositionLocalProvider(
-                LocalWindow provides window
-            ) {
-                setMinimumSize(
-                    width = WINDOW_MIN_WIDTH_DP,
-                    height = WINDOW_MIN_HEIGHT_DP
-                )
-                window.title = windowConfigurationUiState.windowTitle
-                if (appConfigurationUiState.isLoaded) {
-                    LaunchedEffect(appConfigurationUiState.language) {
-                        windowConfigurationViewModel.setWindowTitle(defaultWindowTitle)
-                    }
-
-                    ProvideNavigatorLifecycleKMPSupport {
-                        MainFrame()
-                    }
-                } else { // default background while the theme has not yet loaded
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .background(
-                                color = if (isSystemInDarkTheme()) backgroundDark else backgroundLight
-                            )
-                    )
+            setMinimumSize(
+                width = WINDOW_MIN_WIDTH_DP,
+                height = WINDOW_MIN_HEIGHT_DP
+            )
+            window.title = windowConfigurationUiState.windowTitle
+            if (appConfigurationUiState.isLoaded) {
+                LaunchedEffect(appConfigurationUiState.language) {
+                    windowConfigurationViewModel.setWindowTitle(defaultWindowTitle)
                 }
+
+                MainFrame()
+            } else { // default background while the theme has not yet loaded
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(
+                            color = if (isSystemInDarkTheme()) backgroundDark else backgroundLight
+                        )
+                )
             }
         }
+    }
 
-        if (appConfigurationUiState.isLoaded && showLoggerWindow) {
-            LoggerWindow(
-                focusRequester = loggerWindowFocusRequester,
-                onCloseRequest = {
-                    showLoggerWindow = false
-                }
-            )
-        } else {
-            loggerWindowFocusRequester.onFocusRequested = { }
-        }
+    if (appConfigurationUiState.isLoaded && showLoggerWindow) {
+        LoggerWindow(
+            focusRequester = loggerWindowFocusRequester,
+            onCloseRequest = {
+                showLoggerWindow = false
+            }
+        )
+    } else {
+        loggerWindowFocusRequester.onFocusRequested = { }
     }
 }

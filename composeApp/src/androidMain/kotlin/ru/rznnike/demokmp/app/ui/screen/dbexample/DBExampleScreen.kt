@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.stringResource
 import ru.rznnike.demokmp.app.navigation.AndroidNavigationScreen
 import ru.rznnike.demokmp.app.navigation.getNavigator
@@ -21,6 +22,7 @@ import ru.rznnike.demokmp.app.ui.view.*
 import ru.rznnike.demokmp.app.viewmodel.dbexample.DBExampleViewModel
 import ru.rznnike.demokmp.generated.resources.*
 
+@Serializable
 class DBExampleScreen : AndroidNavigationScreen() {
     @Composable
     override fun Layout() {

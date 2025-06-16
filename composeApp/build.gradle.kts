@@ -45,6 +45,7 @@ kotlin {
             implementation(compose.ui)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
+            implementation(libs.ui.backhandler)
 
             implementation(libs.viewmodel.compose)
 
@@ -71,9 +72,7 @@ kotlin {
             implementation(libs.filekit.core)
             implementation(libs.filekit.dialogs.compose)
 
-            implementation(libs.voyager.navigator)
-            implementation(libs.voyager.transitions)
-            implementation(libs.voyager.lifecycle.kmp)
+            implementation(libs.navigation)
 
             implementation(libs.coil)
             implementation(libs.coil.compose)

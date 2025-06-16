@@ -13,7 +13,7 @@ import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import ru.rznnike.demokmp.app.dispatcher.notifier.Notifier
 import ru.rznnike.demokmp.app.dispatcher.notifier.SystemMessage
-import ru.rznnike.demokmp.app.navigation.createNavigator
+import ru.rznnike.demokmp.app.navigation.createNavHost
 import ru.rznnike.demokmp.app.ui.dialog.common.AlertDialogAction
 import ru.rznnike.demokmp.app.ui.dialog.common.AlertDialogType
 import ru.rznnike.demokmp.app.ui.dialog.common.CommonAlertDialog
@@ -117,7 +117,7 @@ fun MainFrame() {
             BackgroundBox(
                 modifier = Modifier.fillMaxSize()
             ) {
-                createNavigator(SplashFlow())
+                createNavHost(SplashFlow())
             }
             NotifierDialog()
         }

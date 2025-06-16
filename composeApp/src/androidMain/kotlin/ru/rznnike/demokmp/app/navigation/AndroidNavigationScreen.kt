@@ -6,8 +6,11 @@ import androidx.activity.compose.LocalActivity
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.core.view.WindowCompat
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 import ru.rznnike.demokmp.app.ui.theme.LocalIsDarkTheme
 
+@Serializable
 abstract class AndroidNavigationScreen : NavigationScreen() {
     open val isLightStatusBar: Boolean
         @Composable
@@ -27,13 +30,13 @@ abstract class AndroidNavigationScreen : NavigationScreen() {
 
     @Composable
     final override fun Content() {
-        setSystemBarsColors()
-        handleBackPress()
+        SetSystemBarsColors()
+        HandleBackPress()
         super.Content()
     }
 
     @Composable
-    private fun setSystemBarsColors() {
+    private fun SetSystemBarsColors() {
         activity.window?.let { window ->
             val isLightSB = isLightStatusBar
             val isLightNB = isLightNavigationBar
@@ -47,7 +50,7 @@ abstract class AndroidNavigationScreen : NavigationScreen() {
     }
 
     @Composable
-    private fun handleBackPress() {
+    private fun HandleBackPress() {
         val navigator = getNavigator()
         BackHandler {
             onBackPressedCallback(navigator)

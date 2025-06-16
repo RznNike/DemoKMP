@@ -1,15 +1,12 @@
 package ru.rznnike.demokmp.app.navigation
 
 import androidx.compose.runtime.Composable
-import cafe.adriel.voyager.core.screen.Screen
-import cafe.adriel.voyager.core.screen.ScreenKey
-import cafe.adriel.voyager.core.screen.uniqueScreenKey
+import kotlinx.serialization.Serializable
 
-abstract class NavigationScreen : Screen {
-    override val key: ScreenKey = uniqueScreenKey
-
+@Serializable
+abstract class NavigationScreen {
     @Composable
-    override fun Content() = Layout()
+    open fun Content() = Layout()
 
     @Composable
     abstract fun Layout()

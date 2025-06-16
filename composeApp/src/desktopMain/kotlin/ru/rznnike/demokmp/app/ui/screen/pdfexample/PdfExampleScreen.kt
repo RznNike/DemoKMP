@@ -12,6 +12,7 @@ import androidx.compose.ui.input.key.*
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import ru.rznnike.demokmp.app.navigation.DesktopNavigationScreen
@@ -30,6 +31,7 @@ import ru.rznnike.demokmp.generated.resources.error_file_not_found
 import ru.rznnike.demokmp.generated.resources.ic_back
 import ru.rznnike.demokmp.generated.resources.pdf_example
 
+@Serializable
 class PdfExampleScreen : DesktopNavigationScreen() {
     @Composable
     override fun Layout() {
