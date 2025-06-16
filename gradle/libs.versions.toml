@@ -32,7 +32,7 @@ coroutines-swing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", 
 viewmodel-compose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose", version = "2.9.0" }
 
 # Navigation
-# https://github.com/adrielcafe/voyager
+# https://mvnrepository.com/artifact/org.jetbrains.androidx.navigation/navigation-compose
 navigation = { module = "org.jetbrains.androidx.navigation:navigation-compose", version = "2.9.0-beta02" }
 
 # DI

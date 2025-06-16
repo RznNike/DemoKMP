@@ -24,7 +24,6 @@ private const val SCREEN_ANIMATION_DURATION_MS = 500
 val LocalNavController = staticCompositionLocalOf<NavController?> { null }
 val LocalNavigationStructure = staticCompositionLocalOf { mutableListOf<Int>() }
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun createNavHost(flow: NavigationFlow) {
     val navController = rememberNavController()
@@ -42,6 +41,7 @@ fun createNavHost(flow: NavigationFlow) {
             buildNavGraph()
         }
         if (OperatingSystem.isDesktop) {
+            @OptIn(ExperimentalComposeUiApi::class)
             BackHandler {} // Disable default Esc handling in favor of custom hotkeys listener
         }
 
@@ -72,9 +72,7 @@ expect fun NavGraphBuilder.buildNavGraph()
 inline fun <reified T : NavigationScreen> NavGraphBuilder.addToNavGraph(
     typeMap: Map<KType, @JvmSuppressWildcards NavType<*>> = emptyMap()
 ) {
-    composable<T>(
-        typeMap = typeMap
-    ) { backStackEntry ->
+    composable<T>(typeMap = typeMap) { backStackEntry ->
         val screen: T = backStackEntry.toRoute()
         screen.Content()
     }
