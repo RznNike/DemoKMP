@@ -1,5 +1,8 @@
 package ru.rznnike.demokmp.app.navigation
 
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.navigation.NavController
@@ -14,6 +17,8 @@ import ru.rznnike.demokmp.app.viewmodel.global.configuration.WindowConfiguration
 import ru.rznnike.demokmp.domain.log.LogNetworkMessage
 import kotlin.reflect.typeOf
 
+private const val SCREEN_ANIMATION_DURATION_MS = 500
+
 val LocalNavController = staticCompositionLocalOf { NavController() }
 val LocalNavigationStructure = staticCompositionLocalOf { mutableListOf<Int>() }
 
@@ -27,7 +32,9 @@ fun createNavHost(flow: NavigationFlow) {
     ) {
         NavHost(
             navController = navController,
-            startDestination = flow.screens.first()
+            startDestination = flow.screens.first(),
+            enterTransition = { fadeIn(animationSpec = tween(SCREEN_ANIMATION_DURATION_MS)) },
+            exitTransition = { fadeOut(animationSpec = tween(SCREEN_ANIMATION_DURATION_MS)) }
         ) {
             buildNavGraph()
         }
