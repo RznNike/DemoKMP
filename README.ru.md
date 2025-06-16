@@ -69,7 +69,7 @@
 </details>
 
 ## Использованные библиотеки
-* [Voyager](https://voyager.adriel.cafe/)
+* [Compose Navigation](https://www.jetbrains.com/help/kotlin-multiplatform-dev/compose-navigation.html)
 * [Koin](https://insert-koin.io/)
 * [Room](https://developer.android.com/jetpack/androidx/releases/room)
 * [Multiplatform Settings](https://github.com/russhwolf/multiplatform-settings)
