@@ -26,7 +26,7 @@ class AppGatewayImpl(
             val port = getLauncherConfig().singleInstancePort
             singleInstanceSocket = ServerSocket(port)
             false
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             Logger.e("App is already running!")
             true
         }

@@ -23,7 +23,6 @@ class AppWebSocketManager(
     private var session: WebSocketSession? = null
     private var connectionState = MutableStateFlow(WebSocketConnectionState.DISCONNECTED)
     private var sessionData: WebSocketSessionData<WebSocketMessageModel>? = null
-    private val jsonParser = defaultJson()
 
     fun getSession(): WebSocketSessionData<WebSocketMessageModel> {
         return sessionData ?: let {
@@ -49,7 +48,7 @@ class AppWebSocketManager(
                                     val json = frame.readText()
                                     logger.i(json)
                                     try {
-                                        message = jsonParser.decodeFromString<WebSocketMessageModel>(json)
+                                        message = defaultJson.decodeFromString<WebSocketMessageModel>(json)
                                     } catch (exception: SerializationException) {
                                         logger.e(exception, "Message NOT mapped")
                                     }
@@ -91,7 +90,7 @@ class AppWebSocketManager(
 
     suspend fun sendMessage(message: WebSocketMessageModel) {
         session?.let { session ->
-            val json = jsonParser.encodeToString(message)
+            val json = defaultJson.encodeToString(message)
             session.send(json)
             logger.i("Message sent:\n$json")
         }

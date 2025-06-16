@@ -27,7 +27,7 @@ fun String.toTimeStamp(pattern: String = GlobalConstants.DATE_PATTERN_SIMPLE_WIT
                 val time = it.query(TemporalQueries.localTime())
                 ZonedDateTime.of(date, time ?: LocalTime.MIN, ZoneId.systemDefault()).millis()
             }
-        } catch (exception: Exception) {
+        } catch (_: Exception) {
             SimpleDateFormat(pattern, Locale.getDefault()).parse(this)?.time ?: 0
         }
     } else 0

@@ -35,7 +35,7 @@ internal val networkModule = module {
     fun getCache() = try {
         val cacheDirectory = File(DataConstants.NETWORK_CACHE_PATH)
         Cache(cacheDirectory, CACHE_MAX_SIZE.toLong())
-    } catch (ignored: Exception) { null }
+    } catch (_: Exception) { null }
 
     fun OkHttpClient.Builder.allTimeoutsMs(timeout: Long) =
         this.callTimeout(timeout, TimeUnit.MILLISECONDS)
@@ -57,7 +57,7 @@ internal val networkModule = module {
 
     fun HttpClientConfig<OkHttpConfig>.installJson() {
         install(ContentNegotiation) {
-            json(defaultJson())
+            json(defaultJson)
         }
         install(DefaultRequest) {
             header(HttpHeaders.ContentType, ContentType.Application.Json)
