@@ -26,6 +26,7 @@ import ru.rznnike.demokmp.app.ui.screen.chartexample.ChartExampleFlow
 import ru.rznnike.demokmp.app.ui.screen.customui.CustomUIFlow
 import ru.rznnike.demokmp.app.ui.screen.dbexample.DBExampleFlow
 import ru.rznnike.demokmp.app.ui.screen.httpexample.HTTPExampleFlow
+import ru.rznnike.demokmp.app.ui.screen.navigation.NavigationExampleFlow
 import ru.rznnike.demokmp.app.ui.screen.settings.SettingsFlow
 import ru.rznnike.demokmp.app.ui.screen.wsexample.WebSocketsExampleFlow
 import ru.rznnike.demokmp.app.ui.view.FilledButton
@@ -112,6 +113,9 @@ class HomeScreen : AndroidNavigationScreen() {
                         }
                         MenuButton(Res.string.custom_ui_elements) {
                             navigator.openFlow(CustomUIFlow())
+                        }
+                        MenuButton(Res.string.navigation_example) {
+                            navigator.openFlow(NavigationExampleFlow())
                         }
                         MenuButton(Res.string.request_notifications_permission) {
                             notificationsPermissionHandler.checkPermissions { permissionsGranted ->

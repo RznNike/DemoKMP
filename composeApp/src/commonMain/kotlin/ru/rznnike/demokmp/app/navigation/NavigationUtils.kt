@@ -21,7 +21,7 @@ import kotlin.reflect.KType
 
 private const val SCREEN_ANIMATION_DURATION_MS = 500
 
-val LocalNavController = staticCompositionLocalOf { NavController() }
+val LocalNavController = staticCompositionLocalOf<NavController?> { null }
 val LocalNavigationStructure = staticCompositionLocalOf { mutableListOf<Int>() }
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -61,7 +61,7 @@ fun getNavigator(): FlowNavigator {
     val windowConfigurationViewModel = windowViewModel<WindowConfigurationViewModel>()
     val windowConfigurationUiState by windowConfigurationViewModel.uiState.collectAsState()
     return FlowNavigator(
-        navController = LocalNavController.current,
+        navController = LocalNavController.current!!,
         navigationStructure = LocalNavigationStructure.current,
         closeWindowCallback = windowConfigurationUiState.closeWindowCallback
     )
