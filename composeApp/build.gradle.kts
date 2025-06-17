@@ -1,6 +1,7 @@
 import com.codingfeline.buildkonfig.compiler.FieldSpec
 import org.gradle.internal.extensions.stdlib.capitalized
 import org.gradle.internal.extensions.stdlib.toDefaultLowerCase
+import org.gradle.kotlin.dsl.register
 import org.gradle.nativeplatform.platform.internal.DefaultNativePlatform
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
@@ -309,13 +310,13 @@ fun configureBuildKonfigFlavorFromAndroidTasks() {
     }
 }
 
-task("clearAppBuildJarsDir") {
+tasks.register("clearAppBuildJarsDir") {
     doLast {
         delete("${project.rootDir}/composeApp/build/compose/jars")
     }
 }
 
-task("generateReleaseApp") {
+tasks.register("generateReleaseApp") {
     dependsOn("clearAppBuildJarsDir", "packageReleaseUberJarForCurrentOS")
     doLast {
         val outputPath = "${project.rootDir}/distributableOutput/$globalVersionCode"
@@ -340,7 +341,7 @@ task("generateReleaseApp") {
     }
 }
 
-task<Zip>("generateReleaseArchive") {
+tasks.register<Zip>("generateReleaseArchive") {
     dependsOn("generateReleaseApp")
     val flags = mutableListOf(buildType.tag)
     archiveFileName = "DemoKMP_${os.capitalized()}_v${globalVersionName}.${globalVersionCode}_${flags.joinToString(separator = "_")}.zip"
