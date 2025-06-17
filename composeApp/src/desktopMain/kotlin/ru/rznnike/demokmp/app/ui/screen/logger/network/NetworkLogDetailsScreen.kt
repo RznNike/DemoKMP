@@ -25,7 +25,7 @@ import io.github.vinceglb.filekit.dialogs.openFileSaver
 import kotlinx.serialization.Serializable
 import ru.rznnike.demokmp.app.navigation.DesktopNavigationScreen
 import ru.rznnike.demokmp.app.navigation.getNavigator
-import ru.rznnike.demokmp.app.navigation.navtype.LogNetworkMessageNavType
+import ru.rznnike.demokmp.app.navigation.navtype.logNetworkMessageNavType
 import ru.rznnike.demokmp.app.ui.theme.bodyLargeBold
 import ru.rznnike.demokmp.app.ui.theme.bodyMediumMono
 import ru.rznnike.demokmp.app.ui.view.LinkifyText
@@ -42,7 +42,6 @@ import ru.rznnike.demokmp.domain.log.LogNetworkMessage
 import ru.rznnike.demokmp.domain.utils.GlobalConstants
 import ru.rznnike.demokmp.domain.utils.toDateString
 import ru.rznnike.demokmp.generated.resources.*
-import kotlin.reflect.typeOf
 
 @Serializable
 class NetworkLogDetailsScreen(
@@ -232,7 +231,7 @@ class NetworkLogDetailsScreen(
 
     companion object {
         val typeMap = mapOf(
-            typeOf<LogNetworkMessage>() to LogNetworkMessageNavType
+            logNetworkMessageNavType
         )
     }
 }
