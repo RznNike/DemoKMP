@@ -28,6 +28,7 @@ class FlowNavigator(
             navController.popBackStack()
         }
         openFlow(flow)
+        System.gc()
     }
 
     fun newRootFlow(flow: NavigationFlow) {
@@ -51,6 +52,7 @@ class FlowNavigator(
         } else {
             closeWindowCallback()
         }
+        System.gc()
     }
 
     // SCREENS
@@ -69,6 +71,7 @@ class FlowNavigator(
     fun replaceScreen(screen: NavigationScreen) {
         navController.popBackStack()
         navController.navigate(screen)
+        System.gc()
     }
 
     fun newRootScreen(screen: NavigationScreen) {
@@ -78,6 +81,7 @@ class FlowNavigator(
         }
         navigationStructure[navigationStructure.lastIndex] = 1
         navController.navigate(screen)
+        System.gc()
     }
 
     fun closeScreen() {
@@ -88,5 +92,6 @@ class FlowNavigator(
         } else {
             closeFlow()
         }
+        System.gc()
     }
 }
