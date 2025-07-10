@@ -58,24 +58,32 @@ class Logger private constructor(
     }
 
     private fun withExtensions(action: LoggerExtension.() -> Unit) {
-        if (isInitialized) {
-            coroutineScope.launch {
-                outputLock.withPermit {
-                    extensions.forEach {
-                        action(it)
-                    }
-                }
-            }
-        } else {
+        fun printLoggerError(message: String) {
             printLog(
                 LogMessage(
                     type = LogType.DEFAULT,
                     level = LogLevel.ERROR,
                     timestamp = -1,
                     tag = "Logger",
-                    message = "Logger is not initialized!"
+                    message = message
                 )
             )
+        }
+
+        if (isInitialized) {
+            coroutineScope.launch {
+                outputLock.withPermit {
+                    extensions.forEach {
+                        try {
+                            action(it)
+                        } catch (exception: Exception) {
+                            printLoggerError("Error in logger extension ${it::class.java.name}:\n${exception.stackTraceToString()}")
+                        }
+                    }
+                }
+            }
+        } else {
+            printLoggerError("Logger is not initialized!")
         }
     }
 
