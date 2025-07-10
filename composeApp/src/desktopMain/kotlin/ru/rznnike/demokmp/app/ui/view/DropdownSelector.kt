@@ -158,7 +158,11 @@ fun <ItemType> DropdownSelector(
                                 max = maxHeight
                             ),
                         shadowElevation = 4.dp,
-                        shape = MaterialTheme.shapes.medium
+                        shape = MaterialTheme.shapes.medium,
+                        border = BorderStroke(
+                            width = 1.dp,
+                            color = MaterialTheme.colorScheme.outline
+                        )
                     ) {
                         Box(
                             modifier = Modifier.fillMaxWidth()
