@@ -27,7 +27,7 @@ import java.io.File
 import java.time.Duration
 import java.util.concurrent.TimeUnit
 
-private const val CACHE_MAX_SIZE = 100 * 1024 * 1024 // 100 MB
+private const val CACHE_MAX_SIZE = 10 * 1024 * 1024 // 10 MB
 private const val TIMEOUT_MS = 60_000L // 60 sec
 private const val WEB_SOCKET_PING_MS = 10_000L // 10 sec
 
