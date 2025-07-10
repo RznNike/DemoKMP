@@ -11,10 +11,10 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.koin.core.component.inject
 import ru.rznnike.demokmp.app.common.viewmodel.BaseUiViewModel
+import ru.rznnike.demokmp.app.loggerCache
 import ru.rznnike.demokmp.data.utils.DataConstants
 import ru.rznnike.demokmp.domain.common.CoroutineScopeProvider
 import ru.rznnike.demokmp.domain.log.LogNetworkMessage
-import ru.rznnike.demokmp.domain.log.Logger
 import ru.rznnike.demokmp.domain.utils.GlobalConstants
 import ru.rznnike.demokmp.domain.utils.toDateString
 
@@ -50,7 +50,7 @@ class NetworkLogDetailsViewModel(
 
         subscription = viewModelScope.launch {
             if (initMessage.response == null) {
-                Logger.subscribeToNetworkLog(
+                loggerCache.subscribeToNetworkLog(
                     initCallback = { messages ->
                         messages.firstOrNull { it.uuid == initMessage.uuid }?.let {
                             tryToUpdateMessage(it)

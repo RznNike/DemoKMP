@@ -13,12 +13,12 @@ import kotlinx.io.buffered
 import org.jetbrains.compose.resources.StringResource
 import org.koin.core.component.inject
 import ru.rznnike.demokmp.app.common.viewmodel.BaseUiViewModel
+import ru.rznnike.demokmp.app.loggerCache
 import ru.rznnike.demokmp.data.utils.DataConstants
 import ru.rznnike.demokmp.domain.common.CoroutineScopeProvider
 import ru.rznnike.demokmp.domain.log.LogMessage
 import ru.rznnike.demokmp.domain.log.LogNetworkMessage
 import ru.rznnike.demokmp.domain.log.LogType
-import ru.rznnike.demokmp.domain.log.Logger
 import ru.rznnike.demokmp.domain.utils.GlobalConstants
 import ru.rznnike.demokmp.domain.utils.toDateString
 import ru.rznnike.demokmp.generated.resources.Res
@@ -44,7 +44,7 @@ class LoggerViewModel : BaseUiViewModel<LoggerViewModel.UiState>() {
 
     private fun subscribeToLogs() {
         viewModelScope.launch {
-            Logger.subscribeToLog(
+            loggerCache.subscribeToLog(
                 initCallback = { messages ->
                     log.addAll(messages)
                     filterLog()
@@ -56,7 +56,7 @@ class LoggerViewModel : BaseUiViewModel<LoggerViewModel.UiState>() {
             )
         }
         viewModelScope.launch {
-            Logger.subscribeToNetworkLog(
+            loggerCache.subscribeToNetworkLog(
                 initCallback = { messages ->
                     networkLog.addAll(messages)
                     filterNetworkLog()
@@ -154,12 +154,12 @@ class LoggerViewModel : BaseUiViewModel<LoggerViewModel.UiState>() {
             Tab.ALL -> {
                 log.clear()
                 filterLog()
-                Logger.clearLog()
+                loggerCache.clearLog()
             }
             Tab.NETWORK -> {
                 networkLog.clear()
                 filterNetworkLog()
-                Logger.clearNetworkLog()
+                loggerCache.clearNetworkLog()
             }
         }
     }
