@@ -7,6 +7,7 @@ import ru.rznnike.demokmp.app.di.appComponent
 import ru.rznnike.demokmp.app.ui.window.main.MainWindow
 import ru.rznnike.demokmp.domain.log.Logger
 import ru.rznnike.demokmp.domain.log.extension.ConsoleLoggerExtension
+import ru.rznnike.demokmp.domain.log.extension.DatabaseLoggerExtension
 import ru.rznnike.demokmp.domain.log.extension.FileLoggerExtension
 import ru.rznnike.demokmp.domain.log.extension.MemoryCacheLoggerExtension
 
@@ -14,9 +15,10 @@ val loggerCache = MemoryCacheLoggerExtension()
 
 fun main(args: Array<String>) {
     initLogger()
-    Logger.i("Application start")
     application {
         initKoin()
+        Logger.addExtension(DatabaseLoggerExtension())
+        Logger.i("Application start")
         MainWindow(args)
     }
 }

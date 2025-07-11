@@ -2,8 +2,135 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "d90d2dd42744cf633cfe36e09f0ea62d",
+    "identityHash": "3c5ac9b0fc24dfd8066879dbf64dd5fd",
     "entities": [
+      {
+        "tableName": "LogMessageEntity",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `type` TEXT NOT NULL, `level` TEXT NOT NULL, `timestamp` INTEGER NOT NULL, `tag` TEXT NOT NULL, `message` TEXT NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "type",
+            "columnName": "type",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "level",
+            "columnName": "level",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "timestamp",
+            "columnName": "timestamp",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "tag",
+            "columnName": "tag",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "message",
+            "columnName": "message",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        }
+      },
+      {
+        "tableName": "LogNetworkMessageEntity",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uuid` BLOB NOT NULL, `state` TEXT NOT NULL, `requesttype` TEXT NOT NULL, `requestlevel` TEXT NOT NULL, `requesttimestamp` INTEGER NOT NULL, `requesttag` TEXT NOT NULL, `requestmessage` TEXT NOT NULL, `responsetype` TEXT, `responselevel` TEXT, `responsetimestamp` INTEGER, `responsetag` TEXT, `responsemessage` TEXT, PRIMARY KEY(`uuid`))",
+        "fields": [
+          {
+            "fieldPath": "uuid",
+            "columnName": "uuid",
+            "affinity": "BLOB",
+            "notNull": true
+          },
+          {
+            "fieldPath": "state",
+            "columnName": "state",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "request.type",
+            "columnName": "requesttype",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "request.level",
+            "columnName": "requestlevel",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "request.timestamp",
+            "columnName": "requesttimestamp",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "request.tag",
+            "columnName": "requesttag",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "request.message",
+            "columnName": "requestmessage",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "response.type",
+            "columnName": "responsetype",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "response.level",
+            "columnName": "responselevel",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "response.timestamp",
+            "columnName": "responsetimestamp",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "response.tag",
+            "columnName": "responsetag",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "response.message",
+            "columnName": "responsemessage",
+            "affinity": "TEXT"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "uuid"
+          ]
+        }
+      },
       {
         "tableName": "DBExampleDataEntity",
         "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL)",
@@ -31,7 +158,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'd90d2dd42744cf633cfe36e09f0ea62d')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '3c5ac9b0fc24dfd8066879dbf64dd5fd')"
     ]
   }
 }

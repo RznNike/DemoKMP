@@ -12,4 +12,5 @@ internal val gatewayModule = module {
     single<DBExampleGateway> { DBExampleGatewayImpl(get(), get(), get()) }
     single<PdfExampleGateway> { PdfExampleGatewayImpl(get()) }
     single<ChartExampleGateway> { ChartExampleGatewayImpl(get()) }
+    single<LogGateway> { LogGatewayImpl(get(), get(), get()) }
 }

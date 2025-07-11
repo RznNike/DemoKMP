@@ -91,7 +91,7 @@ class Logger private constructor(
         private lateinit var clock: Clock
         private lateinit var coroutineScope: CoroutineScope
         private var isInitialized = false
-        private var extensions: List<LoggerExtension> = emptyList()
+        private var extensions: MutableList<LoggerExtension> = mutableListOf()
 
         private val outputLock = Semaphore(1)
 
@@ -104,7 +104,7 @@ class Logger private constructor(
         ) {
             this.clock = clock
             this.coroutineScope = coroutineScope
-            this.extensions = extensions
+            this.extensions = extensions.toMutableList()
             extensions.forEach {
                 it.init(
                     clock = clock,
@@ -112,6 +112,14 @@ class Logger private constructor(
                 )
             }
             isInitialized = true
+        }
+
+        fun addExtension(extension: LoggerExtension) {
+            extension.init(
+                clock = clock,
+                coroutineScope = coroutineScope
+            )
+            extensions.add(extension)
         }
 
         fun withTag(tag: String) = Logger(tag)

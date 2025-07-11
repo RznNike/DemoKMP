@@ -6,6 +6,8 @@ import ru.rznnike.demokmp.domain.interactor.app.CloseAppSingleInstanceSocketUseC
 import ru.rznnike.demokmp.domain.interactor.chartexample.GetChartSampleDataUseCase
 import ru.rznnike.demokmp.domain.interactor.dbexample.*
 import ru.rznnike.demokmp.domain.interactor.httpexample.GetRandomImageLinksUseCase
+import ru.rznnike.demokmp.domain.interactor.log.AddLogMessageToDBUseCase
+import ru.rznnike.demokmp.domain.interactor.log.AddLogNetworkMessageToDBUseCase
 import ru.rznnike.demokmp.domain.interactor.pdfexample.GetSamplePdfUseCase
 import ru.rznnike.demokmp.domain.interactor.preferences.*
 import ru.rznnike.demokmp.domain.interactor.wsexample.CloseAppWSSessionUseCase
@@ -15,6 +17,9 @@ import ru.rznnike.demokmp.domain.interactor.wsexample.SendAppWSMessageUseCase
 internal val interactorModule = module {
     single { CheckIfAppIsAlreadyRunningUseCase(get(), get()) }
     single { CloseAppSingleInstanceSocketUseCase(get(), get()) }
+
+    single { AddLogMessageToDBUseCase(get(), get()) }
+    single { AddLogNetworkMessageToDBUseCase(get(), get()) }
 
     single { GetTestCounterUseCase(get(), get()) }
     single { SetTestCounterUseCase(get(), get()) }
