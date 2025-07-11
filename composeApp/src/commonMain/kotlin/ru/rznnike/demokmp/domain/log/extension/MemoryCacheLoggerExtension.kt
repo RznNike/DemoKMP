@@ -5,7 +5,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withPermit
 import ru.rznnike.demokmp.domain.log.*
-import ru.rznnike.demokmp.domain.utils.OperatingSystem
 import java.util.*
 
 class MemoryCacheLoggerExtension : LoggerExtension() {
@@ -16,32 +15,28 @@ class MemoryCacheLoggerExtension : LoggerExtension() {
     private val networkLogUpdatesFlow = MutableSharedFlow<LogNetworkMessage>()
 
     override fun networkRequest(tag: String, uuid: UUID, message: String) {
-        val request = addMessage(
+        addMessage(
             tag = tag,
             message = message,
             level = LogLevel.INFO,
             type = LogType.NETWORK
-        )
-        if (OperatingSystem.isDesktop) {
+        ) { request ->
             val logNetworkMessage = LogNetworkMessage(
                 uuid = uuid,
                 request = request
             )
             networkLog.add(logNetworkMessage)
-            coroutineScope.launch {
-                networkLogUpdatesFlow.emit(logNetworkMessage)
-            }
+            networkLogUpdatesFlow.emit(logNetworkMessage)
         }
     }
 
     override fun networkResponse(tag: String, requestUuid: UUID, message: String, state: NetworkRequestState) {
-        val response = addMessage(
+        addMessage(
             tag = tag,
             message = message,
             level = LogLevel.INFO,
             type = LogType.NETWORK
-        )
-        if (OperatingSystem.isDesktop) {
+        ) { response ->
             networkLog.firstOrNull { it.uuid == requestUuid }?.let { logNetworkMessage ->
                 val updatedMessage = logNetworkMessage.copy(
                     response = response,
@@ -49,9 +44,7 @@ class MemoryCacheLoggerExtension : LoggerExtension() {
                 )
                 val index = networkLog.lastIndexOf(logNetworkMessage)
                 networkLog[index] = updatedMessage
-                coroutineScope.launch {
-                    networkLogUpdatesFlow.emit(updatedMessage)
-                }
+                networkLogUpdatesFlow.emit(updatedMessage)
             }
         }
     }
@@ -60,8 +53,9 @@ class MemoryCacheLoggerExtension : LoggerExtension() {
         tag: String,
         message: String,
         level: LogLevel,
-        type: LogType
-    ): LogMessage {
+        type: LogType,
+        callback: suspend (LogMessage) -> Unit
+    ) {
         val logMessage = LogMessage(
             type = type,
             level = level,
@@ -72,14 +66,11 @@ class MemoryCacheLoggerExtension : LoggerExtension() {
 
         coroutineScope.launch {
             outputLock.withPermit {
-                if (OperatingSystem.isDesktop) {
-                    log.add(logMessage)
-                    logUpdatesFlow.emit(logMessage)
-                }
+                log.add(logMessage)
+                logUpdatesFlow.emit(logMessage)
+                callback(logMessage)
             }
         }
-
-        return logMessage
     }
 
     suspend fun subscribeToLog(

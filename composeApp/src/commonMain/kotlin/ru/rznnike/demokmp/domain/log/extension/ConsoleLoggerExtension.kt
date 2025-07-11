@@ -15,8 +15,9 @@ class ConsoleLoggerExtension : LoggerExtension() {
         tag: String,
         message: String,
         level: LogLevel,
-        type: LogType
-    ): LogMessage {
+        type: LogType,
+        callback: suspend (LogMessage) -> Unit
+    ) {
         val logMessage = LogMessage(
             type = type,
             level = level,
@@ -28,9 +29,8 @@ class ConsoleLoggerExtension : LoggerExtension() {
         coroutineScope.launch {
             outputLock.withPermit {
                 printLog(logMessage)
+                callback(logMessage)
             }
         }
-
-        return logMessage
     }
 }

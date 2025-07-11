@@ -88,6 +88,7 @@ abstract class LoggerExtension {
         tag: String,
         message: String,
         level: LogLevel,
-        type: LogType = LogType.DEFAULT
-    ): LogMessage
+        type: LogType = LogType.DEFAULT,
+        callback: suspend (LogMessage) -> Unit = { }
+    )
 }

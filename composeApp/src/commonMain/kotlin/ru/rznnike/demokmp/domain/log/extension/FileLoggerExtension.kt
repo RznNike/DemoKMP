@@ -21,8 +21,9 @@ class FileLoggerExtension : LoggerExtension() {
         tag: String,
         message: String,
         level: LogLevel,
-        type: LogType
-    ): LogMessage {
+        type: LogType,
+        callback: suspend (LogMessage) -> Unit
+    ) {
         val logMessage = LogMessage(
             type = type,
             level = level,
@@ -31,28 +32,25 @@ class FileLoggerExtension : LoggerExtension() {
             message = message
         )
 
-        if (OperatingSystem.isDesktop) {
-            coroutineScope.launch {
-                outputLock.withPermit {
-                    try {
-                        val currentDate = clock.millis().toLocalDate()
-                        if (logFileDate != currentDate) {
-                            logFileDate = currentDate
-                            logFile = null
-                        }
+        coroutineScope.launch {
+            outputLock.withPermit {
+                try {
+                    val currentDate = clock.millis().toLocalDate()
+                    if (logFileDate != currentDate) {
+                        logFileDate = currentDate
+                        logFile = null
+                    }
 
-                        if (logFile == null) {
-                            File(DataConstants.LOGS_PATH).mkdirs()
-                            val logFileName = "${currentDate.millis().toDateString(GlobalConstants.DATE_PATTERN_FILE_NAME_DAY)}.txt"
-                            logFile = File("${DataConstants.LOGS_PATH}/$logFileName")
-                        }
-                        logFile?.appendText(formatLogMessage(logMessage))
-                        logFile?.appendText("\n")
-                    } catch (_: Exception) { }
-                }
+                    if (logFile == null) {
+                        File(DataConstants.LOGS_PATH).mkdirs()
+                        val logFileName = "${currentDate.millis().toDateString(GlobalConstants.DATE_PATTERN_FILE_NAME_DAY)}.txt"
+                        logFile = File("${DataConstants.LOGS_PATH}/$logFileName")
+                    }
+                    logFile?.appendText(formatLogMessage(logMessage))
+                    logFile?.appendText("\n")
+                } catch (_: Exception) { }
+                callback(logMessage)
             }
         }
-
-        return logMessage
     }
 }

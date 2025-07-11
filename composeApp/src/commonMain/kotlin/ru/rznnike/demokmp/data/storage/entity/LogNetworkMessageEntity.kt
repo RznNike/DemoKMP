@@ -12,9 +12,9 @@ import java.util.*
 data class LogNetworkMessageEntity(
     @PrimaryKey
     val uuid: UUID,
-    @Embedded(prefix = "request")
+    @Embedded(prefix = "request_")
     val request: LogMessage,
-    @Embedded(prefix = "response")
+    @Embedded(prefix = "response_")
     val response: LogMessage? = null,
     val state: NetworkRequestState = NetworkRequestState.SENT
 )

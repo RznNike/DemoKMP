@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "3c5ac9b0fc24dfd8066879dbf64dd5fd",
+    "identityHash": "9e4b959b22591a4ed37c63bb07df71f1",
     "entities": [
       {
         "tableName": "LogMessageEntity",
@@ -54,7 +54,7 @@
       },
       {
         "tableName": "LogNetworkMessageEntity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uuid` BLOB NOT NULL, `state` TEXT NOT NULL, `requesttype` TEXT NOT NULL, `requestlevel` TEXT NOT NULL, `requesttimestamp` INTEGER NOT NULL, `requesttag` TEXT NOT NULL, `requestmessage` TEXT NOT NULL, `responsetype` TEXT, `responselevel` TEXT, `responsetimestamp` INTEGER, `responsetag` TEXT, `responsemessage` TEXT, PRIMARY KEY(`uuid`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uuid` BLOB NOT NULL, `state` TEXT NOT NULL, `request_type` TEXT NOT NULL, `request_level` TEXT NOT NULL, `request_timestamp` INTEGER NOT NULL, `request_tag` TEXT NOT NULL, `request_message` TEXT NOT NULL, `response_type` TEXT, `response_level` TEXT, `response_timestamp` INTEGER, `response_tag` TEXT, `response_message` TEXT, PRIMARY KEY(`uuid`))",
         "fields": [
           {
             "fieldPath": "uuid",
@@ -70,57 +70,57 @@
           },
           {
             "fieldPath": "request.type",
-            "columnName": "requesttype",
+            "columnName": "request_type",
             "affinity": "TEXT",
             "notNull": true
           },
           {
             "fieldPath": "request.level",
-            "columnName": "requestlevel",
+            "columnName": "request_level",
             "affinity": "TEXT",
             "notNull": true
           },
           {
             "fieldPath": "request.timestamp",
-            "columnName": "requesttimestamp",
+            "columnName": "request_timestamp",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
             "fieldPath": "request.tag",
-            "columnName": "requesttag",
+            "columnName": "request_tag",
             "affinity": "TEXT",
             "notNull": true
           },
           {
             "fieldPath": "request.message",
-            "columnName": "requestmessage",
+            "columnName": "request_message",
             "affinity": "TEXT",
             "notNull": true
           },
           {
             "fieldPath": "response.type",
-            "columnName": "responsetype",
+            "columnName": "response_type",
             "affinity": "TEXT"
           },
           {
             "fieldPath": "response.level",
-            "columnName": "responselevel",
+            "columnName": "response_level",
             "affinity": "TEXT"
           },
           {
             "fieldPath": "response.timestamp",
-            "columnName": "responsetimestamp",
+            "columnName": "response_timestamp",
             "affinity": "INTEGER"
           },
           {
             "fieldPath": "response.tag",
-            "columnName": "responsetag",
+            "columnName": "response_tag",
             "affinity": "TEXT"
           },
           {
             "fieldPath": "response.message",
-            "columnName": "responsemessage",
+            "columnName": "response_message",
             "affinity": "TEXT"
           }
         ],
@@ -158,7 +158,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '3c5ac9b0fc24dfd8066879dbf64dd5fd')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '9e4b959b22591a4ed37c63bb07df71f1')"
     ]
   }
 }

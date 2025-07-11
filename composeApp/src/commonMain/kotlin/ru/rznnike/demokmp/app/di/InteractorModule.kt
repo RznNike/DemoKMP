@@ -8,6 +8,7 @@ import ru.rznnike.demokmp.domain.interactor.dbexample.*
 import ru.rznnike.demokmp.domain.interactor.httpexample.GetRandomImageLinksUseCase
 import ru.rznnike.demokmp.domain.interactor.log.AddLogMessageToDBUseCase
 import ru.rznnike.demokmp.domain.interactor.log.AddLogNetworkMessageToDBUseCase
+import ru.rznnike.demokmp.domain.interactor.log.GetLogNetworkMessageUseCase
 import ru.rznnike.demokmp.domain.interactor.pdfexample.GetSamplePdfUseCase
 import ru.rznnike.demokmp.domain.interactor.preferences.*
 import ru.rznnike.demokmp.domain.interactor.wsexample.CloseAppWSSessionUseCase
@@ -20,6 +21,7 @@ internal val interactorModule = module {
 
     single { AddLogMessageToDBUseCase(get(), get()) }
     single { AddLogNetworkMessageToDBUseCase(get(), get()) }
+    single { GetLogNetworkMessageUseCase(get(), get()) }
 
     single { GetTestCounterUseCase(get(), get()) }
     single { SetTestCounterUseCase(get(), get()) }
