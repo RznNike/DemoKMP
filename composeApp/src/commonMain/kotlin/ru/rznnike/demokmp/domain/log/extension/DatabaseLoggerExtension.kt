@@ -11,7 +11,9 @@ import ru.rznnike.demokmp.domain.interactor.log.GetLogNetworkMessageUseCase
 import ru.rznnike.demokmp.domain.log.*
 import java.util.*
 
-class DatabaseLoggerExtension : LoggerExtension(), KoinComponent {
+class DatabaseLoggerExtension(
+    stopAfterOneError: Boolean = false
+) : LoggerExtension(stopAfterOneError = stopAfterOneError), KoinComponent {
     private val addLogMessageToDBUseCase: AddLogMessageToDBUseCase by inject()
     private val addLogNetworkMessageToDBUseCase: AddLogNetworkMessageToDBUseCase by inject()
     private val getLogNetworkMessageUseCase: GetLogNetworkMessageUseCase by inject()
@@ -63,18 +65,25 @@ class DatabaseLoggerExtension : LoggerExtension(), KoinComponent {
         type: LogType,
         callback: suspend (LogMessage) -> Unit
     ) {
-        val logMessage = LogMessage(
-            type = type,
-            level = level,
-            timestamp = clock.millis(),
-            tag = tag,
-            message = message
-        )
+        if ((!stopAfterOneError) || (!isErrorDetected)) {
+            val logMessage = LogMessage(
+                type = type,
+                level = level,
+                timestamp = clock.millis(),
+                tag = tag,
+                message = message
+            )
 
-        withContext(coroutineDispatcher) {
-            outputLock.withPermit {
-                addLogMessageToDBUseCase(logMessage)
-                callback(logMessage)
+            try {
+                withContext(coroutineDispatcher) {
+                    outputLock.withPermit {
+                        addLogMessageToDBUseCase(logMessage)
+                        callback(logMessage)
+                    }
+                }
+            } catch (exception: Exception) {
+                isErrorDetected = true
+                throw exception
             }
         }
     }

@@ -8,7 +8,9 @@ import ru.rznnike.demokmp.domain.log.LogMessage
 import ru.rznnike.demokmp.domain.log.LogType
 import ru.rznnike.demokmp.domain.log.printLog
 
-class ConsoleLoggerExtension : LoggerExtension() {
+class ConsoleLoggerExtension(
+    stopAfterOneError: Boolean = false
+) : LoggerExtension(stopAfterOneError = stopAfterOneError) {
     private val outputLock = Semaphore(1)
 
     override suspend fun addMessage(
@@ -18,18 +20,25 @@ class ConsoleLoggerExtension : LoggerExtension() {
         type: LogType,
         callback: suspend (LogMessage) -> Unit
     ) {
-        val logMessage = LogMessage(
-            type = type,
-            level = level,
-            timestamp = clock.millis(),
-            tag = tag,
-            message = message
-        )
+        if ((!stopAfterOneError) || (!isErrorDetected)) {
+            val logMessage = LogMessage(
+                type = type,
+                level = level,
+                timestamp = clock.millis(),
+                tag = tag,
+                message = message
+            )
 
-        withContext(coroutineDispatcher) {
-            outputLock.withPermit {
-                printLog(logMessage)
-                callback(logMessage)
+            try {
+                withContext(coroutineDispatcher) {
+                    outputLock.withPermit {
+                        printLog(logMessage)
+                        callback(logMessage)
+                    }
+                }
+            } catch (exception: Exception) {
+                isErrorDetected = true
+                throw exception
             }
         }
     }

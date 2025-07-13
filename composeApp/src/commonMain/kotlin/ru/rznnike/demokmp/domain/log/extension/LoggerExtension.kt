@@ -9,9 +9,12 @@ import ru.rznnike.demokmp.domain.log.NetworkRequestState
 import java.time.Clock
 import java.util.*
 
-abstract class LoggerExtension {
+abstract class LoggerExtension(
+    protected val stopAfterOneError: Boolean = false
+) {
     protected lateinit var clock: Clock
     protected lateinit var coroutineDispatcher: CoroutineDispatcher
+    protected var isErrorDetected = false
 
     fun init(clock: Clock, coroutineDispatcher: CoroutineDispatcher) {
         this.clock = clock

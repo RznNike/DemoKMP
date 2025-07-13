@@ -15,7 +15,9 @@ import ru.rznnike.demokmp.domain.utils.toLocalDate
 import java.io.File
 import java.time.LocalDate
 
-class FileLoggerExtension : LoggerExtension() {
+class FileLoggerExtension(
+    stopAfterOneError: Boolean = false
+) : LoggerExtension(stopAfterOneError = stopAfterOneError) {
     private val outputLock = Semaphore(1)
     private var logFile: File? = null
     private var logFileDate: LocalDate? = null
@@ -27,32 +29,39 @@ class FileLoggerExtension : LoggerExtension() {
         type: LogType,
         callback: suspend (LogMessage) -> Unit
     ) {
-        val logMessage = LogMessage(
-            type = type,
-            level = level,
-            timestamp = clock.millis(),
-            tag = tag,
-            message = message
-        )
+        if ((!stopAfterOneError) || (!isErrorDetected)) {
+            val logMessage = LogMessage(
+                type = type,
+                level = level,
+                timestamp = clock.millis(),
+                tag = tag,
+                message = message
+            )
 
-        withContext(coroutineDispatcher) {
-            outputLock.withPermit {
-                try {
-                    val currentDate = clock.millis().toLocalDate()
-                    if (logFileDate != currentDate) {
-                        logFileDate = currentDate
-                        logFile = null
-                    }
+            try {
+                withContext(coroutineDispatcher) {
+                    outputLock.withPermit {
+                        try {
+                            val currentDate = clock.millis().toLocalDate()
+                            if (logFileDate != currentDate) {
+                                logFileDate = currentDate
+                                logFile = null
+                            }
 
-                    if (logFile == null) {
-                        File(DataConstants.LOGS_PATH).mkdirs()
-                        val logFileName = "${currentDate.millis().toDateString(GlobalConstants.DATE_PATTERN_FILE_NAME_DAY)}.txt"
-                        logFile = File("${DataConstants.LOGS_PATH}/$logFileName")
+                            if (logFile == null) {
+                                File(DataConstants.LOGS_PATH).mkdirs()
+                                val logFileName = "${currentDate.millis().toDateString(GlobalConstants.DATE_PATTERN_FILE_NAME_DAY)}.txt"
+                                logFile = File("${DataConstants.LOGS_PATH}/$logFileName")
+                            }
+                            logFile?.appendText(formatLogMessage(logMessage))
+                            logFile?.appendText("\n")
+                        } catch (_: Exception) { }
+                        callback(logMessage)
                     }
-                    logFile?.appendText(formatLogMessage(logMessage))
-                    logFile?.appendText("\n")
-                } catch (_: Exception) { }
-                callback(logMessage)
+                }
+            } catch (exception: Exception) {
+                isErrorDetected = true
+                throw exception
             }
         }
     }
