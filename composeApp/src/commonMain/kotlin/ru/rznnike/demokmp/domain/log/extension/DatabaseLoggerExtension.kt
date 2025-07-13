@@ -1,6 +1,5 @@
 package ru.rznnike.demokmp.domain.log.extension
 
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withPermit
 import kotlinx.coroutines.withContext
@@ -9,12 +8,8 @@ import org.koin.core.component.inject
 import ru.rznnike.demokmp.domain.interactor.log.AddLogMessageToDBUseCase
 import ru.rznnike.demokmp.domain.interactor.log.AddLogNetworkMessageToDBUseCase
 import ru.rznnike.demokmp.domain.interactor.log.GetLogNetworkMessageUseCase
-import ru.rznnike.demokmp.domain.log.LogLevel
-import ru.rznnike.demokmp.domain.log.LogMessage
-import ru.rznnike.demokmp.domain.log.LogNetworkMessage
-import ru.rznnike.demokmp.domain.log.LogType
-import ru.rznnike.demokmp.domain.log.NetworkRequestState
-import java.util.UUID
+import ru.rznnike.demokmp.domain.log.*
+import java.util.*
 
 class DatabaseLoggerExtension : LoggerExtension(), KoinComponent {
     private val addLogMessageToDBUseCase: AddLogMessageToDBUseCase by inject()
@@ -23,7 +18,7 @@ class DatabaseLoggerExtension : LoggerExtension(), KoinComponent {
 
     private val outputLock = Semaphore(1)
 
-    override fun networkRequest(tag: String, uuid: UUID, message: String) {
+    override suspend fun networkRequest(tag: String, uuid: UUID, message: String) {
         addMessage(
             tag = tag,
             message = message,
@@ -38,7 +33,7 @@ class DatabaseLoggerExtension : LoggerExtension(), KoinComponent {
         }
     }
 
-    override fun networkResponse(tag: String, requestUuid: UUID, message: String, state: NetworkRequestState) {
+    override suspend fun networkResponse(tag: String, requestUuid: UUID, message: String, state: NetworkRequestState) {
         addMessage(
             tag = tag,
             message = message,
@@ -47,7 +42,7 @@ class DatabaseLoggerExtension : LoggerExtension(), KoinComponent {
         ) { response ->
             getLogNetworkMessageUseCase(requestUuid).process(
                 { result ->
-                    withContext(coroutineScope.coroutineContext) {
+                    withContext(coroutineDispatcher) {
                         result.message?.let { logNetworkMessage ->
                             val updatedMessage = logNetworkMessage.copy(
                                 response = response,
@@ -61,7 +56,7 @@ class DatabaseLoggerExtension : LoggerExtension(), KoinComponent {
         }
     }
 
-    override fun addMessage(
+    override suspend fun addMessage(
         tag: String,
         message: String,
         level: LogLevel,
@@ -76,7 +71,7 @@ class DatabaseLoggerExtension : LoggerExtension(), KoinComponent {
             message = message
         )
 
-        coroutineScope.launch {
+        withContext(coroutineDispatcher) {
             outputLock.withPermit {
                 addLogMessageToDBUseCase(logMessage)
                 callback(logMessage)

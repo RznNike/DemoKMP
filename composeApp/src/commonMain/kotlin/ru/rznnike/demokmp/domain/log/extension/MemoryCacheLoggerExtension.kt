@@ -1,9 +1,9 @@
 package ru.rznnike.demokmp.domain.log.extension
 
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withPermit
+import kotlinx.coroutines.withContext
 import ru.rznnike.demokmp.domain.log.*
 import java.util.*
 
@@ -14,7 +14,7 @@ class MemoryCacheLoggerExtension : LoggerExtension() {
     private val networkLog: MutableList<LogNetworkMessage> = mutableListOf()
     private val networkLogUpdatesFlow = MutableSharedFlow<LogNetworkMessage>()
 
-    override fun networkRequest(tag: String, uuid: UUID, message: String) {
+    override suspend fun networkRequest(tag: String, uuid: UUID, message: String) {
         addMessage(
             tag = tag,
             message = message,
@@ -30,7 +30,7 @@ class MemoryCacheLoggerExtension : LoggerExtension() {
         }
     }
 
-    override fun networkResponse(tag: String, requestUuid: UUID, message: String, state: NetworkRequestState) {
+    override suspend fun networkResponse(tag: String, requestUuid: UUID, message: String, state: NetworkRequestState) {
         addMessage(
             tag = tag,
             message = message,
@@ -49,7 +49,7 @@ class MemoryCacheLoggerExtension : LoggerExtension() {
         }
     }
 
-    override fun addMessage(
+    override suspend fun addMessage(
         tag: String,
         message: String,
         level: LogLevel,
@@ -64,7 +64,7 @@ class MemoryCacheLoggerExtension : LoggerExtension() {
             message = message
         )
 
-        coroutineScope.launch {
+        withContext(coroutineDispatcher) {
             outputLock.withPermit {
                 log.add(logMessage)
                 logUpdatesFlow.emit(logMessage)

@@ -1,14 +1,17 @@
 package ru.rznnike.demokmp.domain.log.extension
 
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withPermit
+import kotlinx.coroutines.withContext
 import ru.rznnike.demokmp.data.utils.DataConstants
 import ru.rznnike.demokmp.domain.log.LogLevel
 import ru.rznnike.demokmp.domain.log.LogMessage
 import ru.rznnike.demokmp.domain.log.LogType
 import ru.rznnike.demokmp.domain.log.formatLogMessage
-import ru.rznnike.demokmp.domain.utils.*
+import ru.rznnike.demokmp.domain.utils.GlobalConstants
+import ru.rznnike.demokmp.domain.utils.millis
+import ru.rznnike.demokmp.domain.utils.toDateString
+import ru.rznnike.demokmp.domain.utils.toLocalDate
 import java.io.File
 import java.time.LocalDate
 
@@ -17,7 +20,7 @@ class FileLoggerExtension : LoggerExtension() {
     private var logFile: File? = null
     private var logFileDate: LocalDate? = null
 
-    override fun addMessage(
+    override suspend fun addMessage(
         tag: String,
         message: String,
         level: LogLevel,
@@ -32,7 +35,7 @@ class FileLoggerExtension : LoggerExtension() {
             message = message
         )
 
-        coroutineScope.launch {
+        withContext(coroutineDispatcher) {
             outputLock.withPermit {
                 try {
                     val currentDate = clock.millis().toLocalDate()

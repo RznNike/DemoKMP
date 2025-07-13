@@ -1,6 +1,6 @@
 package ru.rznnike.demokmp.domain.log.extension
 
-import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineDispatcher
 import ru.rznnike.demokmp.BuildKonfig
 import ru.rznnike.demokmp.domain.log.LogLevel
 import ru.rznnike.demokmp.domain.log.LogMessage
@@ -11,14 +11,14 @@ import java.util.*
 
 abstract class LoggerExtension {
     protected lateinit var clock: Clock
-    protected lateinit var coroutineScope: CoroutineScope
+    protected lateinit var coroutineDispatcher: CoroutineDispatcher
 
-    fun init(clock: Clock, coroutineScope: CoroutineScope) {
+    fun init(clock: Clock, coroutineDispatcher: CoroutineDispatcher) {
         this.clock = clock
-        this.coroutineScope = coroutineScope
+        this.coroutineDispatcher = coroutineDispatcher
     }
 
-    open fun d(tag: String, message: String) {
+    open suspend fun d(tag: String, message: String) {
         if (BuildKonfig.DEBUG) {
             addMessage(
                 tag = tag,
@@ -28,7 +28,7 @@ abstract class LoggerExtension {
         }
     }
 
-    open fun i(tag: String, message: String) {
+    open suspend fun i(tag: String, message: String) {
         addMessage(
             tag = tag,
             message = message,
@@ -36,7 +36,7 @@ abstract class LoggerExtension {
         )
     }
 
-    open fun w(tag: String, message: String) {
+    open suspend fun w(tag: String, message: String) {
         addMessage(
             tag = tag,
             message = message,
@@ -44,7 +44,7 @@ abstract class LoggerExtension {
         )
     }
 
-    open fun e(tag: String, message: String) {
+    open suspend fun e(tag: String, message: String) {
         addMessage(
             tag = tag,
             message = message,
@@ -52,7 +52,7 @@ abstract class LoggerExtension {
         )
     }
 
-    open fun e(tag: String, exception: Throwable, message: String) {
+    open suspend fun e(tag: String, exception: Throwable, message: String) {
         val formattedMessage = "$message\n${exception.stackTraceToString()}"
         addMessage(
             tag = tag,
@@ -61,7 +61,7 @@ abstract class LoggerExtension {
         )
     }
 
-    open fun networkRequest(tag: String, uuid: UUID, message: String) {
+    open suspend fun networkRequest(tag: String, uuid: UUID, message: String) {
         addMessage(
             tag = tag,
             message = message,
@@ -70,7 +70,7 @@ abstract class LoggerExtension {
         )
     }
 
-    open fun networkResponse(
+    open suspend fun networkResponse(
         tag: String,
         requestUuid: UUID,
         message: String,
@@ -84,7 +84,7 @@ abstract class LoggerExtension {
         )
     }
 
-    abstract fun addMessage(
+    abstract suspend fun addMessage(
         tag: String,
         message: String,
         level: LogLevel,

@@ -1,5 +1,6 @@
 package ru.rznnike.demokmp.domain.log
 
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -57,13 +58,13 @@ class Logger private constructor(
         )
     }
 
-    private fun withExtensions(action: LoggerExtension.() -> Unit) {
+    private fun withExtensions(action: suspend LoggerExtension.() -> Unit) {
         fun printLoggerError(message: String) {
             printLog(
                 LogMessage(
                     type = LogType.DEFAULT,
                     level = LogLevel.ERROR,
-                    timestamp = -1,
+                    timestamp = clock.millis(),
                     tag = "Logger",
                     message = message
                 )
@@ -71,7 +72,7 @@ class Logger private constructor(
         }
 
         if (isInitialized) {
-            coroutineScope.launch {
+            CoroutineScope(coroutineDispatcher).launch {
                 outputLock.withPermit {
                     extensions.forEach {
                         try {
@@ -89,7 +90,7 @@ class Logger private constructor(
 
     companion object {
         private lateinit var clock: Clock
-        private lateinit var coroutineScope: CoroutineScope
+        private lateinit var coroutineDispatcher: CoroutineDispatcher
         private var isInitialized = false
         private var extensions: MutableList<LoggerExtension> = mutableListOf()
 
@@ -99,16 +100,16 @@ class Logger private constructor(
 
         fun init(
             clock: Clock = Clock.systemUTC(),
-            coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.IO),
+            coroutineDispatcher: CoroutineDispatcher = Dispatchers.IO,
             extensions: List<LoggerExtension>
         ) {
             this.clock = clock
-            this.coroutineScope = coroutineScope
+            this.coroutineDispatcher = coroutineDispatcher
             this.extensions = extensions.toMutableList()
             extensions.forEach {
                 it.init(
                     clock = clock,
-                    coroutineScope = coroutineScope
+                    coroutineDispatcher = coroutineDispatcher
                 )
             }
             isInitialized = true
@@ -117,7 +118,7 @@ class Logger private constructor(
         fun addExtension(extension: LoggerExtension) {
             extension.init(
                 clock = clock,
-                coroutineScope = coroutineScope
+                coroutineDispatcher = coroutineDispatcher
             )
             extensions.add(extension)
         }

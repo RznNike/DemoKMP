@@ -1,8 +1,8 @@
 package ru.rznnike.demokmp.domain.log.extension
 
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withPermit
+import kotlinx.coroutines.withContext
 import ru.rznnike.demokmp.domain.log.LogLevel
 import ru.rznnike.demokmp.domain.log.LogMessage
 import ru.rznnike.demokmp.domain.log.LogType
@@ -11,7 +11,7 @@ import ru.rznnike.demokmp.domain.log.printLog
 class ConsoleLoggerExtension : LoggerExtension() {
     private val outputLock = Semaphore(1)
 
-    override fun addMessage(
+    override suspend fun addMessage(
         tag: String,
         message: String,
         level: LogLevel,
@@ -26,7 +26,7 @@ class ConsoleLoggerExtension : LoggerExtension() {
             message = message
         )
 
-        coroutineScope.launch {
+        withContext(coroutineDispatcher) {
             outputLock.withPermit {
                 printLog(logMessage)
                 callback(logMessage)
