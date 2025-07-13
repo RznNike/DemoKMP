@@ -13,9 +13,12 @@ import kotlinx.io.buffered
 import org.jetbrains.compose.resources.StringResource
 import org.koin.core.component.inject
 import ru.rznnike.demokmp.app.common.viewmodel.BaseUiViewModel
-import ru.rznnike.demokmp.app.loggerCache
 import ru.rznnike.demokmp.data.utils.DataConstants
 import ru.rznnike.demokmp.domain.common.CoroutineScopeProvider
+import ru.rznnike.demokmp.domain.interactor.log.ClearLogUseCase
+import ru.rznnike.demokmp.domain.interactor.log.ClearNetworkLogUseCase
+import ru.rznnike.demokmp.domain.interactor.log.GetLogUseCase
+import ru.rznnike.demokmp.domain.interactor.log.GetNetworkLogUseCase
 import ru.rznnike.demokmp.domain.log.LogMessage
 import ru.rznnike.demokmp.domain.log.LogNetworkMessage
 import ru.rznnike.demokmp.domain.log.LogType
@@ -29,9 +32,13 @@ import java.time.Clock
 class LoggerViewModel : BaseUiViewModel<LoggerViewModel.UiState>() {
     private val clock: Clock by inject()
     private val coroutineScopeProvider: CoroutineScopeProvider by inject()
+    private val getLogUseCase: GetLogUseCase by inject()
+    private val getNetworkLogUseCase: GetNetworkLogUseCase by inject()
+    private val clearLogUseCase: ClearLogUseCase by inject()
+    private val clearNetworkLogUseCase: ClearNetworkLogUseCase by inject()
 
-    private val log = mutableListOf<LogMessage>()
-    private val networkLog = mutableListOf<LogNetworkMessage>()
+    private var log = emptyList<LogMessage>()
+    private var networkLog = emptyList<LogNetworkMessage>()
 
     var filterInput by mutableStateOf("")
         private set
@@ -44,33 +51,16 @@ class LoggerViewModel : BaseUiViewModel<LoggerViewModel.UiState>() {
 
     private fun subscribeToLogs() {
         viewModelScope.launch {
-            loggerCache.subscribeToLog(
-                initCallback = { messages ->
-                    log.addAll(messages)
-                    filterLog()
-                },
-                updateCallback = { message ->
-                    log.add(message)
-                    filterLog()
-                }
-            )
+            getLogUseCase().collect {
+                log = it
+                filterLog()
+            }
         }
         viewModelScope.launch {
-            loggerCache.subscribeToNetworkLog(
-                initCallback = { messages ->
-                    networkLog.addAll(messages)
-                    filterNetworkLog()
-                },
-                updateCallback = { message ->
-                    val index = networkLog.indexOfLast { it.uuid == message.uuid }
-                    if (index >= 0) {
-                        networkLog[index] = message
-                    } else {
-                        networkLog.add(message)
-                    }
-                    filterNetworkLog()
-                }
-            )
+            getNetworkLogUseCase().collect {
+                networkLog = it
+                filterNetworkLog()
+            }
         }
     }
 
@@ -150,16 +140,14 @@ class LoggerViewModel : BaseUiViewModel<LoggerViewModel.UiState>() {
     }
 
     fun deleteLog() {
-        when (mutableUiState.value.selectedTab) {
-            Tab.ALL -> {
-                log.clear()
-                filterLog()
-                loggerCache.clearLog()
-            }
-            Tab.NETWORK -> {
-                networkLog.clear()
-                filterNetworkLog()
-                loggerCache.clearNetworkLog()
+        coroutineScopeProvider.io.launch {
+            when (mutableUiState.value.selectedTab) {
+                Tab.ALL -> {
+                    clearLogUseCase()
+                }
+                Tab.NETWORK -> {
+                    clearNetworkLogUseCase()
+                }
             }
         }
     }

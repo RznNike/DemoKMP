@@ -226,7 +226,7 @@ class LoggerScreen : DesktopNavigationScreen() {
                                     LoggerViewModel.Tab.ALL -> {
                                         items(
                                             items = uiState.filteredLog,
-                                            key = { item -> item }
+                                            key = { item -> item.hashCode() }
                                         ) { message ->
                                             LogMessageItem(
                                                 message = message,

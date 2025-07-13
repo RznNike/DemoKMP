@@ -6,14 +6,13 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
 import io.github.vinceglb.filekit.PlatformFile
 import io.github.vinceglb.filekit.writeString
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.koin.core.component.inject
 import ru.rznnike.demokmp.app.common.viewmodel.BaseUiViewModel
-import ru.rznnike.demokmp.app.loggerCache
 import ru.rznnike.demokmp.data.utils.DataConstants
 import ru.rznnike.demokmp.domain.common.CoroutineScopeProvider
+import ru.rznnike.demokmp.domain.interactor.log.GetLogNetworkMessageAsFlowUseCase
 import ru.rznnike.demokmp.domain.log.LogNetworkMessage
 import ru.rznnike.demokmp.domain.utils.GlobalConstants
 import ru.rznnike.demokmp.domain.utils.toDateString
@@ -22,6 +21,7 @@ class NetworkLogDetailsViewModel(
     private val initMessage: LogNetworkMessage
 ) : BaseUiViewModel<NetworkLogDetailsViewModel.UiState>() {
     private val coroutineScopeProvider: CoroutineScopeProvider by inject()
+    private val getLogNetworkMessageAsFlowUseCase: GetLogNetworkMessageAsFlowUseCase by inject()
 
     var queryInput by mutableStateOf("")
         private set
@@ -35,33 +35,15 @@ class NetworkLogDetailsViewModel(
     )
 
     private fun subscribeToUpdates() {
-        var subscription: Job? = null
-
-        fun tryToUpdateMessage(message: LogNetworkMessage) {
-            message.response?.let {
-                mutableUiState.update { currentState ->
-                    currentState.copy(
-                        logNetworkMessage = message
-                    )
-                }
-                subscription?.cancel()
-            }
-        }
-
-        subscription = viewModelScope.launch {
-            if (initMessage.response == null) {
-                loggerCache.subscribeToNetworkLog(
-                    initCallback = { messages ->
-                        messages.firstOrNull { it.uuid == initMessage.uuid }?.let {
-                            tryToUpdateMessage(it)
-                        }
-                    },
-                    updateCallback = { message ->
-                        if (message.uuid == initMessage.uuid) {
-                            tryToUpdateMessage(message)
-                        }
+        viewModelScope.launch {
+            getLogNetworkMessageAsFlowUseCase(initMessage.uuid).collect { newMessage ->
+                newMessage?.response?.let {
+                    mutableUiState.update { currentState ->
+                        currentState.copy(
+                            logNetworkMessage = newMessage
+                        )
                     }
-                )
+                }
             }
         }
     }

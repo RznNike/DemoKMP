@@ -8,7 +8,12 @@ import ru.rznnike.demokmp.domain.interactor.dbexample.*
 import ru.rznnike.demokmp.domain.interactor.httpexample.GetRandomImageLinksUseCase
 import ru.rznnike.demokmp.domain.interactor.log.AddLogMessageToDBUseCase
 import ru.rznnike.demokmp.domain.interactor.log.AddLogNetworkMessageToDBUseCase
+import ru.rznnike.demokmp.domain.interactor.log.ClearLogUseCase
+import ru.rznnike.demokmp.domain.interactor.log.ClearNetworkLogUseCase
+import ru.rznnike.demokmp.domain.interactor.log.GetLogNetworkMessageAsFlowUseCase
 import ru.rznnike.demokmp.domain.interactor.log.GetLogNetworkMessageUseCase
+import ru.rznnike.demokmp.domain.interactor.log.GetLogUseCase
+import ru.rznnike.demokmp.domain.interactor.log.GetNetworkLogUseCase
 import ru.rznnike.demokmp.domain.interactor.pdfexample.GetSamplePdfUseCase
 import ru.rznnike.demokmp.domain.interactor.preferences.*
 import ru.rznnike.demokmp.domain.interactor.wsexample.CloseAppWSSessionUseCase
@@ -22,6 +27,11 @@ internal val interactorModule = module {
     single { AddLogMessageToDBUseCase(get(), get()) }
     single { AddLogNetworkMessageToDBUseCase(get(), get()) }
     single { GetLogNetworkMessageUseCase(get(), get()) }
+    single { GetLogNetworkMessageAsFlowUseCase(get(), get()) }
+    single { GetLogUseCase(get(), get()) }
+    single { GetNetworkLogUseCase(get(), get()) }
+    single { ClearLogUseCase(get(), get()) }
+    single { ClearNetworkLogUseCase(get(), get()) }
 
     single { GetTestCounterUseCase(get(), get()) }
     single { SetTestCounterUseCase(get(), get()) }

@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import kotlinx.coroutines.flow.Flow
 import ru.rznnike.demokmp.data.storage.entity.LogNetworkMessageEntity
 import java.util.*
 
@@ -21,6 +22,9 @@ interface LogNetworkMessageDao {
     @Query("SELECT * FROM LogNetworkMessageEntity WHERE uuid == :uuid")
     suspend fun get(uuid: UUID): LogNetworkMessageEntity?
 
+    @Query("SELECT * FROM LogNetworkMessageEntity WHERE uuid == :uuid")
+    fun getAsFlow(uuid: UUID): Flow<LogNetworkMessageEntity?>
+
     @Query("SELECT * FROM LogNetworkMessageEntity")
-    suspend fun getAll(): List<LogNetworkMessageEntity>
+    fun getAll(): Flow<List<LogNetworkMessageEntity>>
 }

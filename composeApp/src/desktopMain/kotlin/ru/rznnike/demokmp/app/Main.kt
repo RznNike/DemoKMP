@@ -9,9 +9,6 @@ import ru.rznnike.demokmp.domain.log.Logger
 import ru.rznnike.demokmp.domain.log.extension.ConsoleLoggerExtension
 import ru.rznnike.demokmp.domain.log.extension.DatabaseLoggerExtension
 import ru.rznnike.demokmp.domain.log.extension.FileLoggerExtension
-import ru.rznnike.demokmp.domain.log.extension.MemoryCacheLoggerExtension
-
-val loggerCache = MemoryCacheLoggerExtension()
 
 fun main(args: Array<String>) {
     initLogger()
@@ -27,8 +24,7 @@ private fun initLogger() {
     Logger.init(
         extensions = listOf(
             ConsoleLoggerExtension(),
-            FileLoggerExtension(),
-            loggerCache
+            FileLoggerExtension()
         )
     )
     Thread.setDefaultUncaughtExceptionHandler(
