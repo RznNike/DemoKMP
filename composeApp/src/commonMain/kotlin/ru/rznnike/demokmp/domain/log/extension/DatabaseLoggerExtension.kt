@@ -31,7 +31,13 @@ class DatabaseLoggerExtension(
                 message = "",
                 level = LogLevel.INFO,
                 type = LogType.SESSION_START
-            )
+            ) { serviceMessage ->
+                val logNetworkMessage = LogNetworkMessage(
+                    uuid = UUID.randomUUID(),
+                    request = serviceMessage
+                )
+                addLogNetworkMessageToDBUseCase(logNetworkMessage)
+            }
         }
     }
 

@@ -20,13 +20,20 @@ data class LogNetworkMessageEntity(
     val sessionId: Long
 )
 
-fun LogNetworkMessageEntity.toLogNetworkMessage(currentSessionId: Long) = LogNetworkMessage(
-    uuid = uuid,
-    request = request,
-    response = response,
-    state = state,
-    isCurrentSession = currentSessionId == sessionId
-)
+fun LogNetworkMessageEntity.toLogNetworkMessage(currentSessionId: Long): LogNetworkMessage {
+    val isCurrentSession = currentSessionId == sessionId
+    return LogNetworkMessage(
+        uuid = uuid,
+        request = request.copy(
+            isCurrentSession = isCurrentSession
+        ),
+        response = response?.copy(
+            isCurrentSession = isCurrentSession
+        ),
+        state = state,
+        isCurrentSession = currentSessionId == sessionId
+    )
+}
 
 fun LogNetworkMessage.toLogNetworkMessageEntity(currentSessionId: Long) = LogNetworkMessageEntity(
     uuid = uuid,

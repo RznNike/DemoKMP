@@ -43,6 +43,7 @@ fun LogMessageServiceItem(
     Text(
         modifier = Modifier
             .fillMaxWidth()
+            .padding(vertical = 2.dp)
             .background(background)
             .padding(4.dp),
         text = text,

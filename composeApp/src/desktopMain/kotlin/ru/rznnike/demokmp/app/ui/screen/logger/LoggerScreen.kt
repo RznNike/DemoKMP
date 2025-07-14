@@ -261,17 +261,27 @@ class LoggerScreen : DesktopNavigationScreen() {
                                             items = uiState.filteredNetworkLog,
                                             key = { item -> item.uuid }
                                         ) { message ->
-                                            LogNetworkMessageItem(
-                                                message = message,
-                                                query = viewModel.filterInput,
-                                                onClick = {
-                                                    if (BuildKonfig.DEBUG) {
-                                                        navigator.openScreen(
-                                                            NetworkLogDetailsScreen(message)
-                                                        )
-                                                    }
+                                            when (message.request.type) {
+                                                LogType.NETWORK -> {
+                                                    LogNetworkMessageItem(
+                                                        message = message,
+                                                        query = viewModel.filterInput,
+                                                        onClick = {
+                                                            if (BuildKonfig.DEBUG) {
+                                                                navigator.openScreen(
+                                                                    NetworkLogDetailsScreen(message)
+                                                                )
+                                                            }
+                                                        }
+                                                    )
                                                 }
-                                            )
+                                                LogType.SESSION_START -> {
+                                                    LogMessageServiceItem(
+                                                        message = message.request
+                                                    )
+                                                }
+                                                else -> Unit
+                                            }
                                         }
                                     }
                                 }
