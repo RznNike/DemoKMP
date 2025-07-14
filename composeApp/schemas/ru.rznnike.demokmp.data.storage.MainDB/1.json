@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "9e4b959b22591a4ed37c63bb07df71f1",
+    "identityHash": "2231375b5d4a0511323fc38320c1390e",
     "entities": [
       {
         "tableName": "LogMessageEntity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `type` TEXT NOT NULL, `level` TEXT NOT NULL, `timestamp` INTEGER NOT NULL, `tag` TEXT NOT NULL, `message` TEXT NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `type` TEXT NOT NULL, `level` TEXT NOT NULL, `timestamp` INTEGER NOT NULL, `tag` TEXT NOT NULL, `message` TEXT NOT NULL, `sessionId` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -43,6 +43,12 @@
             "columnName": "message",
             "affinity": "TEXT",
             "notNull": true
+          },
+          {
+            "fieldPath": "sessionId",
+            "columnName": "sessionId",
+            "affinity": "INTEGER",
+            "notNull": true
           }
         ],
         "primaryKey": {
@@ -54,7 +60,7 @@
       },
       {
         "tableName": "LogNetworkMessageEntity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uuid` BLOB NOT NULL, `state` TEXT NOT NULL, `request_type` TEXT NOT NULL, `request_level` TEXT NOT NULL, `request_timestamp` INTEGER NOT NULL, `request_tag` TEXT NOT NULL, `request_message` TEXT NOT NULL, `response_type` TEXT, `response_level` TEXT, `response_timestamp` INTEGER, `response_tag` TEXT, `response_message` TEXT, PRIMARY KEY(`uuid`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uuid` BLOB NOT NULL, `state` TEXT NOT NULL, `sessionId` INTEGER NOT NULL, `request_type` TEXT NOT NULL, `request_level` TEXT NOT NULL, `request_timestamp` INTEGER NOT NULL, `request_tag` TEXT NOT NULL, `request_message` TEXT NOT NULL, `request_isCurrentSession` INTEGER NOT NULL, `response_type` TEXT, `response_level` TEXT, `response_timestamp` INTEGER, `response_tag` TEXT, `response_message` TEXT, `response_isCurrentSession` INTEGER, PRIMARY KEY(`uuid`))",
         "fields": [
           {
             "fieldPath": "uuid",
@@ -66,6 +72,12 @@
             "fieldPath": "state",
             "columnName": "state",
             "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sessionId",
+            "columnName": "sessionId",
+            "affinity": "INTEGER",
             "notNull": true
           },
           {
@@ -99,6 +111,12 @@
             "notNull": true
           },
           {
+            "fieldPath": "request.isCurrentSession",
+            "columnName": "request_isCurrentSession",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
             "fieldPath": "response.type",
             "columnName": "response_type",
             "affinity": "TEXT"
@@ -122,6 +140,11 @@
             "fieldPath": "response.message",
             "columnName": "response_message",
             "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "response.isCurrentSession",
+            "columnName": "response_isCurrentSession",
+            "affinity": "INTEGER"
           }
         ],
         "primaryKey": {
@@ -158,7 +181,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '9e4b959b22591a4ed37c63bb07df71f1')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '2231375b5d4a0511323fc38320c1390e')"
     ]
   }
 }

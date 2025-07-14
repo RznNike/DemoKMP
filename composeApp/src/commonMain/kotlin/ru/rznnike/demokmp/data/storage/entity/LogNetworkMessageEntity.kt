@@ -16,19 +16,22 @@ data class LogNetworkMessageEntity(
     val request: LogMessage,
     @Embedded(prefix = "response_")
     val response: LogMessage? = null,
-    val state: NetworkRequestState = NetworkRequestState.SENT
+    val state: NetworkRequestState = NetworkRequestState.SENT,
+    val sessionId: Long
 )
 
-fun LogNetworkMessageEntity.toLogNetworkMessage() = LogNetworkMessage(
+fun LogNetworkMessageEntity.toLogNetworkMessage(currentSessionId: Long) = LogNetworkMessage(
     uuid = uuid,
     request = request,
     response = response,
-    state = state
+    state = state,
+    isCurrentSession = currentSessionId == sessionId
 )
 
-fun LogNetworkMessage.toLogNetworkMessageEntity() = LogNetworkMessageEntity(
+fun LogNetworkMessage.toLogNetworkMessageEntity(currentSessionId: Long) = LogNetworkMessageEntity(
     uuid = uuid,
     request = request,
     response = response,
-    state = state
+    state = state,
+    sessionId = currentSessionId
 )

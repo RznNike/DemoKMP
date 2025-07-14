@@ -127,11 +127,10 @@ class LoggerScreen : DesktopNavigationScreen() {
                         Spacer(Modifier.height(4.dp))
                         CheckboxWithText(
                             onClick = {
-                                viewModel.onFilterOnlyByTagClick()
+                                viewModel.onShowOnlyCurrentSessionClick()
                             },
-                            textRes = Res.string.filter_only_by_tag,
-                            checked = uiState.filterOnlyByTag,
-                            enabled = uiState.selectedTab == LoggerViewModel.Tab.ALL
+                            textRes = Res.string.show_only_current_session,
+                            checked = uiState.showOnlyCurrentSession
                         )
                     }
                     Spacer(Modifier.width(16.dp))
@@ -142,6 +141,15 @@ class LoggerScreen : DesktopNavigationScreen() {
                             },
                             textRes = Res.string.collapse_network_logs,
                             checked = uiState.collapseNetworkMessages,
+                            enabled = uiState.selectedTab == LoggerViewModel.Tab.ALL
+                        )
+                        Spacer(Modifier.height(4.dp))
+                        CheckboxWithText(
+                            onClick = {
+                                viewModel.onFilterOnlyByTagClick()
+                            },
+                            textRes = Res.string.filter_only_by_tag,
+                            checked = uiState.filterOnlyByTag,
                             enabled = uiState.selectedTab == LoggerViewModel.Tab.ALL
                         )
                     }

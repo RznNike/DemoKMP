@@ -65,16 +65,19 @@ class LoggerViewModel : BaseUiViewModel<LoggerViewModel.UiState>() {
     }
 
     private fun filterLog() {
-        val filteredLog = log.filter { message ->
-            val tagMatches = message.tag.contains(filterInput, true)
-            val messageString = if (mutableUiState.value.collapseNetworkMessages && (message.type == LogType.NETWORK)) {
-                message.message.lines().first()
-            } else {
-                message.message
-            }
-            val messageMatches = messageString.contains(filterInput, true)
+        val filteredLog = mutableUiState.value.run {
+            log.filter { message ->
+                val tagMatches = message.tag.contains(filterInput, true)
+                val messageString = if (collapseNetworkMessages && (message.type == LogType.NETWORK)) {
+                    message.message.lines().first()
+                } else {
+                    message.message
+                }
+                val messageMatches = messageString.contains(filterInput, true)
 
-            tagMatches || (messageMatches && (!mutableUiState.value.filterOnlyByTag))
+                (tagMatches || (messageMatches && (!filterOnlyByTag)))
+                        && ((!showOnlyCurrentSession) || message.isCurrentSession)
+            }
         }
 
         mutableUiState.update { currentState ->
@@ -86,8 +89,10 @@ class LoggerViewModel : BaseUiViewModel<LoggerViewModel.UiState>() {
 
     private fun filterNetworkLog() {
         val filteredNetworkLog = networkLog.filter {
-            it.request.message.lines().first().contains(filterInput, true)
-                    || (it.response?.message?.lines()?.first()?.contains(filterInput, true) == true)
+            val requestMatches = it.request.message.lines().first().contains(filterInput, true)
+            val responseMatches = it.response?.message?.lines()?.first()?.contains(filterInput, true) == true
+
+            (requestMatches || responseMatches) && ((!mutableUiState.value.showOnlyCurrentSession) || it.isCurrentSession)
         }
 
         mutableUiState.update { currentState ->
@@ -103,15 +108,6 @@ class LoggerViewModel : BaseUiViewModel<LoggerViewModel.UiState>() {
         filterNetworkLog()
     }
 
-    fun onFilterOnlyByTagClick() {
-        mutableUiState.update { currentState ->
-            currentState.copy(
-                filterOnlyByTag = !currentState.filterOnlyByTag
-            )
-        }
-        filterLog()
-    }
-
     fun onAutoscrollClick() {
         mutableUiState.update { currentState ->
             currentState.copy(
@@ -120,10 +116,29 @@ class LoggerViewModel : BaseUiViewModel<LoggerViewModel.UiState>() {
         }
     }
 
+    fun onShowOnlyCurrentSessionClick() {
+        mutableUiState.update { currentState ->
+            currentState.copy(
+                showOnlyCurrentSession = !currentState.showOnlyCurrentSession
+            )
+        }
+        filterLog()
+        filterNetworkLog()
+    }
+
     fun onCollapseNetworkMessagesClick() {
         mutableUiState.update { currentState ->
             currentState.copy(
                 collapseNetworkMessages = !currentState.collapseNetworkMessages
+            )
+        }
+        filterLog()
+    }
+
+    fun onFilterOnlyByTagClick() {
+        mutableUiState.update { currentState ->
+            currentState.copy(
+                filterOnlyByTag = !currentState.filterOnlyByTag
             )
         }
         filterLog()
@@ -175,8 +190,9 @@ class LoggerViewModel : BaseUiViewModel<LoggerViewModel.UiState>() {
     data class UiState(
         val selectedTab: Tab = Tab.ALL,
         val autoscroll: Boolean = true,
-        val filterOnlyByTag: Boolean = false,
+        val showOnlyCurrentSession: Boolean = false,
         val collapseNetworkMessages: Boolean = false,
+        val filterOnlyByTag: Boolean = false,
         val filteredLog: List<LogMessage> = emptyList(),
         val filteredNetworkLog: List<LogNetworkMessage> = emptyList()
     )

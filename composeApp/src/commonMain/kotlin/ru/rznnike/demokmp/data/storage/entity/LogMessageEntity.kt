@@ -14,21 +14,24 @@ data class LogMessageEntity(
     val level: LogLevel,
     val timestamp: Long,
     val tag: String,
-    val message: String
+    val message: String,
+    val sessionId: Long
 )
 
-fun LogMessageEntity.toLogMessage() = LogMessage(
+fun LogMessageEntity.toLogMessage(currentSessionId: Long) = LogMessage(
     type = type,
     level = level,
     timestamp = timestamp,
     tag = tag,
-    message = message
+    message = message,
+    isCurrentSession = currentSessionId == sessionId
 )
 
-fun LogMessage.toLogMessageEntity() = LogMessageEntity(
+fun LogMessage.toLogMessageEntity(currentSessionId: Long) = LogMessageEntity(
     type = type,
     level = level,
     timestamp = timestamp,
     tag = tag,
-    message = message
+    message = message,
+    sessionId = currentSessionId
 )

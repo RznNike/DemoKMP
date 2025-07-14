@@ -10,5 +10,6 @@ data class LogNetworkMessage(
     val uuid: UUID,
     val request: LogMessage,
     val response: LogMessage? = null,
-    val state: NetworkRequestState = NetworkRequestState.SENT
+    val state: NetworkRequestState = NetworkRequestState.SENT,
+    val isCurrentSession: Boolean = true
 )

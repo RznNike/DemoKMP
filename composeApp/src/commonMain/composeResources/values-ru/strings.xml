@@ -54,6 +54,7 @@
     <string name="filter_only_by_tag">Фильтр только по тегу</string>
     <string name="autoscroll">Автопрокрутка</string>
     <string name="collapse_network_logs">Сворачивать сетевые логи</string>
+    <string name="show_only_current_session">Показать только текущую сессию</string>
     <string name="save_log">Сохранить лог</string>
     <string name="restart">Перезапуск</string>
     <string name="error_restart_from_ide">Функция перезапуска недоступна, если приложение запущено из IDE</string>

@@ -8,7 +8,8 @@ data class LogMessage(
     val level: LogLevel,
     val timestamp: Long,
     val tag: String,
-    val message: String
+    val message: String,
+    val isCurrentSession: Boolean = true
 ) {
     fun getFormattedMessage() = message.trim().replace("\t", "    ")
 }

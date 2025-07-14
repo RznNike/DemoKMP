@@ -54,6 +54,7 @@
     <string name="filter_only_by_tag">Filter only by tag</string>
     <string name="autoscroll">Autoscroll</string>
     <string name="collapse_network_logs">Collapse network logs</string>
+    <string name="show_only_current_session">Show only current session</string>
     <string name="save_log">Save log</string>
     <string name="restart">Restart</string>
     <string name="error_restart_from_ide">Restart function is unavailable if app is launched from IDE</string>
