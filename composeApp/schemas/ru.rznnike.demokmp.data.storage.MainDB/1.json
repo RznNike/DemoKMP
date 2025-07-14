@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "2231375b5d4a0511323fc38320c1390e",
+    "identityHash": "8b58c8662399072e0b94059b9bb5f9e2",
     "entities": [
       {
         "tableName": "LogMessageEntity",
@@ -60,8 +60,14 @@
       },
       {
         "tableName": "LogNetworkMessageEntity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uuid` BLOB NOT NULL, `state` TEXT NOT NULL, `sessionId` INTEGER NOT NULL, `request_type` TEXT NOT NULL, `request_level` TEXT NOT NULL, `request_timestamp` INTEGER NOT NULL, `request_tag` TEXT NOT NULL, `request_message` TEXT NOT NULL, `request_isCurrentSession` INTEGER NOT NULL, `response_type` TEXT, `response_level` TEXT, `response_timestamp` INTEGER, `response_tag` TEXT, `response_message` TEXT, `response_isCurrentSession` INTEGER, PRIMARY KEY(`uuid`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `uuid` BLOB NOT NULL, `state` TEXT NOT NULL, `sessionId` INTEGER NOT NULL, `request_type` TEXT NOT NULL, `request_level` TEXT NOT NULL, `request_timestamp` INTEGER NOT NULL, `request_tag` TEXT NOT NULL, `request_message` TEXT NOT NULL, `request_isCurrentSession` INTEGER NOT NULL, `response_type` TEXT, `response_level` TEXT, `response_timestamp` INTEGER, `response_tag` TEXT, `response_message` TEXT, `response_isCurrentSession` INTEGER)",
         "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
           {
             "fieldPath": "uuid",
             "columnName": "uuid",
@@ -148,11 +154,22 @@
           }
         ],
         "primaryKey": {
-          "autoGenerate": false,
+          "autoGenerate": true,
           "columnNames": [
-            "uuid"
+            "id"
           ]
-        }
+        },
+        "indices": [
+          {
+            "name": "index_LogNetworkMessageEntity_uuid",
+            "unique": false,
+            "columnNames": [
+              "uuid"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_LogNetworkMessageEntity_uuid` ON `${TABLE_NAME}` (`uuid`)"
+          }
+        ]
       },
       {
         "tableName": "DBExampleDataEntity",
@@ -181,7 +198,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '2231375b5d4a0511323fc38320c1390e')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '8b58c8662399072e0b94059b9bb5f9e2')"
     ]
   }
 }

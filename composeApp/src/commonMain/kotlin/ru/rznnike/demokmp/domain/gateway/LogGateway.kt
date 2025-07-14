@@ -3,6 +3,7 @@ package ru.rznnike.demokmp.domain.gateway
 import kotlinx.coroutines.flow.Flow
 import ru.rznnike.demokmp.domain.log.LogMessage
 import ru.rznnike.demokmp.domain.log.LogNetworkMessage
+import ru.rznnike.demokmp.domain.log.extension.DatabaseLoggerExtension
 import java.util.UUID
 
 interface LogGateway {
@@ -21,4 +22,6 @@ interface LogGateway {
     suspend fun clearLog()
 
     suspend fun clearNetworkLog()
+
+    suspend fun deleteOldLogs(logsRetentionMode: DatabaseLoggerExtension.LogsRetentionMode)
 }

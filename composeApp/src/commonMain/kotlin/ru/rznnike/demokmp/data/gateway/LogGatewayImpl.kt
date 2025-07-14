@@ -13,11 +13,12 @@ import ru.rznnike.demokmp.domain.common.DispatcherProvider
 import ru.rznnike.demokmp.domain.gateway.LogGateway
 import ru.rznnike.demokmp.domain.log.LogMessage
 import ru.rznnike.demokmp.domain.log.LogNetworkMessage
+import ru.rznnike.demokmp.domain.log.extension.DatabaseLoggerExtension.LogsRetentionMode
 import java.time.Clock
 import java.util.*
 
 class LogGatewayImpl(
-    clock: Clock,
+    private val clock: Clock,
     private val dispatcherProvider: DispatcherProvider,
     private val logMessageDao: LogMessageDao,
     private val logNetworkMessageDao: LogNetworkMessageDao
@@ -58,5 +59,34 @@ class LogGatewayImpl(
 
     override suspend fun clearNetworkLog() = withContext(dispatcherProvider.io) {
         logNetworkMessageDao.deleteAll()
+    }
+
+    override suspend fun deleteOldLogs(logsRetentionMode: LogsRetentionMode): Unit = withContext(dispatcherProvider.io) {
+        when (logsRetentionMode) {
+            LogsRetentionMode.All -> Unit
+            is LogsRetentionMode.LastNSessions -> {
+                val sessionsCount = logsRetentionMode.sessionsCount.coerceAtLeast(1)
+                logMessageDao.getSessionIds()
+                    .sortedDescending()
+                    .getOrNull(sessionsCount - 1)
+                    ?.let { borderSessionId ->
+                        logMessageDao.deleteOldBySessionId(borderSessionId = borderSessionId)
+                        logNetworkMessageDao.deleteOldBySessionId(borderSessionId = borderSessionId)
+                    }
+            }
+            is LogsRetentionMode.LastNMessages -> {
+                logMessageDao.getNthId(offset = logsRetentionMode.messagesCount)?.let { borderId ->
+                    logMessageDao.deleteOldById(borderId = borderId)
+                }
+                logNetworkMessageDao.getNthId(offset = logsRetentionMode.messagesCount)?.let { borderId ->
+                    logNetworkMessageDao.deleteOldById(borderId = borderId)
+                }
+            }
+            is LogsRetentionMode.TimePeriod -> {
+                val borderTimestamp = clock.millis() - logsRetentionMode.logsPeriodMs
+                logMessageDao.deleteOldByTimestamp(borderTimestamp = borderTimestamp)
+                logNetworkMessageDao.deleteOldByTimestamp(borderTimestamp = borderTimestamp)
+            }
+        }
     }
 }

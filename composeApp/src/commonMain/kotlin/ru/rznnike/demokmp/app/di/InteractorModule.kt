@@ -10,6 +10,7 @@ import ru.rznnike.demokmp.domain.interactor.log.AddLogMessageToDBUseCase
 import ru.rznnike.demokmp.domain.interactor.log.AddLogNetworkMessageToDBUseCase
 import ru.rznnike.demokmp.domain.interactor.log.ClearLogUseCase
 import ru.rznnike.demokmp.domain.interactor.log.ClearNetworkLogUseCase
+import ru.rznnike.demokmp.domain.interactor.log.DeleteOldLogsUseCase
 import ru.rznnike.demokmp.domain.interactor.log.GetLogNetworkMessageAsFlowUseCase
 import ru.rznnike.demokmp.domain.interactor.log.GetLogNetworkMessageUseCase
 import ru.rznnike.demokmp.domain.interactor.log.GetLogUseCase
@@ -32,6 +33,7 @@ internal val interactorModule = module {
     single { GetNetworkLogUseCase(get(), get()) }
     single { ClearLogUseCase(get(), get()) }
     single { ClearNetworkLogUseCase(get(), get()) }
+    single { DeleteOldLogsUseCase(get(), get()) }
 
     single { GetTestCounterUseCase(get(), get()) }
     single { SetTestCounterUseCase(get(), get()) }

@@ -6,6 +6,7 @@ import java.util.*
 
 @Serializable
 data class LogNetworkMessage(
+    val id: Long = 0,
     @Serializable(with = UUIDSerializer::class)
     val uuid: UUID,
     val request: LogMessage,

@@ -1,5 +1,6 @@
 package ru.rznnike.demokmp.data.storage.entity
 
+import androidx.room.ColumnInfo
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -10,7 +11,9 @@ import java.util.*
 
 @Entity
 data class LogNetworkMessageEntity(
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
+    val id: Long = 0,
+    @ColumnInfo(index = true)
     val uuid: UUID,
     @Embedded(prefix = "request_")
     val request: LogMessage,
@@ -23,6 +26,7 @@ data class LogNetworkMessageEntity(
 fun LogNetworkMessageEntity.toLogNetworkMessage(currentSessionId: Long): LogNetworkMessage {
     val isCurrentSession = currentSessionId == sessionId
     return LogNetworkMessage(
+        id = id,
         uuid = uuid,
         request = request.copy(
             isCurrentSession = isCurrentSession
@@ -36,6 +40,7 @@ fun LogNetworkMessageEntity.toLogNetworkMessage(currentSessionId: Long): LogNetw
 }
 
 fun LogNetworkMessage.toLogNetworkMessageEntity(currentSessionId: Long) = LogNetworkMessageEntity(
+    id = id,
     uuid = uuid,
     request = request,
     response = response,
