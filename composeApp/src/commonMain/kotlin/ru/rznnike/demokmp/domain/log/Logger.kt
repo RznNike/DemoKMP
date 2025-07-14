@@ -59,18 +59,6 @@ class Logger private constructor(
     }
 
     private fun withExtensions(action: suspend LoggerExtension.() -> Unit) {
-        fun printLoggerError(message: String) {
-            printLog(
-                LogMessage(
-                    type = LogType.DEFAULT,
-                    level = LogLevel.ERROR,
-                    timestamp = clock.millis(),
-                    tag = "Logger",
-                    message = message
-                )
-            )
-        }
-
         if (isInitialized) {
             CoroutineScope(coroutineDispatcher).launch {
                 outputLock.withPermit {
@@ -107,20 +95,28 @@ class Logger private constructor(
             this.coroutineDispatcher = coroutineDispatcher
             this.extensions = extensions.toMutableList()
             extensions.forEach {
-                it.init(
-                    clock = clock,
-                    coroutineDispatcher = coroutineDispatcher
-                )
+                try {
+                    it.init(
+                        clock = clock,
+                        coroutineDispatcher = coroutineDispatcher
+                    )
+                } catch (exception: Exception) {
+                    printLoggerError("Error in logger extension init ${it::class.java.name}:\n${exception.stackTraceToString()}")
+                }
             }
             isInitialized = true
         }
 
         fun addExtension(extension: LoggerExtension) {
-            extension.init(
-                clock = clock,
-                coroutineDispatcher = coroutineDispatcher
-            )
-            extensions.add(extension)
+            try {
+                extension.init(
+                    clock = clock,
+                    coroutineDispatcher = coroutineDispatcher
+                )
+                extensions.add(extension)
+            } catch (exception: Exception) {
+                printLoggerError("Error in logger extension init ${extension::class.java.name}:\n${exception.stackTraceToString()}")
+            }
         }
 
         fun withTag(tag: String) = Logger(tag)
@@ -146,6 +142,18 @@ class Logger private constructor(
             message = message,
             state = state
         )
+
+        private fun printLoggerError(message: String) {
+            printLog(
+                LogMessage(
+                    type = LogType.DEFAULT,
+                    level = LogLevel.ERROR,
+                    timestamp = clock.millis(),
+                    tag = "Logger",
+                    message = message
+                )
+            )
+        }
     }
 }
 

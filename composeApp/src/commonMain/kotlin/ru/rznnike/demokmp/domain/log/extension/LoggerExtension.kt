@@ -16,7 +16,7 @@ abstract class LoggerExtension(
     protected lateinit var coroutineDispatcher: CoroutineDispatcher
     protected var isErrorDetected = false
 
-    fun init(clock: Clock, coroutineDispatcher: CoroutineDispatcher) {
+    open fun init(clock: Clock, coroutineDispatcher: CoroutineDispatcher) {
         this.clock = clock
         this.coroutineDispatcher = coroutineDispatcher
     }
