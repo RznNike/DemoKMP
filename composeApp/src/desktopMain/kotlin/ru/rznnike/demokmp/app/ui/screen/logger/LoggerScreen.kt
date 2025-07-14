@@ -28,6 +28,7 @@ import ru.rznnike.demokmp.BuildKonfig
 import ru.rznnike.demokmp.app.navigation.DesktopNavigationScreen
 import ru.rznnike.demokmp.app.navigation.getNavigator
 import ru.rznnike.demokmp.app.ui.item.LogMessageItem
+import ru.rznnike.demokmp.app.ui.item.LogMessageServiceItem
 import ru.rznnike.demokmp.app.ui.item.LogNetworkMessageItem
 import ru.rznnike.demokmp.app.ui.screen.logger.network.NetworkLogDetailsScreen
 import ru.rznnike.demokmp.app.ui.view.SelectableOutlinedIconButton
@@ -38,6 +39,7 @@ import ru.rznnike.demokmp.app.ui.viewmodel.logger.LoggerViewModel
 import ru.rznnike.demokmp.app.ui.window.LocalWindow
 import ru.rznnike.demokmp.app.utils.onClick
 import ru.rznnike.demokmp.data.utils.DataConstants
+import ru.rznnike.demokmp.domain.log.LogType
 import ru.rznnike.demokmp.generated.resources.*
 
 @Serializable
@@ -236,12 +238,22 @@ class LoggerScreen : DesktopNavigationScreen() {
                                             items = uiState.filteredLog,
                                             key = { item -> item.hashCode() }
                                         ) { message ->
-                                            LogMessageItem(
-                                                message = message,
-                                                query = viewModel.filterInput,
-                                                filterOnlyByTag = uiState.filterOnlyByTag,
-                                                collapseNetworkMessages = uiState.collapseNetworkMessages
-                                            )
+                                            when (message.type) {
+                                                LogType.DEFAULT,
+                                                LogType.NETWORK -> {
+                                                    LogMessageItem(
+                                                        message = message,
+                                                        query = viewModel.filterInput,
+                                                        filterOnlyByTag = uiState.filterOnlyByTag,
+                                                        collapseNetworkMessages = uiState.collapseNetworkMessages
+                                                    )
+                                                }
+                                                LogType.SESSION_START -> {
+                                                    LogMessageServiceItem(
+                                                        message = message
+                                                    )
+                                                }
+                                            }
                                         }
                                     }
                                     LoggerViewModel.Tab.NETWORK -> {

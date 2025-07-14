@@ -1,18 +1,23 @@
 package ru.rznnike.demokmp.data.gateway
 
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ru.rznnike.demokmp.data.storage.dao.LogMessageDao
 import ru.rznnike.demokmp.data.storage.dao.LogNetworkMessageDao
+import ru.rznnike.demokmp.data.storage.entity.LogMessageEntity
 import ru.rznnike.demokmp.data.storage.entity.toLogMessage
 import ru.rznnike.demokmp.data.storage.entity.toLogMessageEntity
 import ru.rznnike.demokmp.data.storage.entity.toLogNetworkMessage
 import ru.rznnike.demokmp.data.storage.entity.toLogNetworkMessageEntity
 import ru.rznnike.demokmp.domain.common.DispatcherProvider
 import ru.rznnike.demokmp.domain.gateway.LogGateway
+import ru.rznnike.demokmp.domain.log.LogLevel
 import ru.rznnike.demokmp.domain.log.LogMessage
 import ru.rznnike.demokmp.domain.log.LogNetworkMessage
+import ru.rznnike.demokmp.domain.log.LogType
 import java.time.Clock
 import java.util.UUID
 
@@ -23,6 +28,21 @@ class LogGatewayImpl(
     private val logNetworkMessageDao: LogNetworkMessageDao
 ) : LogGateway {
     private val currentSessionId = clock.millis()
+
+    init {
+        CoroutineScope(dispatcherProvider.default).launch {
+            logMessageDao.add(
+                LogMessageEntity(
+                    type = LogType.SESSION_START,
+                    level = LogLevel.INFO,
+                    timestamp = currentSessionId,
+                    tag = "",
+                    message = "",
+                    sessionId = currentSessionId
+                )
+            )
+        }
+    }
 
     override suspend fun addLogMessageToDB(message: LogMessage) = withContext(dispatcherProvider.io) {
         logMessageDao.add(message.toLogMessageEntity(currentSessionId))

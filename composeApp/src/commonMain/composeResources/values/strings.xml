@@ -76,4 +76,6 @@
     <string name="close_screen">Close screen</string>
     <string name="close_flow">Close flow</string>
     <string name="test_counter_local">Test counter (local)</string>
+    <string name="session_start">Session start</string>
+    <string name="current_session_start">Current session start</string>
 </resources>

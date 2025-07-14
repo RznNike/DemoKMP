@@ -76,4 +76,6 @@
     <string name="close_screen">Закрыть экран</string>
     <string name="close_flow">Закрыть поток</string>
     <string name="test_counter_local">Тестовый счетчик (локальный)</string>
+    <string name="session_start">Начало сессии</string>
+    <string name="current_session_start">Начало текущей сессии</string>
 </resources>
