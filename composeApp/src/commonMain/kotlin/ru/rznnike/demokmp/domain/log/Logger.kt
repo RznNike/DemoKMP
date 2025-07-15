@@ -77,7 +77,7 @@ class Logger private constructor(
     }
 
     companion object {
-        private lateinit var clock: Clock
+        private var clock: Clock = Clock.systemUTC()
         private lateinit var coroutineDispatcher: CoroutineDispatcher
         private var isInitialized = false
         private var extensions: MutableList<LoggerExtension> = mutableListOf()
