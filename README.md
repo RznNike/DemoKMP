@@ -23,6 +23,7 @@ This is a sample project with a set of solutions to typical problems, demonstrat
 * Various custom UI elements
 * Dynamic BuildConfig with platform and build type information
 * Charts
+* Custom logger with modular structure
 
 #### PC only
 * App building to jar file and launch using script
@@ -30,7 +31,7 @@ This is a sample project with a set of solutions to typical problems, demonstrat
 * Launch arguments
 * Screen-scoped hotkeys
 * Basic PDF viewer, print dialog
-* Built-in logger with UI
+* UI for custom logger; database, file and memory cache modules
 
 #### Android only
 * UI for viewing network logs from a device
