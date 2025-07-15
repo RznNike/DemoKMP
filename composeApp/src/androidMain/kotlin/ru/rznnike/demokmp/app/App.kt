@@ -6,6 +6,7 @@ import org.koin.core.context.startKoin
 import org.koin.core.logger.Level
 import ru.rznnike.demokmp.app.di.appComponent
 import ru.rznnike.demokmp.domain.log.Logger
+import ru.rznnike.demokmp.domain.log.extension.ConsoleLoggerExtension
 import kotlin.system.exitProcess
 
 class App : Application() {
@@ -17,6 +18,11 @@ class App : Application() {
     }
 
     private fun initLogger() {
+        Logger.init(
+            extensions = listOf(
+                ConsoleLoggerExtension()
+            )
+        )
         Thread.setDefaultUncaughtExceptionHandler(
             object : Thread.UncaughtExceptionHandler {
                 var isCrashing = false
