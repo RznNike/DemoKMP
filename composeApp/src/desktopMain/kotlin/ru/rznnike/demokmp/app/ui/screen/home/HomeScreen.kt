@@ -143,17 +143,17 @@ class HomeScreen : DesktopNavigationScreen() {
                         MenuButton(Res.string.navigation_example) {
                             navigator.openFlow(NavigationExampleFlow())
                         }
-                        MenuButton(Res.string.about_app) {
-                            showAboutDialog = true
-                        }
-                        MenuButton(Res.string.restart) {
-                            viewModel.restartApp()
-                        }
                         MenuButton(Res.string.test_dialog) {
                             notifier.sendAlert(Res.string.test_dialog)
                         }
                         MenuButton(Res.string.test_message) {
                             notifier.sendActionMessage(Res.string.test_message, Res.string.close) {}
+                        }
+                        MenuButton(Res.string.restart) {
+                            viewModel.restartApp()
+                        }
+                        MenuButton(Res.string.about_app) {
+                            showAboutDialog = true
                         }
                     }
                     VerticalScrollbar(

@@ -1,5 +1,6 @@
 package ru.rznnike.demokmp.app.ui.screen.settings
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.VerticalScrollbar
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -183,7 +184,11 @@ class SettingsScreen : DesktopNavigationScreen() {
                                                 DropdownMenu(
                                                     expanded = showMenu,
                                                     onDismissRequest = { showMenu = false },
-                                                    containerColor = MaterialTheme.colorScheme.surface
+                                                    containerColor = MaterialTheme.colorScheme.surface,
+                                                    border = BorderStroke(
+                                                        width = 1.dp,
+                                                        color = MaterialTheme.colorScheme.outline
+                                                    )
                                                 ) {
                                                     content {
                                                         showMenu = false

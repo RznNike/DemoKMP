@@ -188,21 +188,24 @@ class HttpLoggingInterceptor : Interceptor {
                     return response
                 }
 
+                logBuilder.appendLine()
                 when {
                     contentLength > MAX_RESPONSE_BODY_SIZE_TO_LOG -> {
-                        logBuilder.appendLine()
                         logBuilder.appendLine("***Too big response body omitted***")
                     }
                     contentLength != 0L -> {
-                        logBuilder.appendLine()
                         val charset: Charset = responseBody.contentType().charsetOrUtf8()
                         val body = buffer.clone().readString(charset)
-                        val formattedBody = try {
-                            formatter.encodeToString(formatter.parseToJsonElement(body))
-                        } catch (_: Exception) {
-                            body
+                        if (buffer.size > MAX_RESPONSE_BODY_SIZE_TO_LOG) {
+                            logBuilder.appendLine("***Too big response body omitted***")
+                        } else {
+                            val formattedBody = try {
+                                formatter.encodeToString(formatter.parseToJsonElement(body))
+                            } catch (_: Exception) {
+                                body
+                            }
+                            logBuilder.appendLine(formattedBody)
                         }
-                        logBuilder.appendLine(formattedBody)
                     }
                 }
 

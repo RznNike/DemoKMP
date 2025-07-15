@@ -1,5 +1,6 @@
 package ru.rznnike.demokmp.app.ui.view
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -140,7 +141,11 @@ fun DateTextField(
                     Surface(
                         modifier = Modifier.padding(end = 16.dp),
                         shadowElevation = 4.dp,
-                        shape = MaterialTheme.shapes.medium
+                        shape = MaterialTheme.shapes.medium,
+                        border = BorderStroke(
+                            width = 1.dp,
+                            color = MaterialTheme.colorScheme.outline
+                        )
                     ) {
                         CompositionLocalProvider(
                             LocalMinimumInteractiveComponentSize provides 48.dp

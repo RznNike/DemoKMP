@@ -23,6 +23,7 @@
 * Различные пользовательские элементы UI
 * Динамический BuildConfig с информацией о платформе и типе сборки
 * Графики
+* Кастомный логгер с модульной структурой
 
 #### Только для ПК
 * Сборка приложения в jar файл и запуск с помощью скрипта
@@ -31,6 +32,7 @@
 * Горячие клавиши в контексте экрана
 * Базовый просмотр PDF, диалог печати
 * Встроенный логгер с собственным UI
+* UI для кастомного логгера; модули базы данных, файла и кеша в памяти
 
 #### Только для Android
 * UI для просмотра сетевых логов с устройства
@@ -39,21 +41,23 @@
 ## Скриншоты
 <details>
     <summary>ПК - основное приложение</summary>
-    <img src="/readmeFiles/ru/screenshots/pc/screenshot_1.png" alt="screenshot" width="500"/>
-    <img src="/readmeFiles/ru/screenshots/pc/screenshot_2.png" alt="screenshot" width="500"/>
-    <img src="/readmeFiles/ru/screenshots/pc/screenshot_3.png" alt="screenshot" width="500"/>
-    <img src="/readmeFiles/ru/screenshots/pc/screenshot_4.png" alt="screenshot" width="500"/>
-    <img src="/readmeFiles/ru/screenshots/pc/screenshot_5.png" alt="screenshot" width="500"/>
-    <img src="/readmeFiles/ru/screenshots/pc/screenshot_6.png" alt="screenshot" width="500"/>
-    <img src="/readmeFiles/ru/screenshots/pc/screenshot_7.png" alt="screenshot" width="500"/>
-    <img src="/readmeFiles/ru/screenshots/pc/screenshot_8.png" alt="screenshot" width="500"/>
-    <img src="/readmeFiles/ru/screenshots/pc/screenshot_9.png" alt="screenshot" width="500"/>
+    <img src="/readmeFiles/ru/screenshots/pc/screenshot_1.png" alt="screenshot" width="400"/>
+    <img src="/readmeFiles/ru/screenshots/pc/screenshot_2.png" alt="screenshot" width="400"/>
+    <img src="/readmeFiles/ru/screenshots/pc/screenshot_3.png" alt="screenshot" width="400"/>
+    <img src="/readmeFiles/ru/screenshots/pc/screenshot_4.png" alt="screenshot" width="400"/>
+    <img src="/readmeFiles/ru/screenshots/pc/screenshot_5.png" alt="screenshot" width="400"/>
+    <img src="/readmeFiles/ru/screenshots/pc/screenshot_6.png" alt="screenshot" width="400"/>
+    <img src="/readmeFiles/ru/screenshots/pc/screenshot_7.png" alt="screenshot" width="400"/>
+    <img src="/readmeFiles/ru/screenshots/pc/screenshot_8.png" alt="screenshot" width="400"/>
+    <img src="/readmeFiles/ru/screenshots/pc/screenshot_9.png" alt="screenshot" width="400"/>
+    <img src="/readmeFiles/ru/screenshots/pc/screenshot_10.png" alt="screenshot" width="400"/>
 </details>
 
 <details>
     <summary>ПК - логгер</summary>
-    <img src="/readmeFiles/ru/screenshots/pc/screenshot_10.png" alt="screenshot" width="750"/>
-    <img src="/readmeFiles/ru/screenshots/pc/screenshot_11.png" alt="screenshot" width="750"/>
+    <img src="/readmeFiles/ru/screenshots/pc/screenshot_11.png" alt="screenshot" width="600"/>
+    <img src="/readmeFiles/ru/screenshots/pc/screenshot_12.png" alt="screenshot" width="600"/>
+    <img src="/readmeFiles/ru/screenshots/pc/screenshot_13.png" alt="screenshot" width="600"/>
 </details>
 
 <details>
@@ -128,9 +132,9 @@
 
 В результате работы будет создан архив с собранной версией приложения, готовый к распространению. Собранное приложение находится в папке ```distributableOutput```, а его архив - в папке ```distributableArchive```.
 
-Если у вас наблюдаются проблемы со сборкой приложения, рекомендуется выбрать JDK версии ```17```. Для этого:
-* Выберите JDK версии ```17``` по пути ```File -> Project Structure -> Project -> SDK```, а также в ```Language level``` под ним.
-* По пути ```Settings -> Build -> Compiler -> Java compiler -> Project bytecode version``` выберите ```17```.
+Если у вас наблюдаются проблемы со сборкой приложения, рекомендуется выбрать JDK версии ```21```. Для этого:
+* Выберите JDK версии ```21``` по пути ```File -> Project Structure -> Project -> SDK```, а также в ```Language level``` под ним.
+* По пути ```Settings -> Build -> Compiler -> Java compiler -> Project bytecode version``` выберите ```21```.
 * По пути ```Settings -> Build -> Build tools -> Gradle -> Gradle JVM``` выберите ```Project JDK```.
 
 *Примечание: вы можете собрать приложение только для той ОС, которую используете в данный момент. Если, например, вы используете Windows и вам необходимо создать сборку для Linux, рассмотрите возможность сделать это в виртуальной машине.*

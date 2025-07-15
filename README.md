@@ -23,6 +23,7 @@ This is a sample project with a set of solutions to typical problems, demonstrat
 * Various custom UI elements
 * Dynamic BuildConfig with platform and build type information
 * Charts
+* Custom logger with modular structure
 
 #### PC only
 * App building to jar file and launch using script
@@ -30,7 +31,7 @@ This is a sample project with a set of solutions to typical problems, demonstrat
 * Launch arguments
 * Screen-scoped hotkeys
 * Basic PDF viewer, print dialog
-* Built-in logger with UI
+* UI for custom logger; database, file and memory cache modules
 
 #### Android only
 * UI for viewing network logs from a device
@@ -39,21 +40,23 @@ This is a sample project with a set of solutions to typical problems, demonstrat
 ## Screenshots
 <details>
     <summary>PC - main app</summary>
-    <img src="/readmeFiles/en/screenshots/pc/screenshot_1.png" alt="screenshot" width="500"/>
-    <img src="/readmeFiles/en/screenshots/pc/screenshot_2.png" alt="screenshot" width="500"/>
-    <img src="/readmeFiles/en/screenshots/pc/screenshot_3.png" alt="screenshot" width="500"/>
-    <img src="/readmeFiles/en/screenshots/pc/screenshot_4.png" alt="screenshot" width="500"/>
-    <img src="/readmeFiles/en/screenshots/pc/screenshot_5.png" alt="screenshot" width="500"/>
-    <img src="/readmeFiles/en/screenshots/pc/screenshot_6.png" alt="screenshot" width="500"/>
-    <img src="/readmeFiles/en/screenshots/pc/screenshot_7.png" alt="screenshot" width="500"/>
-    <img src="/readmeFiles/en/screenshots/pc/screenshot_8.png" alt="screenshot" width="500"/>
-    <img src="/readmeFiles/en/screenshots/pc/screenshot_9.png" alt="screenshot" width="500"/>
+    <img src="/readmeFiles/en/screenshots/pc/screenshot_1.png" alt="screenshot" width="400"/>
+    <img src="/readmeFiles/en/screenshots/pc/screenshot_2.png" alt="screenshot" width="400"/>
+    <img src="/readmeFiles/en/screenshots/pc/screenshot_3.png" alt="screenshot" width="400"/>
+    <img src="/readmeFiles/en/screenshots/pc/screenshot_4.png" alt="screenshot" width="400"/>
+    <img src="/readmeFiles/en/screenshots/pc/screenshot_5.png" alt="screenshot" width="400"/>
+    <img src="/readmeFiles/en/screenshots/pc/screenshot_6.png" alt="screenshot" width="400"/>
+    <img src="/readmeFiles/en/screenshots/pc/screenshot_7.png" alt="screenshot" width="400"/>
+    <img src="/readmeFiles/en/screenshots/pc/screenshot_8.png" alt="screenshot" width="400"/>
+    <img src="/readmeFiles/en/screenshots/pc/screenshot_9.png" alt="screenshot" width="400"/>
+    <img src="/readmeFiles/en/screenshots/pc/screenshot_10.png" alt="screenshot" width="400"/>
 </details>
 
 <details>
     <summary>PC - logger</summary>
-    <img src="/readmeFiles/en/screenshots/pc/screenshot_10.png" alt="screenshot" width="750"/>
-    <img src="/readmeFiles/en/screenshots/pc/screenshot_11.png" alt="screenshot" width="750"/>
+    <img src="/readmeFiles/en/screenshots/pc/screenshot_11.png" alt="screenshot" width="600"/>
+    <img src="/readmeFiles/en/screenshots/pc/screenshot_12.png" alt="screenshot" width="600"/>
+    <img src="/readmeFiles/en/screenshots/pc/screenshot_13.png" alt="screenshot" width="600"/>
 </details>
 
 <details>
@@ -128,9 +131,9 @@ To create a distributable build, use one of the launch configurations:
 
 As a result, an archive with the assembled version of the application will be created, ready for distribution. The assembled application is located in the ```distributableOutput``` folder, and its archive is in the ```distributableArchive``` folder.
 
-If you have problems building your application, it is recommended to select JDK version ```17```. To do this:
-* Select JDK version ```17``` at path ```File -> Project Structure -> Project -> SDK```, and also ```Language level``` under it.
-* At path ```Settings -> Build -> Compiler -> Java compiler -> Project bytecode version``` select ```17```.
+If you have problems building your application, it is recommended to select JDK version ```21```. To do this:
+* Select JDK version ```21``` at path ```File -> Project Structure -> Project -> SDK```, and also ```Language level``` under it.
+* At path ```Settings -> Build -> Compiler -> Java compiler -> Project bytecode version``` select ```21```.
 * At path ```Settings -> Build -> Build tools -> Gradle -> Gradle JVM``` select ```Project JDK```.
 
 *Note: you can build your application only for the OS you are currently using. If, for example, you use Windows and need to create a build for Linux, consider doing it in a virtual machine.*

@@ -113,6 +113,7 @@ fun ApplicationScope.MainWindow(args: Array<String>) = WithWindowViewModelStoreO
             focusRequester = loggerWindowFocusRequester,
             onCloseRequest = {
                 showLoggerWindow = false
+                System.gc()
             }
         )
     } else {

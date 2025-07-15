@@ -19,6 +19,8 @@ object DataConstants {
     val LOGS_PATH = "$ROOT_DIR/logs"
     const val LOG_FILE_NAME_TEMPLATE = "log_%s"
     const val LOG_FILE_NAME_EXTENSION = "txt"
+    const val LOGS_RETENTION_TIME_MS = 172800000L // 2 days
+    const val LOGS_CLEARING_PERIOD_MS = 3600000L // 1 hour
 
     val RUN_SCRIPT_NAME = if (OperatingSystem.isWindows) "run.vbs" else "run.sh"
 

@@ -117,7 +117,7 @@ dependencies {
 android {
     namespace = globalPackageName
     compileSdk = libs.versions.android.targetSdk.get().toInt()
-    buildToolsVersion = "35.0.0"
+    buildToolsVersion = "36.0.0"
 
     signingConfigs {
         create("config") {

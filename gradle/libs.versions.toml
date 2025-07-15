@@ -1,20 +1,20 @@
 [versions]
-kotlin = "2.1.21"
-compose = "1.8.1"
+kotlin = "2.2.0"
+compose = "1.8.2"
 coroutines = "1.10.2"
 koin = "4.1.0"
-ktorfit = "2.5.2"
-ktor = "3.2.0"
+ktorfit = "2.6.1"
+ktor = "3.2.1"
 coil = "3.2.0"
-room = "2.7.1"
-sqlite = "2.5.1"
+room = "2.7.2"
+sqlite = "2.5.2"
 filekit = "0.10.0-beta04"
 desugaring = "2.1.5"
 chucker = "4.1.0"
 vico = "2.1.3"
 
 android-minSdk = "26"
-android-targetSdk = "35"
+android-targetSdk = "36"
 
 
 [libraries]
@@ -29,11 +29,11 @@ coroutines-swing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", 
 
 # ViewModel
 # https://mvnrepository.com/artifact/org.jetbrains.androidx.lifecycle/lifecycle-viewmodel-compose
-viewmodel-compose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose", version = "2.9.0" }
+viewmodel-compose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose", version = "2.9.1" }
 
 # Navigation
 # https://mvnrepository.com/artifact/org.jetbrains.androidx.navigation/navigation-compose
-navigation = { module = "org.jetbrains.androidx.navigation:navigation-compose", version = "2.9.0-beta02" }
+navigation = { module = "org.jetbrains.androidx.navigation:navigation-compose", version = "2.9.0-beta03" }
 
 # DI
 # https://github.com/InsertKoinIO/koin
@@ -48,7 +48,7 @@ multiplatform-settings = { module = "com.russhwolf:multiplatform-settings", vers
 
 # Serialization
 # https://github.com/Kotlin/kotlinx.serialization
-kotlinx-serialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version = "1.8.1" }
+kotlinx-serialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version = "1.9.0" }
 
 # Ktorfit - network
 # https://github.com/Foso/Ktorfit
@@ -133,7 +133,7 @@ buildkonfig = { id = "com.codingfeline.buildkonfig", version = "0.17.1" }
 
 # KSP
 # https://mvnrepository.com/artifact/com.google.devtools.ksp/com.google.devtools.ksp.gradle.plugin?repo=central
-ksp = { id = "com.google.devtools.ksp", version = "2.1.21-2.0.2" }
+ksp = { id = "com.google.devtools.ksp", version = "2.2.0-2.0.2" }
 
 # Ktorfit - network
 ktorfit = { id = "de.jensklingenberg.ktorfit", version.ref = "ktorfit" }

@@ -54,6 +54,7 @@
     <string name="filter_only_by_tag">Filter only by tag</string>
     <string name="autoscroll">Autoscroll</string>
     <string name="collapse_network_logs">Collapse network logs</string>
+    <string name="show_only_current_session">Show only current session</string>
     <string name="save_log">Save log</string>
     <string name="restart">Restart</string>
     <string name="error_restart_from_ide">Restart function is unavailable if app is launched from IDE</string>
@@ -75,4 +76,6 @@
     <string name="close_screen">Close screen</string>
     <string name="close_flow">Close flow</string>
     <string name="test_counter_local">Test counter (local)</string>
+    <string name="session_start">Session start</string>
+    <string name="current_session_start">Current session start</string>
 </resources>

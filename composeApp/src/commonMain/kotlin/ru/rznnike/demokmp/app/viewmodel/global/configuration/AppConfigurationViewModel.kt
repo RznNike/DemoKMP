@@ -128,9 +128,9 @@ class AppConfigurationViewModel : BaseUiViewModel<AppConfigurationViewModel.UiSt
                 return@launch
             }
 
+            Logger.i("Application finish\n")
             closeDBUseCase()
             closeAppSingleInstanceSocketUseCase()
-            Logger.i("Application finish\n")
 
             if (OperatingSystem.isDesktop || (!isRestart)) {
                 closeAppCallback?.invoke()
