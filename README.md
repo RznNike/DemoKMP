@@ -40,21 +40,23 @@ This is a sample project with a set of solutions to typical problems, demonstrat
 ## Screenshots
 <details>
     <summary>PC - main app</summary>
-    <img src="/readmeFiles/en/screenshots/pc/screenshot_1.png" alt="screenshot" width="500"/>
-    <img src="/readmeFiles/en/screenshots/pc/screenshot_2.png" alt="screenshot" width="500"/>
-    <img src="/readmeFiles/en/screenshots/pc/screenshot_3.png" alt="screenshot" width="500"/>
-    <img src="/readmeFiles/en/screenshots/pc/screenshot_4.png" alt="screenshot" width="500"/>
-    <img src="/readmeFiles/en/screenshots/pc/screenshot_5.png" alt="screenshot" width="500"/>
-    <img src="/readmeFiles/en/screenshots/pc/screenshot_6.png" alt="screenshot" width="500"/>
-    <img src="/readmeFiles/en/screenshots/pc/screenshot_7.png" alt="screenshot" width="500"/>
-    <img src="/readmeFiles/en/screenshots/pc/screenshot_8.png" alt="screenshot" width="500"/>
-    <img src="/readmeFiles/en/screenshots/pc/screenshot_9.png" alt="screenshot" width="500"/>
+    <img src="/readmeFiles/en/screenshots/pc/screenshot_1.png" alt="screenshot" width="400"/>
+    <img src="/readmeFiles/en/screenshots/pc/screenshot_2.png" alt="screenshot" width="400"/>
+    <img src="/readmeFiles/en/screenshots/pc/screenshot_3.png" alt="screenshot" width="400"/>
+    <img src="/readmeFiles/en/screenshots/pc/screenshot_4.png" alt="screenshot" width="400"/>
+    <img src="/readmeFiles/en/screenshots/pc/screenshot_5.png" alt="screenshot" width="400"/>
+    <img src="/readmeFiles/en/screenshots/pc/screenshot_6.png" alt="screenshot" width="400"/>
+    <img src="/readmeFiles/en/screenshots/pc/screenshot_7.png" alt="screenshot" width="400"/>
+    <img src="/readmeFiles/en/screenshots/pc/screenshot_8.png" alt="screenshot" width="400"/>
+    <img src="/readmeFiles/en/screenshots/pc/screenshot_9.png" alt="screenshot" width="400"/>
+    <img src="/readmeFiles/en/screenshots/pc/screenshot_10.png" alt="screenshot" width="400"/>
 </details>
 
 <details>
     <summary>PC - logger</summary>
-    <img src="/readmeFiles/en/screenshots/pc/screenshot_10.png" alt="screenshot" width="750"/>
-    <img src="/readmeFiles/en/screenshots/pc/screenshot_11.png" alt="screenshot" width="750"/>
+    <img src="/readmeFiles/en/screenshots/pc/screenshot_11.png" alt="screenshot" width="600"/>
+    <img src="/readmeFiles/en/screenshots/pc/screenshot_12.png" alt="screenshot" width="600"/>
+    <img src="/readmeFiles/en/screenshots/pc/screenshot_13.png" alt="screenshot" width="600"/>
 </details>
 
 <details>
