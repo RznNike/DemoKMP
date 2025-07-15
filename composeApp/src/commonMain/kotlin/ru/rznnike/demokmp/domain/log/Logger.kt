@@ -1,51 +1,46 @@
 package ru.rznnike.demokmp.domain.log
 
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withPermit
-import ru.rznnike.demokmp.BuildKonfig
-import ru.rznnike.demokmp.data.utils.DataConstants
-import ru.rznnike.demokmp.domain.utils.*
-import java.io.File
+import ru.rznnike.demokmp.domain.log.extension.LoggerExtension
 import java.time.Clock
-import java.time.LocalDate
 import java.util.*
 
 class Logger private constructor(
     private val tag: String
 ) {
-    fun d(message: String) {
-        if (BuildKonfig.DEBUG) {
-            addMessage(message, LogLevel.DEBUG)
-        }
+    fun d(message: String) = withExtensions {
+        d(tag = tag, message = message)
     }
 
-    fun i(message: String) = addMessage(message, LogLevel.INFO)
+    fun i(message: String) = withExtensions {
+        i(tag = tag, message = message)
+    }
 
-    fun w(message: String) = addMessage(message, LogLevel.WARNING)
+    fun w(message: String) = withExtensions {
+        w(tag = tag, message = message)
+    }
 
-    fun e(message: String) = addMessage(message, LogLevel.ERROR)
+    fun e(message: String) = withExtensions {
+        e(tag = tag, message = message)
+    }
 
-    fun e(exception: Throwable, message: String = "") {
-        val formattedMessage = "$message\n${exception.stackTraceToString()}"
-        addMessage(formattedMessage, LogLevel.ERROR)
+    fun e(exception: Throwable, message: String = "") = withExtensions {
+        e(tag = tag, exception = exception, message = message)
     }
 
     fun networkRequest(message: String): UUID {
         val uuid = UUID.randomUUID()
-        val request = addMessage(message, LogLevel.INFO, LogType.NETWORK)
-        if (OperatingSystem.isDesktop) {
-            val logNetworkMessage = LogNetworkMessage(
+        withExtensions {
+            networkRequest(
+                tag = tag,
                 uuid = uuid,
-                request = request
+                message = message
             )
-            networkLog.add(logNetworkMessage)
-            coroutineScope.launch {
-                networkLogUpdatesFlow.emit(logNetworkMessage)
-            }
         }
         return uuid
     }
@@ -54,126 +49,77 @@ class Logger private constructor(
         requestUuid: UUID,
         message: String,
         state: NetworkRequestState
-    ) {
-        val response = addMessage(message, LogLevel.INFO, LogType.NETWORK)
-        if (OperatingSystem.isDesktop) {
-            networkLog.firstOrNull { it.uuid == requestUuid }?.let { logNetworkMessage ->
-                val updatedMessage = logNetworkMessage.copy(
-                    response = response,
-                    state = if (state == NetworkRequestState.SENT) NetworkRequestState.SUCCESS else state
-                )
-                val index = networkLog.lastIndexOf(logNetworkMessage)
-                networkLog[index] = updatedMessage
-                coroutineScope.launch {
-                    networkLogUpdatesFlow.emit(updatedMessage)
-                }
-            }
-        }
-    }
-
-    suspend fun subscribeToLog(
-        initCallback: (List<LogMessage>) -> Unit,
-        updateCallback: (LogMessage) -> Unit
-    ) {
-        initCallback(log)
-        logUpdatesFlow.collect { message ->
-            updateCallback(message)
-        }
-    }
-
-    suspend fun subscribeToNetworkLog(
-        initCallback: (List<LogNetworkMessage>) -> Unit,
-        updateCallback: (LogNetworkMessage) -> Unit
-    ) {
-        initCallback(networkLog)
-        networkLogUpdatesFlow.collect { message ->
-            updateCallback(message)
-        }
-    }
-
-    fun clearLog() {
-        log.clear()
-    }
-
-    fun clearNetworkLog() {
-        networkLog.clear()
-    }
-
-    private fun addMessage(
-        message: String,
-        level: LogLevel,
-        type: LogType = LogType.DEFAULT
-    ): LogMessage {
-        val logMessage = LogMessage(
-            type = type,
-            level = level,
-            timestamp = clock.millis(),
+    ) = withExtensions {
+        networkResponse(
             tag = tag,
-            message = message
+            requestUuid = requestUuid,
+            message = message,
+            state = state
         )
-
-        coroutineScope.launch {
-            outputLock.withPermit {
-                printLog(logMessage)
-                if (OperatingSystem.isDesktop) {
-                    log.add(logMessage)
-                    logUpdatesFlow.emit(logMessage)
-                    writeToFile(formatLogMessage(logMessage))
-                }
-            }
-        }
-
-        return logMessage
     }
 
-    private fun writeToFile(formattedMessage: String) {
-        try {
-            val currentDate = clock.millis().toLocalDate()
-            if (logFileDate != currentDate) {
-                logFileDate = currentDate
-                logFile = null
+    private fun withExtensions(action: suspend LoggerExtension.() -> Unit) {
+        if (isInitialized) {
+            CoroutineScope(coroutineDispatcher).launch {
+                outputLock.withPermit {
+                    extensions.forEach {
+                        try {
+                            action(it)
+                        } catch (exception: Exception) {
+                            printLoggerError("Error in logger extension ${it::class.java.name}:\n${exception.stackTraceToString()}")
+                        }
+                    }
+                }
             }
-
-            if (logFile == null) {
-                File(DataConstants.LOGS_PATH).mkdirs()
-                val logFileName = "${currentDate.millis().toDateString(GlobalConstants.DATE_PATTERN_FILE_NAME_DAY)}.txt"
-                logFile = File("${DataConstants.LOGS_PATH}/$logFileName")
-            }
-            logFile?.appendText(formattedMessage)
-            logFile?.appendText("\n")
-        } catch (_: Exception) { }
+        } else {
+            printLoggerError("Logger is not initialized!")
+        }
     }
 
     companion object {
-        private var initClock: Clock? = null
-        private val clock: Clock by lazy { initClock ?: Clock.systemUTC() }
-        private var initCoroutineScope: CoroutineScope? = null
-        private val coroutineScope: CoroutineScope by lazy { initCoroutineScope ?: CoroutineScope(Dispatchers.IO) }
-
-        private val defaultLogger = Logger("")
-
-        private val log: MutableList<LogMessage> = mutableListOf()
-        private val logUpdatesFlow = MutableSharedFlow<LogMessage>()
-
-        private val networkLog: MutableList<LogNetworkMessage> = mutableListOf()
-        private val networkLogUpdatesFlow = MutableSharedFlow<LogNetworkMessage>()
-
-        private var logFile: File? = null
-        private var logFileDate: LocalDate? = null
+        private var clock: Clock = Clock.systemUTC()
+        private lateinit var coroutineDispatcher: CoroutineDispatcher
+        private var isInitialized = false
+        private var extensions: MutableList<LoggerExtension> = mutableListOf()
 
         private val outputLock = Semaphore(1)
 
+        private val defaultLogger = Logger("")
+
         fun init(
             clock: Clock = Clock.systemUTC(),
-            coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.IO)
+            coroutineDispatcher: CoroutineDispatcher = Dispatchers.IO,
+            extensions: List<LoggerExtension>
         ) {
-            initClock = clock
-            initCoroutineScope = coroutineScope
+            this.clock = clock
+            this.coroutineDispatcher = coroutineDispatcher
+            this.extensions = extensions.toMutableList()
+            extensions.forEach {
+                try {
+                    it.init(
+                        clock = clock,
+                        coroutineDispatcher = coroutineDispatcher
+                    )
+                } catch (exception: Exception) {
+                    printLoggerError("Error in logger extension init ${it::class.java.name}:\n${exception.stackTraceToString()}")
+                }
+            }
+            isInitialized = true
         }
 
-        fun withTag(tag: String): Logger {
-            return Logger(tag)
+        fun addExtension(extension: LoggerExtension) {
+            try {
+                extension.init(
+                    clock = clock,
+                    coroutineDispatcher = coroutineDispatcher
+                )
+                extensions.add(extension)
+            } catch (exception: Exception) {
+                printLoggerError("Error in logger extension init ${extension::class.java.name}:\n${exception.stackTraceToString()}")
+            }
         }
+
+        fun withTag(tag: String) = Logger(tag)
 
         fun d(message: String) = defaultLogger.d(message)
 
@@ -197,25 +143,17 @@ class Logger private constructor(
             state = state
         )
 
-        suspend fun subscribeToLog(
-            initCallback: (List<LogMessage>) -> Unit,
-            updateCallback: (LogMessage) -> Unit
-        ) = defaultLogger.subscribeToLog(
-            initCallback = initCallback,
-            updateCallback = updateCallback
-        )
-
-        suspend fun subscribeToNetworkLog(
-            initCallback: (List<LogNetworkMessage>) -> Unit,
-            updateCallback: (LogNetworkMessage) -> Unit
-        ) = defaultLogger.subscribeToNetworkLog(
-            initCallback = initCallback,
-            updateCallback = updateCallback
-        )
-
-        fun clearLog() = defaultLogger.clearLog()
-
-        fun clearNetworkLog() = defaultLogger.clearNetworkLog()
+        private fun printLoggerError(message: String) {
+            printLog(
+                LogMessage(
+                    type = LogType.DEFAULT,
+                    level = LogLevel.ERROR,
+                    timestamp = clock.millis(),
+                    tag = "Logger",
+                    message = message
+                )
+            )
+        }
     }
 }
 

@@ -31,7 +31,7 @@ fun LogNetworkMessageItem(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 1.dp)
+                .padding(vertical = 2.dp)
                 .background(message.state.backgroundColor)
                 .onClick(onClick)
                 .padding(horizontal = 8.dp, vertical = 3.dp)

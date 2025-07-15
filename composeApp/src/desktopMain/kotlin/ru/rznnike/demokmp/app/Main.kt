@@ -5,18 +5,36 @@ import org.koin.core.context.startKoin
 import org.koin.core.logger.Level
 import ru.rznnike.demokmp.app.di.appComponent
 import ru.rznnike.demokmp.app.ui.window.main.MainWindow
+import ru.rznnike.demokmp.data.utils.DataConstants
 import ru.rznnike.demokmp.domain.log.Logger
+import ru.rznnike.demokmp.domain.log.extension.ConsoleLoggerExtension
+import ru.rznnike.demokmp.domain.log.extension.DatabaseLoggerExtension
+import ru.rznnike.demokmp.domain.log.extension.FileLoggerExtension
 
 fun main(args: Array<String>) {
     initLogger()
-    Logger.i("Application start")
     application {
         initKoin()
+        Logger.addExtension(
+            DatabaseLoggerExtension(
+                logsRetentionMode = DatabaseLoggerExtension.LogsRetentionMode.TimePeriod(
+                    logsRetentionMs = DataConstants.LOGS_RETENTION_TIME_MS,
+                    clearingPeriodMs = DataConstants.LOGS_CLEARING_PERIOD_MS
+                )
+            )
+        )
+        Logger.i("Application start")
         MainWindow(args)
     }
 }
 
 private fun initLogger() {
+    Logger.init(
+        extensions = listOf(
+            ConsoleLoggerExtension(),
+            FileLoggerExtension()
+        )
+    )
     Thread.setDefaultUncaughtExceptionHandler(
         object : Thread.UncaughtExceptionHandler {
             var isCrashing = false

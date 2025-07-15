@@ -15,10 +15,13 @@ import org.koin.core.component.inject
 import ru.rznnike.demokmp.app.common.viewmodel.BaseUiViewModel
 import ru.rznnike.demokmp.data.utils.DataConstants
 import ru.rznnike.demokmp.domain.common.CoroutineScopeProvider
+import ru.rznnike.demokmp.domain.interactor.log.ClearLogUseCase
+import ru.rznnike.demokmp.domain.interactor.log.ClearNetworkLogUseCase
+import ru.rznnike.demokmp.domain.interactor.log.GetLogUseCase
+import ru.rznnike.demokmp.domain.interactor.log.GetNetworkLogUseCase
 import ru.rznnike.demokmp.domain.log.LogMessage
 import ru.rznnike.demokmp.domain.log.LogNetworkMessage
 import ru.rznnike.demokmp.domain.log.LogType
-import ru.rznnike.demokmp.domain.log.Logger
 import ru.rznnike.demokmp.domain.utils.GlobalConstants
 import ru.rznnike.demokmp.domain.utils.toDateString
 import ru.rznnike.demokmp.generated.resources.Res
@@ -29,9 +32,13 @@ import java.time.Clock
 class LoggerViewModel : BaseUiViewModel<LoggerViewModel.UiState>() {
     private val clock: Clock by inject()
     private val coroutineScopeProvider: CoroutineScopeProvider by inject()
+    private val getLogUseCase: GetLogUseCase by inject()
+    private val getNetworkLogUseCase: GetNetworkLogUseCase by inject()
+    private val clearLogUseCase: ClearLogUseCase by inject()
+    private val clearNetworkLogUseCase: ClearNetworkLogUseCase by inject()
 
-    private val log = mutableListOf<LogMessage>()
-    private val networkLog = mutableListOf<LogNetworkMessage>()
+    private var log = emptyList<LogMessage>()
+    private var networkLog = emptyList<LogNetworkMessage>()
 
     var filterInput by mutableStateOf("")
         private set
@@ -44,47 +51,33 @@ class LoggerViewModel : BaseUiViewModel<LoggerViewModel.UiState>() {
 
     private fun subscribeToLogs() {
         viewModelScope.launch {
-            Logger.subscribeToLog(
-                initCallback = { messages ->
-                    log.addAll(messages)
-                    filterLog()
-                },
-                updateCallback = { message ->
-                    log.add(message)
-                    filterLog()
-                }
-            )
+            getLogUseCase().collect {
+                log = it
+                filterLog()
+            }
         }
         viewModelScope.launch {
-            Logger.subscribeToNetworkLog(
-                initCallback = { messages ->
-                    networkLog.addAll(messages)
-                    filterNetworkLog()
-                },
-                updateCallback = { message ->
-                    val index = networkLog.indexOfLast { it.uuid == message.uuid }
-                    if (index >= 0) {
-                        networkLog[index] = message
-                    } else {
-                        networkLog.add(message)
-                    }
-                    filterNetworkLog()
-                }
-            )
+            getNetworkLogUseCase().collect {
+                networkLog = it
+                filterNetworkLog()
+            }
         }
     }
 
     private fun filterLog() {
-        val filteredLog = log.filter { message ->
-            val tagMatches = message.tag.contains(filterInput, true)
-            val messageString = if (mutableUiState.value.collapseNetworkMessages && (message.type == LogType.NETWORK)) {
-                message.message.lines().first()
-            } else {
-                message.message
-            }
-            val messageMatches = messageString.contains(filterInput, true)
+        val filteredLog = mutableUiState.value.run {
+            log.filter { message ->
+                val tagMatches = message.tag.contains(filterInput, true)
+                val messageString = if (collapseNetworkMessages && (message.type == LogType.NETWORK)) {
+                    message.message.lines().first()
+                } else {
+                    message.message
+                }
+                val messageMatches = messageString.contains(filterInput, true)
 
-            tagMatches || (messageMatches && (!mutableUiState.value.filterOnlyByTag))
+                (tagMatches || (messageMatches && (!filterOnlyByTag)))
+                        && ((!showOnlyCurrentSession) || message.isCurrentSession)
+            }
         }
 
         mutableUiState.update { currentState ->
@@ -96,8 +89,10 @@ class LoggerViewModel : BaseUiViewModel<LoggerViewModel.UiState>() {
 
     private fun filterNetworkLog() {
         val filteredNetworkLog = networkLog.filter {
-            it.request.message.lines().first().contains(filterInput, true)
-                    || (it.response?.message?.lines()?.first()?.contains(filterInput, true) == true)
+            val requestMatches = it.request.message.lines().first().contains(filterInput, true)
+            val responseMatches = it.response?.message?.lines()?.first()?.contains(filterInput, true) == true
+
+            (requestMatches || responseMatches) && ((!mutableUiState.value.showOnlyCurrentSession) || it.isCurrentSession)
         }
 
         mutableUiState.update { currentState ->
@@ -113,15 +108,6 @@ class LoggerViewModel : BaseUiViewModel<LoggerViewModel.UiState>() {
         filterNetworkLog()
     }
 
-    fun onFilterOnlyByTagClick() {
-        mutableUiState.update { currentState ->
-            currentState.copy(
-                filterOnlyByTag = !currentState.filterOnlyByTag
-            )
-        }
-        filterLog()
-    }
-
     fun onAutoscrollClick() {
         mutableUiState.update { currentState ->
             currentState.copy(
@@ -130,10 +116,29 @@ class LoggerViewModel : BaseUiViewModel<LoggerViewModel.UiState>() {
         }
     }
 
+    fun onShowOnlyCurrentSessionClick() {
+        mutableUiState.update { currentState ->
+            currentState.copy(
+                showOnlyCurrentSession = !currentState.showOnlyCurrentSession
+            )
+        }
+        filterLog()
+        filterNetworkLog()
+    }
+
     fun onCollapseNetworkMessagesClick() {
         mutableUiState.update { currentState ->
             currentState.copy(
                 collapseNetworkMessages = !currentState.collapseNetworkMessages
+            )
+        }
+        filterLog()
+    }
+
+    fun onFilterOnlyByTagClick() {
+        mutableUiState.update { currentState ->
+            currentState.copy(
+                filterOnlyByTag = !currentState.filterOnlyByTag
             )
         }
         filterLog()
@@ -150,16 +155,14 @@ class LoggerViewModel : BaseUiViewModel<LoggerViewModel.UiState>() {
     }
 
     fun deleteLog() {
-        when (mutableUiState.value.selectedTab) {
-            Tab.ALL -> {
-                log.clear()
-                filterLog()
-                Logger.clearLog()
-            }
-            Tab.NETWORK -> {
-                networkLog.clear()
-                filterNetworkLog()
-                Logger.clearNetworkLog()
+        coroutineScopeProvider.io.launch {
+            when (mutableUiState.value.selectedTab) {
+                Tab.ALL -> {
+                    clearLogUseCase()
+                }
+                Tab.NETWORK -> {
+                    clearNetworkLogUseCase()
+                }
             }
         }
     }
@@ -187,8 +190,9 @@ class LoggerViewModel : BaseUiViewModel<LoggerViewModel.UiState>() {
     data class UiState(
         val selectedTab: Tab = Tab.ALL,
         val autoscroll: Boolean = true,
-        val filterOnlyByTag: Boolean = false,
+        val showOnlyCurrentSession: Boolean = false,
         val collapseNetworkMessages: Boolean = false,
+        val filterOnlyByTag: Boolean = false,
         val filteredLog: List<LogMessage> = emptyList(),
         val filteredNetworkLog: List<LogNetworkMessage> = emptyList()
     )

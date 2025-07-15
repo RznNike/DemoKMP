@@ -21,5 +21,7 @@ internal actual fun getDatabaseModule() = module {
             .build()
     }
 
+    factory { get<MainDB>().getLogMessageDao() }
+    factory { get<MainDB>().getLogNetworkMessageDao() }
     factory { get<MainDB>().getDBExampleDataDao() }
 }

@@ -54,6 +54,7 @@
     <string name="filter_only_by_tag">Фильтр только по тегу</string>
     <string name="autoscroll">Автопрокрутка</string>
     <string name="collapse_network_logs">Сворачивать сетевые логи</string>
+    <string name="show_only_current_session">Показать только текущую сессию</string>
     <string name="save_log">Сохранить лог</string>
     <string name="restart">Перезапуск</string>
     <string name="error_restart_from_ide">Функция перезапуска недоступна, если приложение запущено из IDE</string>
@@ -75,4 +76,6 @@
     <string name="close_screen">Закрыть экран</string>
     <string name="close_flow">Закрыть поток</string>
     <string name="test_counter_local">Тестовый счетчик (локальный)</string>
+    <string name="session_start">Начало сессии</string>
+    <string name="current_session_start">Начало текущей сессии</string>
 </resources>
