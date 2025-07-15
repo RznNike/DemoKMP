@@ -23,6 +23,7 @@ import com.patrykandpatrick.vico.multiplatform.cartesian.rememberCartesianChart
 import com.patrykandpatrick.vico.multiplatform.cartesian.rememberVicoZoomState
 import com.patrykandpatrick.vico.multiplatform.common.Insets
 import com.patrykandpatrick.vico.multiplatform.common.LegendItem
+import com.patrykandpatrick.vico.multiplatform.common.ProvideVicoTheme
 import com.patrykandpatrick.vico.multiplatform.common.component.ShapeComponent
 import com.patrykandpatrick.vico.multiplatform.common.component.rememberTextComponent
 import com.patrykandpatrick.vico.multiplatform.common.fill
@@ -34,6 +35,7 @@ import ru.rznnike.demokmp.app.navigation.AndroidNavigationScreen
 import ru.rznnike.demokmp.app.navigation.getNavigator
 import ru.rznnike.demokmp.app.ui.view.Toolbar
 import ru.rznnike.demokmp.app.ui.view.ToolbarButton
+import ru.rznnike.demokmp.app.utils.getCustomVicoTheme
 import ru.rznnike.demokmp.app.viewmodel.chartexample.ChartExampleViewModel
 import ru.rznnike.demokmp.generated.resources.Res
 import ru.rznnike.demokmp.generated.resources.chart_example
@@ -95,39 +97,41 @@ class ChartExampleScreen : AndroidNavigationScreen() {
                     val areaColor = lineColor.copy(alpha = 0.4f)
                     val legendItemLabelComponent = rememberTextComponent(TextStyle(MaterialTheme.colorScheme.onBackground))
                     val legendLineLabel = stringResource(Res.string.test_data)
-                    CartesianChartHost(
-                        modifier = Modifier.fillMaxSize(),
-                        chart = rememberCartesianChart(
-                            rememberLineCartesianLayer(
-                                lineProvider = LineCartesianLayer.LineProvider.series(
-                                    LineCartesianLayer.rememberLine(
-                                        fill = LineCartesianLayer.LineFill.single(fill(lineColor)),
-                                        areaFill = LineCartesianLayer.AreaFill.single(
-                                            fill(Brush.verticalGradient(listOf(areaColor, Color.Transparent, areaColor)))
+                    ProvideVicoTheme(getCustomVicoTheme()) {
+                        CartesianChartHost(
+                            modifier = Modifier.fillMaxSize(),
+                            chart = rememberCartesianChart(
+                                rememberLineCartesianLayer(
+                                    lineProvider = LineCartesianLayer.LineProvider.series(
+                                        LineCartesianLayer.rememberLine(
+                                            fill = LineCartesianLayer.LineFill.single(fill(lineColor)),
+                                            areaFill = LineCartesianLayer.AreaFill.single(
+                                                fill(Brush.verticalGradient(listOf(areaColor, Color.Transparent, areaColor)))
+                                            )
                                         )
                                     )
+                                ),
+                                startAxis = VerticalAxis.rememberStart(),
+                                bottomAxis = HorizontalAxis.rememberBottom(),
+                                legend = rememberHorizontalLegend(
+                                    items = {
+                                        add(
+                                            LegendItem(
+                                                icon = ShapeComponent(fill(lineColor), CorneredShape.Pill),
+                                                labelComponent = legendItemLabelComponent,
+                                                label = legendLineLabel
+                                            )
+                                        )
+                                    },
+                                    padding = Insets(16.dp)
                                 )
                             ),
-                            startAxis = VerticalAxis.rememberStart(),
-                            bottomAxis = HorizontalAxis.rememberBottom(),
-                            legend = rememberHorizontalLegend(
-                                items = {
-                                    add(
-                                        LegendItem(
-                                            icon = ShapeComponent(fill(lineColor), CorneredShape.Pill),
-                                            labelComponent = legendItemLabelComponent,
-                                            label = legendLineLabel
-                                        )
-                                    )
-                                },
-                                padding = Insets(16.dp)
+                            modelProducer = modelProducer,
+                            zoomState = rememberVicoZoomState(
+                                initialZoom = Zoom.Content
                             )
-                        ),
-                        modelProducer = modelProducer,
-                        zoomState = rememberVicoZoomState(
-                            initialZoom = Zoom.Content
                         )
-                    )
+                    }
                 }
             }
         }
