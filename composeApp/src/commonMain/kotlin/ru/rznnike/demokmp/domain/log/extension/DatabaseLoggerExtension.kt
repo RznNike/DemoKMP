@@ -158,7 +158,7 @@ class DatabaseLoggerExtension(
         ) : LogsRetentionMode()
 
         data class TimePeriod(
-            val logsPeriodMs: Long,
+            val logsRetentionMs: Long,
             val clearingPeriodMs: Long
         ) : LogsRetentionMode()
     }

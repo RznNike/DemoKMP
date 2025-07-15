@@ -78,12 +78,12 @@ class LogGatewayImpl(
                 logMessageDao.getNthId(offset = logsRetentionMode.messagesCount)?.let { borderId ->
                     logMessageDao.deleteOldById(borderId = borderId)
                 }
-                logNetworkMessageDao.getNthId(offset = logsRetentionMode.messagesCount)?.let { borderId ->
+                logNetworkMessageDao.getNthId(offset = logsRetentionMode.networkMessagesCount)?.let { borderId ->
                     logNetworkMessageDao.deleteOldById(borderId = borderId)
                 }
             }
             is LogsRetentionMode.TimePeriod -> {
-                val borderTimestamp = clock.millis() - logsRetentionMode.logsPeriodMs
+                val borderTimestamp = clock.millis() - logsRetentionMode.logsRetentionMs
                 logMessageDao.deleteOldByTimestamp(borderTimestamp = borderTimestamp)
                 logNetworkMessageDao.deleteOldByTimestamp(borderTimestamp = borderTimestamp)
             }
