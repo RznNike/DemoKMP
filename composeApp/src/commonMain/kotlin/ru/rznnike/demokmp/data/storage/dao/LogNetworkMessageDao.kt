@@ -23,7 +23,10 @@ interface LogNetworkMessageDao {
     fun getAsFlow(uuid: UUID): Flow<LogNetworkMessageEntity?>
 
     @Query("SELECT * FROM LogNetworkMessageEntity")
-    fun getAll(): Flow<List<LogNetworkMessageEntity>>
+    suspend fun getAll(): List<LogNetworkMessageEntity>
+
+    @Query("SELECT * FROM LogNetworkMessageEntity WHERE id > :lastId")
+    suspend fun getNew(lastId: Long): List<LogNetworkMessageEntity>
 
     @Query("DELETE FROM LogNetworkMessageEntity WHERE uuid == :uuid")
     suspend fun delete(uuid: UUID)

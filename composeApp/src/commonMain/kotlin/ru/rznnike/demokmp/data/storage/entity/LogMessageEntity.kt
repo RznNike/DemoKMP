@@ -19,6 +19,7 @@ data class LogMessageEntity(
 )
 
 fun LogMessageEntity.toLogMessage(currentSessionId: Long) = LogMessage(
+    id = id,
     type = type,
     level = level,
     timestamp = timestamp,
@@ -28,6 +29,7 @@ fun LogMessageEntity.toLogMessage(currentSessionId: Long) = LogMessage(
 )
 
 fun LogMessage.toLogMessageEntity(currentSessionId: Long) = LogMessageEntity(
+    id = id,
     type = type,
     level = level,
     timestamp = timestamp,

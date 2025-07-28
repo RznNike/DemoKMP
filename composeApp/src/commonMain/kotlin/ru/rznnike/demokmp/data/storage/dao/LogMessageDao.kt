@@ -4,7 +4,6 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import kotlinx.coroutines.flow.Flow
 import ru.rznnike.demokmp.data.storage.entity.LogMessageEntity
 
 @Dao
@@ -19,7 +18,10 @@ interface LogMessageDao {
     suspend fun getNthId(offset: Int): Long?
 
     @Query("SELECT * FROM LogMessageEntity")
-    fun getAll(): Flow<List<LogMessageEntity>>
+    suspend fun getAll(): List<LogMessageEntity>
+
+    @Query("SELECT * FROM LogMessageEntity WHERE id > :lastId")
+    suspend fun getNew(lastId: Long): List<LogMessageEntity>
 
     @Query("SELECT DISTINCT sessionId FROM LogMessageEntity")
     suspend fun getSessionIds(): List<Long>

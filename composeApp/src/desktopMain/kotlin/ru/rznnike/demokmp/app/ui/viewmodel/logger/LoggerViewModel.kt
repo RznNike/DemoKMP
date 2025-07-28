@@ -13,12 +13,17 @@ import kotlinx.io.buffered
 import org.jetbrains.compose.resources.StringResource
 import org.koin.core.component.inject
 import ru.rznnike.demokmp.app.common.viewmodel.BaseUiViewModel
+import ru.rznnike.demokmp.app.dispatcher.notifier.Notifier
+import ru.rznnike.demokmp.app.error.ErrorHandler
 import ru.rznnike.demokmp.data.utils.DataConstants
 import ru.rznnike.demokmp.domain.common.CoroutineScopeProvider
 import ru.rznnike.demokmp.domain.interactor.log.ClearLogUseCase
 import ru.rznnike.demokmp.domain.interactor.log.ClearNetworkLogUseCase
 import ru.rznnike.demokmp.domain.interactor.log.GetLogUseCase
 import ru.rznnike.demokmp.domain.interactor.log.GetNetworkLogUseCase
+import ru.rznnike.demokmp.domain.interactor.log.GetNewLogUseCase
+import ru.rznnike.demokmp.domain.interactor.log.GetNewNetworkLogUseCase
+import ru.rznnike.demokmp.domain.log.LogEvent
 import ru.rznnike.demokmp.domain.log.LogMessage
 import ru.rznnike.demokmp.domain.log.LogNetworkMessage
 import ru.rznnike.demokmp.domain.log.LogType
@@ -31,14 +36,18 @@ import java.time.Clock
 
 class LoggerViewModel : BaseUiViewModel<LoggerViewModel.UiState>() {
     private val clock: Clock by inject()
+    private val notifier: Notifier by inject()
+    private val errorHandler: ErrorHandler by inject()
     private val coroutineScopeProvider: CoroutineScopeProvider by inject()
     private val getLogUseCase: GetLogUseCase by inject()
+    private val getNewLogUseCase: GetNewLogUseCase by inject()
     private val getNetworkLogUseCase: GetNetworkLogUseCase by inject()
+    private val getNewNetworkLogUseCase: GetNewNetworkLogUseCase by inject()
     private val clearLogUseCase: ClearLogUseCase by inject()
     private val clearNetworkLogUseCase: ClearNetworkLogUseCase by inject()
 
     private var log = emptyList<LogMessage>()
-    private var networkLog = emptyList<LogNetworkMessage>()
+    private var networkLog = mutableListOf<LogNetworkMessage>()
 
     var filterInput by mutableStateOf("")
         private set
@@ -50,17 +59,79 @@ class LoggerViewModel : BaseUiViewModel<LoggerViewModel.UiState>() {
     override fun provideDefaultUIState() = UiState()
 
     private fun subscribeToLogs() {
-        viewModelScope.launch {
-            getLogUseCase().collect {
-                log = it
-                filterLog()
-            }
+        fun setLog(newValue: List<LogMessage>) {
+            log = newValue
+            filterLog()
         }
+
+        fun setNetworkLog(newValue: List<LogNetworkMessage>) {
+            networkLog = newValue.toMutableList()
+            filterNetworkLog()
+        }
+
         viewModelScope.launch {
-            getNetworkLogUseCase().collect {
-                networkLog = it
-                filterNetworkLog()
-            }
+            getLogUseCase().process(
+                { result ->
+                    setLog(result.log)
+                    result.eventsFlow.collect { event ->
+                        when (event) {
+                            LogEvent.NewMessage -> {
+                                getNewLogUseCase(log.lastOrNull()?.id ?: 0).process(
+                                    { result ->
+                                        setLog(log + result)
+                                    }, ::onError
+                                )
+                            }
+                            LogEvent.Cleanup -> {
+                                getLogUseCase().process(
+                                    { result ->
+                                        setLog(result.log)
+                                    }, ::onError
+                                )
+                            }
+                            else -> Unit
+                        }
+                    }
+                }, ::onError
+            )
+        }
+
+        viewModelScope.launch {
+            getNetworkLogUseCase().process(
+                { result ->
+                    setNetworkLog(result.log)
+                    result.eventsFlow.collect { event ->
+                        when (event) {
+                            is LogEvent.NewNetworkMessage -> {
+                                val oldMessageIndex = networkLog.indexOfFirst { it.id == event.message.id }
+                                if (oldMessageIndex >= 0) {
+                                    networkLog[oldMessageIndex] = event.message
+                                }
+
+                                getNewNetworkLogUseCase(networkLog.lastOrNull()?.id ?: 0).process(
+                                    { result ->
+                                        setNetworkLog(networkLog + result)
+                                    }, ::onError
+                                )
+                            }
+                            LogEvent.Cleanup -> {
+                                getNetworkLogUseCase().process(
+                                    { result ->
+                                        setNetworkLog(result.log)
+                                    }, ::onError
+                                )
+                            }
+                            else -> Unit
+                        }
+                    }
+                }, ::onError
+            )
+        }
+    }
+
+    private suspend fun onError(error: Throwable) {
+        errorHandler.proceed(error) { message ->
+            notifier.sendAlert(message)
         }
     }
 
