@@ -1,6 +1,8 @@
 package ru.rznnike.demokmp.data.gateway
 
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import ru.rznnike.demokmp.data.storage.dao.LogMessageDao
@@ -11,8 +13,11 @@ import ru.rznnike.demokmp.data.storage.entity.toLogNetworkMessage
 import ru.rznnike.demokmp.data.storage.entity.toLogNetworkMessageEntity
 import ru.rznnike.demokmp.domain.common.DispatcherProvider
 import ru.rznnike.demokmp.domain.gateway.LogGateway
+import ru.rznnike.demokmp.domain.log.LogData
+import ru.rznnike.demokmp.domain.log.LogEvent
 import ru.rznnike.demokmp.domain.log.LogMessage
 import ru.rznnike.demokmp.domain.log.LogNetworkMessage
+import ru.rznnike.demokmp.domain.log.NetworkLogData
 import ru.rznnike.demokmp.domain.log.extension.DatabaseLoggerExtension.LogsRetentionMode
 import java.time.Clock
 import java.util.*
@@ -25,12 +30,17 @@ class LogGatewayImpl(
 ) : LogGateway {
     private val currentSessionId = clock.millis()
 
+    private val logEventsFlow = MutableSharedFlow<LogEvent>()
+    private val networkLogEventsFlow = MutableSharedFlow<LogEvent>()
+
     override suspend fun addLogMessageToDB(message: LogMessage) = withContext(dispatcherProvider.io) {
         logMessageDao.add(message.toLogMessageEntity(currentSessionId))
+        logEventsFlow.emit(LogEvent.NewMessage)
     }
 
     override suspend fun addLogNetworkMessageToDB(message: LogNetworkMessage) = withContext(dispatcherProvider.io) {
         logNetworkMessageDao.add(message.toLogNetworkMessageEntity(currentSessionId))
+        networkLogEventsFlow.emit(LogEvent.NewNetworkMessage(message))
     }
 
     override suspend fun getLogNetworkMessage(uuid: UUID): LogNetworkMessage? = withContext(dispatcherProvider.io) {
@@ -41,24 +51,36 @@ class LogGatewayImpl(
         logNetworkMessageDao.getAsFlow(uuid).map { it?.toLogNetworkMessage(currentSessionId) }
     }
 
-    override suspend fun getLog(): Flow<List<LogMessage>> = withContext(dispatcherProvider.io) {
-        logMessageDao.getAll().map { list ->
-            list.map { it.toLogMessage(currentSessionId) }
-        }
+    override suspend fun getLog(): LogData = withContext(dispatcherProvider.io) {
+        LogData(
+            log = logMessageDao.getAll().map { it.toLogMessage(currentSessionId) },
+            eventsFlow = logEventsFlow.asSharedFlow()
+        )
     }
 
-    override suspend fun getNetworkLog(): Flow<List<LogNetworkMessage>> = withContext(dispatcherProvider.io) {
-        logNetworkMessageDao.getAll().map { list ->
-            list.map { it.toLogNetworkMessage(currentSessionId) }
-        }
+    override suspend fun getNewLog(lastId: Long): List<LogMessage> = withContext(dispatcherProvider.io) {
+        logMessageDao.getNew(lastId = lastId).map { it.toLogMessage(currentSessionId)}
+    }
+
+    override suspend fun getNetworkLog(): NetworkLogData = withContext(dispatcherProvider.io) {
+        NetworkLogData(
+            log = logNetworkMessageDao.getAll().map { it.toLogNetworkMessage(currentSessionId) },
+            eventsFlow = networkLogEventsFlow.asSharedFlow()
+        )
+    }
+
+    override suspend fun getNewNetworkLog(lastId: Long): List<LogNetworkMessage> = withContext(dispatcherProvider.io) {
+        logNetworkMessageDao.getNew(lastId = lastId).map { it.toLogNetworkMessage(currentSessionId)}
     }
 
     override suspend fun clearLog() = withContext(dispatcherProvider.io) {
         logMessageDao.deleteAll()
+        logEventsFlow.emit(LogEvent.Cleanup)
     }
 
     override suspend fun clearNetworkLog() = withContext(dispatcherProvider.io) {
         logNetworkMessageDao.deleteAll()
+        networkLogEventsFlow.emit(LogEvent.Cleanup)
     }
 
     override suspend fun deleteOldLogs(logsRetentionMode: LogsRetentionMode): Unit = withContext(dispatcherProvider.io) {
@@ -88,5 +110,7 @@ class LogGatewayImpl(
                 logNetworkMessageDao.deleteOldByTimestamp(borderTimestamp = borderTimestamp)
             }
         }
+        logEventsFlow.emit(LogEvent.Cleanup)
+        networkLogEventsFlow.emit(LogEvent.Cleanup)
     }
 }

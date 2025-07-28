@@ -15,6 +15,8 @@ import ru.rznnike.demokmp.domain.interactor.log.GetLogNetworkMessageAsFlowUseCas
 import ru.rznnike.demokmp.domain.interactor.log.GetLogNetworkMessageUseCase
 import ru.rznnike.demokmp.domain.interactor.log.GetLogUseCase
 import ru.rznnike.demokmp.domain.interactor.log.GetNetworkLogUseCase
+import ru.rznnike.demokmp.domain.interactor.log.GetNewLogUseCase
+import ru.rznnike.demokmp.domain.interactor.log.GetNewNetworkLogUseCase
 import ru.rznnike.demokmp.domain.interactor.pdfexample.GetSamplePdfUseCase
 import ru.rznnike.demokmp.domain.interactor.preferences.*
 import ru.rznnike.demokmp.domain.interactor.wsexample.CloseAppWSSessionUseCase
@@ -30,7 +32,9 @@ internal val interactorModule = module {
     single { GetLogNetworkMessageUseCase(get(), get()) }
     single { GetLogNetworkMessageAsFlowUseCase(get(), get()) }
     single { GetLogUseCase(get(), get()) }
+    single { GetNewLogUseCase(get(), get()) }
     single { GetNetworkLogUseCase(get(), get()) }
+    single { GetNewNetworkLogUseCase(get(), get()) }
     single { ClearLogUseCase(get(), get()) }
     single { ClearNetworkLogUseCase(get(), get()) }
     single { DeleteOldLogsUseCase(get(), get()) }

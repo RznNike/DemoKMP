@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "8b58c8662399072e0b94059b9bb5f9e2",
+    "identityHash": "b5820fc94ca26f9a68cd94f786015b02",
     "entities": [
       {
         "tableName": "LogMessageEntity",
@@ -60,7 +60,7 @@
       },
       {
         "tableName": "LogNetworkMessageEntity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `uuid` BLOB NOT NULL, `state` TEXT NOT NULL, `sessionId` INTEGER NOT NULL, `request_type` TEXT NOT NULL, `request_level` TEXT NOT NULL, `request_timestamp` INTEGER NOT NULL, `request_tag` TEXT NOT NULL, `request_message` TEXT NOT NULL, `request_isCurrentSession` INTEGER NOT NULL, `response_type` TEXT, `response_level` TEXT, `response_timestamp` INTEGER, `response_tag` TEXT, `response_message` TEXT, `response_isCurrentSession` INTEGER)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `uuid` BLOB NOT NULL, `state` TEXT NOT NULL, `sessionId` INTEGER NOT NULL, `request_id` INTEGER NOT NULL, `request_type` TEXT NOT NULL, `request_level` TEXT NOT NULL, `request_timestamp` INTEGER NOT NULL, `request_tag` TEXT NOT NULL, `request_message` TEXT NOT NULL, `request_isCurrentSession` INTEGER NOT NULL, `response_id` INTEGER, `response_type` TEXT, `response_level` TEXT, `response_timestamp` INTEGER, `response_tag` TEXT, `response_message` TEXT, `response_isCurrentSession` INTEGER)",
         "fields": [
           {
             "fieldPath": "id",
@@ -83,6 +83,12 @@
           {
             "fieldPath": "sessionId",
             "columnName": "sessionId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "request.id",
+            "columnName": "request_id",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -121,6 +127,11 @@
             "columnName": "request_isCurrentSession",
             "affinity": "INTEGER",
             "notNull": true
+          },
+          {
+            "fieldPath": "response.id",
+            "columnName": "response_id",
+            "affinity": "INTEGER"
           },
           {
             "fieldPath": "response.type",
@@ -198,7 +209,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '8b58c8662399072e0b94059b9bb5f9e2')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'b5820fc94ca26f9a68cd94f786015b02')"
     ]
   }
 }

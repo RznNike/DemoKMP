@@ -4,6 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class LogMessage(
+    val id: Long = 0,
     val type: LogType,
     val level: LogLevel,
     val timestamp: Long,
