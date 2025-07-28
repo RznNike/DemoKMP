@@ -131,9 +131,9 @@ To create a distributable build, use one of the launch configurations:
 
 As a result, an archive with the assembled version of the application will be created, ready for distribution. The assembled application is located in the ```distributableOutput``` folder, and its archive is in the ```distributableArchive``` folder.
 
-If you have problems building your application, it is recommended to select JDK version ```21```. To do this:
-* Select JDK version ```21``` at path ```File -> Project Structure -> Project -> SDK```, and also ```Language level``` under it.
-* At path ```Settings -> Build -> Compiler -> Java compiler -> Project bytecode version``` select ```21```.
+If you have problems building your application, it is recommended to select JDK version ```17```. To do this:
+* Select JDK version ```17``` at path ```File -> Project Structure -> Project -> SDK```, and also ```Language level``` under it.
+* At path ```Settings -> Build -> Compiler -> Java compiler -> Project bytecode version``` select ```17```.
 * At path ```Settings -> Build -> Build tools -> Gradle -> Gradle JVM``` select ```Project JDK```.
 
 *Note: you can build your application only for the OS you are currently using. If, for example, you use Windows and need to create a build for Linux, consider doing it in a virtual machine.*
