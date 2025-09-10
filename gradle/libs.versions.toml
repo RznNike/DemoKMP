@@ -1,15 +1,13 @@
 [versions]
-kotlin = "2.2.0"
+kotlin = "2.2.10"
 compose = "1.8.2"
 coroutines = "1.10.2"
-koin = "4.1.0"
-ktorfit = "2.6.3"
-ktor = "3.2.2"
+koin = "4.1.1"
+ktorfit = "2.6.4"
+ktor = "3.2.3"
 coil = "3.3.0"
 room = "2.7.2"
-sqlite = "2.5.2"
-filekit = "0.10.0"
-desugaring = "2.1.5"
+filekit = "0.11.0"
 chucker = "4.2.0"
 vico = "2.1.3"
 
@@ -22,18 +20,22 @@ android-targetSdk = "36"
 # https://github.com/JetBrains/compose-multiplatform
 ui-backhandler = { module = "org.jetbrains.compose.ui:ui-backhandler", version.ref = "compose" }
 
-# Coroutines
-# https://github.com/Kotlin/kotlinx.coroutines
-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
-coroutines-swing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", version.ref = "coroutines" }
-
 # ViewModel
 # https://mvnrepository.com/artifact/org.jetbrains.androidx.lifecycle/lifecycle-viewmodel-compose
+# Update the version according to the main Compose library dependencies
+#noinspection NewerVersionAvailable
 viewmodel-compose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose", version = "2.9.1" }
 
 # Navigation
 # https://mvnrepository.com/artifact/org.jetbrains.androidx.navigation/navigation-compose
+# Update the version according to the main Compose library dependencies
+#noinspection NewerVersionAvailable
 navigation = { module = "org.jetbrains.androidx.navigation:navigation-compose", version = "2.9.0-beta03" }
+
+# Coroutines
+# https://github.com/Kotlin/kotlinx.coroutines
+coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
+coroutines-swing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", version.ref = "coroutines" }
 
 # DI
 # https://github.com/InsertKoinIO/koin
@@ -76,7 +78,7 @@ room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 
 # SQLite (Room dependency)
 # https://developer.android.com/jetpack/androidx/releases/sqlite
-sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version.ref = "sqlite" }
+sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version = "2.5.2" }
 
 # Charts
 # https://github.com/patrykandpatrick/vico
@@ -104,7 +106,7 @@ filekit-dialogs-compose = { module = "io.github.vinceglb:filekit-dialogs-compose
 
 # Desugaring
 # https://mvnrepository.com/artifact/com.android.tools/desugar_jdk_libs
-desugaring = { module = "com.android.tools:desugar_jdk_libs", version.ref = "desugaring" }
+desugaring = { module = "com.android.tools:desugar_jdk_libs", version = "2.1.5" }
 
 # AndroidX
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version = "1.10.1" }
@@ -125,7 +127,7 @@ jetbrains-compose = { id = "org.jetbrains.compose", version.ref = "compose" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
-android-application = { id = "com.android.application", version = "8.10.1" }
+android-application = { id = "com.android.application", version = "8.11.1" }
 
 # BuildConfig
 # https://github.com/yshrsmz/BuildKonfig
@@ -133,7 +135,7 @@ buildkonfig = { id = "com.codingfeline.buildkonfig", version = "0.17.1" }
 
 # KSP
 # https://mvnrepository.com/artifact/com.google.devtools.ksp/com.google.devtools.ksp.gradle.plugin?repo=central
-ksp = { id = "com.google.devtools.ksp", version = "2.2.0-2.0.2" }
+ksp = { id = "com.google.devtools.ksp", version = "2.2.10-2.0.2" }
 
 # Ktorfit - network
 ktorfit = { id = "de.jensklingenberg.ktorfit", version.ref = "ktorfit" }
