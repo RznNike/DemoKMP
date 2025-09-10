@@ -3,8 +3,10 @@ package ru.rznnike.demokmp.app
 import androidx.compose.ui.window.application
 import org.koin.core.context.startKoin
 import org.koin.core.logger.Level
+import ru.rznnike.demokmp.BuildKonfig
 import ru.rznnike.demokmp.app.di.appComponent
 import ru.rznnike.demokmp.app.ui.window.main.MainWindow
+import ru.rznnike.demokmp.app.utils.platformName
 import ru.rznnike.demokmp.data.utils.DataConstants
 import ru.rznnike.demokmp.domain.log.Logger
 import ru.rznnike.demokmp.domain.log.extension.ConsoleLoggerExtension
@@ -23,7 +25,7 @@ fun main(args: Array<String>) {
                 )
             )
         )
-        Logger.i("Application start")
+        logAppInfo()
         MainWindow(args)
     }
 }
@@ -65,4 +67,11 @@ private fun initKoin() {
             }
         )
     }
+}
+
+private fun logAppInfo() {
+    Logger.i("Application start")
+    Logger.i("Version: ${BuildKonfig.VERSION_NAME}.${BuildKonfig.VERSION_CODE} | ${BuildKonfig.BUILD_TYPE}")
+    Logger.i("OS: ${System.getProperty("os.name")} | ${System.getProperty("os.version")} | ${System.getProperty("os.arch")}")
+    Logger.i("Environment: $platformName")
 }

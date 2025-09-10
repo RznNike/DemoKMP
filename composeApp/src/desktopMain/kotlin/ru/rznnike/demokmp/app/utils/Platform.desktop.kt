@@ -2,7 +2,7 @@ package ru.rznnike.demokmp.app.utils
 
 import java.net.NetworkInterface
 
-actual val platformName: String = "Java ${System.getProperty("java.version")}"
+actual val platformName: String = "Java ${System.getProperty("java.version")} | ${System.getProperty("java.vm.name")} | ${System.getProperty("java.vm.vendor")}"
 
 actual fun getMacAddress(): String? =
     NetworkInterface
