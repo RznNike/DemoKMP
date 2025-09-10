@@ -9,7 +9,7 @@ import kotlinx.serialization.SerializationException
 import ru.rznnike.demokmp.BuildKonfig
 import ru.rznnike.demokmp.data.network.model.WebSocketMessageModel
 import ru.rznnike.demokmp.data.preference.PreferencesManager
-import ru.rznnike.demokmp.data.utils.defaultJson
+import ru.rznnike.demokmp.data.utils.json.defaultJson
 import ru.rznnike.demokmp.domain.log.Logger
 import ru.rznnike.demokmp.domain.model.websocket.WebSocketConnectionState
 import ru.rznnike.demokmp.domain.model.websocket.WebSocketSessionData

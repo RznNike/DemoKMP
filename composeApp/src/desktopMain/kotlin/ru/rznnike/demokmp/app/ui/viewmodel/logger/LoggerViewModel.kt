@@ -27,6 +27,7 @@ import ru.rznnike.demokmp.domain.log.LogEvent
 import ru.rznnike.demokmp.domain.log.LogMessage
 import ru.rznnike.demokmp.domain.log.LogNetworkMessage
 import ru.rznnike.demokmp.domain.log.LogType
+import ru.rznnike.demokmp.domain.log.formatLogMessage
 import ru.rznnike.demokmp.domain.utils.GlobalConstants
 import ru.rznnike.demokmp.domain.utils.toDateString
 import ru.rznnike.demokmp.generated.resources.Res
@@ -245,15 +246,11 @@ class LoggerViewModel : BaseUiViewModel<LoggerViewModel.UiState>() {
             )
             val file = showFileDialog(saveFileName)
             file?.sink()?.buffered()?.use { writer ->
-                log.forEach { message ->
-                    val text = "%s%s | %s".format(
-                        message.timestamp.toDateString(GlobalConstants.DATE_PATTERN_TIME_MS),
-                        if (message.tag.isNotBlank()) " | ${message.tag}" else "",
-                        message.getFormattedMessage()
-                    )
-                    writer.writeText(text)
-                    writer.writeText("\n")
-                }
+                log.filter { it.type != LogType.SESSION_START }
+                    .forEach { message ->
+                        val text = formatLogMessage(message) + "\n"
+                        writer.writeText(text)
+                    }
             }
         }
     }

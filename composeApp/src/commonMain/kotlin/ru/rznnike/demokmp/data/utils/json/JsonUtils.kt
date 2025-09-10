@@ -1,4 +1,4 @@
-package ru.rznnike.demokmp.data.utils
+package ru.rznnike.demokmp.data.utils.json
 
 import kotlinx.serialization.json.Json
 

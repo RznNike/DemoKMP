@@ -159,7 +159,9 @@ fun <ItemType> DropdownQuerySelector(
                         )
                     ) {
                         Column(
-                            modifier = Modifier.fillMaxWidth()
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(1.dp)
                         ) {
                             var query by remember { mutableStateOf("") }
                             val scrollState = rememberLazyListState()

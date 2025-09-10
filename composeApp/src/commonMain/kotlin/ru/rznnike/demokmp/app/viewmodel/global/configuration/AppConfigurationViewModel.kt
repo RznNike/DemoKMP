@@ -1,6 +1,7 @@
 package ru.rznnike.demokmp.app.viewmodel.global.configuration
 
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.koin.core.component.inject
@@ -128,7 +129,9 @@ class AppConfigurationViewModel : BaseUiViewModel<AppConfigurationViewModel.UiSt
                 return@launch
             }
 
+            eventDispatcher.removeEventListener(eventListener)
             Logger.i("Application finish\n")
+            delay(100)
             closeDBUseCase()
             closeAppSingleInstanceSocketUseCase()
 

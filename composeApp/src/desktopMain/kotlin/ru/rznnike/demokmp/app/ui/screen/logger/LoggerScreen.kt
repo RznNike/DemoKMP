@@ -236,7 +236,7 @@ class LoggerScreen : DesktopNavigationScreen() {
                                     LoggerViewModel.Tab.ALL -> {
                                         items(
                                             items = uiState.filteredLog,
-                                            key = { item -> item.hashCode() }
+                                            key = { item -> item.id }
                                         ) { message ->
                                             when (message.type) {
                                                 LogType.DEFAULT,
@@ -259,7 +259,7 @@ class LoggerScreen : DesktopNavigationScreen() {
                                     LoggerViewModel.Tab.NETWORK -> {
                                         items(
                                             items = uiState.filteredNetworkLog,
-                                            key = { item -> item.uuid }
+                                            key = { item -> item.id }
                                         ) { message ->
                                             when (message.request.type) {
                                                 LogType.NETWORK -> {

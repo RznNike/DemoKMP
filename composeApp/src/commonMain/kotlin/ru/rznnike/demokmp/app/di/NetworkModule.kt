@@ -22,7 +22,7 @@ import ru.rznnike.demokmp.data.network.interceptor.HttpErrorResponseInterceptor
 import ru.rznnike.demokmp.data.network.interceptor.HttpHeaderInterceptor
 import ru.rznnike.demokmp.data.network.interceptor.HttpLoggingInterceptor
 import ru.rznnike.demokmp.data.utils.DataConstants
-import ru.rznnike.demokmp.data.utils.defaultJson
+import ru.rznnike.demokmp.data.utils.json.defaultJson
 import java.io.File
 import java.time.Duration
 import java.util.concurrent.TimeUnit

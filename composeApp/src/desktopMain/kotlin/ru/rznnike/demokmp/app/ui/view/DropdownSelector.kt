@@ -165,7 +165,9 @@ fun <ItemType> DropdownSelector(
                         )
                     ) {
                         Box(
-                            modifier = Modifier.fillMaxWidth()
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(1.dp)
                         ) {
                             val scrollState = rememberLazyListState()
                             var listHeight by remember { mutableStateOf(0) }

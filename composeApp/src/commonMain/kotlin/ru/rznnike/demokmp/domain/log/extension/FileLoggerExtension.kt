@@ -53,8 +53,7 @@ class FileLoggerExtension(
                                 val logFileName = "${currentDate.millis().toDateString(GlobalConstants.DATE_PATTERN_FILE_NAME_DAY)}.txt"
                                 logFile = File("${DataConstants.LOGS_PATH}/$logFileName")
                             }
-                            logFile?.appendText(formatLogMessage(logMessage))
-                            logFile?.appendText("\n")
+                            logFile?.appendText(formatLogMessage(logMessage) + "\n")
                         } catch (_: Exception) { }
                         callback(logMessage)
                     }
