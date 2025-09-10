@@ -37,13 +37,11 @@ private fun initLogger() {
     )
     Thread.setDefaultUncaughtExceptionHandler(
         object : Thread.UncaughtExceptionHandler {
-            var isCrashing = false
+            var defaultHandler = Thread.getDefaultUncaughtExceptionHandler()
 
             override fun uncaughtException(thread: Thread, throwable: Throwable) {
-                if (!isCrashing) {
-                    isCrashing = true
-                    Logger.e(throwable)
-                }
+                Logger.e(throwable)
+                defaultHandler?.uncaughtException(thread, throwable)
             }
         }
     )
