@@ -106,7 +106,7 @@ class HomeScreen : DesktopNavigationScreen() {
                                 modifier = Modifier
                                     .weight(1f)
                                     .widthIn(
-                                        min = 150.dp
+                                        min = 190.dp
                                     )
                                     .height(70.dp),
                                 onClick = onClick
@@ -114,7 +114,8 @@ class HomeScreen : DesktopNavigationScreen() {
                                 TextR(
                                     modifier = Modifier.fillMaxWidth(),
                                     textRes = text,
-                                    textAlign = TextAlign.Center
+                                    textAlign = TextAlign.Center,
+                                    maxLines = 2
                                 )
                             }
                         }
