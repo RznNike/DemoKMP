@@ -6,7 +6,7 @@ koin = "4.1.1"
 ktorfit = "2.6.4"
 ktor = "3.3.0"
 coil = "3.3.0"
-room = "2.8.0"
+room = "2.8.1"
 filekit = "0.11.0"
 chucker = "4.2.0"
 vico = "2.2.0"
@@ -78,7 +78,7 @@ room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 
 # SQLite (Room dependency)
 # https://developer.android.com/jetpack/androidx/releases/sqlite
-sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version = "2.6.0" }
+sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version = "2.6.1" }
 
 # Charts
 # https://github.com/patrykandpatrick/vico
