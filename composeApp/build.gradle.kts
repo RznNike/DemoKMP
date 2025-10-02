@@ -1,4 +1,6 @@
+import com.android.build.api.dsl.ApkSigningConfig
 import com.codingfeline.buildkonfig.compiler.FieldSpec
+import com.codingfeline.buildkonfig.gradle.TargetConfigDsl
 import org.gradle.internal.extensions.stdlib.capitalized
 import org.gradle.internal.extensions.stdlib.toDefaultLowerCase
 import org.gradle.kotlin.dsl.register
@@ -120,16 +122,19 @@ android {
     buildToolsVersion = "36.0.0"
 
     signingConfigs {
-        create("config") {
-            storeFile = file("../demokmp.jks")
-            keyAlias = "demoKey"
-            if (project.hasProperty("PROJECT_KEY_PASSWORD") && project.hasProperty("PROJECT_KEYSTORE_PASSWORD")) {
-                keyPassword = project.property("PROJECT_KEY_PASSWORD") as String
-                storePassword = project.property("PROJECT_KEYSTORE_PASSWORD") as String
-            } else {
-                throw GradleException("Not found signing config password properties")
+        create(
+            "config",
+            Action<ApkSigningConfig> {
+                storeFile = file("../demokmp.jks")
+                keyAlias = "demoKey"
+                if (project.hasProperty("PROJECT_KEY_PASSWORD") && project.hasProperty("PROJECT_KEYSTORE_PASSWORD")) {
+                    keyPassword = project.property("PROJECT_KEY_PASSWORD") as String
+                    storePassword = project.property("PROJECT_KEYSTORE_PASSWORD") as String
+                } else {
+                    throw GradleException("Not found signing config password properties")
+                }
             }
-        }
+        )
     }
 
     defaultConfig {
@@ -205,6 +210,7 @@ android {
         jvmToolchain(17)
     }
 
+    @Suppress("UnstableApiUsage")
     bundle.language.enableSplit = false
 
     dependencies {
@@ -270,31 +276,46 @@ buildkonfig {
     }
 
     targetConfigs {
-        create("android") {
-            buildConfigField(FieldSpec.Type.STRING, "OS", "android")
-        }
-        create("desktop") {
-            buildConfigField(FieldSpec.Type.STRING, "OS", os)
-        }
+        create(
+            "android",
+            Action<TargetConfigDsl> {
+                buildConfigField(FieldSpec.Type.STRING, "OS", "android")
+            }
+        )
+        create(
+            "desktop",
+            Action<TargetConfigDsl> {
+                buildConfigField(FieldSpec.Type.STRING, "OS", os)
+            }
+        )
     }
 
     targetConfigs("debug") {
-        create("android") {
-            buildConfigField(FieldSpec.Type.STRING, "BUILD_TYPE", BuildType.DEBUG.tag)
-            buildConfigField(FieldSpec.Type.BOOLEAN, "DEBUG", "true")
-        }
+        create(
+            "android",
+            Action<TargetConfigDsl> {
+                buildConfigField(FieldSpec.Type.STRING, "BUILD_TYPE", BuildType.DEBUG.tag)
+                buildConfigField(FieldSpec.Type.BOOLEAN, "DEBUG", "true")
+            }
+        )
     }
     targetConfigs("staging") {
-        create("android") {
-            buildConfigField(FieldSpec.Type.STRING, "BUILD_TYPE", BuildType.STAGING.tag)
-            buildConfigField(FieldSpec.Type.BOOLEAN, "DEBUG", "true")
-        }
+        create(
+            "android",
+            Action<TargetConfigDsl> {
+                buildConfigField(FieldSpec.Type.STRING, "BUILD_TYPE", BuildType.STAGING.tag)
+                buildConfigField(FieldSpec.Type.BOOLEAN, "DEBUG", "true")
+            }
+        )
     }
     targetConfigs("release") {
-        create("android") {
-            buildConfigField(FieldSpec.Type.STRING, "BUILD_TYPE", BuildType.RELEASE.tag)
-            buildConfigField(FieldSpec.Type.BOOLEAN, "DEBUG", "false")
-        }
+        create(
+            "android",
+            Action<TargetConfigDsl> {
+                buildConfigField(FieldSpec.Type.STRING, "BUILD_TYPE", BuildType.RELEASE.tag)
+                buildConfigField(FieldSpec.Type.BOOLEAN, "DEBUG", "false")
+            }
+        )
     }
 }
 
