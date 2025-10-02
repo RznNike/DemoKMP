@@ -101,6 +101,10 @@ pdfbox = { module = "org.apache.pdfbox:pdfbox", version = "3.0.5" }
 filekit-core = { module = "io.github.vinceglb:filekit-core", version.ref = "filekit" }
 filekit-dialogs-compose = { module = "io.github.vinceglb:filekit-dialogs-compose", version.ref = "filekit" }
 
+# JNA Platform Library (for COM objects)
+# https://github.com/java-native-access/jna
+jna-platform = { module = "net.java.dev.jna:jna-platform", version = "5.18.0" }
+
 
 ### Android-specific libs ###
 

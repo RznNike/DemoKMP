@@ -103,6 +103,8 @@ kotlin {
             implementation(libs.pdfbox)
 
             implementation(libs.logback)
+
+            implementation(libs.jna.platform)
         }
     }
 

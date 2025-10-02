@@ -41,6 +41,7 @@ import ru.rznnike.demokmp.app.utils.getMacAddress
 import ru.rznnike.demokmp.app.utils.platformName
 import ru.rznnike.demokmp.app.viewmodel.global.configuration.AppConfigurationViewModel
 import ru.rznnike.demokmp.app.viewmodel.home.HomeViewModel
+import ru.rznnike.demokmp.domain.utils.OperatingSystem
 import ru.rznnike.demokmp.generated.resources.*
 
 @Serializable
@@ -101,7 +102,7 @@ class HomeScreen : DesktopNavigationScreen() {
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         @Composable
-                        fun MenuButton(text: StringResource, onClick: () -> Unit) {
+                        fun MenuButton(textRes: StringResource, onClick: () -> Unit) {
                             SelectableButton(
                                 modifier = Modifier
                                     .weight(1f)
@@ -113,7 +114,7 @@ class HomeScreen : DesktopNavigationScreen() {
                             ) {
                                 TextR(
                                     modifier = Modifier.fillMaxWidth(),
-                                    textRes = text,
+                                    textRes = textRes,
                                     textAlign = TextAlign.Center,
                                     maxLines = 2
                                 )
@@ -143,6 +144,11 @@ class HomeScreen : DesktopNavigationScreen() {
                         }
                         MenuButton(Res.string.navigation_example) {
                             navigator.openFlow(NavigationExampleFlow())
+                        }
+                        if (OperatingSystem.isWindows) {
+                            MenuButton(Res.string.minimize_all_windows) {
+                                viewModel.minimizeAllWindows()
+                            }
                         }
                         MenuButton(Res.string.test_dialog) {
                             notifier.sendAlert(Res.string.test_dialog)

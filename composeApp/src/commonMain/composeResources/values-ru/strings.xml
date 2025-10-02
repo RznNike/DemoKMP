@@ -83,4 +83,5 @@
     <string name="error_unsupported_operation">Операция не поддерживается</string>
     <string name="error_io">Ошибка ввода-вывода</string>
     <string name="error_security">Ошибка доступа</string>
+    <string name="minimize_all_windows">Свернуть все окна</string>
 </resources>

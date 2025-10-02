@@ -85,4 +85,5 @@
     <string name="error_unsupported_operation">Unsupported operation</string>
     <string name="error_io">Input-output error</string>
     <string name="error_security">Security exception</string>
+    <string name="minimize_all_windows">Minimize all windows</string>
 </resources>
