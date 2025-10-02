@@ -1,5 +1,7 @@
 <resources>
-    <string name="window_title">Demo KMP app</string>
+    <string name="github_repository_link">https://github.com/RznNike/DemoKMP</string>
+
+    <string name="app_name">Demo KMP app</string>
     <string name="main_screen">Main screen</string>
     <string name="test_dialog">Test dialog</string>
     <string name="test_message">Test message</string>
@@ -78,4 +80,9 @@
     <string name="test_counter_local">Test counter (local)</string>
     <string name="session_start">Session start</string>
     <string name="current_session_start">Current session start</string>
+    <string name="source_code">Source code</string>
+    <string name="error_json_convert">JSON reading error</string>
+    <string name="error_unsupported_operation">Unsupported operation</string>
+    <string name="error_io">Input-output error</string>
+    <string name="error_security">Security exception</string>
 </resources>

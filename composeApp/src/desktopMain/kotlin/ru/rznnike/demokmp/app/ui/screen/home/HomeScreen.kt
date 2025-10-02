@@ -191,7 +191,7 @@ class HomeScreen : DesktopNavigationScreen() {
             )
             CommonAlertDialog(
                 type = AlertDialogType.HORIZONTAL,
-                header = stringResource(Res.string.window_title),
+                header = stringResource(Res.string.app_name),
                 message = details,
                 cancellable = true,
                 onCancelListener = {
@@ -200,6 +200,10 @@ class HomeScreen : DesktopNavigationScreen() {
                 actions = listOf(
                     AlertDialogAction(stringResource(Res.string.close)) {
                         showAboutDialog = false
+                    },
+                    AlertDialogAction(stringResource(Res.string.source_code)) {
+                        showAboutDialog = false
+                        viewModel.openSourceCodeLink()
                     }
                 )
             )
