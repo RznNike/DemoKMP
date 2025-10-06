@@ -5,6 +5,10 @@ interface ShellManager {
 
     suspend fun destroyWrapper()
 
+    suspend fun getPCData(): String
+
+    suspend fun openFolderOrFile(path: String)
+
     suspend fun minimizeAllWindows()
 }
 

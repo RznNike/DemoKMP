@@ -22,6 +22,18 @@ class ComObjectExampleGatewayImpl(
         shellManager.destroyWrapper()
     }
 
+    override suspend fun getPCData(): String = withContext(dispatcherProvider.io) {
+        if (!OperatingSystem.isWindows) return@withContext ""
+
+        shellManager.getPCData()
+    }
+
+    override suspend fun openFolderOrFile(path: String): Unit = withContext(dispatcherProvider.io) {
+        if (!OperatingSystem.isWindows) return@withContext
+
+        shellManager.openFolderOrFile(path)
+    }
+
     override suspend fun minimizeAllWindows(): Unit = withContext(dispatcherProvider.io) {
         if (!OperatingSystem.isWindows) return@withContext
 

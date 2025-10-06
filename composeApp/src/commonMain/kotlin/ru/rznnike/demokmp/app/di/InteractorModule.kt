@@ -5,8 +5,10 @@ import ru.rznnike.demokmp.domain.interactor.app.CheckIfAppIsAlreadyRunningUseCas
 import ru.rznnike.demokmp.domain.interactor.app.CloseAppSingleInstanceSocketUseCase
 import ru.rznnike.demokmp.domain.interactor.chartexample.GetChartSampleDataUseCase
 import ru.rznnike.demokmp.domain.interactor.comobjectexample.DestroyShellWrapperUseCase
+import ru.rznnike.demokmp.domain.interactor.comobjectexample.GetPCDataUseCase
 import ru.rznnike.demokmp.domain.interactor.comobjectexample.InitShellWrapperUseCase
 import ru.rznnike.demokmp.domain.interactor.comobjectexample.MinimizeAllWindowsUseCase
+import ru.rznnike.demokmp.domain.interactor.comobjectexample.OpenFolderOrFileUseCase
 import ru.rznnike.demokmp.domain.interactor.dbexample.*
 import ru.rznnike.demokmp.domain.interactor.httpexample.GetRandomImageLinksUseCase
 import ru.rznnike.demokmp.domain.interactor.log.AddLogMessageToDBUseCase
@@ -70,5 +72,7 @@ internal val interactorModule = module {
 
     single { InitShellWrapperUseCase(get(), get()) }
     single { DestroyShellWrapperUseCase(get(), get()) }
+    single { GetPCDataUseCase(get(), get()) }
+    single { OpenFolderOrFileUseCase(get(), get()) }
     single { MinimizeAllWindowsUseCase(get(), get()) }
 }

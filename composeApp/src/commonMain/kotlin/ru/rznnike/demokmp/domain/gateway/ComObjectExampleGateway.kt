@@ -5,5 +5,9 @@ interface ComObjectExampleGateway {
 
     suspend fun destroyShellWrapper()
 
+    suspend fun getPCData(): String
+
+    suspend fun openFolderOrFile(path: String)
+
     suspend fun minimizeAllWindows()
 }

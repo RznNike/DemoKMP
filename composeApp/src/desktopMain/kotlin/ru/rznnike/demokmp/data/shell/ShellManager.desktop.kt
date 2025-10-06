@@ -30,6 +30,26 @@ class ShellManagerImpl : ShellManager {
         PowerShellWrapper.uninitialize()
     }
 
+    override suspend fun getPCData(): String {
+        logger.i("Getting PC data")
+        var result = ""
+        withWrapper {
+            result = "CPU %d Mhz (%s) | RAM %.2f Gb".format(
+                getCPUSpeedMhz(),
+                getCPUArchitecture(),
+                getRAMAmountGb()
+            )
+        }
+        return result
+    }
+
+    override suspend fun openFolderOrFile(path: String) {
+        logger.i("trying to open path: $path")
+        withWrapper {
+            openFolderOrFile(path)
+        }
+    }
+
     override suspend fun minimizeAllWindows() {
         logger.i("Minimizing all windows")
         withWrapper {
