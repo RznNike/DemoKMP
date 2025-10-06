@@ -13,6 +13,8 @@ import ru.rznnike.demokmp.app.dispatcher.notifier.Notifier
 import ru.rznnike.demokmp.data.utils.DataConstants
 import ru.rznnike.demokmp.domain.common.DispatcherProvider
 import ru.rznnike.demokmp.domain.interactor.app.CloseAppSingleInstanceSocketUseCase
+import ru.rznnike.demokmp.domain.interactor.comobjectexample.DestroyShellWrapperUseCase
+import ru.rznnike.demokmp.domain.interactor.comobjectexample.InitShellWrapperUseCase
 import ru.rznnike.demokmp.domain.interactor.dbexample.CloseDBUseCase
 import ru.rznnike.demokmp.domain.interactor.preferences.GetLanguageUseCase
 import ru.rznnike.demokmp.domain.interactor.preferences.GetThemeUseCase
@@ -35,6 +37,8 @@ class AppConfigurationViewModel : BaseUiViewModel<AppConfigurationViewModel.UiSt
     private val setLanguageUseCase: SetLanguageUseCase by inject()
     private val getThemeUseCase: GetThemeUseCase by inject()
     private val setThemeUseCase: SetThemeUseCase by inject()
+    private val initShellWrapperUseCase: InitShellWrapperUseCase by inject()
+    private val destroyShellWrapperUseCase: DestroyShellWrapperUseCase by inject()
     private val closeDBUseCase: CloseDBUseCase by inject()
     private val closeAppSingleInstanceSocketUseCase: CloseAppSingleInstanceSocketUseCase by inject()
 
@@ -53,7 +57,23 @@ class AppConfigurationViewModel : BaseUiViewModel<AppConfigurationViewModel.UiSt
 
     init {
         subscribeToEvents()
-        viewModelScope.launch(dispatcherProvider.default) {
+        initLanguageAndTheme()
+        initShellWrapper()
+    }
+
+    override fun provideDefaultUIState() = UiState()
+
+    private fun subscribeToEvents() {
+        eventDispatcher.addEventListener(
+            appEventClasses = listOf(
+                AppEvent.RestartRequested::class
+            ),
+            listener = eventListener
+        )
+    }
+
+    private fun initLanguageAndTheme() {
+        viewModelScope.launch {
             val selectedLanguage = getLanguageUseCase().data ?: Language.default
             val selectedTheme = getThemeUseCase().data ?: Theme.default
             applySelectedLanguage(selectedLanguage)
@@ -68,16 +88,11 @@ class AppConfigurationViewModel : BaseUiViewModel<AppConfigurationViewModel.UiSt
         }
     }
 
-    private fun subscribeToEvents() {
-        eventDispatcher.addEventListener(
-            appEventClasses = listOf(
-                AppEvent.RestartRequested::class
-            ),
-            listener = eventListener
-        )
+    private fun initShellWrapper() {
+        viewModelScope.launch {
+            initShellWrapperUseCase()
+        }
     }
-
-    override fun provideDefaultUIState() = UiState()
 
     fun setLanguage(newValue: Language) {
         viewModelScope.launch {
@@ -130,10 +145,11 @@ class AppConfigurationViewModel : BaseUiViewModel<AppConfigurationViewModel.UiSt
             }
 
             eventDispatcher.removeEventListener(eventListener)
-            Logger.i("Application finish\n")
-            delay(100)
+            destroyShellWrapperUseCase()
             closeDBUseCase()
             closeAppSingleInstanceSocketUseCase()
+            Logger.i("Application finish\n")
+            delay(100)
 
             if (OperatingSystem.isDesktop || (!isRestart)) {
                 closeAppCallback?.invoke()

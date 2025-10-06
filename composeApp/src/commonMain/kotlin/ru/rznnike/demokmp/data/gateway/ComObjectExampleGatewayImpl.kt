@@ -10,13 +10,21 @@ class ComObjectExampleGatewayImpl(
     private val dispatcherProvider: DispatcherProvider,
     private val shellManager: ShellManager
 ) : ComObjectExampleGateway {
+    override suspend fun initShellWrapper(): Unit = withContext(dispatcherProvider.io) {
+        if (!OperatingSystem.isWindows) return@withContext
+
+        shellManager.initWrapper()
+    }
+
+    override suspend fun destroyShellWrapper(): Unit = withContext(dispatcherProvider.io) {
+        if (!OperatingSystem.isWindows) return@withContext
+
+        shellManager.destroyWrapper()
+    }
+
     override suspend fun minimizeAllWindows(): Unit = withContext(dispatcherProvider.io) {
         if (!OperatingSystem.isWindows) return@withContext
 
-        shellManager.apply {
-            initWrapper()
-            minimizeAllWindows()
-            destroyWrapper()
-        }
+        shellManager.minimizeAllWindows()
     }
 }

@@ -4,6 +4,8 @@ import org.koin.dsl.module
 import ru.rznnike.demokmp.domain.interactor.app.CheckIfAppIsAlreadyRunningUseCase
 import ru.rznnike.demokmp.domain.interactor.app.CloseAppSingleInstanceSocketUseCase
 import ru.rznnike.demokmp.domain.interactor.chartexample.GetChartSampleDataUseCase
+import ru.rznnike.demokmp.domain.interactor.comobjectexample.DestroyShellWrapperUseCase
+import ru.rznnike.demokmp.domain.interactor.comobjectexample.InitShellWrapperUseCase
 import ru.rznnike.demokmp.domain.interactor.comobjectexample.MinimizeAllWindowsUseCase
 import ru.rznnike.demokmp.domain.interactor.dbexample.*
 import ru.rznnike.demokmp.domain.interactor.httpexample.GetRandomImageLinksUseCase
@@ -66,5 +68,7 @@ internal val interactorModule = module {
 
     single { GetChartSampleDataUseCase(get(), get()) }
 
+    single { InitShellWrapperUseCase(get(), get()) }
+    single { DestroyShellWrapperUseCase(get(), get()) }
     single { MinimizeAllWindowsUseCase(get(), get()) }
 }

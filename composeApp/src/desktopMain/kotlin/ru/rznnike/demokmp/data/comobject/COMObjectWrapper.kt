@@ -53,12 +53,18 @@ open class COMObjectWrapper(name: String) : COMLateBindingObject(name, false) {
     }
 
     companion object {
+        private var isInitialized: Boolean = false
+
         @JvmStatic
         protected fun initialize() {
-            if (OperatingSystem.isWindows) {
-                Ole32.INSTANCE.CoInitializeEx(null, Ole32.COINIT_MULTITHREADED)
-            } else {
-                throw UnsupportedOperationException("This driver only supports Windows!")
+            when {
+                !OperatingSystem.isWindows -> {
+                    throw UnsupportedOperationException("This driver only supports Windows!")
+                }
+                !isInitialized -> {
+                    Ole32.INSTANCE.CoInitializeEx(null, Ole32.COINIT_MULTITHREADED)
+                    isInitialized = true
+                }
             }
         }
 

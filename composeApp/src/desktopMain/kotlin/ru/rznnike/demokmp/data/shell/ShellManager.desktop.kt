@@ -26,6 +26,7 @@ class ShellManagerImpl : ShellManager {
 
     override suspend fun destroyWrapper(): Unit = wrapperLock.withLock {
         logger.i("Destroying PowerShellWrapper")
+        wrapper = null
         PowerShellWrapper.uninitialize()
     }
 
