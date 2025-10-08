@@ -4,12 +4,12 @@ compose = "1.9.0"
 coroutines = "1.10.2"
 koin = "4.1.1"
 ktorfit = "2.6.4"
-ktor = "3.3.0"
+ktor = "3.3.1"
 coil = "3.3.0"
 room = "2.8.1"
-filekit = "0.11.0"
+filekit = "0.12.0"
 chucker = "4.2.0"
-vico = "2.2.0"
+vico = "2.2.1"
 
 android-minSdk = "26"
 android-targetSdk = "36"
@@ -90,7 +90,7 @@ vico-multiplatform-m3 = { group = "com.patrykandpatrick.vico", name = "multiplat
 
 # Logging (for Ktor)
 # https://mvnrepository.com/artifact/ch.qos.logback/logback-classic
-logback = { module = "ch.qos.logback:logback-classic", version = "1.5.18" }
+logback = { module = "ch.qos.logback:logback-classic", version = "1.5.19" }
 
 # PDF renderer
 # https://mvnrepository.com/artifact/org.apache.pdfbox/pdfbox
@@ -103,7 +103,7 @@ filekit-dialogs-compose = { module = "io.github.vinceglb:filekit-dialogs-compose
 
 # JNA Platform Library (for COM objects)
 # https://github.com/java-native-access/jna
-jna-platform = { module = "net.java.dev.jna:jna-platform", version = "5.18.0" }
+jna-platform = { module = "net.java.dev.jna:jna-platform", version = "5.18.1" }
 
 
 ### Android-specific libs ###
