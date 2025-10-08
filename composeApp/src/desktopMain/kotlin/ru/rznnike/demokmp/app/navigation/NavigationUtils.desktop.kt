@@ -2,6 +2,7 @@ package ru.rznnike.demokmp.app.navigation
 
 import androidx.navigation.NavGraphBuilder
 import ru.rznnike.demokmp.app.ui.screen.chartexample.ChartExampleScreen
+import ru.rznnike.demokmp.app.ui.screen.comobjectexample.ComObjectExampleScreen
 import ru.rznnike.demokmp.app.ui.screen.customui.CustomUIScreen
 import ru.rznnike.demokmp.app.ui.screen.dbexample.DBExampleScreen
 import ru.rznnike.demokmp.app.ui.screen.home.HomeScreen
@@ -29,4 +30,5 @@ actual fun NavGraphBuilder.buildNavGraph() {
     addToNavGraph<CustomUIScreen>()
     addToNavGraph<PdfExampleScreen>()
     addToNavGraph<NavigationExampleScreen>()
+    addToNavGraph<ComObjectExampleScreen>()
 }

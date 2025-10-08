@@ -84,4 +84,8 @@
     <string name="error_io">Ошибка ввода-вывода</string>
     <string name="error_security">Ошибка доступа</string>
     <string name="minimize_all_windows">Свернуть все окна</string>
+    <string name="com_object_example">Пример COM объекта</string>
+    <string name="pc_data_header">Данные ПК:</string>
+    <string name="path_to_folder_or_file">Путь до папки или файла</string>
+    <string name="open">Открыть</string>
 </resources>

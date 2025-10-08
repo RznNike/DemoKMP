@@ -26,6 +26,7 @@ import ru.rznnike.demokmp.app.ui.dialog.common.AlertDialogAction
 import ru.rznnike.demokmp.app.ui.dialog.common.AlertDialogType
 import ru.rznnike.demokmp.app.ui.dialog.common.CommonAlertDialog
 import ru.rznnike.demokmp.app.ui.screen.chartexample.ChartExampleFlow
+import ru.rznnike.demokmp.app.ui.screen.comobjectexample.ComObjectExampleFlow
 import ru.rznnike.demokmp.app.ui.screen.customui.CustomUIFlow
 import ru.rznnike.demokmp.app.ui.screen.dbexample.DBExampleFlow
 import ru.rznnike.demokmp.app.ui.screen.httpexample.HTTPExampleFlow
@@ -102,23 +103,21 @@ class HomeScreen : DesktopNavigationScreen() {
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         @Composable
-                        fun MenuButton(textRes: StringResource, onClick: () -> Unit) {
-                            SelectableButton(
-                                modifier = Modifier
-                                    .weight(1f)
-                                    .widthIn(
-                                        min = 190.dp
-                                    )
-                                    .height(70.dp),
-                                onClick = onClick
-                            ) {
-                                TextR(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    textRes = textRes,
-                                    textAlign = TextAlign.Center,
-                                    maxLines = 2
+                        fun MenuButton(textRes: StringResource, onClick: () -> Unit) = SelectableButton(
+                            modifier = Modifier
+                                .weight(1f)
+                                .widthIn(
+                                    min = 190.dp
                                 )
-                            }
+                                .height(70.dp),
+                            onClick = onClick
+                        ) {
+                            TextR(
+                                modifier = Modifier.fillMaxWidth(),
+                                textRes = textRes,
+                                textAlign = TextAlign.Center,
+                                maxLines = 2
+                            )
                         }
 
                         MenuButton(Res.string.settings) {
@@ -146,8 +145,8 @@ class HomeScreen : DesktopNavigationScreen() {
                             navigator.openFlow(NavigationExampleFlow())
                         }
                         if (OperatingSystem.isWindows) {
-                            MenuButton(Res.string.minimize_all_windows) {
-                                viewModel.minimizeAllWindows()
+                            MenuButton(Res.string.com_object_example) {
+                                navigator.openFlow(ComObjectExampleFlow())
                             }
                         }
                         MenuButton(Res.string.test_dialog) {

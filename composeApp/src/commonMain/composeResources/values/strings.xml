@@ -86,4 +86,8 @@
     <string name="error_io">Input-output error</string>
     <string name="error_security">Security exception</string>
     <string name="minimize_all_windows">Minimize all windows</string>
+    <string name="com_object_example">COM object example</string>
+    <string name="pc_data_header">PC data:</string>
+    <string name="path_to_folder_or_file">Path to folder or file</string>
+    <string name="open">Open</string>
 </resources>

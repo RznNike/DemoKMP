@@ -45,7 +45,7 @@ class ShellManagerImpl : ShellManager {
     }
 
     override suspend fun openFolderOrFile(path: String) {
-        logger.i("trying to open path: $path")
+        logger.i("Trying to open path: $path")
         withWrapper {
             openFolderOrFile(path)
         }
@@ -61,7 +61,7 @@ class ShellManagerImpl : ShellManager {
     private suspend fun withWrapper(
         action: suspend PowerShellWrapper.() -> Unit
     ): Unit = wrapperLock.withLock {
-        wrapper?.action() ?: logger.e("PowerShellWrapper is not initialized")
+        wrapper?.action() ?: throw IllegalStateException("PowerShellWrapper is not initialized")
     }
 }
 
