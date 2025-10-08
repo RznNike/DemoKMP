@@ -34,10 +34,4 @@ class PowerShellWrapper : COMObjectWrapper("Shell.Application") {
     fun openFolderOrFile(path: String) {
         invoke("Open", Variant.VARIANT(path))
     }
-
-    companion object {
-        fun initialize() = COMObjectWrapper.initialize()
-
-        fun uninitialize() = COMObjectWrapper.uninitialize()
-    }
 }

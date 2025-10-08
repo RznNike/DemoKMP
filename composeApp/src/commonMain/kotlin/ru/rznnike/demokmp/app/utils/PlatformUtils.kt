@@ -7,3 +7,7 @@ expect val platformName: String
 expect fun getMacAddress(): String?
 
 expect fun KoinComponent.openLink(link: String)
+
+expect fun initCOMLibrary()
+
+expect fun destroyCOMLibrary()

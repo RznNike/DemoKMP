@@ -2,6 +2,7 @@ package ru.rznnike.demokmp.data.shell
 
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import ru.rznnike.demokmp.data.comobject.COMObjectWrapper
 import ru.rznnike.demokmp.domain.log.Logger
 
 class ShellManagerImpl : ShellManager {
@@ -17,7 +18,7 @@ class ShellManagerImpl : ShellManager {
 
         logger.i("Initializing PowerShellWrapper")
         try {
-            PowerShellWrapper.initialize()
+            COMObjectWrapper.initialize()
             wrapper = PowerShellWrapper()
         } catch (e: Exception) {
             logger.e(e, "PowerShellWrapper initialization failed")
@@ -27,7 +28,6 @@ class ShellManagerImpl : ShellManager {
     override suspend fun destroyWrapper(): Unit = wrapperLock.withLock {
         logger.i("Destroying PowerShellWrapper")
         wrapper = null
-        PowerShellWrapper.uninitialize()
     }
 
     override suspend fun getPCData(): String {
@@ -40,6 +40,7 @@ class ShellManagerImpl : ShellManager {
                 getRAMAmountGb()
             )
         }
+        logger.i(result)
         return result
     }
 

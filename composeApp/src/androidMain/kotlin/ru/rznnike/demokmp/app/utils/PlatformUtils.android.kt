@@ -18,3 +18,7 @@ actual fun KoinComponent.openLink(link: String) {
         .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
     context.startActivity(intent)
 }
+
+actual fun initCOMLibrary() = Unit
+
+actual fun destroyCOMLibrary() = Unit

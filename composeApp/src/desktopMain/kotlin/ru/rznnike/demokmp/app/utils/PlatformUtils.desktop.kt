@@ -1,6 +1,8 @@
 package ru.rznnike.demokmp.app.utils
 
 import org.koin.core.component.KoinComponent
+import ru.rznnike.demokmp.data.comobject.COMObjectWrapper
+import ru.rznnike.demokmp.domain.utils.OperatingSystem
 import java.awt.Desktop
 import java.net.NetworkInterface
 import java.net.URI
@@ -24,4 +26,16 @@ actual fun getMacAddress(): String? =
 
 actual fun KoinComponent.openLink(link: String) {
     Desktop.getDesktop().browse(URI(link))
+}
+
+actual fun initCOMLibrary() {
+    if (OperatingSystem.isWindows) {
+        COMObjectWrapper.initialize()
+    }
+}
+
+actual fun destroyCOMLibrary() {
+    if (OperatingSystem.isWindows) {
+        COMObjectWrapper.uninitialize()
+    }
 }

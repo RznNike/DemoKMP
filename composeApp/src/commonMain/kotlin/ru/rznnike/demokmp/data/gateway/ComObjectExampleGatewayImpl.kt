@@ -1,6 +1,8 @@
 package ru.rznnike.demokmp.data.gateway
 
 import kotlinx.coroutines.withContext
+import ru.rznnike.demokmp.app.utils.destroyCOMLibrary
+import ru.rznnike.demokmp.app.utils.initCOMLibrary
 import ru.rznnike.demokmp.data.shell.ShellManager
 import ru.rznnike.demokmp.domain.common.DispatcherProvider
 import ru.rznnike.demokmp.domain.gateway.ComObjectExampleGateway
@@ -13,6 +15,7 @@ class ComObjectExampleGatewayImpl(
     override suspend fun initShellWrapper(): Unit = withContext(dispatcherProvider.io) {
         if (!OperatingSystem.isWindows) return@withContext
 
+        initCOMLibrary()
         shellManager.initWrapper()
     }
 
@@ -20,6 +23,7 @@ class ComObjectExampleGatewayImpl(
         if (!OperatingSystem.isWindows) return@withContext
 
         shellManager.destroyWrapper()
+        destroyCOMLibrary()
     }
 
     override suspend fun getPCData(): String = withContext(dispatcherProvider.io) {
