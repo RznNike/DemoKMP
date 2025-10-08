@@ -33,6 +33,7 @@
 * Базовый просмотр PDF, диалог печати
 * Встроенный логгер с собственным UI
 * UI для кастомного логгера; модули базы данных, файла и кеша в памяти
+* Использование COM объектов (Windows)
 
 #### Только для Android
 * UI для просмотра сетевых логов с устройства
@@ -87,6 +88,7 @@
 #### Только для ПК
 * [PDFBox](https://pdfbox.apache.org/)
 * [FileKit](https://github.com/vinceglb/FileKit)
+* [JNA](https://github.com/java-native-access/jna)
 
 #### Только для Android
 * [Chucker](https://github.com/ChuckerTeam/chucker)

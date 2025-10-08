@@ -32,6 +32,7 @@ This is a sample project with a set of solutions to typical problems, demonstrat
 * Screen-scoped hotkeys
 * Basic PDF viewer, print dialog
 * UI for custom logger; database, file and memory cache modules
+* COM objects usage (Windows)
 
 #### Android only
 * UI for viewing network logs from a device
@@ -86,6 +87,7 @@ This is a sample project with a set of solutions to typical problems, demonstrat
 #### PC only
 * [PDFBox](https://pdfbox.apache.org/)
 * [FileKit](https://github.com/vinceglb/FileKit)
+* [JNA](https://github.com/java-native-access/jna)
 
 #### Android only
 * [Chucker](https://github.com/ChuckerTeam/chucker)

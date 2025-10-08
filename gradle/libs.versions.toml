@@ -1,15 +1,15 @@
 [versions]
-kotlin = "2.2.10"
-compose = "1.8.2"
+kotlin = "2.2.20"
+compose = "1.9.0"
 coroutines = "1.10.2"
 koin = "4.1.1"
 ktorfit = "2.6.4"
-ktor = "3.2.3"
+ktor = "3.3.1"
 coil = "3.3.0"
-room = "2.7.2"
-filekit = "0.11.0"
+room = "2.8.1"
+filekit = "0.12.0"
 chucker = "4.2.0"
-vico = "2.1.3"
+vico = "2.2.1"
 
 android-minSdk = "26"
 android-targetSdk = "36"
@@ -24,13 +24,13 @@ ui-backhandler = { module = "org.jetbrains.compose.ui:ui-backhandler", version.r
 # https://mvnrepository.com/artifact/org.jetbrains.androidx.lifecycle/lifecycle-viewmodel-compose
 # Update the version according to the main Compose library dependencies
 #noinspection NewerVersionAvailable
-viewmodel-compose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose", version = "2.9.1" }
+viewmodel-compose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose", version = "2.9.4" }
 
 # Navigation
 # https://mvnrepository.com/artifact/org.jetbrains.androidx.navigation/navigation-compose
 # Update the version according to the main Compose library dependencies
 #noinspection NewerVersionAvailable
-navigation = { module = "org.jetbrains.androidx.navigation:navigation-compose", version = "2.9.0-beta03" }
+navigation = { module = "org.jetbrains.androidx.navigation:navigation-compose", version = "2.9.0" }
 
 # Coroutines
 # https://github.com/Kotlin/kotlinx.coroutines
@@ -78,7 +78,7 @@ room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 
 # SQLite (Room dependency)
 # https://developer.android.com/jetpack/androidx/releases/sqlite
-sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version = "2.5.2" }
+sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version = "2.6.1" }
 
 # Charts
 # https://github.com/patrykandpatrick/vico
@@ -90,7 +90,7 @@ vico-multiplatform-m3 = { group = "com.patrykandpatrick.vico", name = "multiplat
 
 # Logging (for Ktor)
 # https://mvnrepository.com/artifact/ch.qos.logback/logback-classic
-logback = { module = "ch.qos.logback:logback-classic", version = "1.5.18" }
+logback = { module = "ch.qos.logback:logback-classic", version = "1.5.19" }
 
 # PDF renderer
 # https://mvnrepository.com/artifact/org.apache.pdfbox/pdfbox
@@ -101,6 +101,10 @@ pdfbox = { module = "org.apache.pdfbox:pdfbox", version = "3.0.5" }
 filekit-core = { module = "io.github.vinceglb:filekit-core", version.ref = "filekit" }
 filekit-dialogs-compose = { module = "io.github.vinceglb:filekit-dialogs-compose", version.ref = "filekit" }
 
+# JNA Platform Library (for COM objects)
+# https://github.com/java-native-access/jna
+jna-platform = { module = "net.java.dev.jna:jna-platform", version = "5.18.1" }
+
 
 ### Android-specific libs ###
 
@@ -109,7 +113,7 @@ filekit-dialogs-compose = { module = "io.github.vinceglb:filekit-dialogs-compose
 desugaring = { module = "com.android.tools:desugar_jdk_libs", version = "2.1.5" }
 
 # AndroidX
-androidx-activity-compose = { module = "androidx.activity:activity-compose", version = "1.10.1" }
+androidx-activity-compose = { module = "androidx.activity:activity-compose", version = "1.11.0" }
 androidx-preference = { module = "androidx.preference:preference-ktx", version = "1.2.1" }
 
 # Network logger
@@ -127,7 +131,7 @@ jetbrains-compose = { id = "org.jetbrains.compose", version.ref = "compose" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
-android-application = { id = "com.android.application", version = "8.11.1" }
+android-application = { id = "com.android.application", version = "8.12.3" }
 
 # BuildConfig
 # https://github.com/yshrsmz/BuildKonfig
@@ -135,7 +139,7 @@ buildkonfig = { id = "com.codingfeline.buildkonfig", version = "0.17.1" }
 
 # KSP
 # https://mvnrepository.com/artifact/com.google.devtools.ksp/com.google.devtools.ksp.gradle.plugin?repo=central
-ksp = { id = "com.google.devtools.ksp", version = "2.2.10-2.0.2" }
+ksp = { id = "com.google.devtools.ksp", version = "2.2.20-2.0.2" }
 
 # Ktorfit - network
 ktorfit = { id = "de.jensklingenberg.ktorfit", version.ref = "ktorfit" }

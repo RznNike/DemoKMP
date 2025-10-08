@@ -46,15 +46,18 @@ fun CommonAlertDialog(
                 modifier = Modifier.padding(16.dp),
             ) {
                 Text(
+                    modifier = Modifier.fillMaxWidth(),
                     text = header,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.fillMaxWidth()
+                    textAlign = TextAlign.Center
                 )
                 if (!message.isNullOrBlank()) {
                     Text(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 16.dp),
                         text = message,
                         textAlign = TextAlign.Center,
-                        modifier = Modifier.fillMaxWidth().padding(top = 16.dp)
+                        style = MaterialTheme.typography.bodyMedium
                     )
                 }
 

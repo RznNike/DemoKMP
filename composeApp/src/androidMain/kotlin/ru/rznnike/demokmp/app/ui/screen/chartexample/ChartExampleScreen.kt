@@ -21,12 +21,12 @@ import com.patrykandpatrick.vico.multiplatform.cartesian.layer.rememberLine
 import com.patrykandpatrick.vico.multiplatform.cartesian.layer.rememberLineCartesianLayer
 import com.patrykandpatrick.vico.multiplatform.cartesian.rememberCartesianChart
 import com.patrykandpatrick.vico.multiplatform.cartesian.rememberVicoZoomState
+import com.patrykandpatrick.vico.multiplatform.common.Fill
 import com.patrykandpatrick.vico.multiplatform.common.Insets
 import com.patrykandpatrick.vico.multiplatform.common.LegendItem
 import com.patrykandpatrick.vico.multiplatform.common.ProvideVicoTheme
 import com.patrykandpatrick.vico.multiplatform.common.component.ShapeComponent
 import com.patrykandpatrick.vico.multiplatform.common.component.rememberTextComponent
-import com.patrykandpatrick.vico.multiplatform.common.fill
 import com.patrykandpatrick.vico.multiplatform.common.rememberHorizontalLegend
 import com.patrykandpatrick.vico.multiplatform.common.shape.CorneredShape
 import kotlinx.serialization.Serializable
@@ -104,9 +104,9 @@ class ChartExampleScreen : AndroidNavigationScreen() {
                                 rememberLineCartesianLayer(
                                     lineProvider = LineCartesianLayer.LineProvider.series(
                                         LineCartesianLayer.rememberLine(
-                                            fill = LineCartesianLayer.LineFill.single(fill(lineColor)),
+                                            fill = LineCartesianLayer.LineFill.single(Fill(lineColor)),
                                             areaFill = LineCartesianLayer.AreaFill.single(
-                                                fill(Brush.verticalGradient(listOf(areaColor, Color.Transparent, areaColor)))
+                                                Fill(Brush.verticalGradient(listOf(areaColor, Color.Transparent, areaColor)))
                                             )
                                         )
                                     )
@@ -117,7 +117,7 @@ class ChartExampleScreen : AndroidNavigationScreen() {
                                     items = {
                                         add(
                                             LegendItem(
-                                                icon = ShapeComponent(fill(lineColor), CorneredShape.Pill),
+                                                icon = ShapeComponent(Fill(lineColor), CorneredShape.Pill),
                                                 labelComponent = legendItemLabelComponent,
                                                 label = legendLineLabel
                                             )

@@ -26,6 +26,7 @@ import ru.rznnike.demokmp.app.ui.dialog.common.AlertDialogAction
 import ru.rznnike.demokmp.app.ui.dialog.common.AlertDialogType
 import ru.rznnike.demokmp.app.ui.dialog.common.CommonAlertDialog
 import ru.rznnike.demokmp.app.ui.screen.chartexample.ChartExampleFlow
+import ru.rznnike.demokmp.app.ui.screen.comobjectexample.ComObjectExampleFlow
 import ru.rznnike.demokmp.app.ui.screen.customui.CustomUIFlow
 import ru.rznnike.demokmp.app.ui.screen.dbexample.DBExampleFlow
 import ru.rznnike.demokmp.app.ui.screen.httpexample.HTTPExampleFlow
@@ -41,6 +42,7 @@ import ru.rznnike.demokmp.app.utils.getMacAddress
 import ru.rznnike.demokmp.app.utils.platformName
 import ru.rznnike.demokmp.app.viewmodel.global.configuration.AppConfigurationViewModel
 import ru.rznnike.demokmp.app.viewmodel.home.HomeViewModel
+import ru.rznnike.demokmp.domain.utils.OperatingSystem
 import ru.rznnike.demokmp.generated.resources.*
 
 @Serializable
@@ -101,22 +103,21 @@ class HomeScreen : DesktopNavigationScreen() {
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         @Composable
-                        fun MenuButton(text: StringResource, onClick: () -> Unit) {
-                            SelectableButton(
-                                modifier = Modifier
-                                    .weight(1f)
-                                    .widthIn(
-                                        min = 150.dp
-                                    )
-                                    .height(70.dp),
-                                onClick = onClick
-                            ) {
-                                TextR(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    textRes = text,
-                                    textAlign = TextAlign.Center
+                        fun MenuButton(textRes: StringResource, onClick: () -> Unit) = SelectableButton(
+                            modifier = Modifier
+                                .weight(1f)
+                                .widthIn(
+                                    min = 190.dp
                                 )
-                            }
+                                .height(70.dp),
+                            onClick = onClick
+                        ) {
+                            TextR(
+                                modifier = Modifier.fillMaxWidth(),
+                                textRes = textRes,
+                                textAlign = TextAlign.Center,
+                                maxLines = 2
+                            )
                         }
 
                         MenuButton(Res.string.settings) {
@@ -142,6 +143,11 @@ class HomeScreen : DesktopNavigationScreen() {
                         }
                         MenuButton(Res.string.navigation_example) {
                             navigator.openFlow(NavigationExampleFlow())
+                        }
+                        if (OperatingSystem.isWindows) {
+                            MenuButton(Res.string.com_object_example) {
+                                navigator.openFlow(ComObjectExampleFlow())
+                            }
                         }
                         MenuButton(Res.string.test_dialog) {
                             notifier.sendAlert(Res.string.test_dialog)
@@ -190,7 +196,7 @@ class HomeScreen : DesktopNavigationScreen() {
             )
             CommonAlertDialog(
                 type = AlertDialogType.HORIZONTAL,
-                header = stringResource(Res.string.window_title),
+                header = stringResource(Res.string.app_name),
                 message = details,
                 cancellable = true,
                 onCancelListener = {
@@ -199,6 +205,10 @@ class HomeScreen : DesktopNavigationScreen() {
                 actions = listOf(
                     AlertDialogAction(stringResource(Res.string.close)) {
                         showAboutDialog = false
+                    },
+                    AlertDialogAction(stringResource(Res.string.source_code)) {
+                        showAboutDialog = false
+                        viewModel.openSourceCodeLink()
                     }
                 )
             )

@@ -28,7 +28,7 @@ import ru.rznnike.demokmp.app.viewmodel.global.hotkeys.HotKeysViewModel
 import ru.rznnike.demokmp.generated.resources.Res
 import ru.rznnike.demokmp.generated.resources.icon_linux
 import ru.rznnike.demokmp.generated.resources.logger
-import ru.rznnike.demokmp.generated.resources.window_title
+import ru.rznnike.demokmp.generated.resources.app_name
 
 private val WINDOW_START_WIDTH_DP = 1024.dp
 private val WINDOW_START_HEIGHT_DP = 700.dp
@@ -60,7 +60,7 @@ fun LoggerWindow(
     val hotKeysViewModel = windowViewModel<HotKeysViewModel>()
 
     val loggerName = stringResource(Res.string.logger)
-    val appName = stringResource(Res.string.window_title)
+    val appName = stringResource(Res.string.app_name)
     val defaultWindowTitle = remember(appConfigurationUiState.language) {
         "$loggerName | $appName"
     }

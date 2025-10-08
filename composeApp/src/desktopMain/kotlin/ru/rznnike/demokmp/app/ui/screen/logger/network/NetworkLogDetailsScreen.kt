@@ -7,15 +7,11 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.key
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.key.*
-import androidx.compose.ui.platform.LocalClipboardManager
-import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.platform.LocalClipboard
 import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -36,6 +32,7 @@ import ru.rznnike.demokmp.app.ui.viewmodel.logger.network.NetworkLogDetailsViewM
 import ru.rznnike.demokmp.app.ui.window.LocalWindow
 import ru.rznnike.demokmp.app.utils.backgroundColor
 import ru.rznnike.demokmp.app.utils.highlightSubstrings
+import ru.rznnike.demokmp.app.utils.setText
 import ru.rznnike.demokmp.data.utils.DataConstants
 import ru.rznnike.demokmp.domain.log.LogMessage
 import ru.rznnike.demokmp.domain.log.LogNetworkMessage
@@ -53,6 +50,9 @@ class NetworkLogDetailsScreen(
 
         val viewModel = viewModel { NetworkLogDetailsViewModel(message) }
         val uiState by viewModel.uiState.collectAsState()
+
+        val coroutineScope = rememberCoroutineScope()
+        val clipboard = LocalClipboard.current
 
         screenKeyEventCallback = { keyEvent ->
             if (keyEvent.type == KeyEventType.KeyDown) {
@@ -113,13 +113,15 @@ class NetworkLogDetailsScreen(
                         }
                         Spacer(Modifier.weight(1f))
 
-                        val clipboardManager = LocalClipboardManager.current
                         Spacer(Modifier.width(16.dp))
                         SelectableOutlinedIconButton(
                             modifier = Modifier.size(40.dp),
                             iconRes = Res.drawable.ic_copy,
                             onClick = {
-                                clipboardManager.setText(AnnotatedString(viewModel.getFullText()))
+                                clipboard.setText(
+                                    text = viewModel.getFullText(),
+                                    scope = coroutineScope
+                                )
                             }
                         )
 
