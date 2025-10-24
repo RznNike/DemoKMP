@@ -112,6 +112,7 @@ fun <ItemType> DropdownSelector(
             trailingIcon = {
                 Icon(
                     modifier = Modifier
+                        .padding(end = 8.dp)
                         .size(24.dp)
                         .rotate(if (isExpanded) 180f else 0f),
                     painter = painterResource(Res.drawable.ic_expand),
@@ -185,7 +186,7 @@ fun <ItemType> DropdownSelector(
                             ) {
                                 items(
                                     items = items,
-                                    key = { item -> item.hashCode().toString() },
+                                    key = { item -> item.hashCode() },
                                 ) { item ->
                                     DropdownSelectorItem(
                                         modifier = Modifier
