@@ -11,7 +11,6 @@ import ru.rznnike.demokmp.app.dispatcher.event.AppEvent
 import ru.rznnike.demokmp.app.dispatcher.event.EventDispatcher
 import ru.rznnike.demokmp.app.dispatcher.notifier.Notifier
 import ru.rznnike.demokmp.data.utils.DataConstants
-import ru.rznnike.demokmp.domain.common.DispatcherProvider
 import ru.rznnike.demokmp.domain.interactor.app.CloseAppSingleInstanceSocketUseCase
 import ru.rznnike.demokmp.domain.interactor.comobjectexample.DestroyShellWrapperUseCase
 import ru.rznnike.demokmp.domain.interactor.comobjectexample.InitShellWrapperUseCase
@@ -32,7 +31,6 @@ import java.util.*
 class AppConfigurationViewModel : BaseUiViewModel<AppConfigurationViewModel.UiState>() {
     private val eventDispatcher: EventDispatcher by inject()
     private val notifier: Notifier by inject()
-    private val dispatcherProvider: DispatcherProvider by inject()
     private val getLanguageUseCase: GetLanguageUseCase by inject()
     private val setLanguageUseCase: SetLanguageUseCase by inject()
     private val getThemeUseCase: GetThemeUseCase by inject()
@@ -59,6 +57,10 @@ class AppConfigurationViewModel : BaseUiViewModel<AppConfigurationViewModel.UiSt
         subscribeToEvents()
         initLanguageAndTheme()
         initShellWrapper()
+    }
+
+    override fun onCleared() {
+        eventDispatcher.removeEventListener(eventListener)
     }
 
     override fun provideDefaultUIState() = UiState()
