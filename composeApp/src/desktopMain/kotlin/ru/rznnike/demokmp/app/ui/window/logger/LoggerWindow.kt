@@ -16,6 +16,7 @@ import ru.rznnike.demokmp.app.navigation.createNavHost
 import ru.rznnike.demokmp.app.ui.screen.logger.LoggerFlow
 import ru.rznnike.demokmp.app.ui.theme.AppTheme
 import ru.rznnike.demokmp.app.ui.window.*
+import ru.rznnike.demokmp.app.utils.CustomUiScale
 import ru.rznnike.demokmp.app.utils.WithWindowViewModelStoreOwner
 import ru.rznnike.demokmp.app.utils.clearFocusOnTap
 import ru.rznnike.demokmp.app.utils.windowViewModel
@@ -86,7 +87,7 @@ fun LoggerWindow(
                 windowConfigurationViewModel.setWindowTitle(defaultWindowTitle)
             }
 
-            CustomWindowScale(
+            CustomUiScale(
                 appConfigurationUiState.uiScale
             ) {
                 AppTheme {

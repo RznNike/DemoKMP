@@ -19,19 +19,19 @@ import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import ru.rznnike.demokmp.app.ui.theme.backgroundDark
 import ru.rznnike.demokmp.app.ui.theme.backgroundLight
-import ru.rznnike.demokmp.app.ui.window.CustomWindowScale
 import ru.rznnike.demokmp.app.ui.window.LocalWindow
 import ru.rznnike.demokmp.app.ui.window.WindowFocusRequester
 import ru.rznnike.demokmp.app.ui.window.logger.LoggerWindow
 import ru.rznnike.demokmp.app.ui.window.setMinimumSize
+import ru.rznnike.demokmp.app.utils.CustomUiScale
 import ru.rznnike.demokmp.app.utils.WithWindowViewModelStoreOwner
 import ru.rznnike.demokmp.app.utils.windowViewModel
 import ru.rznnike.demokmp.app.viewmodel.global.configuration.AppConfigurationViewModel
 import ru.rznnike.demokmp.app.viewmodel.global.configuration.WindowConfigurationViewModel
 import ru.rznnike.demokmp.app.viewmodel.global.hotkeys.HotKeysViewModel
 import ru.rznnike.demokmp.generated.resources.Res
-import ru.rznnike.demokmp.generated.resources.icon_linux
 import ru.rznnike.demokmp.generated.resources.app_name
+import ru.rznnike.demokmp.generated.resources.icon_linux
 
 private val WINDOW_START_WIDTH_DP = 700.dp
 private val WINDOW_START_HEIGHT_DP = 600.dp
@@ -96,7 +96,7 @@ fun ApplicationScope.MainWindow(args: Array<String>) = WithWindowViewModelStoreO
                     windowConfigurationViewModel.setWindowTitle(defaultWindowTitle)
                 }
 
-                CustomWindowScale(
+                CustomUiScale(
                     appConfigurationUiState.uiScale
                 ) {
                     MainFrame()

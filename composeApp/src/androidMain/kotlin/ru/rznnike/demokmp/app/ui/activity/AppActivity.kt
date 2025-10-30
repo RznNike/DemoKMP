@@ -24,6 +24,7 @@ import ru.rznnike.demokmp.app.ui.dialog.common.CommonAlertDialog
 import ru.rznnike.demokmp.app.ui.screen.splash.SplashFlow
 import ru.rznnike.demokmp.app.ui.theme.AppTheme
 import ru.rznnike.demokmp.app.utils.AppConstants
+import ru.rznnike.demokmp.app.utils.CustomUiScale
 import ru.rznnike.demokmp.app.utils.onClick
 import ru.rznnike.demokmp.app.utils.restartApp
 import ru.rznnike.demokmp.app.utils.windowViewModel
@@ -56,6 +57,7 @@ class AppActivity : AppCompatActivity() {
         }
 
         val appConfigurationViewModel: AppConfigurationViewModel = koinInject()
+        val appConfigurationUiState by appConfigurationViewModel.uiState.collectAsState()
         val windowConfigurationViewModel = windowViewModel<WindowConfigurationViewModel>()
 
         val notifier = koinInject<Notifier>()
@@ -148,29 +150,34 @@ class AppActivity : AppCompatActivity() {
                 )
             }
         }
-        AppTheme {
-            val focusManager = LocalFocusManager.current
-            Scaffold(
-                modifier = Modifier.onClick {
-                    focusManager.clearFocus()
-                },
-                snackbarHost = {
-                    SnackbarHost(hostState = snackbarHostState) {
-                        Snackbar(
-                            modifier = Modifier
-                                .onClick {
-                                    snackbarHostState.currentSnackbarData?.dismiss()
-                                },
-                            snackbarData = it,
-                            containerColor = MaterialTheme.colorScheme.primary,
-                            contentColor = MaterialTheme.colorScheme.onPrimary,
-                            actionColor = MaterialTheme.colorScheme.onPrimary
-                        )
+
+        CustomUiScale(
+            appConfigurationUiState.uiScale
+        ) {
+            AppTheme {
+                val focusManager = LocalFocusManager.current
+                Scaffold(
+                    modifier = Modifier.onClick {
+                        focusManager.clearFocus()
+                    },
+                    snackbarHost = {
+                        SnackbarHost(hostState = snackbarHostState) {
+                            Snackbar(
+                                modifier = Modifier
+                                    .onClick {
+                                        snackbarHostState.currentSnackbarData?.dismiss()
+                                    },
+                                snackbarData = it,
+                                containerColor = MaterialTheme.colorScheme.primary,
+                                contentColor = MaterialTheme.colorScheme.onPrimary,
+                                actionColor = MaterialTheme.colorScheme.onPrimary
+                            )
+                        }
                     }
+                ) {
+                    createNavHost(SplashFlow())
+                    NotifierDialog()
                 }
-            ) {
-                createNavHost(SplashFlow())
-                NotifierDialog()
             }
         }
     }

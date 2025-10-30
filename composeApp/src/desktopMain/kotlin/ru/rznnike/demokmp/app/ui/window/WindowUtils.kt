@@ -59,20 +59,3 @@ fun FrameWindowScope.setMinimumSize(
         }
     }
 }
-
-@Composable
-fun CustomWindowScale(
-    scale: UiScale,
-    content: @Composable () -> Unit
-) {
-    val defaultDensity = LocalDensity.current
-    val customDensity = Density(
-        density = defaultDensity.density * scale.value / 100f,
-        fontScale = defaultDensity.fontScale
-    )
-    CompositionLocalProvider(
-        LocalDensity provides customDensity
-    ) {
-        content()
-    }
-}
