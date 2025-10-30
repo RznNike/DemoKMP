@@ -4,13 +4,16 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.key
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.awt.ComposeWindow
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.window.FrameWindowScope
+import ru.rznnike.demokmp.domain.model.common.UiScale
 import java.awt.Dimension
 
 val LocalWindow = staticCompositionLocalOf { ComposeWindow() }
@@ -54,5 +57,22 @@ fun FrameWindowScope.setMinimumSize(
         window.minimumSize = with(density) {
             Dimension(width.toPx().toInt(), height.toPx().toInt())
         }
+    }
+}
+
+@Composable
+fun CustomWindowScale(
+    scale: UiScale,
+    content: @Composable () -> Unit
+) {
+    val defaultDensity = LocalDensity.current
+    val customDensity = Density(
+        density = defaultDensity.density * scale.value / 100f,
+        fontScale = defaultDensity.fontScale
+    )
+    CompositionLocalProvider(
+        LocalDensity provides customDensity
+    ) {
+        content()
     }
 }

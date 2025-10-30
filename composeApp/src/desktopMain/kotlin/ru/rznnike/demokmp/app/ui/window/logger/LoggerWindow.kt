@@ -15,10 +15,7 @@ import org.koin.compose.koinInject
 import ru.rznnike.demokmp.app.navigation.createNavHost
 import ru.rznnike.demokmp.app.ui.screen.logger.LoggerFlow
 import ru.rznnike.demokmp.app.ui.theme.AppTheme
-import ru.rznnike.demokmp.app.ui.window.BackgroundBox
-import ru.rznnike.demokmp.app.ui.window.LocalWindow
-import ru.rznnike.demokmp.app.ui.window.WindowFocusRequester
-import ru.rznnike.demokmp.app.ui.window.setMinimumSize
+import ru.rznnike.demokmp.app.ui.window.*
 import ru.rznnike.demokmp.app.utils.WithWindowViewModelStoreOwner
 import ru.rznnike.demokmp.app.utils.clearFocusOnTap
 import ru.rznnike.demokmp.app.utils.windowViewModel
@@ -26,9 +23,9 @@ import ru.rznnike.demokmp.app.viewmodel.global.configuration.AppConfigurationVie
 import ru.rznnike.demokmp.app.viewmodel.global.configuration.WindowConfigurationViewModel
 import ru.rznnike.demokmp.app.viewmodel.global.hotkeys.HotKeysViewModel
 import ru.rznnike.demokmp.generated.resources.Res
+import ru.rznnike.demokmp.generated.resources.app_name
 import ru.rznnike.demokmp.generated.resources.icon_linux
 import ru.rznnike.demokmp.generated.resources.logger
-import ru.rznnike.demokmp.generated.resources.app_name
 
 private val WINDOW_START_WIDTH_DP = 1024.dp
 private val WINDOW_START_HEIGHT_DP = 700.dp
@@ -89,11 +86,15 @@ fun LoggerWindow(
                 windowConfigurationViewModel.setWindowTitle(defaultWindowTitle)
             }
 
-            AppTheme {
-                BackgroundBox(
-                    modifier = Modifier.clearFocusOnTap()
-                ) {
-                    createNavHost(LoggerFlow())
+            CustomWindowScale(
+                appConfigurationUiState.uiScale
+            ) {
+                AppTheme {
+                    BackgroundBox(
+                        modifier = Modifier.clearFocusOnTap()
+                    ) {
+                        createNavHost(LoggerFlow())
+                    }
                 }
             }
         }

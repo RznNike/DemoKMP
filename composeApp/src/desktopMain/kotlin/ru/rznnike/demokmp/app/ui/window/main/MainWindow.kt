@@ -19,6 +19,7 @@ import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import ru.rznnike.demokmp.app.ui.theme.backgroundDark
 import ru.rznnike.demokmp.app.ui.theme.backgroundLight
+import ru.rznnike.demokmp.app.ui.window.CustomWindowScale
 import ru.rznnike.demokmp.app.ui.window.LocalWindow
 import ru.rznnike.demokmp.app.ui.window.WindowFocusRequester
 import ru.rznnike.demokmp.app.ui.window.logger.LoggerWindow
@@ -95,7 +96,11 @@ fun ApplicationScope.MainWindow(args: Array<String>) = WithWindowViewModelStoreO
                     windowConfigurationViewModel.setWindowTitle(defaultWindowTitle)
                 }
 
-                MainFrame()
+                CustomWindowScale(
+                    appConfigurationUiState.uiScale
+                ) {
+                    MainFrame()
+                }
             } else { // default background while the theme has not yet loaded
                 Box(
                     modifier = Modifier
