@@ -10,7 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.unit.dp
 import ru.rznnike.demokmp.app.ui.view.SelectableOutlinedIconButton
-import ru.rznnike.demokmp.domain.model.dbexample.DBExampleData
+import ru.rznnike.demokmp.domain.model.db.DBExampleData
 import ru.rznnike.demokmp.generated.resources.Res
 import ru.rznnike.demokmp.generated.resources.ic_delete
 

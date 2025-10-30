@@ -52,6 +52,8 @@ internal val interactorModule = module {
     single { SetThemeUseCase(get(), get()) }
     single { GetPrintSettingsUseCase(get(), get()) }
     single { SetPrintSettingsUseCase(get(), get()) }
+    single { GetUiScaleUseCase(get(), get()) }
+    single { SetUiScaleUseCase(get(), get()) }
 
     single { GetRandomImageLinksUseCase(get(), get()) }
 

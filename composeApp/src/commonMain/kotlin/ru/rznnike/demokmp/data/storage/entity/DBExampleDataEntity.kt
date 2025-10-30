@@ -2,7 +2,7 @@ package ru.rznnike.demokmp.data.storage.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import ru.rznnike.demokmp.domain.model.dbexample.DBExampleData
+import ru.rznnike.demokmp.domain.model.db.DBExampleData
 
 @Entity
 data class DBExampleDataEntity(

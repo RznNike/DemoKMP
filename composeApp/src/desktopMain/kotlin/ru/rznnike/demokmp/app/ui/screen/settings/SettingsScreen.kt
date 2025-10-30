@@ -29,6 +29,7 @@ import ru.rznnike.demokmp.app.viewmodel.global.profile.ProfileViewModel
 import ru.rznnike.demokmp.app.viewmodel.settings.SettingsViewModel
 import ru.rznnike.demokmp.domain.model.common.Language
 import ru.rznnike.demokmp.domain.model.common.Theme
+import ru.rznnike.demokmp.domain.model.common.UiScale
 import ru.rznnike.demokmp.generated.resources.*
 
 @Serializable
@@ -147,59 +148,59 @@ class SettingsScreen : DesktopNavigationScreen() {
                             }
                         }
 
-                        Spacer(Modifier.height(16.dp))
-                        Row {
-                            @Composable
-                            fun OptionsSelector(
-                                headerRes: StringResource,
-                                buttonText: String,
-                                content: @Composable (ColumnScope.(closeMenu: () -> Unit) -> Unit)
+                        @Composable
+                        fun OptionsSelector(
+                            headerRes: StringResource,
+                            buttonText: String,
+                            content: @Composable (ColumnScope.(closeMenu: () -> Unit) -> Unit)
+                        ) {
+                            Surface(
+                                modifier = Modifier.weight(1f),
+                                shape = MaterialTheme.shapes.medium,
+                                color = MaterialTheme.colorScheme.surface
                             ) {
-                                Surface(
-                                    modifier = Modifier.weight(1f),
-                                    shape = MaterialTheme.shapes.medium,
-                                    color = MaterialTheme.colorScheme.surface
+                                Row(
+                                    modifier = Modifier.padding(12.dp),
+                                    verticalAlignment = Alignment.CenterVertically
                                 ) {
-                                    Row(
-                                        modifier = Modifier.padding(12.dp),
-                                        verticalAlignment = Alignment.CenterVertically
-                                    ) {
-                                        Spacer(Modifier.width(4.dp))
-                                        TextR(
-                                            textRes = headerRes,
-                                            modifier = Modifier.weight(1f),
-                                        )
-                                        Box {
-                                            var showMenu by remember { mutableStateOf(false) }
-                                            SelectableButton(
-                                                onClick = {
-                                                    showMenu = !showMenu
-                                                }
-                                            ) {
-                                                Text(buttonText)
+                                    Spacer(Modifier.width(4.dp))
+                                    TextR(
+                                        textRes = headerRes,
+                                        modifier = Modifier.weight(1f),
+                                    )
+                                    Box {
+                                        var showMenu by remember { mutableStateOf(false) }
+                                        SelectableButton(
+                                            onClick = {
+                                                showMenu = !showMenu
                                             }
-                                            Box(
-                                                modifier = Modifier.padding(end = 16.dp)
+                                        ) {
+                                            Text(buttonText)
+                                        }
+                                        Box(
+                                            modifier = Modifier.padding(end = 16.dp)
+                                        ) {
+                                            DropdownMenu(
+                                                expanded = showMenu,
+                                                onDismissRequest = { showMenu = false },
+                                                containerColor = MaterialTheme.colorScheme.surface,
+                                                border = BorderStroke(
+                                                    width = 1.dp,
+                                                    color = MaterialTheme.colorScheme.outline
+                                                )
                                             ) {
-                                                DropdownMenu(
-                                                    expanded = showMenu,
-                                                    onDismissRequest = { showMenu = false },
-                                                    containerColor = MaterialTheme.colorScheme.surface,
-                                                    border = BorderStroke(
-                                                        width = 1.dp,
-                                                        color = MaterialTheme.colorScheme.outline
-                                                    )
-                                                ) {
-                                                    content {
-                                                        showMenu = false
-                                                    }
+                                                content {
+                                                    showMenu = false
                                                 }
                                             }
                                         }
                                     }
                                 }
                             }
+                        }
 
+                        Spacer(Modifier.height(16.dp))
+                        Row {
                             OptionsSelector(
                                 headerRes = Res.string.language,
                                 buttonText = appConfigurationUiState.language.localizedName
@@ -233,6 +234,27 @@ class SettingsScreen : DesktopNavigationScreen() {
                                     )
                                 }
                             }
+                        }
+                        Spacer(Modifier.height(16.dp))
+                        Row {
+                            OptionsSelector(
+                                headerRes = Res.string.ui_scale,
+                                buttonText = "%d%%".format(appConfigurationUiState.uiScale.value)
+                            ) { closeMenu ->
+                                UiScale.entries.forEach { uiScale ->
+                                    DropdownMenuItem(
+                                        text = {
+                                            Text("%d%%".format(uiScale.value))
+                                        },
+                                        onClick = {
+                                            appConfigurationViewModel.setUiScale(uiScale)
+                                            closeMenu()
+                                        }
+                                    )
+                                }
+                            }
+                            Spacer(Modifier.width(16.dp))
+                            Spacer(Modifier.weight(1f))
                         }
                         Spacer(Modifier.height(16.dp))
                     }
