@@ -26,6 +26,7 @@ import ru.rznnike.demokmp.app.viewmodel.global.profile.ProfileViewModel
 import ru.rznnike.demokmp.app.viewmodel.settings.SettingsViewModel
 import ru.rznnike.demokmp.domain.model.common.Language
 import ru.rznnike.demokmp.domain.model.common.Theme
+import ru.rznnike.demokmp.domain.model.common.UiScale
 import ru.rznnike.demokmp.generated.resources.*
 
 @Serializable
@@ -213,6 +214,23 @@ class SettingsScreen : AndroidNavigationScreen() {
                                 },
                                 onClick = {
                                     appConfigurationViewModel.setTheme(theme)
+                                    closeMenu()
+                                }
+                            )
+                        }
+                    }
+                    Spacer(Modifier.height(16.dp))
+                    OptionsSelector(
+                        headerRes = Res.string.ui_scale,
+                        buttonText = "%d%%".format(appConfigurationUiState.uiScale.value)
+                    ) { closeMenu ->
+                        UiScale.entries.forEach { uiScale ->
+                            DropdownMenuItem(
+                                text = {
+                                    Text("%d%%".format(uiScale.value))
+                                },
+                                onClick = {
+                                    appConfigurationViewModel.setUiScale(uiScale)
                                     closeMenu()
                                 }
                             )

@@ -6,6 +6,7 @@ import ru.rznnike.demokmp.domain.common.DispatcherProvider
 import ru.rznnike.demokmp.domain.gateway.PreferencesGateway
 import ru.rznnike.demokmp.domain.model.common.Language
 import ru.rznnike.demokmp.domain.model.common.Theme
+import ru.rznnike.demokmp.domain.model.common.UiScale
 import ru.rznnike.demokmp.domain.model.print.PrintSettings
 
 class PreferencesGatewayImpl(
@@ -46,5 +47,13 @@ class PreferencesGatewayImpl(
     override suspend fun setPrintSettings(newValue: PrintSettings): Unit = withContext(dispatcherProvider.io) {
         preferencesManager.printerName.set(newValue.printerName)
         preferencesManager.twoSidedPrint.set(newValue.twoSidedPrint)
+    }
+
+    override suspend fun getUiScale(): UiScale = withContext(dispatcherProvider.io) {
+        preferencesManager.uiScale.get()
+    }
+
+    override suspend fun setUiScale(newValue: UiScale) = withContext(dispatcherProvider.io) {
+        preferencesManager.uiScale.set(newValue)
     }
 }

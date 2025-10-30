@@ -7,7 +7,7 @@ import ru.rznnike.demokmp.data.storage.entity.toDBExampleData
 import ru.rznnike.demokmp.data.storage.entity.toDBExampleDataEntity
 import ru.rznnike.demokmp.domain.common.DispatcherProvider
 import ru.rznnike.demokmp.domain.gateway.DBExampleGateway
-import ru.rznnike.demokmp.domain.model.dbexample.DBExampleData
+import ru.rznnike.demokmp.domain.model.db.DBExampleData
 
 class DBExampleGatewayImpl(
     private val dispatcherProvider: DispatcherProvider,
