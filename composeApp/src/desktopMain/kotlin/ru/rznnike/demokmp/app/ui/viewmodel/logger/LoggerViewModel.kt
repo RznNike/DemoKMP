@@ -237,7 +237,9 @@ class LoggerViewModel : BaseUiViewModel<LoggerViewModel.UiState>() {
                 clock.millis().toDateString(GlobalConstants.DATE_PATTERN_FILE_NAME_MS)
             )
             showFileDialog(suggestedFileName)?.let { platformFile ->
-                saveLogToFileUseCase(platformFile.file)
+                saveLogToFileUseCase(platformFile.file).process(
+                    { }, ::onError
+                )
             }
         }
     }

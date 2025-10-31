@@ -14,6 +14,7 @@ import ru.rznnike.demokmp.domain.model.print.PrintSettings
 import ru.rznnike.demokmp.domain.model.print.TwoSidedPrint
 import ru.rznnike.demokmp.generated.resources.Res
 import ru.rznnike.demokmp.generated.resources.ic_print
+import ru.rznnike.demokmp.generated.resources.ic_save
 import ru.rznnike.demokmp.generated.resources.two_sided_print
 import java.io.File
 
@@ -23,7 +24,8 @@ fun PdfPrintControls(
     pdf: File?,
     printSettings: PrintSettings,
     onTwoSidedPrintChanged: (TwoSidedPrint) -> Unit,
-    onPrinterSelected: (String) -> Unit
+    onPrinterSelected: (String) -> Unit,
+    onSaveClick: () -> Unit
 ) = Row(
     modifier = modifier,
     verticalAlignment = Alignment.CenterVertically
@@ -53,17 +55,24 @@ fun PdfPrintControls(
             }
         }
     )
+    Spacer(Modifier.width(16.dp))
+    SelectableOutlinedIconButton(
+        modifier = Modifier.size(40.dp),
+        iconRes = Res.drawable.ic_save,
+        onClick = onSaveClick
+    )
 }
 
 @Preview
 @Composable
-private fun BottomStatusBarPreview() {
+private fun PdfPrintControlsPreview() {
     PreviewAppTheme {
         PdfPrintControls(
             pdf = null,
             printSettings = PrintSettings(),
             onTwoSidedPrintChanged = { },
-            onPrinterSelected = { }
+            onPrinterSelected = { },
+            onSaveClick = { }
         )
     }
 }

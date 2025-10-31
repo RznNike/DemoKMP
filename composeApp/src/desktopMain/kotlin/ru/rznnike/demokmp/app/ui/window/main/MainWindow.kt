@@ -36,8 +36,8 @@ import ru.rznnike.demokmp.generated.resources.icon_linux
 private val WINDOW_START_WIDTH_DP = 700.dp
 private val WINDOW_START_HEIGHT_DP = 600.dp
 
-private val WINDOW_MIN_WIDTH_DP = 500.dp
-private val WINDOW_MIN_HEIGHT_DP = 500.dp
+private val WINDOW_MIN_WIDTH_DP = 700.dp
+private val WINDOW_MIN_HEIGHT_DP = 600.dp
 
 @Composable
 fun ApplicationScope.MainWindow(args: Array<String>) = WithWindowViewModelStoreOwner {

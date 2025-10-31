@@ -9,6 +9,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.koin.core.component.inject
 import ru.rznnike.demokmp.app.common.viewmodel.BaseUiViewModel
+import ru.rznnike.demokmp.app.dispatcher.notifier.Notifier
+import ru.rznnike.demokmp.app.error.ErrorHandler
 import ru.rznnike.demokmp.data.utils.DataConstants
 import ru.rznnike.demokmp.domain.common.CoroutineScopeProvider
 import ru.rznnike.demokmp.domain.interactor.log.GetLogNetworkMessageAsFlowUseCase
@@ -20,6 +22,8 @@ import ru.rznnike.demokmp.domain.utils.toDateString
 class NetworkLogDetailsViewModel(
     private val initMessage: NetworkLogMessage
 ) : BaseUiViewModel<NetworkLogDetailsViewModel.UiState>() {
+    private val notifier: Notifier by inject()
+    private val errorHandler: ErrorHandler by inject()
     private val coroutineScopeProvider: CoroutineScopeProvider by inject()
     private val getLogNetworkMessageAsFlowUseCase: GetLogNetworkMessageAsFlowUseCase by inject()
     private val saveNetworkLogMessageToFileUseCase: SaveNetworkLogMessageToFileUseCase by inject()
@@ -79,6 +83,12 @@ class NetworkLogDetailsViewModel(
                         file = platformFile.file,
                         message = message
                     )
+                ).process(
+                    { }, { error ->
+                        errorHandler.proceed(error) { message ->
+                            notifier.sendAlert(message)
+                        }
+                    }
                 )
             }
         }

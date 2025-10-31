@@ -25,6 +25,7 @@ import ru.rznnike.demokmp.domain.interactor.log.GetNewNetworkLogUseCase
 import ru.rznnike.demokmp.domain.interactor.log.SaveLogToFileUseCase
 import ru.rznnike.demokmp.domain.interactor.log.SaveNetworkLogMessageToFileUseCase
 import ru.rznnike.demokmp.domain.interactor.pdfexample.GetSamplePdfUseCase
+import ru.rznnike.demokmp.domain.interactor.pdfexample.SavePdfToFileUseCase
 import ru.rznnike.demokmp.domain.interactor.preferences.*
 import ru.rznnike.demokmp.domain.interactor.wsexample.CloseAppWSSessionUseCase
 import ru.rznnike.demokmp.domain.interactor.wsexample.GetAppWSSessionUseCase
@@ -73,6 +74,7 @@ internal val interactorModule = module {
     single { SendAppWSMessageUseCase(get(), get()) }
 
     single { GetSamplePdfUseCase(get(), get()) }
+    single { SavePdfToFileUseCase(get(), get()) }
 
     single { GetChartSampleDataUseCase(get(), get()) }
 

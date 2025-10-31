@@ -131,9 +131,9 @@ class NetworkLogDetailsScreen(
                             modifier = Modifier.size(40.dp),
                             iconRes = Res.drawable.ic_save,
                             onClick = {
-                                viewModel.openSaveLogDialog { fileName ->
+                                viewModel.openSaveLogDialog { suggestedName ->
                                     FileKit.openFileSaver(
-                                        suggestedName = fileName,
+                                        suggestedName = suggestedName,
                                         extension = DataConstants.LOG_FILE_NAME_EXTENSION,
                                         dialogSettings = FileKitDialogSettings(
                                             parentWindow = window
