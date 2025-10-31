@@ -1,13 +1,17 @@
 package ru.rznnike.demokmp.app.ui.screen.settings
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.VerticalScrollbar
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.rememberScrollbarAdapter
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.key.*
@@ -16,7 +20,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.serialization.Serializable
-import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import ru.rznnike.demokmp.app.navigation.DesktopNavigationScreen
@@ -148,113 +151,45 @@ class SettingsScreen : DesktopNavigationScreen() {
                             }
                         }
 
-                        @Composable
-                        fun OptionsSelector(
-                            headerRes: StringResource,
-                            buttonText: String,
-                            content: @Composable (ColumnScope.(closeMenu: () -> Unit) -> Unit)
+                        Spacer(Modifier.height(16.dp))
+                        Surface(
+                            modifier = Modifier.fillMaxWidth(),
+                            shape = MaterialTheme.shapes.medium,
+                            color = MaterialTheme.colorScheme.surface
                         ) {
-                            Surface(
-                                modifier = Modifier.weight(1f),
-                                shape = MaterialTheme.shapes.medium,
-                                color = MaterialTheme.colorScheme.surface
+                            FlowRow(
+                                modifier = Modifier.padding(top = 12.dp, bottom = 16.dp, start = 16.dp, end = 16.dp),
+                                horizontalArrangement = Arrangement.spacedBy(16.dp),
+                                verticalArrangement = Arrangement.spacedBy(12.dp)
                             ) {
-                                Row(
-                                    modifier = Modifier.padding(12.dp),
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    Spacer(Modifier.width(4.dp))
-                                    TextR(
-                                        textRes = headerRes,
-                                        modifier = Modifier.weight(1f),
-                                    )
-                                    Box {
-                                        var showMenu by remember { mutableStateOf(false) }
-                                        SelectableButton(
-                                            onClick = {
-                                                showMenu = !showMenu
-                                            }
-                                        ) {
-                                            Text(buttonText)
-                                        }
-                                        Box(
-                                            modifier = Modifier.padding(end = 16.dp)
-                                        ) {
-                                            DropdownMenu(
-                                                expanded = showMenu,
-                                                onDismissRequest = { showMenu = false },
-                                                containerColor = MaterialTheme.colorScheme.surface,
-                                                border = BorderStroke(
-                                                    width = 1.dp,
-                                                    color = MaterialTheme.colorScheme.outline
-                                                )
-                                            ) {
-                                                content {
-                                                    showMenu = false
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
+                                DropdownSelector(
+                                    modifier = Modifier
+                                        .width(150.dp),
+                                    label = stringResource(Res.string.language),
+                                    items = Language.entries,
+                                    selectedItem = appConfigurationUiState.language,
+                                    itemNameRetriever = { it?.localizedName ?: "" },
+                                    onItemSelected = appConfigurationViewModel::setLanguage
+                                )
+                                DropdownSelector(
+                                    modifier = Modifier
+                                        .width(150.dp),
+                                    label = stringResource(Res.string.theme),
+                                    items = Theme.entries,
+                                    selectedItem = appConfigurationUiState.theme,
+                                    itemNameRetriever = { it?.let { stringResource(it.nameRes) } ?: "" },
+                                    onItemSelected = appConfigurationViewModel::setTheme
+                                )
+                                DropdownSelector(
+                                    modifier = Modifier
+                                        .width(150.dp),
+                                    label = stringResource(Res.string.ui_scale),
+                                    items = UiScale.entries,
+                                    selectedItem = appConfigurationUiState.uiScale,
+                                    itemNameRetriever = { it?.let { "%d%%".format(it.value) } ?: "" },
+                                    onItemSelected = appConfigurationViewModel::setUiScale
+                                )
                             }
-                        }
-
-                        Spacer(Modifier.height(16.dp))
-                        Row {
-                            OptionsSelector(
-                                headerRes = Res.string.language,
-                                buttonText = appConfigurationUiState.language.localizedName
-                            ) { closeMenu ->
-                                Language.entries.forEach { language ->
-                                    DropdownMenuItem(
-                                        text = {
-                                            Text(language.localizedName)
-                                        },
-                                        onClick = {
-                                            appConfigurationViewModel.setLanguage(language)
-                                            closeMenu()
-                                        }
-                                    )
-                                }
-                            }
-                            Spacer(Modifier.width(16.dp))
-                            OptionsSelector(
-                                headerRes = Res.string.theme,
-                                buttonText = stringResource(appConfigurationUiState.theme.nameRes)
-                            ) { closeMenu ->
-                                Theme.entries.forEach { theme ->
-                                    DropdownMenuItem(
-                                        text = {
-                                            TextR(theme.nameRes)
-                                        },
-                                        onClick = {
-                                            appConfigurationViewModel.setTheme(theme)
-                                            closeMenu()
-                                        }
-                                    )
-                                }
-                            }
-                        }
-                        Spacer(Modifier.height(16.dp))
-                        Row {
-                            OptionsSelector(
-                                headerRes = Res.string.ui_scale,
-                                buttonText = "%d%%".format(appConfigurationUiState.uiScale.value)
-                            ) { closeMenu ->
-                                UiScale.entries.forEach { uiScale ->
-                                    DropdownMenuItem(
-                                        text = {
-                                            Text("%d%%".format(uiScale.value))
-                                        },
-                                        onClick = {
-                                            appConfigurationViewModel.setUiScale(uiScale)
-                                            closeMenu()
-                                        }
-                                    )
-                                }
-                            }
-                            Spacer(Modifier.width(16.dp))
-                            Spacer(Modifier.weight(1f))
                         }
                         Spacer(Modifier.height(16.dp))
                     }
