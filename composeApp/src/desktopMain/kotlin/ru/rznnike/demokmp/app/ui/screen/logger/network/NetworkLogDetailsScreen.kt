@@ -21,7 +21,7 @@ import io.github.vinceglb.filekit.dialogs.openFileSaver
 import kotlinx.serialization.Serializable
 import ru.rznnike.demokmp.app.navigation.DesktopNavigationScreen
 import ru.rznnike.demokmp.app.navigation.getNavigator
-import ru.rznnike.demokmp.app.navigation.navtype.logNetworkMessageNavType
+import ru.rznnike.demokmp.app.navigation.navtype.networkLogMessageNavType
 import ru.rznnike.demokmp.app.ui.theme.bodyLargeBold
 import ru.rznnike.demokmp.app.ui.theme.bodyMediumMono
 import ru.rznnike.demokmp.app.ui.view.LinkifyText
@@ -35,14 +35,14 @@ import ru.rznnike.demokmp.app.utils.highlightSubstrings
 import ru.rznnike.demokmp.app.utils.setText
 import ru.rznnike.demokmp.data.utils.DataConstants
 import ru.rznnike.demokmp.domain.log.LogMessage
-import ru.rznnike.demokmp.domain.log.LogNetworkMessage
+import ru.rznnike.demokmp.domain.log.NetworkLogMessage
 import ru.rznnike.demokmp.domain.utils.GlobalConstants
 import ru.rznnike.demokmp.domain.utils.toDateString
 import ru.rznnike.demokmp.generated.resources.*
 
 @Serializable
 class NetworkLogDetailsScreen(
-    private val message: LogNetworkMessage
+    private val message: NetworkLogMessage
 ) : DesktopNavigationScreen() {
     @Composable
     override fun Layout() {
@@ -119,7 +119,7 @@ class NetworkLogDetailsScreen(
                             iconRes = Res.drawable.ic_copy,
                             onClick = {
                                 clipboard.setText(
-                                    text = viewModel.getFullText(),
+                                    text = uiState.networkLogMessage.getFullText(),
                                     scope = coroutineScope
                                 )
                             }
@@ -162,9 +162,9 @@ class NetworkLogDetailsScreen(
                     Text(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .background(uiState.logNetworkMessage.state.backgroundColor)
+                            .background(uiState.networkLogMessage.state.backgroundColor)
                             .padding(horizontal = 24.dp, vertical = 16.dp),
-                        text = uiState.logNetworkMessage.request.message.lines().first().removePrefix("--> "),
+                        text = uiState.networkLogMessage.request.message.lines().first().removePrefix("--> "),
                         style = MaterialTheme.typography.bodyLargeBold
                     )
                     Box(
@@ -196,8 +196,8 @@ class NetworkLogDetailsScreen(
                                     )
                                 }
 
-                                MessageText(uiState.logNetworkMessage.request)
-                                uiState.logNetworkMessage.response?.let { response ->
+                                MessageText(uiState.networkLogMessage.request)
+                                uiState.networkLogMessage.response?.let { response ->
                                     HorizontalDivider(
                                         thickness = 1.dp,
                                         color = MaterialTheme.colorScheme.outline
@@ -233,7 +233,7 @@ class NetworkLogDetailsScreen(
 
     companion object {
         val typeMap = mapOf(
-            logNetworkMessageNavType
+            networkLogMessageNavType
         )
     }
 }

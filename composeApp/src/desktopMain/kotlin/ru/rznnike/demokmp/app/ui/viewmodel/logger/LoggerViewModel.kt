@@ -5,11 +5,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
 import io.github.vinceglb.filekit.PlatformFile
-import io.github.vinceglb.filekit.sink
-import io.ktor.utils.io.core.*
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.io.buffered
 import org.jetbrains.compose.resources.StringResource
 import org.koin.core.component.inject
 import ru.rznnike.demokmp.app.common.viewmodel.BaseUiViewModel
@@ -17,17 +14,11 @@ import ru.rznnike.demokmp.app.dispatcher.notifier.Notifier
 import ru.rznnike.demokmp.app.error.ErrorHandler
 import ru.rznnike.demokmp.data.utils.DataConstants
 import ru.rznnike.demokmp.domain.common.CoroutineScopeProvider
-import ru.rznnike.demokmp.domain.interactor.log.ClearLogUseCase
-import ru.rznnike.demokmp.domain.interactor.log.ClearNetworkLogUseCase
-import ru.rznnike.demokmp.domain.interactor.log.GetLogUseCase
-import ru.rznnike.demokmp.domain.interactor.log.GetNetworkLogUseCase
-import ru.rznnike.demokmp.domain.interactor.log.GetNewLogUseCase
-import ru.rznnike.demokmp.domain.interactor.log.GetNewNetworkLogUseCase
+import ru.rznnike.demokmp.domain.interactor.log.*
 import ru.rznnike.demokmp.domain.log.LogEvent
 import ru.rznnike.demokmp.domain.log.LogMessage
-import ru.rznnike.demokmp.domain.log.LogNetworkMessage
 import ru.rznnike.demokmp.domain.log.LogType
-import ru.rznnike.demokmp.domain.log.formatLogMessage
+import ru.rznnike.demokmp.domain.log.NetworkLogMessage
 import ru.rznnike.demokmp.domain.utils.GlobalConstants
 import ru.rznnike.demokmp.domain.utils.toDateString
 import ru.rznnike.demokmp.generated.resources.Res
@@ -46,9 +37,10 @@ class LoggerViewModel : BaseUiViewModel<LoggerViewModel.UiState>() {
     private val getNewNetworkLogUseCase: GetNewNetworkLogUseCase by inject()
     private val clearLogUseCase: ClearLogUseCase by inject()
     private val clearNetworkLogUseCase: ClearNetworkLogUseCase by inject()
+    private val saveLogToFileUseCase: SaveLogToFileUseCase by inject()
 
     private var log = emptyList<LogMessage>()
-    private var networkLog = mutableListOf<LogNetworkMessage>()
+    private var networkLog = mutableListOf<NetworkLogMessage>()
 
     var filterInput by mutableStateOf("")
         private set
@@ -65,7 +57,7 @@ class LoggerViewModel : BaseUiViewModel<LoggerViewModel.UiState>() {
             filterLog()
         }
 
-        fun setNetworkLog(newValue: List<LogNetworkMessage>) {
+        fun setNetworkLog(newValue: List<NetworkLogMessage>) {
             networkLog = newValue.toMutableList()
             filterNetworkLog()
         }
@@ -241,16 +233,11 @@ class LoggerViewModel : BaseUiViewModel<LoggerViewModel.UiState>() {
 
     fun openSaveLogDialog(showFileDialog: suspend (String) -> PlatformFile?) {
         coroutineScopeProvider.io.launch {
-            val saveFileName = DataConstants.LOG_FILE_NAME_TEMPLATE.format(
+            val suggestedFileName = DataConstants.LOG_FILE_NAME_TEMPLATE.format(
                 clock.millis().toDateString(GlobalConstants.DATE_PATTERN_FILE_NAME_MS)
             )
-            val file = showFileDialog(saveFileName)
-            file?.sink()?.buffered()?.use { writer ->
-                log.filter { it.type != LogType.SESSION_START }
-                    .forEach { message ->
-                        val text = formatLogMessage(message) + "\n"
-                        writer.writeText(text)
-                    }
+            showFileDialog(suggestedFileName)?.let { platformFile ->
+                saveLogToFileUseCase(platformFile.file)
             }
         }
     }
@@ -262,7 +249,7 @@ class LoggerViewModel : BaseUiViewModel<LoggerViewModel.UiState>() {
         val collapseNetworkMessages: Boolean = false,
         val filterOnlyByTag: Boolean = false,
         val filteredLog: List<LogMessage> = emptyList(),
-        val filteredNetworkLog: List<LogNetworkMessage> = emptyList()
+        val filteredNetworkLog: List<NetworkLogMessage> = emptyList()
     )
 
     enum class Tab(

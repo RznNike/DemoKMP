@@ -5,6 +5,8 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
+import okio.buffer
+import okio.sink
 import ru.rznnike.demokmp.data.storage.dao.LogMessageDao
 import ru.rznnike.demokmp.data.storage.dao.LogNetworkMessageDao
 import ru.rznnike.demokmp.data.storage.entity.toLogMessage
@@ -13,14 +15,12 @@ import ru.rznnike.demokmp.data.storage.entity.toLogNetworkMessage
 import ru.rznnike.demokmp.data.storage.entity.toLogNetworkMessageEntity
 import ru.rznnike.demokmp.domain.common.DispatcherProvider
 import ru.rznnike.demokmp.domain.gateway.LogGateway
-import ru.rznnike.demokmp.domain.log.LogData
-import ru.rznnike.demokmp.domain.log.LogEvent
-import ru.rznnike.demokmp.domain.log.LogMessage
-import ru.rznnike.demokmp.domain.log.LogNetworkMessage
-import ru.rznnike.demokmp.domain.log.NetworkLogData
+import ru.rznnike.demokmp.domain.log.*
 import ru.rznnike.demokmp.domain.log.extension.DatabaseLoggerExtension.LogsRetentionMode
+import java.io.File
 import java.time.Clock
 import java.util.*
+import kotlin.use
 
 class LogGatewayImpl(
     private val clock: Clock,
@@ -38,16 +38,16 @@ class LogGatewayImpl(
         logEventsFlow.emit(LogEvent.NewMessage)
     }
 
-    override suspend fun addLogNetworkMessageToDB(message: LogNetworkMessage) = withContext(dispatcherProvider.io) {
+    override suspend fun addLogNetworkMessageToDB(message: NetworkLogMessage) = withContext(dispatcherProvider.io) {
         logNetworkMessageDao.add(message.toLogNetworkMessageEntity(currentSessionId))
         networkLogEventsFlow.emit(LogEvent.NewNetworkMessage(message))
     }
 
-    override suspend fun getLogNetworkMessage(uuid: UUID): LogNetworkMessage? = withContext(dispatcherProvider.io) {
+    override suspend fun getLogNetworkMessage(uuid: UUID): NetworkLogMessage? = withContext(dispatcherProvider.io) {
         logNetworkMessageDao.get(uuid)?.toLogNetworkMessage(currentSessionId)
     }
 
-    override suspend fun getLogNetworkMessageAsFlow(uuid: UUID): Flow<LogNetworkMessage?> = withContext(dispatcherProvider.io) {
+    override suspend fun getLogNetworkMessageAsFlow(uuid: UUID): Flow<NetworkLogMessage?> = withContext(dispatcherProvider.io) {
         logNetworkMessageDao.getAsFlow(uuid).map { it?.toLogNetworkMessage(currentSessionId) }
     }
 
@@ -69,7 +69,7 @@ class LogGatewayImpl(
         )
     }
 
-    override suspend fun getNewNetworkLog(lastId: Long): List<LogNetworkMessage> = withContext(dispatcherProvider.io) {
+    override suspend fun getNewNetworkLog(lastId: Long): List<NetworkLogMessage> = withContext(dispatcherProvider.io) {
         logNetworkMessageDao.getNew(lastId = lastId).map { it.toLogNetworkMessage(currentSessionId)}
     }
 
@@ -112,5 +112,20 @@ class LogGatewayImpl(
         }
         logEventsFlow.emit(LogEvent.Cleanup)
         networkLogEventsFlow.emit(LogEvent.Cleanup)
+    }
+
+    override suspend fun saveLogToFile(file: File): Unit = withContext(dispatcherProvider.io) {
+        val log = logMessageDao.getAll().map { it.toLogMessage(currentSessionId) }
+        file.sink().buffer().use { writer ->
+            log.filter { it.type != LogType.SESSION_START }
+                .forEach { message ->
+                    val text = formatLogMessage(message) + "\n"
+                    writer.writeUtf8(text)
+                }
+        }
+    }
+
+    override suspend fun saveNetworkLogMessageToFile(file: File, message: NetworkLogMessage): Unit = withContext(dispatcherProvider.io) {
+        file.writeText(message.getFullText())
     }
 }
