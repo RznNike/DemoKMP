@@ -22,7 +22,10 @@ import ru.rznnike.demokmp.domain.interactor.log.GetLogUseCase
 import ru.rznnike.demokmp.domain.interactor.log.GetNetworkLogUseCase
 import ru.rznnike.demokmp.domain.interactor.log.GetNewLogUseCase
 import ru.rznnike.demokmp.domain.interactor.log.GetNewNetworkLogUseCase
+import ru.rznnike.demokmp.domain.interactor.log.SaveLogToFileUseCase
+import ru.rznnike.demokmp.domain.interactor.log.SaveNetworkLogMessageToFileUseCase
 import ru.rznnike.demokmp.domain.interactor.pdfexample.GetSamplePdfUseCase
+import ru.rznnike.demokmp.domain.interactor.pdfexample.SavePdfToFileUseCase
 import ru.rznnike.demokmp.domain.interactor.preferences.*
 import ru.rznnike.demokmp.domain.interactor.wsexample.CloseAppWSSessionUseCase
 import ru.rznnike.demokmp.domain.interactor.wsexample.GetAppWSSessionUseCase
@@ -43,6 +46,8 @@ internal val interactorModule = module {
     single { ClearLogUseCase(get(), get()) }
     single { ClearNetworkLogUseCase(get(), get()) }
     single { DeleteOldLogsUseCase(get(), get()) }
+    single { SaveLogToFileUseCase(get(), get()) }
+    single { SaveNetworkLogMessageToFileUseCase(get(), get()) }
 
     single { GetTestCounterUseCase(get(), get()) }
     single { SetTestCounterUseCase(get(), get()) }
@@ -52,6 +57,8 @@ internal val interactorModule = module {
     single { SetThemeUseCase(get(), get()) }
     single { GetPrintSettingsUseCase(get(), get()) }
     single { SetPrintSettingsUseCase(get(), get()) }
+    single { GetUiScaleUseCase(get(), get()) }
+    single { SetUiScaleUseCase(get(), get()) }
 
     single { GetRandomImageLinksUseCase(get(), get()) }
 
@@ -67,6 +74,7 @@ internal val interactorModule = module {
     single { SendAppWSMessageUseCase(get(), get()) }
 
     single { GetSamplePdfUseCase(get(), get()) }
+    single { SavePdfToFileUseCase(get(), get()) }
 
     single { GetChartSampleDataUseCase(get(), get()) }
 

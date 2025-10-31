@@ -2,6 +2,7 @@ package ru.rznnike.demokmp.domain.gateway
 
 import ru.rznnike.demokmp.domain.model.common.Language
 import ru.rznnike.demokmp.domain.model.common.Theme
+import ru.rznnike.demokmp.domain.model.common.UiScale
 import ru.rznnike.demokmp.domain.model.print.PrintSettings
 
 interface PreferencesGateway {
@@ -20,4 +21,8 @@ interface PreferencesGateway {
     suspend fun getPrintSettings(): PrintSettings
 
     suspend fun setPrintSettings(newValue: PrintSettings)
+
+    suspend fun getUiScale(): UiScale
+
+    suspend fun setUiScale(newValue: UiScale)
 }

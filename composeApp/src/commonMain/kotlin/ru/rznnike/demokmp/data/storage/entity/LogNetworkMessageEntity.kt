@@ -5,7 +5,7 @@ import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import ru.rznnike.demokmp.domain.log.LogMessage
-import ru.rznnike.demokmp.domain.log.LogNetworkMessage
+import ru.rznnike.demokmp.domain.log.NetworkLogMessage
 import ru.rznnike.demokmp.domain.log.NetworkRequestState
 import java.util.*
 
@@ -23,9 +23,9 @@ data class LogNetworkMessageEntity(
     val sessionId: Long
 )
 
-fun LogNetworkMessageEntity.toLogNetworkMessage(currentSessionId: Long): LogNetworkMessage {
+fun LogNetworkMessageEntity.toLogNetworkMessage(currentSessionId: Long): NetworkLogMessage {
     val isCurrentSession = currentSessionId == sessionId
-    return LogNetworkMessage(
+    return NetworkLogMessage(
         id = id,
         uuid = uuid,
         request = request.copy(
@@ -39,7 +39,7 @@ fun LogNetworkMessageEntity.toLogNetworkMessage(currentSessionId: Long): LogNetw
     )
 }
 
-fun LogNetworkMessage.toLogNetworkMessageEntity(currentSessionId: Long) = LogNetworkMessageEntity(
+fun NetworkLogMessage.toLogNetworkMessageEntity(currentSessionId: Long) = LogNetworkMessageEntity(
     id = id,
     uuid = uuid,
     request = request,

@@ -18,9 +18,8 @@ import androidx.compose.ui.input.key.*
 import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import io.github.vinceglb.filekit.FileKit
 import io.github.vinceglb.filekit.dialogs.FileKitDialogSettings
-import io.github.vinceglb.filekit.dialogs.openFileSaver
+import io.github.vinceglb.filekit.dialogs.compose.rememberFileSaverLauncher
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.painterResource
@@ -50,6 +49,17 @@ class LoggerScreen : DesktopNavigationScreen() {
 
         val viewModel = viewModel { LoggerViewModel() }
         val uiState by viewModel.uiState.collectAsState()
+
+        val window = LocalWindow.current
+        val fileSaver = rememberFileSaverLauncher(
+            dialogSettings = FileKitDialogSettings(
+                parentWindow = window
+            )
+        ) { result ->
+            result?.file?.let {
+                viewModel.saveLogToFile(it)
+            }
+        }
 
         screenKeyEventCallback = { keyEvent ->
             if (keyEvent.type == KeyEventType.KeyDown) {
@@ -168,20 +178,14 @@ class LoggerScreen : DesktopNavigationScreen() {
 
                     if (uiState.selectedTab == LoggerViewModel.Tab.ALL) {
                         Spacer(Modifier.width(16.dp))
-                        val window = LocalWindow.current
                         SelectableOutlinedIconButton(
                             modifier = Modifier.size(40.dp),
                             iconRes = Res.drawable.ic_save,
                             onClick = {
-                                viewModel.openSaveLogDialog { fileName ->
-                                    FileKit.openFileSaver(
-                                        suggestedName = fileName,
-                                        extension = DataConstants.LOG_FILE_NAME_EXTENSION,
-                                        dialogSettings = FileKitDialogSettings(
-                                            parentWindow = window
-                                        )
-                                    )
-                                }
+                                fileSaver.launch(
+                                    suggestedName = viewModel.getSuggestedSaveFileName(),
+                                    extension = DataConstants.LOG_FILE_NAME_EXTENSION
+                                )
                             }
                         )
                     }

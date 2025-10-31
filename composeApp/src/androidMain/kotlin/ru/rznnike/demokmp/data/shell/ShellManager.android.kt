@@ -5,6 +5,10 @@ class ShellManagerImpl : ShellManager {
 
     override suspend fun destroyWrapper() = Unit
 
+    override suspend fun getPCData() = ""
+
+    override suspend fun openFolderOrFile(path: String) = Unit
+
     override suspend fun minimizeAllWindows() = Unit
 }
 

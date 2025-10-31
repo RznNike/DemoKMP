@@ -1,12 +1,12 @@
 [versions]
-kotlin = "2.2.20"
-compose = "1.9.0"
+kotlin = "2.2.21"
+compose = "1.9.2"
 coroutines = "1.10.2"
 koin = "4.1.1"
 ktorfit = "2.6.4"
 ktor = "3.3.1"
 coil = "3.3.0"
-room = "2.8.1"
+room = "2.8.3"
 filekit = "0.12.0"
 chucker = "4.2.0"
 vico = "2.2.1"
@@ -24,13 +24,13 @@ ui-backhandler = { module = "org.jetbrains.compose.ui:ui-backhandler", version.r
 # https://mvnrepository.com/artifact/org.jetbrains.androidx.lifecycle/lifecycle-viewmodel-compose
 # Update the version according to the main Compose library dependencies
 #noinspection NewerVersionAvailable
-viewmodel-compose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose", version = "2.9.4" }
+viewmodel-compose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose", version = "2.9.5" }
 
 # Navigation
 # https://mvnrepository.com/artifact/org.jetbrains.androidx.navigation/navigation-compose
 # Update the version according to the main Compose library dependencies
 #noinspection NewerVersionAvailable
-navigation = { module = "org.jetbrains.androidx.navigation:navigation-compose", version = "2.9.0" }
+navigation = { module = "org.jetbrains.androidx.navigation:navigation-compose", version = "2.9.1" }
 
 # Coroutines
 # https://github.com/Kotlin/kotlinx.coroutines
@@ -90,11 +90,11 @@ vico-multiplatform-m3 = { group = "com.patrykandpatrick.vico", name = "multiplat
 
 # Logging (for Ktor)
 # https://mvnrepository.com/artifact/ch.qos.logback/logback-classic
-logback = { module = "ch.qos.logback:logback-classic", version = "1.5.19" }
+logback = { module = "ch.qos.logback:logback-classic", version = "1.5.20" }
 
 # PDF renderer
 # https://mvnrepository.com/artifact/org.apache.pdfbox/pdfbox
-pdfbox = { module = "org.apache.pdfbox:pdfbox", version = "3.0.5" }
+pdfbox = { module = "org.apache.pdfbox:pdfbox", version = "3.0.6" }
 
 # File dialogs
 # https://github.com/vinceglb/FileKit
@@ -139,7 +139,7 @@ buildkonfig = { id = "com.codingfeline.buildkonfig", version = "0.17.1" }
 
 # KSP
 # https://mvnrepository.com/artifact/com.google.devtools.ksp/com.google.devtools.ksp.gradle.plugin?repo=central
-ksp = { id = "com.google.devtools.ksp", version = "2.2.20-2.0.2" }
+ksp = { id = "com.google.devtools.ksp", version = "2.2.21-2.0.4" }
 
 # Ktorfit - network
 ktorfit = { id = "de.jensklingenberg.ktorfit", version.ref = "ktorfit" }

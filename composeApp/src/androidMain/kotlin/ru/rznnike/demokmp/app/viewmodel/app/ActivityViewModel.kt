@@ -25,6 +25,10 @@ class ActivityViewModel(
         subscribeToEvents()
     }
 
+    override fun onCleared() {
+        eventDispatcher.removeEventListener(eventListener)
+    }
+
     private fun subscribeToEvents() {
         eventDispatcher.addEventListener(
             appEventClasses = listOf(

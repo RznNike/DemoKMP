@@ -92,6 +92,7 @@ fun <ItemType> DropdownQuerySelector(
                 items?.let {
                     Text(
                         modifier = Modifier
+                            .padding(end = 8.dp)
                             .size(24.dp)
                             .wrapContentSize(),
                         text = items.size.coerceAtMost(999).toString(),
@@ -105,6 +106,7 @@ fun <ItemType> DropdownQuerySelector(
                 } ?: run {
                     CircularProgressIndicator(
                         modifier = Modifier
+                            .padding(end = 8.dp)
                             .size(24.dp)
                             .padding(3.dp),
                         strokeWidth = 2.dp,
@@ -234,7 +236,7 @@ fun <ItemType> DropdownQuerySelector(
                                 ) {
                                     items(
                                         items = filteredItems,
-                                        key = { item -> item.hashCode().toString() },
+                                        key = { item -> item.hashCode() },
                                     ) { item ->
                                         DropdownSelectorItem(
                                             modifier = Modifier

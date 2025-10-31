@@ -370,6 +370,9 @@ tasks.register<Zip>("generateReleaseArchive") {
     archiveFileName = "DemoKMP_${os.capitalized()}_v${globalVersionName}.${globalVersionCode}_${flags.joinToString(separator = "_")}.zip"
     destinationDirectory = file("${project.rootDir}/distributableArchive")
     from("${project.rootDir}/distributableOutput/${globalVersionCode}")
+    doLast {
+        println("Generated archive folder: ${project.rootDir}/distributableArchive")
+    }
 }
 
 private enum class BuildType(

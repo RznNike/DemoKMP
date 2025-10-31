@@ -62,7 +62,7 @@ open class COMObjectWrapper(name: String) : COMLateBindingObject(name, false) {
                     throw UnsupportedOperationException("This driver only supports Windows!")
                 }
                 !isInitialized -> {
-                    Ole32.INSTANCE.CoInitializeEx(null, Ole32.COINIT_MULTITHREADED)
+                    Ole32.INSTANCE.CoInitializeEx(null, Ole32.COINIT_APARTMENTTHREADED)
                     isInitialized = true
                 }
             }

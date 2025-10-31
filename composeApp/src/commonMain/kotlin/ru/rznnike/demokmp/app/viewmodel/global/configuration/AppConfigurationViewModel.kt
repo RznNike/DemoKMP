@@ -11,18 +11,20 @@ import ru.rznnike.demokmp.app.dispatcher.event.AppEvent
 import ru.rznnike.demokmp.app.dispatcher.event.EventDispatcher
 import ru.rznnike.demokmp.app.dispatcher.notifier.Notifier
 import ru.rznnike.demokmp.data.utils.DataConstants
-import ru.rznnike.demokmp.domain.common.DispatcherProvider
 import ru.rznnike.demokmp.domain.interactor.app.CloseAppSingleInstanceSocketUseCase
 import ru.rznnike.demokmp.domain.interactor.comobjectexample.DestroyShellWrapperUseCase
 import ru.rznnike.demokmp.domain.interactor.comobjectexample.InitShellWrapperUseCase
 import ru.rznnike.demokmp.domain.interactor.dbexample.CloseDBUseCase
 import ru.rznnike.demokmp.domain.interactor.preferences.GetLanguageUseCase
 import ru.rznnike.demokmp.domain.interactor.preferences.GetThemeUseCase
+import ru.rznnike.demokmp.domain.interactor.preferences.GetUiScaleUseCase
 import ru.rznnike.demokmp.domain.interactor.preferences.SetLanguageUseCase
 import ru.rznnike.demokmp.domain.interactor.preferences.SetThemeUseCase
+import ru.rznnike.demokmp.domain.interactor.preferences.SetUiScaleUseCase
 import ru.rznnike.demokmp.domain.log.Logger
 import ru.rznnike.demokmp.domain.model.common.Language
 import ru.rznnike.demokmp.domain.model.common.Theme
+import ru.rznnike.demokmp.domain.model.common.UiScale
 import ru.rznnike.demokmp.domain.utils.OperatingSystem
 import ru.rznnike.demokmp.generated.resources.Res
 import ru.rznnike.demokmp.generated.resources.error_restart_from_ide
@@ -32,11 +34,12 @@ import java.util.*
 class AppConfigurationViewModel : BaseUiViewModel<AppConfigurationViewModel.UiState>() {
     private val eventDispatcher: EventDispatcher by inject()
     private val notifier: Notifier by inject()
-    private val dispatcherProvider: DispatcherProvider by inject()
     private val getLanguageUseCase: GetLanguageUseCase by inject()
     private val setLanguageUseCase: SetLanguageUseCase by inject()
     private val getThemeUseCase: GetThemeUseCase by inject()
     private val setThemeUseCase: SetThemeUseCase by inject()
+    private val getUiScaleUseCase: GetUiScaleUseCase by inject()
+    private val setUiScaleUseCase: SetUiScaleUseCase by inject()
     private val initShellWrapperUseCase: InitShellWrapperUseCase by inject()
     private val destroyShellWrapperUseCase: DestroyShellWrapperUseCase by inject()
     private val closeDBUseCase: CloseDBUseCase by inject()
@@ -57,8 +60,12 @@ class AppConfigurationViewModel : BaseUiViewModel<AppConfigurationViewModel.UiSt
 
     init {
         subscribeToEvents()
-        initLanguageAndTheme()
+        initUiSettings()
         initShellWrapper()
+    }
+
+    override fun onCleared() {
+        eventDispatcher.removeEventListener(eventListener)
     }
 
     override fun provideDefaultUIState() = UiState()
@@ -72,16 +79,18 @@ class AppConfigurationViewModel : BaseUiViewModel<AppConfigurationViewModel.UiSt
         )
     }
 
-    private fun initLanguageAndTheme() {
+    private fun initUiSettings() {
         viewModelScope.launch {
             val selectedLanguage = getLanguageUseCase().data ?: Language.default
             val selectedTheme = getThemeUseCase().data ?: Theme.default
+            val selectedUiScale = getUiScaleUseCase().data ?: UiScale.default
             applySelectedLanguage(selectedLanguage)
 
             mutableUiState.update { currentState ->
                 currentState.copy(
                     language = selectedLanguage,
                     theme = selectedTheme,
+                    uiScale = selectedUiScale,
                     isLoaded = true
                 )
             }
@@ -117,6 +126,20 @@ class AppConfigurationViewModel : BaseUiViewModel<AppConfigurationViewModel.UiSt
                 mutableUiState.update { currentState ->
                     currentState.copy(
                         theme = newValue
+                    )
+                }
+            }
+        }
+    }
+
+    fun setUiScale(newValue: UiScale) {
+        viewModelScope.launch {
+            if (newValue != mutableUiState.value.uiScale) {
+                setUiScaleUseCase(newValue)
+
+                mutableUiState.update { currentState ->
+                    currentState.copy(
+                        uiScale = newValue
                     )
                 }
             }
@@ -186,6 +209,7 @@ class AppConfigurationViewModel : BaseUiViewModel<AppConfigurationViewModel.UiSt
         val args: List<String> = emptyList(),
         val language: Language = Language.default,
         val theme: Theme = Theme.default,
+        val uiScale: UiScale = UiScale.default,
         val isLoaded: Boolean = false
     )
 }

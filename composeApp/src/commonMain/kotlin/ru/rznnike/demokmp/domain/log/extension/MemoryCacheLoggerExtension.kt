@@ -13,8 +13,8 @@ class MemoryCacheLoggerExtension(
     private val outputLock = Semaphore(1)
     private val log: MutableList<LogMessage> = mutableListOf()
     private val logUpdatesFlow = MutableSharedFlow<LogMessage>()
-    private val networkLog: MutableList<LogNetworkMessage> = mutableListOf()
-    private val networkLogUpdatesFlow = MutableSharedFlow<LogNetworkMessage>()
+    private val networkLog: MutableList<NetworkLogMessage> = mutableListOf()
+    private val networkLogUpdatesFlow = MutableSharedFlow<NetworkLogMessage>()
 
     override suspend fun networkRequest(tag: String, uuid: UUID, message: String) {
         addMessage(
@@ -23,12 +23,12 @@ class MemoryCacheLoggerExtension(
             level = LogLevel.INFO,
             type = LogType.NETWORK
         ) { request ->
-            val logNetworkMessage = LogNetworkMessage(
+            val networkLogMessage = NetworkLogMessage(
                 uuid = uuid,
                 request = request
             )
-            networkLog.add(logNetworkMessage)
-            networkLogUpdatesFlow.emit(logNetworkMessage)
+            networkLog.add(networkLogMessage)
+            networkLogUpdatesFlow.emit(networkLogMessage)
         }
     }
 
@@ -93,8 +93,8 @@ class MemoryCacheLoggerExtension(
     }
 
     suspend fun subscribeToNetworkLog(
-        initCallback: (List<LogNetworkMessage>) -> Unit,
-        updateCallback: (LogNetworkMessage) -> Unit
+        initCallback: (List<NetworkLogMessage>) -> Unit,
+        updateCallback: (NetworkLogMessage) -> Unit
     ) {
         initCallback(networkLog)
         networkLogUpdatesFlow.collect { message ->

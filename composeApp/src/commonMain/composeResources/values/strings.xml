@@ -90,4 +90,5 @@
     <string name="pc_data_header">PC data:</string>
     <string name="path_to_folder_or_file">Path to folder or file</string>
     <string name="open">Open</string>
+    <string name="ui_scale">UI scale</string>
 </resources>

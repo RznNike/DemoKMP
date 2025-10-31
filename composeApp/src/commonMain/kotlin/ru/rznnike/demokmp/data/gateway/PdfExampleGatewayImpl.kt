@@ -16,4 +16,11 @@ class PdfExampleGatewayImpl(
         }
         result
     }
+
+    override suspend fun savePdfToFile(tempPdfFile: File, saveFile: File): Unit = withContext(dispatcherProvider.io) {
+        tempPdfFile.copyTo(
+            target = saveFile,
+            overwrite = true
+        )
+    }
 }

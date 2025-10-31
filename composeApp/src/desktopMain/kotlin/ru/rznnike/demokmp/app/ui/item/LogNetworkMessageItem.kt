@@ -23,7 +23,7 @@ import java.util.*
 
 @Composable
 fun LogNetworkMessageItem(
-    message: LogNetworkMessage,
+    message: NetworkLogMessage,
     query: String,
     onClick: () -> Unit
 ) {
@@ -86,7 +86,7 @@ fun LogNetworkMessageItem(
 private fun LogNetworkMessageItemPreview() {
     AppTheme {
         LogNetworkMessageItem(
-            message = LogNetworkMessage(
+            message = NetworkLogMessage(
                 uuid = UUID.randomUUID(),
                 request = LogMessage(
                     type = LogType.NETWORK,

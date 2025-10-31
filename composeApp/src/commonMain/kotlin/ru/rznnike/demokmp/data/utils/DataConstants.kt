@@ -26,5 +26,7 @@ object DataConstants {
 
     const val HEADER_TEST = "Test"
 
+    const val PDF_FILE_NAME_EXTENSION = "pdf"
     val TEST_PDF_PATH = "$ROOT_DIR/sample.pdf"
+    val EXAMPLE_PDF_SAVE_NAME = "saved_pdf_file.pdf"
 }

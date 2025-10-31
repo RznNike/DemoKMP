@@ -4,6 +4,7 @@ import com.russhwolf.settings.Settings
 import com.russhwolf.settings.set
 import ru.rznnike.demokmp.domain.model.common.Language
 import ru.rznnike.demokmp.domain.model.common.Theme
+import ru.rznnike.demokmp.domain.model.common.UiScale
 import ru.rznnike.demokmp.domain.model.print.TwoSidedPrint
 import ru.rznnike.demokmp.domain.utils.toDoubleOrNullSmart
 
@@ -100,5 +101,15 @@ sealed class Preference<Type>(
         override fun TwoSidedPrint.serialize() = id.toString()
 
         override fun String.deserialize() = TwoSidedPrint[toIntOrNull()]
+    }
+
+    class UiScalePreference(
+        settings: Settings,
+        key: String,
+        defaultValue: UiScale
+    ) : Preference<UiScale>(settings, key, defaultValue) {
+        override fun UiScale.serialize() = value.toString()
+
+        override fun String.deserialize() = UiScale[toIntOrNull() ?: 0]
     }
 }

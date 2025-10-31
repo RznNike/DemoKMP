@@ -12,6 +12,8 @@ import androidx.compose.ui.input.key.*
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import io.github.vinceglb.filekit.dialogs.FileKitDialogSettings
+import io.github.vinceglb.filekit.dialogs.compose.rememberFileSaverLauncher
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
@@ -22,6 +24,7 @@ import ru.rznnike.demokmp.app.ui.view.PdfViewer
 import ru.rznnike.demokmp.app.ui.view.SelectableOutlinedIconButton
 import ru.rznnike.demokmp.app.ui.view.TextR
 import ru.rznnike.demokmp.app.ui.viewmodel.common.print.FilePrintViewModel
+import ru.rznnike.demokmp.app.ui.window.LocalWindow
 import ru.rznnike.demokmp.app.utils.printDialog
 import ru.rznnike.demokmp.app.viewmodel.pdfexample.PdfExampleViewModel
 import ru.rznnike.demokmp.data.utils.DataConstants
@@ -46,6 +49,17 @@ class PdfExampleScreen : DesktopNavigationScreen() {
             FilePrintViewModel()
         }
         val filePrintUiState by filePrintViewModel.uiState.collectAsState()
+
+        val window = LocalWindow.current
+        val fileSaver = rememberFileSaverLauncher(
+            dialogSettings = FileKitDialogSettings(
+                parentWindow = window
+            )
+        ) { result ->
+            result?.file?.let {
+                viewModel.savePdfToFile(it)
+            }
+        }
 
         screenKeyEventCallback = { keyEvent ->
             if (keyEvent.type == KeyEventType.KeyDown) {
@@ -104,7 +118,13 @@ class PdfExampleScreen : DesktopNavigationScreen() {
                         pdf = uiState.pdf,
                         printSettings = filePrintUiState.printSettings,
                         onTwoSidedPrintChanged = filePrintViewModel::onTwoSidedPrintChanged,
-                        onPrinterSelected = filePrintViewModel::onPrinterSelected
+                        onPrinterSelected = filePrintViewModel::onPrinterSelected,
+                        onSaveClick = {
+                            fileSaver.launch(
+                                suggestedName = viewModel.getSuggestedSaveFileName(),
+                                extension = DataConstants.PDF_FILE_NAME_EXTENSION
+                            )
+                        }
                     )
                     Spacer(Modifier.width(16.dp))
                 }

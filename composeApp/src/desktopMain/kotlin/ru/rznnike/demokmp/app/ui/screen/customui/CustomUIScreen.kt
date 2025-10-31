@@ -164,7 +164,7 @@ class CustomUIScreen : DesktopNavigationScreen() {
                                 Spacer(Modifier.width(16.dp))
                                 DateTextField(
                                     modifier = Modifier
-                                        .width(155.dp)
+                                        .width(160.dp)
                                         .height(48.dp),
                                     labelRes = Res.string.date_selection,
                                     value = viewModel.dateInputManager.inputString,

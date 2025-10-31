@@ -15,7 +15,7 @@ import ru.rznnike.demokmp.domain.interactor.dbexample.AddDBExampleDataUseCase
 import ru.rznnike.demokmp.domain.interactor.dbexample.DeleteAllDBExampleDataUseCase
 import ru.rznnike.demokmp.domain.interactor.dbexample.DeleteDBExampleDataUseCase
 import ru.rznnike.demokmp.domain.interactor.dbexample.GetDBExampleDataListUseCase
-import ru.rznnike.demokmp.domain.model.dbexample.DBExampleData
+import ru.rznnike.demokmp.domain.model.db.DBExampleData
 
 class DBExampleViewModel : BaseUiViewModel<DBExampleViewModel.UiState>() {
     private val notifier: Notifier by inject()

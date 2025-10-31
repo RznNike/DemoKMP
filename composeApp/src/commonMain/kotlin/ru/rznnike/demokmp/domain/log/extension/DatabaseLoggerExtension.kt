@@ -38,11 +38,11 @@ class DatabaseLoggerExtension(
                 level = LogLevel.INFO,
                 type = LogType.SESSION_START
             ) { serviceMessage ->
-                val logNetworkMessage = LogNetworkMessage(
+                val networkLogMessage = NetworkLogMessage(
                     uuid = UUID.randomUUID(),
                     request = serviceMessage
                 )
-                addLogNetworkMessageToDBUseCase(logNetworkMessage)
+                addLogNetworkMessageToDBUseCase(networkLogMessage)
             }
         }
         deleteOldLogs()
@@ -55,11 +55,11 @@ class DatabaseLoggerExtension(
             level = LogLevel.INFO,
             type = LogType.NETWORK
         ) { request ->
-            val logNetworkMessage = LogNetworkMessage(
+            val networkLogMessage = NetworkLogMessage(
                 uuid = uuid,
                 request = request
             )
-            addLogNetworkMessageToDBUseCase(logNetworkMessage)
+            addLogNetworkMessageToDBUseCase(networkLogMessage)
         }
     }
 
