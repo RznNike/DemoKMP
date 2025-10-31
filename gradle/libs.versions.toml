@@ -1,6 +1,6 @@
 [versions]
-kotlin = "2.2.20"
-compose = "1.9.1"
+kotlin = "2.2.21"
+compose = "1.9.2"
 coroutines = "1.10.2"
 koin = "4.1.1"
 ktorfit = "2.6.4"
@@ -139,7 +139,7 @@ buildkonfig = { id = "com.codingfeline.buildkonfig", version = "0.17.1" }
 
 # KSP
 # https://mvnrepository.com/artifact/com.google.devtools.ksp/com.google.devtools.ksp.gradle.plugin?repo=central
-ksp = { id = "com.google.devtools.ksp", version = "2.2.20-2.0.4" }
+ksp = { id = "com.google.devtools.ksp", version = "2.2.21-2.0.4" }
 
 # Ktorfit - network
 ktorfit = { id = "de.jensklingenberg.ktorfit", version.ref = "ktorfit" }
