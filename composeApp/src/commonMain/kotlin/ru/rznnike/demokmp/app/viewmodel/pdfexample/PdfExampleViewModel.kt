@@ -1,7 +1,6 @@
 package ru.rznnike.demokmp.app.viewmodel.pdfexample
 
 import androidx.lifecycle.viewModelScope
-import io.github.vinceglb.filekit.PlatformFile
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.koin.core.component.inject
@@ -50,24 +49,23 @@ class PdfExampleViewModel : BaseUiViewModel<PdfExampleViewModel.UiState>() {
         }
     }
 
-    fun openSaveFileDialog(showFileDialog: suspend (String) -> PlatformFile?) {
+    fun getSuggestedSaveFileName() = DataConstants.EXAMPLE_PDF_SAVE_NAME
+
+    fun savePdfToFile(file: File) {
         coroutineScopeProvider.io.launch {
-            val suggestedFileName = DataConstants.EXAMPLE_PDF_SAVE_NAME
-            showFileDialog(suggestedFileName)?.let { platformFile ->
-                mutableUiState.value.pdf?.let { pdf ->
-                    savePdfToFileUseCase(
-                        SavePdfToFileUseCase.Parameters(
-                            tempPdfFile = pdf,
-                            saveFile = platformFile.file
-                        )
-                    ).process(
-                        { }, { error ->
-                            errorHandler.proceed(error) { message ->
-                                notifier.sendAlert(message)
-                            }
-                        }
+            mutableUiState.value.pdf?.let { pdf ->
+                savePdfToFileUseCase(
+                    SavePdfToFileUseCase.Parameters(
+                        tempPdfFile = pdf,
+                        saveFile = file
                     )
-                }
+                ).process(
+                    { }, { error ->
+                        errorHandler.proceed(error) { message ->
+                            notifier.sendAlert(message)
+                        }
+                    }
+                )
             }
         }
     }

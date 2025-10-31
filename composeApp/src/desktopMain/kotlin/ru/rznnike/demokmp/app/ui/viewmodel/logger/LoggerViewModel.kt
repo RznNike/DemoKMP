@@ -4,7 +4,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
-import io.github.vinceglb.filekit.PlatformFile
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.StringResource
@@ -24,6 +23,7 @@ import ru.rznnike.demokmp.domain.utils.toDateString
 import ru.rznnike.demokmp.generated.resources.Res
 import ru.rznnike.demokmp.generated.resources.logs_all_header
 import ru.rznnike.demokmp.generated.resources.logs_network_header
+import java.io.File
 import java.time.Clock
 
 class LoggerViewModel : BaseUiViewModel<LoggerViewModel.UiState>() {
@@ -231,16 +231,15 @@ class LoggerViewModel : BaseUiViewModel<LoggerViewModel.UiState>() {
         }
     }
 
-    fun openSaveLogDialog(showFileDialog: suspend (String) -> PlatformFile?) {
+    fun getSuggestedSaveFileName() = DataConstants.LOG_FILE_NAME_TEMPLATE.format(
+        clock.millis().toDateString(GlobalConstants.DATE_PATTERN_FILE_NAME_MS)
+    )
+
+    fun saveLogToFile(file: File) {
         coroutineScopeProvider.io.launch {
-            val suggestedFileName = DataConstants.LOG_FILE_NAME_TEMPLATE.format(
-                clock.millis().toDateString(GlobalConstants.DATE_PATTERN_FILE_NAME_MS)
+            saveLogToFileUseCase(file).process(
+                { }, ::onError
             )
-            showFileDialog(suggestedFileName)?.let { platformFile ->
-                saveLogToFileUseCase(platformFile.file).process(
-                    { }, ::onError
-                )
-            }
         }
     }
 

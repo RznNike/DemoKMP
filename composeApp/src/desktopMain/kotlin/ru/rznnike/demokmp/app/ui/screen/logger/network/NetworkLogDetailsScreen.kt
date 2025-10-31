@@ -15,9 +15,8 @@ import androidx.compose.ui.platform.LocalClipboard
 import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import io.github.vinceglb.filekit.FileKit
 import io.github.vinceglb.filekit.dialogs.FileKitDialogSettings
-import io.github.vinceglb.filekit.dialogs.openFileSaver
+import io.github.vinceglb.filekit.dialogs.compose.rememberFileSaverLauncher
 import kotlinx.serialization.Serializable
 import ru.rznnike.demokmp.app.navigation.DesktopNavigationScreen
 import ru.rznnike.demokmp.app.navigation.getNavigator
@@ -53,6 +52,16 @@ class NetworkLogDetailsScreen(
 
         val coroutineScope = rememberCoroutineScope()
         val clipboard = LocalClipboard.current
+        val window = LocalWindow.current
+        val fileSaver = rememberFileSaverLauncher(
+            dialogSettings = FileKitDialogSettings(
+                parentWindow = window
+            )
+        ) { result ->
+            result?.file?.let {
+                viewModel.saveLogToFile(it)
+            }
+        }
 
         screenKeyEventCallback = { keyEvent ->
             if (keyEvent.type == KeyEventType.KeyDown) {
@@ -126,20 +135,14 @@ class NetworkLogDetailsScreen(
                         )
 
                         Spacer(Modifier.width(16.dp))
-                        val window = LocalWindow.current
                         SelectableOutlinedIconButton(
                             modifier = Modifier.size(40.dp),
                             iconRes = Res.drawable.ic_save,
                             onClick = {
-                                viewModel.openSaveLogDialog { suggestedName ->
-                                    FileKit.openFileSaver(
-                                        suggestedName = suggestedName,
-                                        extension = DataConstants.LOG_FILE_NAME_EXTENSION,
-                                        dialogSettings = FileKitDialogSettings(
-                                            parentWindow = window
-                                        )
-                                    )
-                                }
+                                fileSaver.launch(
+                                    suggestedName = viewModel.getSuggestedSaveFileName(),
+                                    extension = DataConstants.LOG_FILE_NAME_EXTENSION
+                                )
                             }
                         )
                     }

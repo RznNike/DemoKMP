@@ -4,7 +4,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
-import io.github.vinceglb.filekit.PlatformFile
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.koin.core.component.inject
@@ -18,6 +17,7 @@ import ru.rznnike.demokmp.domain.interactor.log.SaveNetworkLogMessageToFileUseCa
 import ru.rznnike.demokmp.domain.log.NetworkLogMessage
 import ru.rznnike.demokmp.domain.utils.GlobalConstants
 import ru.rznnike.demokmp.domain.utils.toDateString
+import java.io.File
 
 class NetworkLogDetailsViewModel(
     private val initMessage: NetworkLogMessage
@@ -68,29 +68,29 @@ class NetworkLogDetailsViewModel(
         }
     }
 
-    fun openSaveLogDialog(showFileDialog: suspend (String) -> PlatformFile?) {
+    fun getSuggestedSaveFileName() = DataConstants.LOG_FILE_NAME_TEMPLATE.format(
+        mutableUiState
+            .value
+            .networkLogMessage
+            .request
+            .timestamp
+            .toDateString(GlobalConstants.DATE_PATTERN_FILE_NAME_MS)
+    )
+
+    fun saveLogToFile(file: File) {
         coroutineScopeProvider.io.launch {
-            val message = mutableUiState.value.networkLogMessage
-            val suggestedFileName = DataConstants.LOG_FILE_NAME_TEMPLATE.format(
-                message
-                    .request
-                    .timestamp
-                    .toDateString(GlobalConstants.DATE_PATTERN_FILE_NAME_MS)
-            )
-            showFileDialog(suggestedFileName)?.let { platformFile ->
-                saveNetworkLogMessageToFileUseCase(
-                    SaveNetworkLogMessageToFileUseCase.Parameters(
-                        file = platformFile.file,
-                        message = message
-                    )
-                ).process(
-                    { }, { error ->
-                        errorHandler.proceed(error) { message ->
-                            notifier.sendAlert(message)
-                        }
-                    }
+            saveNetworkLogMessageToFileUseCase(
+                SaveNetworkLogMessageToFileUseCase.Parameters(
+                    file = file,
+                    message = mutableUiState.value.networkLogMessage
                 )
-            }
+            ).process(
+                { }, { error ->
+                    errorHandler.proceed(error) { message ->
+                        notifier.sendAlert(message)
+                    }
+                }
+            )
         }
     }
 
