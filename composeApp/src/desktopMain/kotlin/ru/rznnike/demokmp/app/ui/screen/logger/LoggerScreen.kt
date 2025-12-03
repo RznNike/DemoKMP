@@ -14,6 +14,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.input.key.*
 import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.unit.dp
@@ -231,7 +232,11 @@ class LoggerScreen : DesktopNavigationScreen() {
                             LoggerViewModel.Tab.ALL -> allScrollState
                             LoggerViewModel.Tab.NETWORK -> networkScrollState
                         }
-                        SelectionContainer {
+                        SelectionContainer(
+                            modifier = Modifier.focusProperties {
+                                canFocus = false
+                            }
+                        ) {
                             LazyColumn(
                                 state = currentScrollState,
                                 modifier = Modifier.fillMaxSize()

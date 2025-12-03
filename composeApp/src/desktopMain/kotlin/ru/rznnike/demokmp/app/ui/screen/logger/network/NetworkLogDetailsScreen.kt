@@ -10,6 +10,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.input.key.*
 import androidx.compose.ui.platform.LocalClipboard
 import androidx.compose.ui.text.intl.Locale
@@ -176,7 +177,11 @@ class NetworkLogDetailsScreen(
                             .weight(1f)
                     ) {
                         val scrollState = rememberScrollState()
-                        SelectionContainer {
+                        SelectionContainer(
+                            modifier = Modifier.focusProperties {
+                                canFocus = false
+                            }
+                        ) {
                             Column(
                                 modifier = Modifier
                                     .fillMaxSize()

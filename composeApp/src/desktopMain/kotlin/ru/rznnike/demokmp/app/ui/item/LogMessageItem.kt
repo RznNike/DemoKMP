@@ -10,6 +10,7 @@ import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.unit.dp
 import ru.rznnike.demokmp.app.ui.theme.AppTheme
 import ru.rznnike.demokmp.app.ui.theme.bodyMediumMono
@@ -49,7 +50,11 @@ fun LogMessageItem(
                 style = MaterialTheme.typography.bodyMediumMono
             )
             if (message.tag.isNotBlank()) {
-                SelectionContainer {
+                SelectionContainer(
+                    modifier = Modifier.focusProperties {
+                        canFocus = false
+                    }
+                ) {
                     Text(
                         modifier = Modifier.fillMaxWidth(),
                         text = message.tag.highlightSubstrings(query),
