@@ -58,7 +58,10 @@ class HTTPExampleScreen : DesktopNavigationScreen() {
             Toolbar(
                 modifier = Modifier.fillMaxWidth(),
                 title = stringResource(Res.string.http_example),
-                leftButton = ToolbarButton(Res.drawable.ic_back) {
+                leftButton = ToolbarButton(
+                    iconRes = Res.drawable.ic_back,
+                    tooltip = "Ctrl+W"
+                ) {
                     navigator.closeScreen()
                 },
                 rightButton = ToolbarButton(Res.drawable.ic_refresh) {

@@ -56,7 +56,10 @@ class ComObjectExampleScreen : DesktopNavigationScreen() {
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp),
                 title = stringResource(Res.string.com_object_example),
-                leftButton = ToolbarButton(Res.drawable.ic_back) {
+                leftButton = ToolbarButton(
+                    iconRes = Res.drawable.ic_back,
+                    tooltip = "Ctrl+W"
+                ) {
                     navigator.closeScreen()
                 }
             )

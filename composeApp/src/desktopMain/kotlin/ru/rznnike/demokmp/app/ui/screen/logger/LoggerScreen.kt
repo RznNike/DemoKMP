@@ -16,7 +16,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.input.key.*
-import androidx.compose.ui.input.key.type
 import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -33,12 +32,7 @@ import ru.rznnike.demokmp.app.ui.item.LogMessageItem
 import ru.rznnike.demokmp.app.ui.item.LogMessageServiceItem
 import ru.rznnike.demokmp.app.ui.item.LogNetworkMessageItem
 import ru.rznnike.demokmp.app.ui.screen.logger.network.NetworkLogDetailsScreen
-import ru.rznnike.demokmp.app.ui.view.CustomCheckboxWithText
-import ru.rznnike.demokmp.app.ui.view.FilledButton
-import ru.rznnike.demokmp.app.ui.view.SelectableOutlinedIconButton
-import ru.rznnike.demokmp.app.ui.view.SlimOutlinedTextField
-import ru.rznnike.demokmp.app.ui.view.TabText
-import ru.rznnike.demokmp.app.ui.view.TextR
+import ru.rznnike.demokmp.app.ui.view.*
 import ru.rznnike.demokmp.app.ui.viewmodel.logger.LoggerViewModel
 import ru.rznnike.demokmp.app.ui.window.LocalWindow
 import ru.rznnike.demokmp.app.utils.onClick
@@ -204,15 +198,21 @@ class LoggerScreen : DesktopNavigationScreen() {
                     Row {
                         Spacer(Modifier.width(12.dp))
                         LoggerViewModel.Tab.entries.forEach {
-                            TabText(
-                                modifier = Modifier
-                                    .onClick {
-                                        viewModel.onTabSelected(it)
-                                    }
-                                    .padding(12.dp),
-                                textRes = it.nameRes,
-                                selected = it == uiState.selectedTab
-                            )
+                            val tooltip = when (it) {
+                                LoggerViewModel.Tab.ALL -> "Ctrl+1"
+                                LoggerViewModel.Tab.NETWORK -> "Ctrl+2"
+                            }
+                            Tooltip(tooltip) {
+                                TabText(
+                                    modifier = Modifier
+                                        .onClick {
+                                            viewModel.onTabSelected(it)
+                                        }
+                                        .padding(12.dp),
+                                    textRes = it.nameRes,
+                                    selected = it == uiState.selectedTab
+                                )
+                            }
                         }
                     }
 

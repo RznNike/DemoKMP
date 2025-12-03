@@ -23,6 +23,7 @@ import ru.rznnike.demokmp.app.ui.view.PdfPrintControls
 import ru.rznnike.demokmp.app.ui.view.PdfViewer
 import ru.rznnike.demokmp.app.ui.view.SelectableOutlinedIconButton
 import ru.rznnike.demokmp.app.ui.view.TextR
+import ru.rznnike.demokmp.app.ui.view.Tooltip
 import ru.rznnike.demokmp.app.ui.viewmodel.common.print.FilePrintViewModel
 import ru.rznnike.demokmp.app.ui.window.LocalWindow
 import ru.rznnike.demokmp.app.utils.printDialog
@@ -94,15 +95,17 @@ class PdfExampleScreen : DesktopNavigationScreen() {
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Spacer(Modifier.width(16.dp))
-                    SelectableOutlinedIconButton(
-                        modifier = Modifier
-                            .padding(vertical = 16.dp)
-                            .size(40.dp),
-                        iconRes = Res.drawable.ic_back,
-                        onClick = {
-                            navigator.closeScreen()
-                        }
-                    )
+                    Tooltip("Ctrl+W") {
+                        SelectableOutlinedIconButton(
+                            modifier = Modifier
+                                .padding(vertical = 16.dp)
+                                .size(40.dp),
+                            iconRes = Res.drawable.ic_back,
+                            onClick = {
+                                navigator.closeScreen()
+                            }
+                        )
+                    }
                     Spacer(Modifier.width(16.dp))
                     TextR(
                         modifier = Modifier

@@ -31,19 +31,21 @@ fun Toolbar(
         @Composable
         fun ImageButton(
             button: ToolbarButton?
-        ) = Box(
-            modifier = Modifier
-                .padding(16.dp)
-                .size(40.dp)
-        ) {
-            button?.let {
-                SelectableOutlinedIconButton(
-                    modifier = Modifier.fillMaxSize(),
-                    iconRes = button.iconRes,
-                    onClick = {
-                        button.onClick()
-                    }
-                )
+        ) = Tooltip(button?.tooltip ?: "") {
+            Box(
+                modifier = Modifier
+                    .padding(16.dp)
+                    .size(40.dp)
+            ) {
+                button?.let {
+                    SelectableOutlinedIconButton(
+                        modifier = Modifier.fillMaxSize(),
+                        iconRes = button.iconRes,
+                        onClick = {
+                            button.onClick()
+                        }
+                    )
+                }
             }
         }
 
@@ -67,5 +69,6 @@ fun Toolbar(
 data class ToolbarButton(
     val iconRes: DrawableResource,
     val iconTint: Color? = null,
+    val tooltip: String = "",
     val onClick: () -> Unit
 )

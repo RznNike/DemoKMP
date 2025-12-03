@@ -42,19 +42,21 @@ fun PdfPrintControls(
     )
 
     Spacer(Modifier.width(16.dp))
-    SelectableOutlinedIconButton(
-        modifier = Modifier.size(40.dp),
-        iconRes = Res.drawable.ic_print,
-        onClick = {
-            pdf?.let {
-                val newPrinterName = printDialog(
-                    pdf = pdf,
-                    printSettings = printSettings
-                )
-                onPrinterSelected(newPrinterName)
+    Tooltip("Ctrl+P") {
+        SelectableOutlinedIconButton(
+            modifier = Modifier.size(40.dp),
+            iconRes = Res.drawable.ic_print,
+            onClick = {
+                pdf?.let {
+                    val newPrinterName = printDialog(
+                        pdf = pdf,
+                        printSettings = printSettings
+                    )
+                    onPrinterSelected(newPrinterName)
+                }
             }
-        }
-    )
+        )
+    }
     Spacer(Modifier.width(16.dp))
     SelectableOutlinedIconButton(
         modifier = Modifier.size(40.dp),

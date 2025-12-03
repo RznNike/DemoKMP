@@ -55,7 +55,10 @@ class CustomUIScreen : DesktopNavigationScreen() {
             Toolbar(
                 modifier = Modifier.fillMaxWidth(),
                 title = stringResource(Res.string.custom_ui_elements),
-                leftButton = ToolbarButton(Res.drawable.ic_back) {
+                leftButton = ToolbarButton(
+                    iconRes = Res.drawable.ic_back,
+                    tooltip = "Ctrl+W"
+                ) {
                     navigator.closeScreen()
                 }
             )

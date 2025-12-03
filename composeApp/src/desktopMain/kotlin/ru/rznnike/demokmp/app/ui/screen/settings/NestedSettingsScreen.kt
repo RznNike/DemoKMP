@@ -46,7 +46,10 @@ class NestedSettingsScreen : DesktopNavigationScreen() {
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp),
                 title = stringResource(Res.string.nested_settings),
-                leftButton = ToolbarButton(Res.drawable.ic_back) {
+                leftButton = ToolbarButton(
+                    iconRes = Res.drawable.ic_back,
+                    tooltip = "Ctrl+W"
+                ) {
                     navigator.closeScreen()
                 }
             )

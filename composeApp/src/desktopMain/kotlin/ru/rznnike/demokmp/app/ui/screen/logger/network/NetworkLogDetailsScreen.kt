@@ -28,6 +28,7 @@ import ru.rznnike.demokmp.app.ui.view.LinkifyText
 import ru.rznnike.demokmp.app.ui.view.SelectableOutlinedIconButton
 import ru.rznnike.demokmp.app.ui.view.SlimOutlinedTextField
 import ru.rznnike.demokmp.app.ui.view.TextR
+import ru.rznnike.demokmp.app.ui.view.Tooltip
 import ru.rznnike.demokmp.app.ui.viewmodel.logger.network.NetworkLogDetailsViewModel
 import ru.rznnike.demokmp.app.ui.window.LocalWindow
 import ru.rznnike.demokmp.app.utils.backgroundColor
@@ -81,15 +82,17 @@ class NetworkLogDetailsScreen(
                     color = MaterialTheme.colorScheme.surface,
                     shape = MaterialTheme.shapes.medium
                 ) {
-                    SelectableOutlinedIconButton(
-                        modifier = Modifier
-                            .padding(16.dp)
-                            .size(40.dp),
-                        iconRes = Res.drawable.ic_back,
-                        onClick = {
-                            navigator.closeScreen()
-                        }
-                    )
+                    Tooltip("Ctrl+W") {
+                        SelectableOutlinedIconButton(
+                            modifier = Modifier
+                                .padding(16.dp)
+                                .size(40.dp),
+                            iconRes = Res.drawable.ic_back,
+                            onClick = {
+                                navigator.closeScreen()
+                            }
+                        )
+                    }
                 }
                 Spacer(Modifier.width(16.dp))
                 Surface(

@@ -57,7 +57,10 @@ class WebSocketsExampleScreen : DesktopNavigationScreen() {
             Toolbar(
                 modifier = Modifier.fillMaxWidth(),
                 title = stringResource(Res.string.ws_example),
-                leftButton = ToolbarButton(Res.drawable.ic_back) {
+                leftButton = ToolbarButton(
+                    iconRes = Res.drawable.ic_back,
+                    tooltip = "Ctrl+W"
+                ) {
                     navigator.closeScreen()
                 }
             )
