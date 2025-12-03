@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.vinceglb.filekit.dialogs.FileKitDialogSettings
 import io.github.vinceglb.filekit.dialogs.compose.rememberFileSaverLauncher
+import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.painterResource
@@ -32,6 +33,7 @@ import ru.rznnike.demokmp.app.ui.item.LogMessageItem
 import ru.rznnike.demokmp.app.ui.item.LogMessageServiceItem
 import ru.rznnike.demokmp.app.ui.item.LogNetworkMessageItem
 import ru.rznnike.demokmp.app.ui.screen.logger.network.NetworkLogDetailsScreen
+import ru.rznnike.demokmp.app.ui.view.FilledButton
 import ru.rznnike.demokmp.app.ui.view.SelectableOutlinedIconButton
 import ru.rznnike.demokmp.app.ui.view.SlimOutlinedTextField
 import ru.rznnike.demokmp.app.ui.view.TabText
@@ -62,6 +64,7 @@ class LoggerScreen : DesktopNavigationScreen() {
                 viewModel.saveLogToFile(it)
             }
         }
+        val coroutineScope = rememberCoroutineScope()
 
         screenKeyEventCallback = { keyEvent ->
             if (keyEvent.type == KeyEventType.KeyDown) {
@@ -82,16 +85,14 @@ class LoggerScreen : DesktopNavigationScreen() {
             ) {
                 Row(
                     modifier = Modifier
-                        .padding(16.dp)
+                        .padding(start = 16.dp, end = 16.dp, bottom = 16.dp, top = 8.dp)
                         .fillMaxWidth()
                 ) {
                     SlimOutlinedTextField(
-                        modifier = Modifier
-                            .width(300.dp)
-                            .height(40.dp),
+                        modifier = Modifier.width(300.dp),
                         value = viewModel.filterInput,
                         singleLine = true,
-                        placeholder = {
+                        label = {
                             TextR(Res.string.filter)
                         },
                         onValueChange = viewModel::onFilterInput
@@ -130,7 +131,9 @@ class LoggerScreen : DesktopNavigationScreen() {
                     }
 
                     Spacer(Modifier.width(16.dp))
-                    Column {
+                    Column(
+                        modifier = Modifier.padding(top = 8.dp)
+                    ) {
                         CheckboxWithText(
                             onClick = {
                                 viewModel.onAutoscrollClick()
@@ -148,7 +151,9 @@ class LoggerScreen : DesktopNavigationScreen() {
                         )
                     }
                     Spacer(Modifier.width(16.dp))
-                    Column {
+                    Column(
+                        modifier = Modifier.padding(top = 8.dp)
+                    ) {
                         CheckboxWithText(
                             onClick = {
                                 viewModel.onCollapseNetworkMessagesClick()
@@ -171,7 +176,9 @@ class LoggerScreen : DesktopNavigationScreen() {
 
                     Spacer(Modifier.width(16.dp))
                     SelectableOutlinedIconButton(
-                        modifier = Modifier.size(40.dp),
+                        modifier = Modifier
+                            .padding(top = 8.dp)
+                            .size(40.dp),
                         iconRes = Res.drawable.ic_delete,
                         onClick = {
                             viewModel.deleteLog()
@@ -181,7 +188,9 @@ class LoggerScreen : DesktopNavigationScreen() {
                     if (uiState.selectedTab == LoggerViewModel.Tab.ALL) {
                         Spacer(Modifier.width(16.dp))
                         SelectableOutlinedIconButton(
-                            modifier = Modifier.size(40.dp),
+                            modifier = Modifier
+                                .padding(top = 8.dp)
+                                .size(40.dp),
                             iconRes = Res.drawable.ic_save,
                             onClick = {
                                 fileSaver.launch(
@@ -309,29 +318,54 @@ class LoggerScreen : DesktopNavigationScreen() {
                             adapter = rememberScrollbarAdapter(currentScrollState)
                         )
 
-                        if (uiState.autoscroll) {
-                            when (uiState.selectedTab) {
-                                LoggerViewModel.Tab.ALL -> {
-                                    LaunchedEffect(uiState.filteredLog) {
-                                        allScrollState.scrollToItem(
-                                            uiState.filteredLog.lastIndex.coerceAtLeast(0)
-                                        )
-                                        allScrollState.scrollBy(
-                                            allScrollState.layoutInfo.visibleItemsInfo.lastOrNull()?.size?.toFloat() ?: 0f
-                                        )
+                        val currentItems = when (uiState.selectedTab) {
+                            LoggerViewModel.Tab.ALL -> uiState.filteredLog
+                            LoggerViewModel.Tab.NETWORK -> uiState.filteredNetworkLog
+                        }
+                        suspend fun scrollToBottom() {
+                            currentScrollState.scrollToItem(
+                                currentItems.lastIndex.coerceAtLeast(0)
+                            )
+                            currentScrollState.scrollBy(
+                                currentScrollState.layoutInfo.visibleItemsInfo.lastOrNull()?.size?.toFloat() ?: 0f
+                            )
+                        }
+
+                        val scrolledFromBottom =
+                            currentScrollState.layoutInfo.visibleItemsInfo.lastOrNull()?.index != currentItems.lastIndex
+                        if (scrolledFromBottom) {
+                            FilledButton(
+                                modifier = Modifier
+                                    .padding(16.dp)
+                                    .size(40.dp)
+                                    .focusProperties {
+                                        canFocus = false
+                                    }
+                                    .align(Alignment.BottomEnd),
+                                contentPadding = PaddingValues(0.dp),
+                                onClick = {
+                                    coroutineScope.launch {
+                                        scrollToBottom()
                                     }
                                 }
-                                LoggerViewModel.Tab.NETWORK -> {
-                                    LaunchedEffect(uiState.filteredNetworkLog) {
-                                        networkScrollState.scrollToItem(
-                                            uiState.filteredNetworkLog.lastIndex.coerceAtLeast(0)
-                                        )
-                                        networkScrollState.scrollBy(
-                                            networkScrollState.layoutInfo.visibleItemsInfo.lastOrNull()?.size?.toFloat() ?: 0f
-                                        )
-                                    }
-                                }
+                            ) {
+                                Icon(
+                                    modifier = Modifier
+                                        .padding(vertical = 8.dp)
+                                        .size(24.dp),
+                                    painter = painterResource(Res.drawable.ic_arrow_down),
+                                    tint = MaterialTheme.colorScheme.onPrimary,
+                                    contentDescription = null
+                                )
                             }
+                        }
+
+                        if (uiState.autoscroll) {
+                            val key = when (uiState.selectedTab) {
+                                LoggerViewModel.Tab.ALL -> uiState.filteredLog
+                                LoggerViewModel.Tab.NETWORK -> uiState.filteredNetworkLog
+                            }
+                            LaunchedEffect(key) { scrollToBottom() }
                         }
                     }
                 }
