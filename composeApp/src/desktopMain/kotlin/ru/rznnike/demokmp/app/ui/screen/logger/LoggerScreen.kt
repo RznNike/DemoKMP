@@ -16,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.input.key.*
+import androidx.compose.ui.input.key.type
 import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -259,7 +260,9 @@ class LoggerScreen : DesktopNavigationScreen() {
                                                 }
                                                 LogType.SESSION_START -> {
                                                     LogMessageServiceItem(
-                                                        message = message
+                                                        type = message.type,
+                                                        timestamp = message.timestamp,
+                                                        isCurrentSession = message.isCurrentSession
                                                     )
                                                 }
                                             }
@@ -286,7 +289,9 @@ class LoggerScreen : DesktopNavigationScreen() {
                                                 }
                                                 LogType.SESSION_START -> {
                                                     LogMessageServiceItem(
-                                                        message = message.request
+                                                        type = message.request.type,
+                                                        timestamp = message.request.timestamp,
+                                                        isCurrentSession = message.isCurrentSession
                                                     )
                                                 }
                                                 else -> Unit

@@ -12,31 +12,40 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
-import ru.rznnike.demokmp.app.ui.theme.AppTheme
 import ru.rznnike.demokmp.app.ui.theme.LocalCustomColorScheme
+import ru.rznnike.demokmp.app.ui.theme.PreviewAppTheme
 import ru.rznnike.demokmp.app.ui.theme.bodyMediumMono
-import ru.rznnike.demokmp.domain.log.LogLevel
-import ru.rznnike.demokmp.domain.log.LogMessage
 import ru.rznnike.demokmp.domain.log.LogType
 import ru.rznnike.demokmp.domain.utils.currentTimeMillis
+import ru.rznnike.demokmp.domain.utils.toDateString
 import ru.rznnike.demokmp.generated.resources.Res
 import ru.rznnike.demokmp.generated.resources.current_session_start
 import ru.rznnike.demokmp.generated.resources.session_start
 
 @Composable
 fun LogMessageServiceItem(
-    message: LogMessage
+    type: LogType,
+    timestamp: Long,
+    isCurrentSession: Boolean
 ) {
     var text = ""
     var background = Color.Unspecified
-    when (message.type) {
-        LogType.SESSION_START -> if (message.isCurrentSession) {
-            text = stringResource(Res.string.current_session_start)
-            background = LocalCustomColorScheme.current.logServiceAccent
-        } else {
-            text = stringResource(Res.string.session_start)
-            background = LocalCustomColorScheme.current.logService
+    when (type) {
+        LogType.SESSION_START -> {
+            val headerRes: StringResource
+            if (isCurrentSession) {
+                headerRes = Res.string.current_session_start
+                background = LocalCustomColorScheme.current.logServiceAccent
+            } else {
+                headerRes = Res.string.session_start
+                background = LocalCustomColorScheme.current.logService
+            }
+            text = "%s | %s".format(
+                stringResource(headerRes),
+                timestamp.toDateString()
+            )
         }
         else -> Unit
     }
@@ -56,27 +65,17 @@ fun LogMessageServiceItem(
 @Preview
 @Composable
 private fun LogMessageServiceItemPreview() {
-    AppTheme {
+    PreviewAppTheme {
         Column {
             LogMessageServiceItem(
-                message = LogMessage(
-                    type = LogType.SESSION_START,
-                    level = LogLevel.INFO,
-                    timestamp = currentTimeMillis(),
-                    tag = "",
-                    message = "",
-                    isCurrentSession = true
-                )
+                type = LogType.SESSION_START,
+                timestamp = currentTimeMillis(),
+                isCurrentSession = true
             )
             LogMessageServiceItem(
-                message = LogMessage(
-                    type = LogType.SESSION_START,
-                    level = LogLevel.INFO,
-                    timestamp = currentTimeMillis(),
-                    tag = "",
-                    message = "",
-                    isCurrentSession = false
-                )
+                type = LogType.SESSION_START,
+                timestamp = currentTimeMillis(),
+                isCurrentSession = false
             )
         }
     }
