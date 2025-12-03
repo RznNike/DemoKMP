@@ -103,7 +103,8 @@ data class CustomColorScheme(
     val logNetworkSuccess: Color = Color.Unspecified,
     val logNetworkError: Color = Color.Unspecified,
     val logNetworkCancelled: Color = Color.Unspecified,
-    val searchSelection: Color = Color.Unspecified
+    val searchSelection: Color = Color.Unspecified,
+    val disabledText: Color = Color.Unspecified
 )
 
 val lightCustomScheme = CustomColorScheme(
@@ -119,7 +120,8 @@ val lightCustomScheme = CustomColorScheme(
     logNetworkSuccess = logNetworkSuccessLight,
     logNetworkError = logNetworkErrorLight,
     logNetworkCancelled = logNetworkCancelledLight,
-    searchSelection = searchSelectionLight
+    searchSelection = searchSelectionLight,
+    disabledText = disabledTextLight
 )
 
 val darkCustomScheme = CustomColorScheme(
@@ -135,7 +137,8 @@ val darkCustomScheme = CustomColorScheme(
     logNetworkSuccess = logNetworkSuccessDark,
     logNetworkError = logNetworkErrorDark,
     logNetworkCancelled = logNetworkCancelledDark,
-    searchSelection = searchSelectionDark
+    searchSelection = searchSelectionDark,
+    disabledText = disabledTextDark
 )
 
 val LocalIsDarkTheme = staticCompositionLocalOf { false }

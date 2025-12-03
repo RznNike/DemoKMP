@@ -53,6 +53,7 @@ val logNetworkSuccessLight = Color(0xFFE5FFE5)
 val logNetworkErrorLight = logErrorLight
 val logNetworkCancelledLight = Color(0xFFE5E5E5)
 val searchSelectionLight = Color(0x80FFBE00)
+val disabledTextLight = Color(0xFFD2D2D2)
 
 val primaryDark = Color(0xFF006600) // accent
 val onPrimaryDark = Color(0xFFFFFFFF) // text on accent (white)
@@ -103,3 +104,4 @@ val logNetworkSuccessDark = Color(0xFF008000)
 val logNetworkErrorDark = logErrorDark
 val logNetworkCancelledDark = Color(0xFF8A8A8A)
 val searchSelectionDark = Color(0x80FFBE00)
+val disabledTextDark = Color(0xFF646464)

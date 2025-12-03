@@ -33,6 +33,7 @@ import ru.rznnike.demokmp.app.ui.item.LogMessageItem
 import ru.rznnike.demokmp.app.ui.item.LogMessageServiceItem
 import ru.rznnike.demokmp.app.ui.item.LogNetworkMessageItem
 import ru.rznnike.demokmp.app.ui.screen.logger.network.NetworkLogDetailsScreen
+import ru.rznnike.demokmp.app.ui.view.CustomCheckboxWithText
 import ru.rznnike.demokmp.app.ui.view.FilledButton
 import ru.rznnike.demokmp.app.ui.view.SelectableOutlinedIconButton
 import ru.rznnike.demokmp.app.ui.view.SlimOutlinedTextField
@@ -100,35 +101,19 @@ class LoggerScreen : DesktopNavigationScreen() {
 
                     @Composable
                     fun CheckboxWithText(
-                        textRes: StringResource,
                         onClick: () -> Unit,
+                        textRes: StringResource,
                         checked: Boolean,
                         enabled: Boolean = true
-                    ) = Row(
-                        modifier = Modifier.onClick {
-                            if (enabled) onClick()
-                        },
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Icon(
-                            modifier = Modifier.size(18.dp),
-                            painter = painterResource(
-                                if (checked) Res.drawable.ic_checkbox_on else Res.drawable.ic_checkbox_off
-                            ),
-                            tint = when {
-                                !enabled -> MaterialTheme.colorScheme.outline
-                                checked -> MaterialTheme.colorScheme.primary
-                                else -> MaterialTheme.colorScheme.onSurfaceVariant
-                            },
-                            contentDescription = null
-                        )
-                        Spacer(Modifier.width(4.dp))
-                        TextR(
-                            textRes = textRes,
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = if (enabled) MaterialTheme.colorScheme.onBackground else MaterialTheme.colorScheme.outline
-                        )
-                    }
+                    ) = CustomCheckboxWithText(
+                        onClick = onClick,
+                        checkboxSize = 18.dp,
+                        contentPadding = 6.dp,
+                        textRes = textRes,
+                        textStyle = MaterialTheme.typography.bodySmall,
+                        checked = checked,
+                        enabled = enabled
+                    )
 
                     Spacer(Modifier.width(16.dp))
                     Column(
