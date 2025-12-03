@@ -1,7 +1,5 @@
 package ru.rznnike.demokmp.data.network.interceptor
 
-import kotlinx.serialization.ExperimentalSerializationApi
-import kotlinx.serialization.json.Json
 import okhttp3.Headers
 import okhttp3.Interceptor
 import okhttp3.MediaType
@@ -10,6 +8,7 @@ import okhttp3.internal.http.promisesBody
 import okio.Buffer
 import okio.GzipSource
 import ru.rznnike.demokmp.BuildKonfig
+import ru.rznnike.demokmp.data.utils.json.prettifyJson
 import ru.rznnike.demokmp.domain.log.Logger
 import ru.rznnike.demokmp.domain.log.NetworkRequestState
 import java.io.EOFException
@@ -20,13 +19,7 @@ import java.util.concurrent.TimeUnit
 
 private const val MAX_RESPONSE_BODY_SIZE_TO_LOG = 100 * 1024 // 100 KB
 
-@OptIn(ExperimentalSerializationApi::class)
 class HttpLoggingInterceptor : Interceptor {
-    private val formatter = Json {
-        prettyPrint = true
-        prettyPrintIndent = "    "
-    }
-
     @Suppress("KotlinConstantConditions")
     @Throws(IOException::class)
     override fun intercept(chain: Interceptor.Chain): Response {
@@ -104,19 +97,8 @@ class HttpLoggingInterceptor : Interceptor {
                 } else if (gzippedLength != null) {
                     logBuilder.appendLine("--> END ${request.method} (${buffer.size}-byte, $gzippedLength-gzipped-byte body)")
                 } else {
-                    var body = buffer.readString(charset)
-
-                    if (request.url.toString().endsWith("authorization/sign-in")) {
-                        body = body.replace("\"password\" *: *\".*\"".toRegex(), "\"password\":\"***\"")
-                    }
-
-                    val formattedBody = try {
-                        formatter.encodeToString(formatter.parseToJsonElement(body))
-                    } catch (_: Exception) {
-                        body
-                    }
-                    logBuilder.appendLine(formattedBody)
-
+                    val body = buffer.readString(charset)
+                    logBuilder.appendLine(body.prettifyJson())
                     logBuilder.appendLine("--> END ${request.method} (${requestBody.contentLength()}-byte body)")
                 }
             }
@@ -199,12 +181,7 @@ class HttpLoggingInterceptor : Interceptor {
                         if (buffer.size > MAX_RESPONSE_BODY_SIZE_TO_LOG) {
                             logBuilder.appendLine("***Too big response body omitted***")
                         } else {
-                            val formattedBody = try {
-                                formatter.encodeToString(formatter.parseToJsonElement(body))
-                            } catch (_: Exception) {
-                                body
-                            }
-                            logBuilder.appendLine(formattedBody)
+                            logBuilder.appendLine(body.prettifyJson())
                         }
                     }
                 }
