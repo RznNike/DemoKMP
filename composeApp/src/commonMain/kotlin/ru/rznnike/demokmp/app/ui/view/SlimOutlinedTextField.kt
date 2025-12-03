@@ -18,6 +18,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.takeOrElse
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.isAltPressed
+import androidx.compose.ui.input.key.isCtrlPressed
+import androidx.compose.ui.input.key.isShiftPressed
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.onPreviewKeyEvent
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.TextStyle
@@ -82,7 +88,16 @@ fun SlimOutlinedTextField(
                 .defaultMinSize(
                     minWidth = OutlinedTextFieldDefaults.MinWidth,
                     minHeight = OutlinedTextFieldDefaults.MinHeight
-                ),
+                )
+                .onPreviewKeyEvent { keyEvent ->
+                    val isDefaultCtrlHotkey = keyEvent.isCtrlPressed
+                            && listOf(Key.A, Key.C, Key.X, Key.V, Key.Z, Key.DirectionUp, Key.DirectionDown, Key.DirectionLeft, Key.DirectionRight).contains(keyEvent.key)
+                    val isDefaultAltHotkey = keyEvent.isAltPressed
+                            && keyEvent.isShiftPressed
+                            && listOf(Key.DirectionUp, Key.DirectionDown).contains(keyEvent.key)
+
+                    (keyEvent.isCtrlPressed || keyEvent.isAltPressed) && (!(isDefaultCtrlHotkey || isDefaultAltHotkey))
+                },
             onValueChange = onValueChange,
             enabled = enabled,
             readOnly = readOnly,
