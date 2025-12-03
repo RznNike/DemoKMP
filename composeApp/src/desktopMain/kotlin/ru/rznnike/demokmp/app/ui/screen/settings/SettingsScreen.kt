@@ -184,7 +184,7 @@ class SettingsScreen : DesktopNavigationScreen() {
                                     modifier = Modifier
                                         .width(150.dp),
                                     label = stringResource(Res.string.ui_scale),
-                                    items = UiScale.entries,
+                                    items = UiScale.entries.sortedDescending(),
                                     selectedItem = appConfigurationUiState.uiScale,
                                     itemNameRetriever = { it?.let { "%d%%".format(it.value) } ?: "" },
                                     onItemSelected = appConfigurationViewModel::setUiScale

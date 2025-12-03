@@ -22,7 +22,7 @@ import ru.rznnike.demokmp.app.ui.theme.backgroundLight
 import ru.rznnike.demokmp.app.ui.window.LocalWindow
 import ru.rznnike.demokmp.app.ui.window.WindowFocusRequester
 import ru.rznnike.demokmp.app.ui.window.logger.LoggerWindow
-import ru.rznnike.demokmp.app.ui.window.setMinimumSize
+import ru.rznnike.demokmp.app.ui.window.SetMinimumSize
 import ru.rznnike.demokmp.app.utils.CustomUiScale
 import ru.rznnike.demokmp.app.utils.WithWindowViewModelStoreOwner
 import ru.rznnike.demokmp.app.utils.windowViewModel
@@ -86,9 +86,10 @@ fun ApplicationScope.MainWindow(args: Array<String>) = WithWindowViewModelStoreO
         CompositionLocalProvider(
             LocalWindow provides window
         ) {
-            setMinimumSize(
+            SetMinimumSize(
                 width = WINDOW_MIN_WIDTH_DP,
-                height = WINDOW_MIN_HEIGHT_DP
+                height = WINDOW_MIN_HEIGHT_DP,
+                scale = appConfigurationUiState.uiScale.value
             )
             window.title = windowConfigurationUiState.windowTitle
             if (appConfigurationUiState.isLoaded) {
@@ -96,9 +97,7 @@ fun ApplicationScope.MainWindow(args: Array<String>) = WithWindowViewModelStoreO
                     windowConfigurationViewModel.setWindowTitle(defaultWindowTitle)
                 }
 
-                CustomUiScale(
-                    appConfigurationUiState.uiScale
-                ) {
+                CustomUiScale(appConfigurationUiState.uiScale) {
                     MainFrame()
                 }
             } else { // default background while the theme has not yet loaded

@@ -78,9 +78,10 @@ fun LoggerWindow(
             focusRequester.onFocusRequested = {
                 window.toFront()
             }
-            setMinimumSize(
+            SetMinimumSize(
                 width = WINDOW_MIN_WIDTH_DP,
-                height = WINDOW_MIN_HEIGHT_DP
+                height = WINDOW_MIN_HEIGHT_DP,
+                scale = appConfigurationUiState.uiScale.value
             )
             window.title = windowConfigurationUiState.windowTitle
             LaunchedEffect(appConfigurationUiState.language) {

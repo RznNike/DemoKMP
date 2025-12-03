@@ -224,7 +224,7 @@ class SettingsScreen : AndroidNavigationScreen() {
                         headerRes = Res.string.ui_scale,
                         buttonText = "%d%%".format(appConfigurationUiState.uiScale.value)
                     ) { closeMenu ->
-                        UiScale.entries.forEach { uiScale ->
+                        UiScale.entries.sortedDescending().forEach { uiScale ->
                             DropdownMenuItem(
                                 text = {
                                     Text("%d%%".format(uiScale.value))

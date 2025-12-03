@@ -12,6 +12,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.window.FrameWindowScope
 import java.awt.Dimension
+import kotlin.math.roundToInt
 
 val LocalWindow = staticCompositionLocalOf { ComposeWindow() }
 
@@ -45,14 +46,17 @@ class WindowFocusRequester(
 )
 
 @Composable
-fun FrameWindowScope.setMinimumSize(
+fun FrameWindowScope.SetMinimumSize(
     width: Dp = Dp.Unspecified,
     height: Dp = Dp.Unspecified,
+    scale: Int = 100
 ) {
     val density = LocalDensity.current
     key(density) {
         window.minimumSize = with(density) {
-            Dimension(width.toPx().toInt(), height.toPx().toInt())
+            val scaledWidth = (width.toPx() * scale / 100).roundToInt()
+            val scaledHeight = (height.toPx() * scale / 100).roundToInt()
+            Dimension(scaledWidth, scaledHeight)
         }
     }
 }
