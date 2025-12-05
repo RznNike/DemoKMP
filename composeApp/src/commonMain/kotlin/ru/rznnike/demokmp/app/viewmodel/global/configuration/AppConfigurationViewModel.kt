@@ -46,13 +46,21 @@ class AppConfigurationViewModel : BaseUiViewModel<AppConfigurationViewModel.UiSt
     private val closeAppSingleInstanceSocketUseCase: CloseAppSingleInstanceSocketUseCase by inject()
 
     private var closeAppCallback: (() -> Unit)? = null
+    private var openLoggerWindowCallback: (() -> Unit)? = null
+    private var openHotkeysDialogCallback: (() -> Unit)? = null
 
     private val eventListener = object : EventDispatcher.EventListener {
         override fun onEvent(event: AppEvent) {
             when (event) {
-                is AppEvent.RestartRequested -> {
-                    closeApplication(isRestart = true)
+                is AppEvent.RestartRequested -> closeApplication(isRestart = true)
+                is AppEvent.BottomStatusBarRequested -> {
+                    mutableUiState.update { currentState ->
+                        currentState.copy(
+                            isBottomStatusBarVisible = event.show
+                        )
+                    }
                 }
+                is AppEvent.LoggerWindowRequested -> openLoggerWindow()
                 else -> Unit
             }
         }
@@ -60,7 +68,7 @@ class AppConfigurationViewModel : BaseUiViewModel<AppConfigurationViewModel.UiSt
 
     init {
         subscribeToEvents()
-        initUiSettings()
+        initAppConfiguration()
         initShellWrapper()
     }
 
@@ -73,13 +81,15 @@ class AppConfigurationViewModel : BaseUiViewModel<AppConfigurationViewModel.UiSt
     private fun subscribeToEvents() {
         eventDispatcher.addEventListener(
             appEventClasses = listOf(
-                AppEvent.RestartRequested::class
+                AppEvent.RestartRequested::class,
+                AppEvent.BottomStatusBarRequested::class,
+                AppEvent.LoggerWindowRequested::class
             ),
             listener = eventListener
         )
     }
 
-    private fun initUiSettings() {
+    private fun initAppConfiguration() {
         viewModelScope.launch {
             val selectedLanguage = getLanguageUseCase().data ?: Language.default
             val selectedTheme = getThemeUseCase().data ?: Theme.default
@@ -169,10 +179,10 @@ class AppConfigurationViewModel : BaseUiViewModel<AppConfigurationViewModel.UiSt
 
             eventDispatcher.removeEventListener(eventListener)
             destroyShellWrapperUseCase()
-            closeDBUseCase()
-            closeAppSingleInstanceSocketUseCase()
             Logger.i("Application finish\n")
             delay(100)
+            closeDBUseCase()
+            closeAppSingleInstanceSocketUseCase()
 
             if (OperatingSystem.isDesktop || (!isRestart)) {
                 closeAppCallback?.invoke()
@@ -205,11 +215,32 @@ class AppConfigurationViewModel : BaseUiViewModel<AppConfigurationViewModel.UiSt
         }
     }
 
+    fun setLoggerWindowCallback(
+        openLoggerWindowCallback: () -> Unit
+    ) {
+        this.openLoggerWindowCallback = openLoggerWindowCallback
+    }
+
+    fun openLoggerWindow() {
+        openLoggerWindowCallback?.invoke()
+    }
+
+    fun setHotkeysDialogCallback(
+        openHotkeysDialogCallback: () -> Unit
+    ) {
+        this.openHotkeysDialogCallback = openHotkeysDialogCallback
+    }
+
+    fun openHotkeysDialog() {
+        openHotkeysDialogCallback?.invoke()
+    }
+
     data class UiState(
         val args: List<String> = emptyList(),
         val language: Language = Language.default,
         val theme: Theme = Theme.default,
         val uiScale: UiScale = UiScale.default,
-        val isLoaded: Boolean = false
+        val isLoaded: Boolean = false,
+        val isBottomStatusBarVisible: Boolean = false
     )
 }

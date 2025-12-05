@@ -5,7 +5,9 @@ sealed class AppEvent {
 
     data object ActivityRestartRequested : AppEvent()
 
-//    data class TestClass(
-//        val data: String
-//    ) : AppEvent()
+    data class BottomStatusBarRequested(
+        val show: Boolean
+    ) : AppEvent()
+
+    data object LoggerWindowRequested : AppEvent()
 }

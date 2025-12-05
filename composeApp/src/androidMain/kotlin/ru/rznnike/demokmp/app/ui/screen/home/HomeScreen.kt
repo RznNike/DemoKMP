@@ -14,7 +14,6 @@ import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
-import ru.rznnike.demokmp.BuildKonfig
 import ru.rznnike.demokmp.app.dispatcher.notifier.Notifier
 import ru.rznnike.demokmp.app.navigation.AndroidNavigationScreen
 import ru.rznnike.demokmp.app.navigation.getNavigator
@@ -32,6 +31,7 @@ import ru.rznnike.demokmp.app.ui.screen.wsexample.WebSocketsExampleFlow
 import ru.rznnike.demokmp.app.ui.view.FilledButton
 import ru.rznnike.demokmp.app.ui.view.TextR
 import ru.rznnike.demokmp.app.ui.view.Toolbar
+import ru.rznnike.demokmp.app.utils.getFormattedAppVersion
 import ru.rznnike.demokmp.app.utils.platformName
 import ru.rznnike.demokmp.app.viewmodel.home.HomeViewModel
 import ru.rznnike.demokmp.generated.resources.*
@@ -145,11 +145,9 @@ class HomeScreen : AndroidNavigationScreen() {
         }
 
         if (showAboutDialog) {
-            val details = "%s: %s.%d%s\n%s: %s".format(
+            val details = "%s: %s\n%s: %s".format(
                 stringResource(Res.string.version),
-                BuildKonfig.VERSION_NAME,
-                BuildKonfig.VERSION_CODE,
-                if (BuildKonfig.DEBUG) " ${BuildKonfig.BUILD_TYPE}" else "",
+                getFormattedAppVersion(),
                 stringResource(Res.string.environment),
                 platformName
             )

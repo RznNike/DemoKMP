@@ -5,7 +5,7 @@ import androidx.compose.ui.input.key.KeyEvent
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 import ru.rznnike.demokmp.app.utils.windowViewModel
-import ru.rznnike.demokmp.app.viewmodel.global.hotkeys.HotKeysViewModel
+import ru.rznnike.demokmp.app.ui.viewmodel.global.hotkeys.HotKeysViewModel
 
 @Serializable
 abstract class DesktopNavigationScreen : NavigationScreen() {

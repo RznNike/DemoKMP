@@ -89,4 +89,7 @@
     <string name="path_to_folder_or_file">Путь до папки или файла</string>
     <string name="open">Открыть</string>
     <string name="ui_scale">Масштаб UI</string>
+    <string name="tootip_logger">Логгер (F12)</string>
+    <string name="tootip_hotkeys">Горячие клавиши (Ctrl+F12)</string>
+    <string name="scale">Масштаб</string>
 </resources>

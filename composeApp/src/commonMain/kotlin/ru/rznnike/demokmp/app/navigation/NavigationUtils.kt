@@ -25,7 +25,7 @@ val LocalNavController = staticCompositionLocalOf<NavController?> { null }
 val LocalNavigationStructure = staticCompositionLocalOf { mutableListOf<Int>() }
 
 @Composable
-fun createNavHost(flow: NavigationFlow) {
+fun CreateNavHost(flow: NavigationFlow) {
     val navController = rememberNavController()
     val navigationStructure = rememberSaveable { mutableListOf(flow.screens.size) }
     CompositionLocalProvider(

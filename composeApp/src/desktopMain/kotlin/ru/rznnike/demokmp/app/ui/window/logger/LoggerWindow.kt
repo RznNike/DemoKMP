@@ -12,7 +12,7 @@ import androidx.compose.ui.window.rememberWindowState
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
-import ru.rznnike.demokmp.app.navigation.createNavHost
+import ru.rznnike.demokmp.app.navigation.CreateNavHost
 import ru.rznnike.demokmp.app.ui.screen.logger.LoggerFlow
 import ru.rznnike.demokmp.app.ui.theme.AppTheme
 import ru.rznnike.demokmp.app.ui.window.*
@@ -22,7 +22,7 @@ import ru.rznnike.demokmp.app.utils.clearFocusOnTap
 import ru.rznnike.demokmp.app.utils.windowViewModel
 import ru.rznnike.demokmp.app.viewmodel.global.configuration.AppConfigurationViewModel
 import ru.rznnike.demokmp.app.viewmodel.global.configuration.WindowConfigurationViewModel
-import ru.rznnike.demokmp.app.viewmodel.global.hotkeys.HotKeysViewModel
+import ru.rznnike.demokmp.app.ui.viewmodel.global.hotkeys.HotKeysViewModel
 import ru.rznnike.demokmp.generated.resources.Res
 import ru.rznnike.demokmp.generated.resources.app_name
 import ru.rznnike.demokmp.generated.resources.icon_linux
@@ -56,6 +56,7 @@ fun LoggerWindow(
         placement = WindowPlacement.Floating
     )
     val hotKeysViewModel = windowViewModel<HotKeysViewModel>()
+    val hotKeysUiState by hotKeysViewModel.uiState.collectAsState()
 
     val loggerName = stringResource(Res.string.logger)
     val appName = stringResource(Res.string.app_name)
@@ -68,7 +69,7 @@ fun LoggerWindow(
         onCloseRequest = windowConfigurationUiState.closeWindowCallback,
         state = state,
         onPreviewKeyEvent = { keyEvent ->
-            hotKeysViewModel.sendEvent(keyEvent)
+            hotKeysUiState.screenEventListener(keyEvent)
             false
         }
     ) {
@@ -95,7 +96,7 @@ fun LoggerWindow(
                     BackgroundBox(
                         modifier = Modifier.clearFocusOnTap()
                     ) {
-                        createNavHost(LoggerFlow())
+                        CreateNavHost(LoggerFlow())
                     }
                 }
             }

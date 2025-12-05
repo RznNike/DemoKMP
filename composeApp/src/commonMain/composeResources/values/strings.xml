@@ -91,4 +91,7 @@
     <string name="path_to_folder_or_file">Path to folder or file</string>
     <string name="open">Open</string>
     <string name="ui_scale">UI scale</string>
+    <string name="tootip_logger">Logger (F12)</string>
+    <string name="tootip_hotkeys">Hotkeys (Ctrl+F12)</string>
+    <string name="scale">Scale</string>
 </resources>
