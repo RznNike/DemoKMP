@@ -150,7 +150,6 @@ class ComObjectExampleScreen : DesktopNavigationScreen() {
                             }
                         }
                     }
-                    Spacer(modifier = Modifier.height(16.dp))
                 }
                 VerticalScrollbar(
                     modifier = Modifier

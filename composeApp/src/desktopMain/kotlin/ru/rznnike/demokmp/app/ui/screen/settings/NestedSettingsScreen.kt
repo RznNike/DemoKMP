@@ -98,7 +98,6 @@ class NestedSettingsScreen : DesktopNavigationScreen() {
                             Spacer(modifier = Modifier.height(12.dp))
                         }
                     }
-                    Spacer(modifier = Modifier.height(16.dp))
                 }
                 VerticalScrollbar(
                     modifier = Modifier

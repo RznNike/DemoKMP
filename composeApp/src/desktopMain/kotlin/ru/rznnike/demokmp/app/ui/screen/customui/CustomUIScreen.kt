@@ -50,7 +50,7 @@ class CustomUIScreen : DesktopNavigationScreen() {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp)
+                .padding(top = 16.dp, start = 16.dp, end = 16.dp)
         ) {
             Toolbar(
                 modifier = Modifier.fillMaxWidth(),

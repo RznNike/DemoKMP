@@ -194,7 +194,6 @@ class SettingsScreen : DesktopNavigationScreen() {
                                 )
                             }
                         }
-                        Spacer(Modifier.height(16.dp))
                     }
                     VerticalScrollbar(
                         modifier = Modifier
