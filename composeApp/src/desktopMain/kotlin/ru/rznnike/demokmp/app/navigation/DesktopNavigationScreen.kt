@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.input.key.KeyEvent
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
+import ru.rznnike.demokmp.app.model.common.HotkeyDescription
 import ru.rznnike.demokmp.app.utils.windowViewModel
 import ru.rznnike.demokmp.app.ui.viewmodel.global.hotkeys.HotKeysViewModel
 
@@ -18,7 +19,13 @@ abstract class DesktopNavigationScreen : NavigationScreen() {
 
     @Composable
     final override fun Content() {
-        windowViewModel<HotKeysViewModel>().setScreenEventListener(keyEventListener)
+        windowViewModel<HotKeysViewModel>().apply {
+            setScreenEventListener(keyEventListener)
+            setScreenHotkeysDescription(getHotkeysDescription())
+        }
         super.Content()
     }
+
+    @Composable
+    open fun getHotkeysDescription(): List<HotkeyDescription> = emptyList()
 }

@@ -20,6 +20,7 @@ import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import ru.rznnike.demokmp.BuildKonfig
 import ru.rznnike.demokmp.app.dispatcher.notifier.Notifier
+import ru.rznnike.demokmp.app.model.common.HotkeyDescription
 import ru.rznnike.demokmp.app.navigation.DesktopNavigationScreen
 import ru.rznnike.demokmp.app.navigation.getNavigator
 import ru.rznnike.demokmp.app.ui.dialog.common.AlertDialogAction
@@ -34,7 +35,6 @@ import ru.rznnike.demokmp.app.ui.screen.navigation.NavigationExampleFlow
 import ru.rznnike.demokmp.app.ui.screen.pdfexample.PdfExampleFlow
 import ru.rznnike.demokmp.app.ui.screen.settings.SettingsFlow
 import ru.rznnike.demokmp.app.ui.screen.wsexample.WebSocketsExampleFlow
-import ru.rznnike.demokmp.app.ui.theme.bodyLargeItalic
 import ru.rznnike.demokmp.app.ui.view.SelectableButton
 import ru.rznnike.demokmp.app.ui.view.TextR
 import ru.rznnike.demokmp.app.ui.view.Toolbar
@@ -170,15 +170,6 @@ class HomeScreen : DesktopNavigationScreen() {
                     )
                 }
             }
-            Spacer(Modifier.height(8.dp))
-            TextR(
-                modifier = Modifier.align(Alignment.CenterHorizontally),
-                textRes = Res.string.hotkeys_tip,
-                textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.bodyLargeItalic,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-            Spacer(Modifier.height(8.dp))
         }
 
         if (showAboutDialog) {
@@ -214,4 +205,12 @@ class HomeScreen : DesktopNavigationScreen() {
             )
         }
     }
+
+    @Composable
+    override fun getHotkeysDescription(): List<HotkeyDescription> = listOf(
+        HotkeyDescription(
+            hotkey = "Ctrl+F",
+            description = stringResource(Res.string.hotkey_test_combination)
+        )
+    )
 }

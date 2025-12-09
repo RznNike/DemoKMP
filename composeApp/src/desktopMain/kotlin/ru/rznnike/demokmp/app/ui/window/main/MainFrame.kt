@@ -18,7 +18,9 @@ import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import ru.rznnike.demokmp.app.dispatcher.notifier.Notifier
 import ru.rznnike.demokmp.app.dispatcher.notifier.SystemMessage
+import ru.rznnike.demokmp.app.model.common.HotkeyDescription
 import ru.rznnike.demokmp.app.navigation.CreateNavHost
+import ru.rznnike.demokmp.app.ui.desktop.HotkeysDialog
 import ru.rznnike.demokmp.app.ui.dialog.common.AlertDialogAction
 import ru.rznnike.demokmp.app.ui.dialog.common.AlertDialogType
 import ru.rznnike.demokmp.app.ui.dialog.common.CommonAlertDialog
@@ -34,6 +36,9 @@ import ru.rznnike.demokmp.app.viewmodel.global.configuration.AppConfigurationVie
 import ru.rznnike.demokmp.domain.common.CoroutineScopeProvider
 import ru.rznnike.demokmp.generated.resources.Res
 import ru.rznnike.demokmp.generated.resources.close
+import ru.rznnike.demokmp.generated.resources.hotkey_close_screen
+import ru.rznnike.demokmp.generated.resources.hotkeys_description
+import ru.rznnike.demokmp.generated.resources.logger
 
 @Composable
 fun MainFrame() {
@@ -118,6 +123,24 @@ fun MainFrame() {
         }
     }
 
+    val commonHotkeysDescription = listOf(
+        HotkeyDescription(
+            hotkey = "Ctrl+W",
+            description = stringResource(Res.string.hotkey_close_screen)
+        ),
+        HotkeyDescription(
+            hotkey = "F12",
+            description = stringResource(Res.string.logger)
+        ),
+        HotkeyDescription(
+            hotkey = "Ctrl+F12",
+            description = stringResource(Res.string.hotkeys_description)
+        )
+    )
+    LaunchedEffect(commonHotkeysDescription) {
+        hotKeysViewModel.setCommonHotkeysDescription(commonHotkeysDescription)
+    }
+
     AppTheme {
         Scaffold(
             modifier = Modifier.clearFocusOnTap(),
@@ -155,6 +178,11 @@ fun MainFrame() {
                 }
             }
             NotifierDialog()
+            HotkeysDialog(
+                showDialog = showHotkeysDialog,
+                screenHotkeysDescription = hotKeysUiState.screenHotkeysDescription,
+                commonHotkeysDescription = hotKeysUiState.commonHotkeysDescription
+            )
         }
     }
 }

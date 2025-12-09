@@ -17,23 +17,17 @@ import io.github.vinceglb.filekit.dialogs.compose.rememberFileSaverLauncher
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
+import ru.rznnike.demokmp.app.model.common.HotkeyDescription
 import ru.rznnike.demokmp.app.navigation.DesktopNavigationScreen
 import ru.rznnike.demokmp.app.navigation.getNavigator
-import ru.rznnike.demokmp.app.ui.view.PdfPrintControls
-import ru.rznnike.demokmp.app.ui.view.PdfViewer
-import ru.rznnike.demokmp.app.ui.view.SelectableOutlinedIconButton
-import ru.rznnike.demokmp.app.ui.view.TextR
-import ru.rznnike.demokmp.app.ui.view.Tooltip
+import ru.rznnike.demokmp.app.ui.view.*
 import ru.rznnike.demokmp.app.ui.viewmodel.common.print.FilePrintViewModel
 import ru.rznnike.demokmp.app.ui.window.LocalWindow
 import ru.rznnike.demokmp.app.utils.printDialog
 import ru.rznnike.demokmp.app.viewmodel.pdfexample.PdfExampleViewModel
 import ru.rznnike.demokmp.data.utils.DataConstants
 import ru.rznnike.demokmp.domain.common.DispatcherProvider
-import ru.rznnike.demokmp.generated.resources.Res
-import ru.rznnike.demokmp.generated.resources.error_file_not_found
-import ru.rznnike.demokmp.generated.resources.ic_back
-import ru.rznnike.demokmp.generated.resources.pdf_example
+import ru.rznnike.demokmp.generated.resources.*
 
 @Serializable
 class PdfExampleScreen : DesktopNavigationScreen() {
@@ -159,4 +153,12 @@ class PdfExampleScreen : DesktopNavigationScreen() {
             }
         }
     }
+
+    @Composable
+    override fun getHotkeysDescription(): List<HotkeyDescription> = listOf(
+        HotkeyDescription(
+            hotkey = "Ctrl+P",
+            description = stringResource(Res.string.hotkey_file_print)
+        )
+    )
 }
