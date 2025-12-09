@@ -51,8 +51,13 @@ class PdfExampleScreen : DesktopNavigationScreen() {
                 parentWindow = window
             )
         ) { result ->
-            result?.file?.let {
-                viewModel.savePdfToFile(it)
+            uiState.pdf?.let { original ->
+                result?.file?.let { copy ->
+                    filePrintViewModel.saveFile(
+                        original = original,
+                        copy = copy
+                    )
+                }
             }
         }
 
