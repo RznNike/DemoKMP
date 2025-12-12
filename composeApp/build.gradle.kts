@@ -7,6 +7,7 @@ import org.gradle.kotlin.dsl.register
 import org.gradle.nativeplatform.platform.internal.DefaultNativePlatform
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import java.net.URLEncoder
 
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
@@ -371,7 +372,13 @@ tasks.register<Zip>("generateReleaseArchive") {
     destinationDirectory = file("${project.rootDir}/distributableArchive")
     from("${project.rootDir}/distributableOutput/${globalVersionCode}")
     doLast {
-        println("Generated archive folder: ${project.rootDir}/distributableArchive")
+        val rootDirPath = project.rootDir.invariantSeparatorsPath.removePrefix("/")
+        val encodedOutputPath = "file:///%s/distributableArchive".format(
+            URLEncoder.encode(rootDirPath, Charsets.UTF_8)
+        )
+            .replace("%2F", "/")
+            .replace("%3A", ":")
+        println("Generated archive folder: $encodedOutputPath")
     }
 }
 
