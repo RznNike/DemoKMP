@@ -10,7 +10,10 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.selection.LocalTextSelectionColors
-import androidx.compose.material3.*
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.LocalTextStyle
+import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.TextFieldColors
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
@@ -18,12 +21,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.takeOrElse
-import androidx.compose.ui.input.key.Key
-import androidx.compose.ui.input.key.isAltPressed
-import androidx.compose.ui.input.key.isCtrlPressed
-import androidx.compose.ui.input.key.isShiftPressed
-import androidx.compose.ui.input.key.key
-import androidx.compose.ui.input.key.onPreviewKeyEvent
+import androidx.compose.ui.input.key.*
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.TextStyle
@@ -31,6 +29,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import ru.rznnike.demokmp.app.ui.theme.LocalCustomColorScheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -58,7 +57,7 @@ fun SlimOutlinedTextField(
     minLines: Int = 1,
     interactionSource: MutableInteractionSource? = null,
     shape: Shape = OutlinedTextFieldDefaults.shape,
-    colors: TextFieldColors = OutlinedTextFieldDefaults.colors(),
+    colors: TextFieldColors = defaultColors(),
     contentPadding: PaddingValues = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
 ) {
     @Suppress("NAME_SHADOWING")
@@ -168,7 +167,7 @@ fun SlimOutlinedTextField(
     minLines: Int = 1,
     interactionSource: MutableInteractionSource? = null,
     shape: Shape = OutlinedTextFieldDefaults.shape,
-    colors: TextFieldColors = OutlinedTextFieldDefaults.colors(),
+    colors: TextFieldColors = defaultColors(),
     contentPadding: PaddingValues = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
     selectAllOnFocus: Boolean = false
 ) {
@@ -236,14 +235,27 @@ internal fun TextFieldColors.textColor(
     enabled: Boolean,
     isError: Boolean,
     focused: Boolean,
-): Color =
-    when {
-        !enabled -> disabledTextColor
-        isError -> errorTextColor
-        focused -> focusedTextColor
-        else -> unfocusedTextColor
-    }
+): Color = when {
+    !enabled -> disabledTextColor
+    isError -> errorTextColor
+    focused -> focusedTextColor
+    else -> unfocusedTextColor
+}
 
 @Stable
 internal fun TextFieldColors.cursorColor(isError: Boolean): Color =
     if (isError) errorCursorColor else cursorColor
+
+@Composable
+internal fun defaultColors(): TextFieldColors = OutlinedTextFieldDefaults.colors().copy(
+    unfocusedLabelColor = LocalCustomColorScheme.current.outlineComponentContent,
+    disabledTextColor = LocalCustomColorScheme.current.disabledText,
+    disabledLabelColor = LocalCustomColorScheme.current.disabledText,
+    disabledPrefixColor = LocalCustomColorScheme.current.disabledText,
+    disabledSuffixColor = LocalCustomColorScheme.current.disabledText,
+    disabledPlaceholderColor = LocalCustomColorScheme.current.disabledText,
+    disabledSupportingTextColor = LocalCustomColorScheme.current.disabledText,
+    disabledLeadingIconColor = LocalCustomColorScheme.current.disabledText,
+    disabledTrailingIconColor = LocalCustomColorScheme.current.disabledText,
+    disabledIndicatorColor = LocalCustomColorScheme.current.disabledText
+)

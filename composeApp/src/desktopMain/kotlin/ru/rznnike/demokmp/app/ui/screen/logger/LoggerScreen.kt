@@ -25,6 +25,7 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 import ru.rznnike.demokmp.BuildKonfig
 import ru.rznnike.demokmp.app.navigation.DesktopNavigationScreen
 import ru.rznnike.demokmp.app.navigation.getNavigator
@@ -209,7 +210,7 @@ class LoggerScreen : DesktopNavigationScreen() {
                                             viewModel.onTabSelected(it)
                                         }
                                         .padding(12.dp),
-                                    textRes = it.nameRes,
+                                    text = stringResource(it.nameRes),
                                     selected = it == uiState.selectedTab
                                 )
                             }

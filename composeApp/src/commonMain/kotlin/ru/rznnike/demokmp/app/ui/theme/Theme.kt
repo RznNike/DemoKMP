@@ -1,10 +1,15 @@
 package ru.rznnike.demokmp.app.ui.theme
 
+import androidx.compose.foundation.LocalScrollbarStyle
+import androidx.compose.foundation.ScrollbarStyle
+import androidx.compose.foundation.defaultScrollbarStyle
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.DrawableResource
 import org.koin.compose.koinInject
 import ru.rznnike.demokmp.app.viewmodel.global.configuration.AppConfigurationViewModel
@@ -51,6 +56,14 @@ private val lightScheme = lightColorScheme(
     surfaceContainerHighest = surfaceContainerHighestLight,
 )
 
+private val lightContrastScheme = lightScheme.copy(
+    background = backgroundLightContrast,
+    surfaceVariant = surfaceVariantLightContrast,
+    onSurfaceVariant = onSurfaceVariantLightContrast,
+    outline = outlineLightContrast,
+    outlineVariant = outlineVariantLightContrast
+)
+
 private val darkScheme = darkColorScheme(
     primary = primaryDark,
     onPrimary = onPrimaryDark,
@@ -89,8 +102,15 @@ private val darkScheme = darkColorScheme(
     surfaceContainerHighest = surfaceContainerHighestDark,
 )
 
+private val darkContrastScheme = darkScheme.copy(
+    onSurfaceVariant = onSurfaceVariantDarkContrast,
+    outline = outlineDarkContrast,
+    outlineVariant = outlineVariantDarkContrast
+)
+
 @Immutable
 data class CustomColorScheme(
+    val outlineComponentContent: Color = Color.Unspecified,
     val surfaceContainerA50: Color = Color.Unspecified,
     val textLink: Color = Color.Unspecified,
     val logDebug: Color = Color.Unspecified,
@@ -104,10 +124,13 @@ data class CustomColorScheme(
     val logNetworkError: Color = Color.Unspecified,
     val logNetworkCancelled: Color = Color.Unspecified,
     val searchSelection: Color = Color.Unspecified,
-    val disabledText: Color = Color.Unspecified
+    val disabledText: Color = Color.Unspecified,
+    val scrollbarAlpha: Float = 0.1f,
+    val scrollbarHoverAlpha: Float = 0.5f
 )
 
 val lightCustomScheme = CustomColorScheme(
+    outlineComponentContent = outlineComponentContentLight,
     surfaceContainerA50 = surfaceContainerA50Light,
     textLink = textLinkLight,
     logDebug = logDebugLight,
@@ -124,7 +147,15 @@ val lightCustomScheme = CustomColorScheme(
     disabledText = disabledTextLight
 )
 
+private val lightContrastCustomScheme = lightCustomScheme.copy(
+    outlineComponentContent = outlineComponentContentLightContrast,
+    disabledText = disabledTextLightContrast,
+    scrollbarAlpha = 0.3f,
+    scrollbarHoverAlpha = 0.8f
+)
+
 val darkCustomScheme = CustomColorScheme(
+    outlineComponentContent = outlineComponentContentDark,
     surfaceContainerA50 = surfaceContainerA50Dark,
     textLink = textLinkDark,
     logDebug = logDebugDark,
@@ -138,7 +169,12 @@ val darkCustomScheme = CustomColorScheme(
     logNetworkError = logNetworkErrorDark,
     logNetworkCancelled = logNetworkCancelledDark,
     searchSelection = searchSelectionDark,
-    disabledText = disabledTextDark
+    disabledText = disabledTextDark,
+    scrollbarAlpha = 0.2f
+)
+
+val darkContrastCustomScheme = darkCustomScheme.copy(
+    outlineComponentContent = outlineComponentContentDarkContrast
 )
 
 val LocalIsDarkTheme = staticCompositionLocalOf { false }
@@ -168,30 +204,53 @@ fun AppTheme(
     val appConfigurationViewModel: AppConfigurationViewModel = koinInject()
     val appConfigurationUiState by appConfigurationViewModel.uiState.collectAsState()
 
+    val selectedTheme = if (appConfigurationUiState.theme == Theme.AUTO) {
+        if (isSystemInDarkTheme()) Theme.DARK else Theme.LIGHT
+    } else appConfigurationUiState.theme
+    val isDarkTheme = (appConfigurationUiState.theme == Theme.DARK) || (appConfigurationUiState.theme == Theme.DARK_CONTRAST)
+
     val colorScheme: ColorScheme
     val customColorScheme: CustomColorScheme
     val customDrawables: CustomDrawables
 
-    val isDarkTheme = when (appConfigurationUiState.theme) {
-        Theme.AUTO -> isSystemInDarkTheme()
-        Theme.LIGHT -> false
-        Theme.DARK -> true
+    when (selectedTheme) {
+        Theme.LIGHT_CONTRAST -> {
+            colorScheme = lightContrastScheme
+            customColorScheme = lightContrastCustomScheme
+            customDrawables = lightCustomDrawables
+        }
+        Theme.DARK -> {
+            colorScheme = darkScheme
+            customColorScheme = darkCustomScheme
+            customDrawables = darkCustomDrawables
+        }
+        Theme.DARK_CONTRAST -> {
+            colorScheme = darkContrastScheme
+            customColorScheme = darkContrastCustomScheme
+            customDrawables = darkCustomDrawables
+        }
+        else -> {
+            colorScheme = lightScheme
+            customColorScheme = lightCustomScheme
+            customDrawables = lightCustomDrawables
+        }
     }
-    if (isDarkTheme) {
-        colorScheme = darkScheme
-        customColorScheme = darkCustomScheme
-        customDrawables = darkCustomDrawables
-    } else {
-        colorScheme = lightScheme
-        customColorScheme = lightCustomScheme
-        customDrawables = lightCustomDrawables
-    }
+
+    val scrollbarStyle = ScrollbarStyle(
+        minimalHeight = 16.dp,
+        thickness = 8.dp,
+        shape = RoundedCornerShape(4.dp),
+        hoverDurationMillis = 300,
+        unhoverColor = colorScheme.onBackground.copy(alpha = customColorScheme.scrollbarAlpha),
+        hoverColor = colorScheme.onBackground.copy(alpha = customColorScheme.scrollbarHoverAlpha)
+    )
 
     CompositionLocalProvider(
         LocalIsDarkTheme provides isDarkTheme,
         LocalCustomColorScheme provides customColorScheme,
         LocalCustomDrawables provides customDrawables,
-        LocalMinimumInteractiveComponentSize provides Dp.Unspecified
+        LocalMinimumInteractiveComponentSize provides Dp.Unspecified,
+        LocalScrollbarStyle provides scrollbarStyle
     ) {
         MaterialTheme(
             colorScheme = colorScheme,
@@ -214,7 +273,8 @@ fun PreviewAppTheme(
         LocalIsDarkTheme provides false,
         LocalCustomColorScheme provides customColorScheme,
         LocalCustomDrawables provides customDrawables,
-        LocalMinimumInteractiveComponentSize provides Dp.Unspecified
+        LocalMinimumInteractiveComponentSize provides Dp.Unspecified,
+        LocalScrollbarStyle provides defaultScrollbarStyle()
     ) {
         MaterialTheme(
             colorScheme = colorScheme,

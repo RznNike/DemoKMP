@@ -176,7 +176,7 @@ class SettingsScreen : DesktopNavigationScreen() {
                                 )
                                 DropdownSelector(
                                     modifier = Modifier
-                                        .width(150.dp),
+                                        .width(220.dp),
                                     label = stringResource(Res.string.theme),
                                     items = Theme.entries,
                                     selectedItem = appConfigurationUiState.theme,

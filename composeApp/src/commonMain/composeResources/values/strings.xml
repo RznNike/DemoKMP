@@ -18,7 +18,9 @@
     <string name="language">Language</string>
     <string name="theme">Theme</string>
     <string name="theme_light">Light</string>
+    <string name="theme_light_contrast">Light contrast</string>
     <string name="theme_dark">Dark</string>
+    <string name="theme_dark_contrast">Dark contrast</string>
     <string name="theme_auto">Auto</string>
     <string name="nested_settings">Nested settings</string>
     <string name="to_main_screen">To main screen</string>

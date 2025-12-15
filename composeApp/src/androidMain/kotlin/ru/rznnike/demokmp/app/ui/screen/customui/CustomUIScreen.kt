@@ -74,7 +74,7 @@ class CustomUIScreen : AndroidNavigationScreen() {
                                             viewModel.onTabChanged(it)
                                         }
                                         .padding(12.dp),
-                                    textRes = it.nameRes,
+                                    text = stringResource(it.nameRes),
                                     selected = it == uiState.selectedTab
                                 )
                             }

@@ -8,21 +8,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import org.jetbrains.compose.resources.StringResource
-import org.jetbrains.compose.resources.stringResource
 import ru.rznnike.demokmp.app.ui.theme.bodyLargeBold
 
 @Composable
 fun TabText(
     modifier: Modifier = Modifier,
-    textRes: StringResource,
+    text: String,
     selected: Boolean = false
 ) = Box(
     modifier = modifier.width(IntrinsicSize.Max)
 ) {
     Text(
         modifier = Modifier.padding(vertical = 4.dp),
-        text = stringResource(textRes),
+        text = text,
         style = MaterialTheme.typography.bodyLargeBold
     )
     if (selected) {

@@ -13,6 +13,7 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
+import ru.rznnike.demokmp.app.ui.theme.LocalCustomColorScheme
 
 @Composable
 fun SelectableOutlinedIconButton(
@@ -45,7 +46,7 @@ fun SelectableOutlinedIconButton(
         Icon(
             modifier = Modifier.size(24.dp),
             painter = painterResource(iconRes),
-            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+            tint = LocalCustomColorScheme.current.outlineComponentContent,
             contentDescription = null
         )
     }
