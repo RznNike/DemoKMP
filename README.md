@@ -15,15 +15,19 @@ This is a sample project with a set of solutions to typical problems, demonstrat
 * WebSocket API usage
 * Proguard configuration (with obfuscation)
 * Two-layer screen navigation (screen flows and screens)
+* Custom logger with modular structure
 * App-wide dialogs and snackbars
 * Images loading from network
 * Material 3 theme configuration
-* Dark/Light theme with auto and manual selection
+* Dark/light/contrast themes with auto and manual selection
+* UI scaling
 * Strings localization
 * Various custom UI elements
 * Dynamic BuildConfig with platform and build type information
 * Charts
-* Custom logger with modular structure
+* Statusbar
+* Tooltips
+* Dialog with hotkeys description for current screen
 
 #### PC only
 * App building to jar file and launch using script
