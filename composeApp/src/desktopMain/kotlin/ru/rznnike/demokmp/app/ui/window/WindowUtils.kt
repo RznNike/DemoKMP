@@ -23,7 +23,7 @@ fun BackgroundBox(
 ) = Box(
     modifier = modifier
 ) {
-    Column( // Background artefacts fix for Intel Arc GPU
+    Column( // Background artifacts fix for Intel Arc GPU
         modifier = Modifier.fillMaxSize()
     ) {
         @Composable

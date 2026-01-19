@@ -10,7 +10,7 @@ object DataConstants {
     val NETWORK_CACHE_PATH = "$APP_DATA_DIR/networkCache"
     val PREFERENCES_FOLDER_PATH = "$APP_DATA_DIR/preferences"
     val PREFERENCES_PATH = "$PREFERENCES_FOLDER_PATH/settings.properties"
-    val DB_NAME = "demokmp_main.db"
+    const val DB_NAME = "demokmp_main.db"
     val DB_PATH = "$APP_DATA_DIR/database/$DB_NAME"
 
     private const val LAUNCHER_CONFIGURATION_NAME = "launcher_configuration.ini"
@@ -28,5 +28,5 @@ object DataConstants {
 
     const val PDF_FILE_NAME_EXTENSION = "pdf"
     val TEST_PDF_PATH = "$ROOT_DIR/sample.pdf"
-    val EXAMPLE_PDF_SAVE_NAME = "saved_pdf_file.pdf"
+    const val EXAMPLE_PDF_SAVE_NAME = "saved_pdf_file.pdf"
 }

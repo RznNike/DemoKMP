@@ -36,7 +36,7 @@ class EventDispatcher(
     }
 
     fun removeEventListener(listener: EventListener) = eventListeners
-        .filter { it.value.size > 0 }
+        .filter { it.value.isNotEmpty() }
         .forEach { it.value.remove(listener) }
 
     fun sendEvent(appEvent: AppEvent) {

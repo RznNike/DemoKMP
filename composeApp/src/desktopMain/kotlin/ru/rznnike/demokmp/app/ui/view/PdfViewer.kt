@@ -58,7 +58,7 @@ fun PdfViewer(
     modifier = modifier
 ) {
     var pages by remember { mutableStateOf(listOf<ImageBitmap>()) }
-    var scale by remember { mutableStateOf(1f) }
+    var scale by remember { mutableFloatStateOf(1f) }
     val coroutineScope = rememberCoroutineScope()
     val scrollState = rememberLazyListState()
     val scrollStepPx = with(LocalDensity.current) {

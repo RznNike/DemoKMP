@@ -142,6 +142,7 @@ fun MainFrame() {
     }
 
     AppTheme {
+        @Suppress("UnusedMaterial3ScaffoldPaddingParameter")
         Scaffold(
             modifier = Modifier.clearFocusOnTap(),
             snackbarHost = {

@@ -171,7 +171,7 @@ fun <ItemType> DropdownSelector(
                                 .padding(1.dp)
                         ) {
                             val scrollState = rememberLazyListState()
-                            var listHeight by remember { mutableStateOf(0) }
+                            var listHeight by remember { mutableIntStateOf(0) }
                             val listHeightDp = with(LocalDensity.current) {
                                 listHeight.toDp()
                             }

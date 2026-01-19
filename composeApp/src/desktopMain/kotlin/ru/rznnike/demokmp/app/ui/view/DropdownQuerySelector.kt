@@ -220,7 +220,7 @@ fun <ItemType> DropdownQuerySelector(
 
                             Spacer(modifier = Modifier.height(16.dp))
                             Box {
-                                var listHeight by remember { mutableStateOf(0) }
+                                var listHeight by remember { mutableIntStateOf(0) }
                                 val listHeightDp = with(LocalDensity.current) {
                                     listHeight.toDp()
                                 }

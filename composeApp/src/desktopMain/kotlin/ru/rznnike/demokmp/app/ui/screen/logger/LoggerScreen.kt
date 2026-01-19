@@ -317,8 +317,11 @@ class LoggerScreen : DesktopNavigationScreen() {
                             )
                         }
 
-                        val scrolledFromBottom =
-                            currentScrollState.layoutInfo.visibleItemsInfo.lastOrNull()?.index != currentItems.lastIndex
+                        val scrolledFromBottom by remember(currentItems) {
+                            derivedStateOf {
+                                currentScrollState.layoutInfo.visibleItemsInfo.lastOrNull()?.index != currentItems.lastIndex
+                            }
+                        }
                         if (scrolledFromBottom) {
                             FilledButton(
                                 modifier = Modifier

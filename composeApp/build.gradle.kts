@@ -43,13 +43,13 @@ kotlin {
         val desktopMain by getting
 
         commonMain.dependencies {
-            implementation(compose.runtime)
-            implementation(compose.foundation)
-            implementation(compose.material3)
-            implementation(compose.ui)
-            implementation(compose.components.resources)
-            implementation(compose.components.uiToolingPreview)
-            implementation(libs.ui.backhandler)
+            implementation(libs.compose.runtime)
+            implementation(libs.compose.foundation)
+            implementation(libs.compose.material3)
+            implementation(libs.compose.components.resources)
+            implementation(libs.compose.ui)
+            implementation(libs.compose.ui.backhandler)
+            implementation(libs.compose.ui.tooling.preview)
 
             implementation(libs.viewmodel.compose)
 
@@ -87,7 +87,6 @@ kotlin {
         }
 
         androidMain.dependencies {
-            implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
             implementation(libs.androidx.preference)
 
@@ -260,6 +259,10 @@ compose {
             }
         }
     }
+}
+
+ktorfit {
+    compilerPluginVersion.set("2.3.3")
 }
 
 configureBuildKonfigFlavorFromAndroidTasks()
