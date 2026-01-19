@@ -1,6 +1,5 @@
 package ru.rznnike.demokmp.app.ui.view
 
-import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Icon
@@ -11,19 +10,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.painterResource
-import ru.rznnike.demokmp.app.ui.theme.PreviewAppTheme
+import ru.rznnike.demokmp.app.ui.theme.PreviewDesktopAppTheme
 import ru.rznnike.demokmp.app.utils.getFormattedAppVersion
 import ru.rznnike.demokmp.app.utils.onClick
 import ru.rznnike.demokmp.domain.model.common.UiScale
-import ru.rznnike.demokmp.generated.resources.Res
-import ru.rznnike.demokmp.generated.resources.ic_keyboard
-import ru.rznnike.demokmp.generated.resources.ic_logger
-import ru.rznnike.demokmp.generated.resources.ic_zoom
-import ru.rznnike.demokmp.generated.resources.scale
-import ru.rznnike.demokmp.generated.resources.tootip_hotkeys
-import ru.rznnike.demokmp.generated.resources.tootip_logger
+import ru.rznnike.demokmp.generated.resources.*
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -121,7 +115,7 @@ fun BottomStatusBar(
 @Preview
 @Composable
 private fun BottomStatusBarPreview() {
-    PreviewAppTheme {
+    PreviewDesktopAppTheme {
         BottomStatusBar(
             uiScale = UiScale.S100,
             onLoggerClick = { },

@@ -14,15 +14,18 @@ import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import ru.rznnike.demokmp.app.navigation.CreateNavHost
 import ru.rznnike.demokmp.app.ui.screen.logger.LoggerFlow
-import ru.rznnike.demokmp.app.ui.theme.AppTheme
-import ru.rznnike.demokmp.app.ui.window.*
+import ru.rznnike.demokmp.app.ui.theme.DesktopAppTheme
+import ru.rznnike.demokmp.app.ui.viewmodel.global.hotkeys.HotKeysViewModel
+import ru.rznnike.demokmp.app.ui.window.BackgroundBox
+import ru.rznnike.demokmp.app.ui.window.LocalWindow
+import ru.rznnike.demokmp.app.ui.window.SetMinimumSize
+import ru.rznnike.demokmp.app.ui.window.WindowFocusRequester
 import ru.rznnike.demokmp.app.utils.CustomUiScale
 import ru.rznnike.demokmp.app.utils.WithWindowViewModelStoreOwner
 import ru.rznnike.demokmp.app.utils.clearFocusOnTap
 import ru.rznnike.demokmp.app.utils.windowViewModel
 import ru.rznnike.demokmp.app.viewmodel.global.configuration.AppConfigurationViewModel
 import ru.rznnike.demokmp.app.viewmodel.global.configuration.WindowConfigurationViewModel
-import ru.rznnike.demokmp.app.ui.viewmodel.global.hotkeys.HotKeysViewModel
 import ru.rznnike.demokmp.generated.resources.Res
 import ru.rznnike.demokmp.generated.resources.app_name
 import ru.rznnike.demokmp.generated.resources.icon_linux
@@ -92,7 +95,7 @@ fun LoggerWindow(
             CustomUiScale(
                 appConfigurationUiState.uiScale
             ) {
-                AppTheme {
+                DesktopAppTheme {
                     BackgroundBox(
                         modifier = Modifier.clearFocusOnTap()
                     ) {

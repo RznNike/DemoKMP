@@ -4,13 +4,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
@@ -25,7 +19,7 @@ import ru.rznnike.demokmp.app.ui.dialog.common.AlertDialogAction
 import ru.rznnike.demokmp.app.ui.dialog.common.AlertDialogType
 import ru.rznnike.demokmp.app.ui.dialog.common.CommonAlertDialog
 import ru.rznnike.demokmp.app.ui.screen.splash.SplashFlow
-import ru.rznnike.demokmp.app.ui.theme.AppTheme
+import ru.rznnike.demokmp.app.ui.theme.DesktopAppTheme
 import ru.rznnike.demokmp.app.ui.view.BottomStatusBar
 import ru.rznnike.demokmp.app.ui.viewmodel.global.hotkeys.HotKeysViewModel
 import ru.rznnike.demokmp.app.ui.window.BackgroundBox
@@ -34,11 +28,7 @@ import ru.rznnike.demokmp.app.utils.onClick
 import ru.rznnike.demokmp.app.utils.windowViewModel
 import ru.rznnike.demokmp.app.viewmodel.global.configuration.AppConfigurationViewModel
 import ru.rznnike.demokmp.domain.common.CoroutineScopeProvider
-import ru.rznnike.demokmp.generated.resources.Res
-import ru.rznnike.demokmp.generated.resources.close
-import ru.rznnike.demokmp.generated.resources.hotkey_close_screen
-import ru.rznnike.demokmp.generated.resources.hotkeys_description
-import ru.rznnike.demokmp.generated.resources.logger
+import ru.rznnike.demokmp.generated.resources.*
 
 @Composable
 fun MainFrame() {
@@ -141,7 +131,7 @@ fun MainFrame() {
         hotKeysViewModel.setCommonHotkeysDescription(commonHotkeysDescription)
     }
 
-    AppTheme {
+    DesktopAppTheme {
         @Suppress("UnusedMaterial3ScaffoldPaddingParameter")
         Scaffold(
             modifier = Modifier.clearFocusOnTap(),

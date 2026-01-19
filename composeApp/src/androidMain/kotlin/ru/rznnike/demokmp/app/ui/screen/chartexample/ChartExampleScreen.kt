@@ -21,14 +21,9 @@ import com.patrykandpatrick.vico.multiplatform.cartesian.layer.rememberLine
 import com.patrykandpatrick.vico.multiplatform.cartesian.layer.rememberLineCartesianLayer
 import com.patrykandpatrick.vico.multiplatform.cartesian.rememberCartesianChart
 import com.patrykandpatrick.vico.multiplatform.cartesian.rememberVicoZoomState
-import com.patrykandpatrick.vico.multiplatform.common.Fill
-import com.patrykandpatrick.vico.multiplatform.common.Insets
-import com.patrykandpatrick.vico.multiplatform.common.LegendItem
-import com.patrykandpatrick.vico.multiplatform.common.ProvideVicoTheme
+import com.patrykandpatrick.vico.multiplatform.common.*
 import com.patrykandpatrick.vico.multiplatform.common.component.ShapeComponent
 import com.patrykandpatrick.vico.multiplatform.common.component.rememberTextComponent
-import com.patrykandpatrick.vico.multiplatform.common.rememberHorizontalLegend
-import com.patrykandpatrick.vico.multiplatform.common.shape.CorneredShape
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.stringResource
 import ru.rznnike.demokmp.app.navigation.AndroidNavigationScreen
@@ -97,6 +92,7 @@ class ChartExampleScreen : AndroidNavigationScreen() {
                     val areaColor = lineColor.copy(alpha = 0.4f)
                     val legendItemLabelComponent = rememberTextComponent(TextStyle(MaterialTheme.colorScheme.onBackground))
                     val legendLineLabel = stringResource(Res.string.test_data)
+                    val legendShape = MaterialTheme.shapes.extraSmall
                     ProvideVicoTheme(getCustomVicoTheme()) {
                         CartesianChartHost(
                             modifier = Modifier.fillMaxSize(),
@@ -117,7 +113,10 @@ class ChartExampleScreen : AndroidNavigationScreen() {
                                     items = {
                                         add(
                                             LegendItem(
-                                                icon = ShapeComponent(Fill(lineColor), CorneredShape.Pill),
+                                                icon = ShapeComponent(
+                                                    fill = Fill(lineColor),
+                                                    shape = legendShape
+                                                ),
                                                 labelComponent = legendItemLabelComponent,
                                                 label = legendLineLabel
                                             )

@@ -1,6 +1,5 @@
 package ru.rznnike.demokmp.app.ui.item
 
-import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -11,11 +10,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 import ru.rznnike.demokmp.app.ui.theme.LocalCustomColorScheme
-import ru.rznnike.demokmp.app.ui.theme.PreviewAppTheme
+import ru.rznnike.demokmp.app.ui.theme.PreviewDesktopAppTheme
 import ru.rznnike.demokmp.app.ui.theme.bodyMediumMono
 import ru.rznnike.demokmp.domain.log.LogType
 import ru.rznnike.demokmp.domain.utils.currentTimeMillis
@@ -65,7 +65,7 @@ fun LogMessageServiceItem(
 @Preview
 @Composable
 private fun LogMessageServiceItemPreview() {
-    PreviewAppTheme {
+    PreviewDesktopAppTheme {
         Column {
             LogMessageServiceItem(
                 type = LogType.SESSION_START,

@@ -1,15 +1,10 @@
 package ru.rznnike.demokmp.app.ui.theme
 
-import androidx.compose.foundation.LocalScrollbarStyle
-import androidx.compose.foundation.ScrollbarStyle
-import androidx.compose.foundation.defaultScrollbarStyle
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.DrawableResource
 import org.koin.compose.koinInject
 import ru.rznnike.demokmp.app.viewmodel.global.configuration.AppConfigurationViewModel
@@ -236,21 +231,11 @@ fun AppTheme(
         }
     }
 
-    val scrollbarStyle = ScrollbarStyle(
-        minimalHeight = 16.dp,
-        thickness = 8.dp,
-        shape = RoundedCornerShape(4.dp),
-        hoverDurationMillis = 300,
-        unhoverColor = colorScheme.onBackground.copy(alpha = customColorScheme.scrollbarAlpha),
-        hoverColor = colorScheme.onBackground.copy(alpha = customColorScheme.scrollbarHoverAlpha)
-    )
-
     CompositionLocalProvider(
         LocalIsDarkTheme provides isDarkTheme,
         LocalCustomColorScheme provides customColorScheme,
         LocalCustomDrawables provides customDrawables,
-        LocalMinimumInteractiveComponentSize provides Dp.Unspecified,
-        LocalScrollbarStyle provides scrollbarStyle
+        LocalMinimumInteractiveComponentSize provides Dp.Unspecified
     ) {
         MaterialTheme(
             colorScheme = colorScheme,
@@ -273,8 +258,7 @@ fun PreviewAppTheme(
         LocalIsDarkTheme provides false,
         LocalCustomColorScheme provides customColorScheme,
         LocalCustomDrawables provides customDrawables,
-        LocalMinimumInteractiveComponentSize provides Dp.Unspecified,
-        LocalScrollbarStyle provides defaultScrollbarStyle()
+        LocalMinimumInteractiveComponentSize provides Dp.Unspecified
     ) {
         MaterialTheme(
             colorScheme = colorScheme,

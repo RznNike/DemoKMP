@@ -1,6 +1,5 @@
 package ru.rznnike.demokmp.app.ui.item
 
-import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.selection.SelectionContainer
@@ -11,8 +10,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.focusProperties
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import ru.rznnike.demokmp.app.ui.theme.AppTheme
+import ru.rznnike.demokmp.app.ui.theme.PreviewDesktopAppTheme
 import ru.rznnike.demokmp.app.ui.theme.bodyMediumMono
 import ru.rznnike.demokmp.app.ui.theme.bodySmallMono
 import ru.rznnike.demokmp.app.ui.view.LinkifyText
@@ -87,7 +87,7 @@ fun LogMessageItem(
 @Preview
 @Composable
 private fun LogMessageItemPreview() {
-    AppTheme {
+    PreviewDesktopAppTheme {
         Column {
             LogMessageItem(
                 message = LogMessage(
