@@ -202,7 +202,7 @@ fun AppTheme(
     val selectedTheme = if (appConfigurationUiState.theme == Theme.AUTO) {
         if (isSystemInDarkTheme()) Theme.DARK else Theme.LIGHT
     } else appConfigurationUiState.theme
-    val isDarkTheme = (appConfigurationUiState.theme == Theme.DARK) || (appConfigurationUiState.theme == Theme.DARK_CONTRAST)
+    val isDarkTheme = (selectedTheme == Theme.DARK) || (selectedTheme == Theme.DARK_CONTRAST)
 
     val colorScheme: ColorScheme
     val customColorScheme: CustomColorScheme
