@@ -11,7 +11,15 @@ import androidx.compose.foundation.onClick as onClickDesktop
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-actual fun Modifier.onClick(action: () -> Unit): Modifier = onClickDesktop(onClick = action)
+actual fun Modifier.onClick(
+    onDoubleClick: (() -> Unit)?,
+    onLongClick: (() -> Unit)?,
+    onClick: () -> Unit
+): Modifier = onClickDesktop(
+    onDoubleClick = onDoubleClick,
+    onLongClick = onLongClick,
+    onClick = onClick
+)
 
 @Composable
 fun Modifier.clearFocusOnTap(): Modifier {

@@ -8,7 +8,11 @@ import androidx.compose.ui.unit.Density
 import ru.rznnike.demokmp.domain.model.common.UiScale
 
 @Composable
-expect fun Modifier.onClick(action: () -> Unit): Modifier
+expect fun Modifier.onClick(
+    onDoubleClick: (() -> Unit)? = null,
+    onLongClick: (() -> Unit)? = null,
+    onClick: () -> Unit
+): Modifier
 
 @Composable
 fun CustomUiScale(

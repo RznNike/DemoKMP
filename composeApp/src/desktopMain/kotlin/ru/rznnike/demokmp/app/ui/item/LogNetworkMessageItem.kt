@@ -33,7 +33,7 @@ fun LogNetworkMessageItem(
                 .fillMaxWidth()
                 .padding(vertical = 2.dp)
                 .background(message.state.backgroundColor)
-                .onClick(onClick)
+                .onClick { onClick() }
                 .padding(horizontal = 8.dp, vertical = 3.dp)
         ) {
             @Composable
