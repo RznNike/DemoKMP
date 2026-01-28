@@ -42,11 +42,10 @@ class SplashScreen : DesktopNavigationScreen() {
 
         val showMultiLaunchDialog = remember { mutableStateOf(false) }
 
-        val viewModel = viewModel {
-            SplashViewModel { command ->
-                when (command) {
-                    SplashViewModel.NavigationCommand.MAIN -> navigator.newRootFlow(HomeFlow())
-                }
+        val viewModel = viewModel { SplashViewModel() }
+        viewModel.setNavigationCallback { command ->
+            when (command) {
+                SplashViewModel.NavigationCommand.MAIN -> navigator.newRootFlow(HomeFlow())
             }
         }
         viewModel.setDialogCallbacks(

@@ -31,11 +31,10 @@ class SplashScreen : AndroidNavigationScreen() {
     override fun Layout() {
         val navigator = getNavigator()
 
-        val viewModel = viewModel {
-            SplashViewModel { command ->
-                when (command) {
-                    SplashViewModel.NavigationCommand.MAIN -> navigator.newRootFlow(HomeFlow())
-                }
+        val viewModel = viewModel { SplashViewModel() }
+        viewModel.setNavigationCallback { command ->
+            when (command) {
+                SplashViewModel.NavigationCommand.MAIN -> navigator.newRootFlow(HomeFlow())
             }
         }
 
