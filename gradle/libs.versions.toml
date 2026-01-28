@@ -4,12 +4,12 @@ compose = "1.10.0"
 coroutines = "1.10.2"
 koin = "4.1.1"
 ktorfit = "2.7.2"
-ktor = "3.3.3"
+ktor = "3.4.0"
 coil = "3.3.0"
 room = "2.8.4"
 filekit = "0.12.0"
-chucker = "4.2.0"
-vico = "2.4.1"
+chucker = "4.3.0"
+vico = "2.4.3"
 
 android-minSdk = "26"
 android-targetSdk = "36"
@@ -30,7 +30,7 @@ compose-ui-tooling-preview = { module = "org.jetbrains.compose.ui:ui-tooling-pre
 # https://mvnrepository.com/artifact/org.jetbrains.androidx.lifecycle/lifecycle-viewmodel-compose
 # Update the version according to the main Compose library dependencies
 #noinspection NewerVersionAvailable
-viewmodel-compose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose", version = "2.10.0-alpha06" }
+viewmodel-compose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose", version = "2.10.0-alpha08" }
 
 # Navigation
 # https://mvnrepository.com/artifact/org.jetbrains.androidx.navigation/navigation-compose
@@ -56,7 +56,7 @@ multiplatform-settings = { module = "com.russhwolf:multiplatform-settings", vers
 
 # Serialization
 # https://github.com/Kotlin/kotlinx.serialization
-kotlinx-serialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version = "1.10.0-RC" }
+kotlinx-serialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version = "1.10.0" }
 
 # Ktorfit - network
 # https://github.com/Foso/Ktorfit
@@ -96,7 +96,7 @@ vico-multiplatform-m3 = { group = "com.patrykandpatrick.vico", name = "multiplat
 
 # Logging (for Ktor)
 # https://mvnrepository.com/artifact/ch.qos.logback/logback-classic
-logback = { module = "ch.qos.logback:logback-classic", version = "1.5.24" }
+logback = { module = "ch.qos.logback:logback-classic", version = "1.5.26" }
 
 # PDF renderer
 # https://mvnrepository.com/artifact/org.apache.pdfbox/pdfbox
