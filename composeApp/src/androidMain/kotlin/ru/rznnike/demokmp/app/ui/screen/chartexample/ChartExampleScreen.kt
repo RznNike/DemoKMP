@@ -31,6 +31,7 @@ import ru.rznnike.demokmp.app.navigation.getNavigator
 import ru.rznnike.demokmp.app.ui.view.Toolbar
 import ru.rznnike.demokmp.app.ui.view.ToolbarButton
 import ru.rznnike.demokmp.app.utils.getCustomVicoTheme
+import ru.rznnike.demokmp.app.utils.statusBarsAndCutoutPadding
 import ru.rznnike.demokmp.app.viewmodel.chartexample.ChartExampleViewModel
 import ru.rznnike.demokmp.generated.resources.Res
 import ru.rznnike.demokmp.generated.resources.chart_example
@@ -48,9 +49,9 @@ class ChartExampleScreen : AndroidNavigationScreen() {
 
         Column(
             modifier = Modifier
-                .systemBarsPadding()
-                .imePadding()
                 .fillMaxSize()
+                .statusBarsAndCutoutPadding()
+                .navigationBarsPadding()
                 .padding(16.dp)
         ) {
             Toolbar(

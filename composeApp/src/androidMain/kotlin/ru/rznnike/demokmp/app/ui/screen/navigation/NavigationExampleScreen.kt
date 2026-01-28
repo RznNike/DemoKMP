@@ -19,6 +19,8 @@ import org.jetbrains.compose.resources.stringResource
 import ru.rznnike.demokmp.app.navigation.AndroidNavigationScreen
 import ru.rznnike.demokmp.app.navigation.getNavigator
 import ru.rznnike.demokmp.app.ui.view.*
+import ru.rznnike.demokmp.app.utils.navigationBarsSidesPadding
+import ru.rznnike.demokmp.app.utils.statusBarsAndCutoutPadding
 import ru.rznnike.demokmp.app.viewmodel.navigation.NavigationExampleViewModel
 import ru.rznnike.demokmp.generated.resources.*
 
@@ -37,14 +39,14 @@ class NavigationExampleScreen(
 
         Column(
             modifier = Modifier
-                .systemBarsPadding()
                 .fillMaxSize()
+                .padding(top = 16.dp, start = 16.dp, end = 16.dp)
+                .statusBarsAndCutoutPadding()
         ) {
-            Spacer(Modifier.height(16.dp))
             Toolbar(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
+                    .navigationBarsSidesPadding(),
                 title = stringResource(Res.string.navigation_example),
                 leftButton = ToolbarButton(Res.drawable.ic_back) {
                     navigator.closeScreen()
@@ -60,9 +62,10 @@ class NavigationExampleScreen(
                 val state = rememberScrollState()
                 Column(
                     modifier = Modifier
-                        .padding(horizontal = 16.dp)
                         .fillMaxSize()
                         .verticalScroll(state)
+                        .navigationBarsPadding()
+                        .padding(bottom = 16.dp)
                 ) {
                     Surface(
                         modifier = Modifier.fillMaxWidth(),

@@ -19,6 +19,7 @@ import ru.rznnike.demokmp.app.navigation.AndroidNavigationScreen
 import ru.rznnike.demokmp.app.navigation.getNavigator
 import ru.rznnike.demokmp.app.ui.item.DBExampleDataItem
 import ru.rznnike.demokmp.app.ui.view.*
+import ru.rznnike.demokmp.app.utils.statusBarsAndCutoutPadding
 import ru.rznnike.demokmp.app.viewmodel.dbexample.DBExampleViewModel
 import ru.rznnike.demokmp.generated.resources.*
 
@@ -35,10 +36,11 @@ class DBExampleScreen : AndroidNavigationScreen() {
 
         Column(
             modifier = Modifier
-                .systemBarsPadding()
-                .imePadding()
                 .fillMaxSize()
                 .padding(16.dp)
+                .statusBarsAndCutoutPadding()
+                .navigationBarsPadding()
+                .imePadding()
         ) {
             Box(
                 contentAlignment = Alignment.TopEnd

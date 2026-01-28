@@ -33,6 +33,7 @@ import ru.rznnike.demokmp.app.ui.view.TextR
 import ru.rznnike.demokmp.app.ui.view.Toolbar
 import ru.rznnike.demokmp.app.utils.getFormattedAppVersion
 import ru.rznnike.demokmp.app.utils.platformName
+import ru.rznnike.demokmp.app.utils.statusBarsAndCutoutPadding
 import ru.rznnike.demokmp.app.viewmodel.home.HomeViewModel
 import ru.rznnike.demokmp.generated.resources.*
 
@@ -52,9 +53,11 @@ class HomeScreen : AndroidNavigationScreen() {
 
         Column(
             modifier = Modifier
-                .systemBarsPadding()
-                .padding(horizontal = 16.dp)
                 .fillMaxSize()
+                .padding(horizontal = 16.dp)
+                .statusBarsAndCutoutPadding()
+                .navigationBarsPadding()
+                .imePadding()
         ) {
             Spacer(Modifier.height(16.dp))
             Toolbar(

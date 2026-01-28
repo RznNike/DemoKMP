@@ -27,6 +27,7 @@ import ru.rznnike.demokmp.app.navigation.AndroidNavigationScreen
 import ru.rznnike.demokmp.app.navigation.getNavigator
 import ru.rznnike.demokmp.app.ui.item.WebSocketMessageItem
 import ru.rznnike.demokmp.app.ui.view.*
+import ru.rznnike.demokmp.app.utils.statusBarsAndCutoutPadding
 import ru.rznnike.demokmp.app.viewmodel.wsexample.WebSocketsExampleViewModel
 import ru.rznnike.demokmp.domain.model.websocket.WebSocketConnectionState
 import ru.rznnike.demokmp.generated.resources.*
@@ -42,10 +43,11 @@ class WebSocketsExampleScreen : AndroidNavigationScreen() {
 
         Column(
             modifier = Modifier
-                .systemBarsPadding()
-                .imePadding()
                 .fillMaxSize()
                 .padding(16.dp)
+                .statusBarsAndCutoutPadding()
+                .navigationBarsPadding()
+                .imePadding()
         ) {
             Toolbar(
                 modifier = Modifier.fillMaxWidth(),

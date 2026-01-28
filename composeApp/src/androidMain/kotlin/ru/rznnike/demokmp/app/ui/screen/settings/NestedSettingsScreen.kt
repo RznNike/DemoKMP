@@ -14,6 +14,8 @@ import org.jetbrains.compose.resources.stringResource
 import ru.rznnike.demokmp.app.navigation.AndroidNavigationScreen
 import ru.rznnike.demokmp.app.navigation.getNavigator
 import ru.rznnike.demokmp.app.ui.view.*
+import ru.rznnike.demokmp.app.utils.navigationBarsSidesPadding
+import ru.rznnike.demokmp.app.utils.statusBarsAndCutoutPadding
 import ru.rznnike.demokmp.app.utils.windowViewModel
 import ru.rznnike.demokmp.app.viewmodel.global.profile.ProfileViewModel
 import ru.rznnike.demokmp.generated.resources.*
@@ -28,15 +30,14 @@ class NestedSettingsScreen : AndroidNavigationScreen() {
 
         Column(
             modifier = Modifier
-                .systemBarsPadding()
-                .imePadding()
                 .fillMaxSize()
+                .padding(top = 16.dp, start = 16.dp, end = 16.dp)
+                .statusBarsAndCutoutPadding()
         ) {
-            Spacer(Modifier.height(16.dp))
             Toolbar(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
+                    .navigationBarsSidesPadding(),
                 title = stringResource(Res.string.nested_settings),
                 leftButton = ToolbarButton(Res.drawable.ic_back) {
                     navigator.closeScreen()
@@ -52,9 +53,11 @@ class NestedSettingsScreen : AndroidNavigationScreen() {
                 val state = rememberScrollState()
                 Column(
                     modifier = Modifier
-                        .padding(horizontal = 16.dp)
                         .fillMaxSize()
                         .verticalScroll(state)
+                        .navigationBarsPadding()
+                        .imePadding()
+                        .padding(bottom = 16.dp)
                 ) {
                     Surface(
                         modifier = Modifier.fillMaxWidth(),
@@ -89,7 +92,6 @@ class NestedSettingsScreen : AndroidNavigationScreen() {
                             Spacer(modifier = Modifier.height(16.dp))
                         }
                     }
-                    Spacer(modifier = Modifier.height(16.dp))
                 }
             }
         }

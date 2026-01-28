@@ -19,7 +19,9 @@ import ru.rznnike.demokmp.app.navigation.getNavigator
 import ru.rznnike.demokmp.app.ui.view.*
 import ru.rznnike.demokmp.app.utils.getSelectedLanguage
 import ru.rznnike.demokmp.app.utils.nameRes
+import ru.rznnike.demokmp.app.utils.navigationBarsSidesPadding
 import ru.rznnike.demokmp.app.utils.setSelectedLanguage
+import ru.rznnike.demokmp.app.utils.statusBarsAndCutoutPadding
 import ru.rznnike.demokmp.app.utils.windowViewModel
 import ru.rznnike.demokmp.app.viewmodel.global.configuration.AppConfigurationViewModel
 import ru.rznnike.demokmp.app.viewmodel.global.profile.ProfileViewModel
@@ -43,14 +45,14 @@ class SettingsScreen : AndroidNavigationScreen() {
 
         Column(
             modifier = Modifier
-                .systemBarsPadding()
                 .fillMaxSize()
+                .padding(top = 16.dp, start = 16.dp, end = 16.dp)
+                .statusBarsAndCutoutPadding()
         ) {
-            Spacer(Modifier.height(16.dp))
             Toolbar(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
+                    .navigationBarsSidesPadding(),
                 title = stringResource(Res.string.settings),
                 leftButton = ToolbarButton(Res.drawable.ic_back) {
                     navigator.closeScreen()
@@ -66,9 +68,10 @@ class SettingsScreen : AndroidNavigationScreen() {
                 val state = rememberScrollState()
                 Column(
                     modifier = Modifier
-                        .padding(horizontal = 16.dp)
                         .fillMaxSize()
                         .verticalScroll(state)
+                        .navigationBarsPadding()
+                        .padding(bottom = 16.dp)
                 ) {
                     Surface(
                         modifier = Modifier.fillMaxWidth(),
@@ -236,7 +239,6 @@ class SettingsScreen : AndroidNavigationScreen() {
                             )
                         }
                     }
-                    Spacer(Modifier.height(16.dp))
                 }
             }
         }

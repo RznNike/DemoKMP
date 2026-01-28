@@ -16,7 +16,9 @@ import org.jetbrains.compose.resources.stringResource
 import ru.rznnike.demokmp.app.navigation.AndroidNavigationScreen
 import ru.rznnike.demokmp.app.navigation.getNavigator
 import ru.rznnike.demokmp.app.ui.view.*
+import ru.rznnike.demokmp.app.utils.navigationBarsSidesPadding
 import ru.rznnike.demokmp.app.utils.onClick
+import ru.rznnike.demokmp.app.utils.statusBarsAndCutoutPadding
 import ru.rznnike.demokmp.app.viewmodel.customui.CustomUIViewModel
 import ru.rznnike.demokmp.generated.resources.*
 
@@ -32,13 +34,14 @@ class CustomUIScreen : AndroidNavigationScreen() {
 
         Column(
             modifier = Modifier
-                .systemBarsPadding()
-                .imePadding()
                 .fillMaxSize()
-                .padding(16.dp)
+                .padding(top = 16.dp, start = 16.dp, end = 16.dp)
+                .statusBarsAndCutoutPadding()
         ) {
             Toolbar(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .navigationBarsSidesPadding(),
                 title = stringResource(Res.string.custom_ui_elements),
                 leftButton = ToolbarButton(Res.drawable.ic_back) {
                     navigator.closeScreen()
@@ -56,6 +59,9 @@ class CustomUIScreen : AndroidNavigationScreen() {
                     modifier = Modifier
                         .fillMaxSize()
                         .verticalScroll(state)
+                        .navigationBarsPadding()
+                        .imePadding()
+                        .padding(bottom = 16.dp)
                 ) {
                     Surface(
                         modifier = Modifier.fillMaxWidth(),

@@ -24,6 +24,7 @@ import ru.rznnike.demokmp.app.navigation.AndroidNavigationScreen
 import ru.rznnike.demokmp.app.navigation.getNavigator
 import ru.rznnike.demokmp.app.ui.view.Toolbar
 import ru.rznnike.demokmp.app.ui.view.ToolbarButton
+import ru.rznnike.demokmp.app.utils.statusBarsAndCutoutPadding
 import ru.rznnike.demokmp.app.viewmodel.httpexample.HTTPExampleViewModel
 import ru.rznnike.demokmp.generated.resources.Res
 import ru.rznnike.demokmp.generated.resources.http_example
@@ -41,9 +42,10 @@ class HTTPExampleScreen : AndroidNavigationScreen() {
 
         Column(
             modifier = Modifier
-                .systemBarsPadding()
                 .fillMaxSize()
                 .padding(16.dp)
+                .statusBarsAndCutoutPadding()
+                .navigationBarsPadding()
         ) {
             Toolbar(
                 modifier = Modifier.fillMaxWidth(),

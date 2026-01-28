@@ -6,6 +6,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.*
@@ -20,6 +21,7 @@ import ru.rznnike.demokmp.app.navigation.AndroidNavigationScreen
 import ru.rznnike.demokmp.app.navigation.getNavigator
 import ru.rznnike.demokmp.app.ui.screen.home.HomeFlow
 import ru.rznnike.demokmp.app.ui.theme.LocalCustomDrawables
+import ru.rznnike.demokmp.app.utils.statusBarsAndCutoutPadding
 import ru.rznnike.demokmp.app.viewmodel.splash.SplashViewModel
 
 private const val ANIMATION_DURATION_MS = 1000
@@ -50,8 +52,10 @@ class SplashScreen : AndroidNavigationScreen() {
         // Main layout
         Box(
             modifier = Modifier
+                .fillMaxSize()
                 .padding(20.dp)
-                .fillMaxSize(),
+                .statusBarsAndCutoutPadding()
+                .navigationBarsPadding(),
             contentAlignment = Alignment.Center
         ) {
             Image(
