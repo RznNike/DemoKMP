@@ -4,7 +4,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.VerticalScrollbar
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollbarAdapter
 import androidx.compose.material3.MaterialTheme
@@ -13,6 +13,8 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.input.key.*
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
@@ -24,6 +26,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.min
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
+import kotlinx.coroutines.launch
+import ru.rznnike.demokmp.app.utils.smartScrollToItem
 
 private val MAX_HEIGHT_DP = 500.dp
 
@@ -74,6 +78,10 @@ fun <ItemType> PopupList(
                         .padding(1.dp)
                 ) {
                     val scrollState = rememberLazyListState()
+                    val coroutineScope = rememberCoroutineScope()
+                    val firstItemFocusRequester = remember { FocusRequester() }
+                    val lastItemFocusRequester = remember { FocusRequester() }
+
                     var listHeight by remember { mutableIntStateOf(0) }
                     val listHeightDp = with(LocalDensity.current) {
                         listHeight.toDp()
@@ -87,21 +95,44 @@ fun <ItemType> PopupList(
                             },
                         state = scrollState
                     ) {
-                        items(
+                        itemsIndexed(
                             items = items,
-                            key = { item -> item.hashCode() },
-                        ) { item ->
+                            key = { _, item -> item.hashCode() },
+                        ) { index, item ->
                             DropdownSelectorItem(
                                 modifier = Modifier
+                                    .run {
+                                        when (index) {
+                                            0 -> focusRequester(firstItemFocusRequester)
+                                            items.lastIndex -> focusRequester(lastItemFocusRequester)
+                                            else -> this
+                                        }
+                                    }
                                     .onPreviewKeyEvent { keyEvent ->
                                         if (keyEvent.type == KeyEventType.KeyDown) {
-                                            when (keyEvent.key) {
-                                                Key.DirectionUp -> {
-                                                    focusManager.moveFocus(FocusDirection.Previous)
+                                            when {
+                                                (keyEvent.isShiftPressed && (keyEvent.key == Key.Tab)) || (keyEvent.key == Key.DirectionUp) -> {
+                                                    coroutineScope.launch {
+                                                        if (index > 0) {
+                                                            scrollState.smartScrollToItem(index - 1)
+                                                            focusManager.moveFocus(FocusDirection.Previous)
+                                                        } else {
+                                                            scrollState.smartScrollToItem(items.lastIndex)
+                                                            lastItemFocusRequester.requestFocus()
+                                                        }
+                                                    }
                                                     true
                                                 }
-                                                Key.DirectionDown -> {
-                                                    focusManager.moveFocus(FocusDirection.Next)
+                                                (keyEvent.key == Key.Tab) || (keyEvent.key == Key.DirectionDown) -> {
+                                                    coroutineScope.launch {
+                                                        if (index < items.lastIndex) {
+                                                            scrollState.smartScrollToItem(index + 1)
+                                                            focusManager.moveFocus(FocusDirection.Next)
+                                                        } else {
+                                                            scrollState.smartScrollToItem(0)
+                                                            firstItemFocusRequester.requestFocus()
+                                                        }
+                                                    }
                                                     true
                                                 }
                                                 else -> false
@@ -123,6 +154,10 @@ fun <ItemType> PopupList(
                         adapter = rememberScrollbarAdapter(scrollState)
                     )
                 }
+            }
+
+            LaunchedEffect(Unit) {
+                focusManager.moveFocus(FocusDirection.Next)
             }
         }
     }

@@ -5,7 +5,7 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -13,7 +13,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.focus.FocusRequester
@@ -32,6 +31,7 @@ import kotlinx.coroutines.launch
 import ru.rznnike.demokmp.app.ui.theme.bodyMediumBold
 import ru.rznnike.demokmp.app.utils.onClick
 import ru.rznnike.demokmp.app.utils.onEnterKey
+import ru.rznnike.demokmp.app.utils.smartScrollToItem
 import ru.rznnike.demokmp.domain.utils.smartFilter
 import ru.rznnike.demokmp.generated.resources.Res
 import ru.rznnike.demokmp.generated.resources.nothing_found
@@ -39,7 +39,6 @@ import ru.rznnike.demokmp.generated.resources.search
 
 private val MAX_HEIGHT_DP = 500.dp
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun <ItemType> DropdownQuerySelector(
     modifier: Modifier = Modifier,
@@ -188,14 +187,14 @@ fun <ItemType> DropdownQuerySelector(
                                             when {
                                                 (keyEvent.isShiftPressed && (keyEvent.key == Key.Tab)) || (keyEvent.key == Key.DirectionUp) -> {
                                                     coroutineScope.launch {
-                                                        scrollState.scrollToItem(filteredItems.lastIndex.coerceAtLeast(0))
+                                                        scrollState.smartScrollToItem(filteredItems.lastIndex)
                                                         focusManager.moveFocus(FocusDirection.Previous)
                                                     }
                                                     true
                                                 }
                                                 (keyEvent.key == Key.Tab) || (keyEvent.key == Key.DirectionDown) -> {
                                                     coroutineScope.launch {
-                                                        scrollState.scrollToItem(0)
+                                                        scrollState.smartScrollToItem(0)
                                                         focusManager.moveFocus(FocusDirection.Next)
                                                     }
                                                     true
@@ -218,7 +217,7 @@ fun <ItemType> DropdownQuerySelector(
                                 }
                             )
 
-                            Spacer(modifier = Modifier.height(16.dp))
+                            Spacer(Modifier.height(16.dp))
                             Box {
                                 var listHeight by remember { mutableIntStateOf(0) }
                                 val listHeightDp = with(LocalDensity.current) {
@@ -234,26 +233,32 @@ fun <ItemType> DropdownQuerySelector(
                                     state = scrollState,
                                     contentPadding = PaddingValues(bottom = 16.dp)
                                 ) {
-                                    items(
+                                    itemsIndexed(
                                         items = filteredItems,
-                                        key = { item -> item.hashCode() },
-                                    ) { item ->
+                                        key = { _, item -> item.hashCode() },
+                                    ) { index, item ->
                                         DropdownSelectorItem(
                                             modifier = Modifier
                                                 .padding(horizontal = 16.dp)
                                                 .onPreviewKeyEvent { keyEvent ->
                                                     if (keyEvent.type == KeyEventType.KeyDown) {
                                                         when {
-                                                            keyEvent.isCtrlPressed && (keyEvent.key == Key.F) -> {
+                                                            (keyEvent.key == Key.F6) || (keyEvent.isCtrlPressed && (keyEvent.key == Key.F)) -> {
                                                                 searchFieldFocusRequester.requestFocus()
                                                                 true
                                                             }
-                                                            keyEvent.key == Key.DirectionUp -> {
-                                                                focusManager.moveFocus(FocusDirection.Previous)
+                                                            (keyEvent.isShiftPressed && (keyEvent.key == Key.Tab)) || (keyEvent.key == Key.DirectionUp) -> {
+                                                                coroutineScope.launch {
+                                                                    scrollState.smartScrollToItem(index - 1)
+                                                                    focusManager.moveFocus(FocusDirection.Previous)
+                                                                }
                                                                 true
                                                             }
-                                                            keyEvent.key == Key.DirectionDown -> {
-                                                                focusManager.moveFocus(FocusDirection.Next)
+                                                            (keyEvent.key == Key.Tab) || (keyEvent.key == Key.DirectionDown) -> {
+                                                                coroutineScope.launch {
+                                                                    scrollState.smartScrollToItem(index + 1)
+                                                                    focusManager.moveFocus(FocusDirection.Next)
+                                                                }
                                                                 true
                                                             }
                                                             else -> false
