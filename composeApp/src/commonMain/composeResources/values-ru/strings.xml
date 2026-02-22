@@ -100,4 +100,7 @@
     <string name="hotkey_close_screen">Закрыть экран (назад)</string>
     <string name="hotkey_test_combination">Тестовая комбинация клавиш</string>
     <string name="hotkey_file_print">Печать файла</string>
+    <string name="shutdown">Завершение работы</string>
+    <string name="please_wait">Пожалуйста, подождите...</string>
+    <string name="force_close">Закрыть принудительно</string>
 </resources>

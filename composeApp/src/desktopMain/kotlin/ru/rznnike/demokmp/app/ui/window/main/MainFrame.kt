@@ -20,6 +20,7 @@ import ru.rznnike.demokmp.app.ui.dialog.common.AlertDialogType
 import ru.rznnike.demokmp.app.ui.dialog.common.CommonAlertDialog
 import ru.rznnike.demokmp.app.ui.screen.splash.SplashFlow
 import ru.rznnike.demokmp.app.ui.theme.DesktopAppTheme
+import ru.rznnike.demokmp.app.ui.view.AppClosingPlaceholder
 import ru.rznnike.demokmp.app.ui.view.BottomStatusBar
 import ru.rznnike.demokmp.app.ui.viewmodel.global.hotkeys.HotKeysViewModel
 import ru.rznnike.demokmp.app.ui.window.BackgroundBox
@@ -168,12 +169,19 @@ fun MainFrame() {
                     )
                 }
             }
+
             NotifierDialog()
             HotkeysDialog(
                 showDialog = showHotkeysDialog,
                 screenHotkeysDescription = hotKeysUiState.screenHotkeysDescription,
                 commonHotkeysDescription = hotKeysUiState.commonHotkeysDescription
             )
+
+            if (appConfigurationUiState.isAppClosing) {
+                AppClosingPlaceholder(
+                    forceCloseCallback = appConfigurationViewModel::forceCloseApplication
+                )
+            }
         }
     }
 }

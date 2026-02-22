@@ -83,6 +83,7 @@ fun ApplicationScope.MainWindow(args: Array<String>) = WithWindowViewModelStoreO
         state = state,
         onPreviewKeyEvent = { keyEvent ->
             when {
+                appConfigurationUiState.isAppClosing -> true
                 (keyEvent.type == KeyEventType.KeyDown) && (keyEvent.isCtrlPressed) && (keyEvent.key == Key.F12) -> {
                     appConfigurationViewModel.openHotkeysDialog()
                     true

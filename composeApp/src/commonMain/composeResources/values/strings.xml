@@ -102,4 +102,7 @@
     <string name="hotkey_close_screen">Close screen (back)</string>
     <string name="hotkey_test_combination">Test hotkeys combination</string>
     <string name="hotkey_file_print">File print</string>
+    <string name="shutdown">Shutdown</string>
+    <string name="please_wait">Please wait...</string>
+    <string name="force_close">Force close</string>
 </resources>
