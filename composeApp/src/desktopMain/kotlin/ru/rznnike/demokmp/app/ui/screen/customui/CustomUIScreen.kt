@@ -29,7 +29,6 @@ import ru.rznnike.demokmp.generated.resources.*
 
 @Serializable
 class CustomUIScreen : DesktopNavigationScreen() {
-    @OptIn(ExperimentalLayoutApi::class)
     @Composable
     override fun Layout() {
         val navigator = getNavigator()

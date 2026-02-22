@@ -33,7 +33,6 @@ import java.time.LocalDate
 private val INPUT_FILTER_REGEX = Regex("\\d*")
 private const val MAX_LENGTH = 8
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DateTextField(
     modifier: Modifier = Modifier,

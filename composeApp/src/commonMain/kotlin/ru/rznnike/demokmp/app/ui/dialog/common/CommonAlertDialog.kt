@@ -15,7 +15,6 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import ru.rznnike.demokmp.app.ui.view.SelectableButton
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun CommonAlertDialog(
     type: AlertDialogType,

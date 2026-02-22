@@ -1,6 +1,5 @@
 package ru.rznnike.demokmp.app.ui.view
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import org.jetbrains.compose.resources.StringResource
@@ -14,7 +13,6 @@ expect fun Tooltip(
     content: @Composable (() -> Unit)
 )
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun Tooltip(
     tooltipRes: StringResource,

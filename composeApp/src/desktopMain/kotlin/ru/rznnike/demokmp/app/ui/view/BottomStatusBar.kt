@@ -1,6 +1,5 @@
 package ru.rznnike.demokmp.app.ui.view
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -19,7 +18,6 @@ import ru.rznnike.demokmp.app.utils.onClick
 import ru.rznnike.demokmp.domain.model.common.UiScale
 import ru.rznnike.demokmp.generated.resources.*
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun BottomStatusBar(
     isVisible: Boolean = true,
@@ -37,7 +35,7 @@ fun BottomStatusBar(
     if (isVisible) {
         Spacer(Modifier.weight(1f))
         Tooltip(
-            tooltipRes = Res.string.tootip_logger,
+            tooltipRes = Res.string.tooltip_logger,
             alignment = TooltipAlignment.TOP
         ) {
             Icon(
@@ -51,7 +49,7 @@ fun BottomStatusBar(
         }
         Spacer(Modifier.width(12.dp))
         Tooltip(
-            tooltipRes = Res.string.tootip_hotkeys,
+            tooltipRes = Res.string.tooltip_hotkeys,
             alignment = TooltipAlignment.TOP
         ) {
             Icon(

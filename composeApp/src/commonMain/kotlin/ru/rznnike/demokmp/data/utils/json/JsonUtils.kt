@@ -1,6 +1,5 @@
 package ru.rznnike.demokmp.data.utils.json
 
-import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 
 val defaultJson = Json {
@@ -9,7 +8,6 @@ val defaultJson = Json {
     ignoreUnknownKeys = true
 }
 
-@OptIn(ExperimentalSerializationApi::class)
 val formatterJson = Json {
     isLenient = true
     prettyPrint = true
