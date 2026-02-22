@@ -1,6 +1,6 @@
 [versions]
-kotlin = "2.3.0"
-compose = "1.10.0"
+kotlin = "2.3.10"
+compose = "1.10.1"
 coroutines = "1.10.2"
 koin = "4.1.1"
 ktorfit = "2.7.2"
@@ -9,7 +9,7 @@ coil = "3.3.0"
 room = "2.8.4"
 filekit = "0.12.0"
 chucker = "4.3.0"
-vico = "2.4.3"
+vico = "3.0.0"
 
 android-minSdk = "26"
 android-targetSdk = "36"
@@ -36,7 +36,7 @@ viewmodel-compose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewm
 # https://mvnrepository.com/artifact/org.jetbrains.androidx.navigation/navigation-compose
 # Update the version according to the main Compose library dependencies
 #noinspection NewerVersionAvailable
-navigation = { module = "org.jetbrains.androidx.navigation:navigation-compose", version = "2.9.1" }
+navigation = { module = "org.jetbrains.androidx.navigation:navigation-compose", version = "2.9.2" }
 
 # Coroutines
 # https://github.com/Kotlin/kotlinx.coroutines
@@ -88,15 +88,15 @@ sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version = "2.6.2" 
 
 # Charts
 # https://github.com/patrykandpatrick/vico
-vico-multiplatform = { group = "com.patrykandpatrick.vico", name = "multiplatform", version.ref = "vico" }
-vico-multiplatform-m3 = { group = "com.patrykandpatrick.vico", name = "multiplatform-m3", version.ref = "vico" }
+vico-compose = { group = "com.patrykandpatrick.vico", name = "compose", version.ref = "vico" }
+vico-compose-m3 = { group = "com.patrykandpatrick.vico", name = "compose-m3", version.ref = "vico" }
 
 
 ### Desktop-specific libs ###
 
 # Logging (for Ktor)
 # https://mvnrepository.com/artifact/ch.qos.logback/logback-classic
-logback = { module = "ch.qos.logback:logback-classic", version = "1.5.26" }
+logback = { module = "ch.qos.logback:logback-classic", version = "1.5.32" }
 
 # PDF renderer
 # https://mvnrepository.com/artifact/org.apache.pdfbox/pdfbox
@@ -119,7 +119,7 @@ jna-platform = { module = "net.java.dev.jna:jna-platform", version = "5.18.1" }
 desugaring = { module = "com.android.tools:desugar_jdk_libs", version = "2.1.5" }
 
 # AndroidX
-androidx-activity-compose = { module = "androidx.activity:activity-compose", version = "1.12.2" }
+androidx-activity-compose = { module = "androidx.activity:activity-compose", version = "1.12.4" }
 androidx-preference = { module = "androidx.preference:preference-ktx", version = "1.2.1" }
 
 # Network logger
@@ -145,7 +145,7 @@ buildkonfig = { id = "com.codingfeline.buildkonfig", version = "0.17.1" }
 
 # KSP
 # https://mvnrepository.com/artifact/com.google.devtools.ksp/com.google.devtools.ksp.gradle.plugin?repo=central
-ksp = { id = "com.google.devtools.ksp", version = "2.3.4" }
+ksp = { id = "com.google.devtools.ksp", version = "2.3.6" }
 
 # Ktorfit - network
 ktorfit = { id = "de.jensklingenberg.ktorfit", version.ref = "ktorfit" }

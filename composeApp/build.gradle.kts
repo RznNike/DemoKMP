@@ -82,8 +82,8 @@ kotlin {
             implementation(libs.coil.compose)
             implementation(libs.coil.okhttp)
 
-            implementation(libs.vico.multiplatform)
-            implementation(libs.vico.multiplatform.m3)
+            implementation(libs.vico.compose)
+            implementation(libs.vico.compose.m3)
         }
 
         androidMain.dependencies {

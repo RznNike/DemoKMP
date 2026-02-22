@@ -2,7 +2,7 @@ package ru.rznnike.demokmp.app.utils
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import com.patrykandpatrick.vico.multiplatform.common.vicoTheme
+import com.patrykandpatrick.vico.compose.common.vicoTheme
 
 @Composable
 fun getCustomVicoTheme() = vicoTheme.copy(
