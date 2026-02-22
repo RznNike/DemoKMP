@@ -37,6 +37,7 @@ This is a sample project with a set of solutions to typical problems, demonstrat
 * Basic PDF viewer, print dialog
 * UI for custom logger; database, file and memory cache modules
 * COM objects usage (Windows)
+* Skiko render API configuration
 
 #### Android only
 * UI for viewing network logs from a device
