@@ -12,6 +12,7 @@ import ru.rznnike.demokmp.domain.log.Logger
 import ru.rznnike.demokmp.domain.log.extension.ConsoleLoggerExtension
 import ru.rznnike.demokmp.domain.log.extension.DatabaseLoggerExtension
 import ru.rznnike.demokmp.domain.log.extension.FileLoggerExtension
+import ru.rznnike.demokmp.domain.utils.GlobalConstants
 
 fun main(args: Array<String>) {
     initLogger()
@@ -26,6 +27,7 @@ fun main(args: Array<String>) {
             )
         )
         logAppInfo()
+        setRenderApi(args)
         MainWindow(args)
     }
 }
@@ -74,4 +76,15 @@ private fun logAppInfo() {
     Logger.i("Version: ${BuildKonfig.VERSION_NAME}.${BuildKonfig.VERSION_CODE} | ${BuildKonfig.BUILD_TYPE}")
     Logger.i("OS: ${System.getProperty("os.name")} | ${System.getProperty("os.version")} | ${System.getProperty("os.arch")}")
     Logger.i("Environment: $platformName")
+}
+
+private fun setRenderApi(args: Array<String>) {
+    val api = args
+        .firstOrNull { it.startsWith("${GlobalConstants.RENDER_API_LAUNCH_ARG}=") }
+        ?.substringAfter("=")
+        ?: ""
+    if (api.isNotBlank()) {
+        System.setProperty("skiko.renderApi", api)
+    }
+    Logger.i("Requested render API: ${api.ifBlank { "default" }}")
 }

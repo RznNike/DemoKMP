@@ -1,12 +1,14 @@
 package ru.rznnike.demokmp.domain.model.common
 
 private const val JAVA_PATH_KEY = "java_path"
+private const val RENDER_API_KEY = "render_api"
 private const val SINGLE_INSTANCE_PORT_KEY = "single_instance_port"
 
 private const val SINGLE_INSTANCE_PORT_DEFAULT = 62740
 
 data class LauncherConfig(
     val javaPath: String = "",
+    val renderApi: String = "",
     val singleInstancePort: Int = SINGLE_INSTANCE_PORT_DEFAULT
 )
 
@@ -17,6 +19,7 @@ fun String.toLauncherConfig(): LauncherConfig {
     }
     return LauncherConfig(
         javaPath = configMap[JAVA_PATH_KEY] ?: "",
+        renderApi = configMap[RENDER_API_KEY] ?: "",
         singleInstancePort = configMap[SINGLE_INSTANCE_PORT_KEY]?.toIntOrNull() ?: SINGLE_INSTANCE_PORT_DEFAULT
     )
 }

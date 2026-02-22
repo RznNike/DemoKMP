@@ -1,6 +1,8 @@
 package ru.rznnike.demokmp.domain.utils
 
 object GlobalConstants {
+    const val RENDER_API_LAUNCH_ARG = "renderApi"
+
     const val DATE_PATTERN_SIMPLE = "dd.MM.yyyy"
     const val DATE_PATTERN_SIMPLE_WITH_TIME = "dd.MM.yyyy HH:mm"
     const val DATE_PATTERN_TEXT_MONTH_YEAR = "LLLL yyyy"

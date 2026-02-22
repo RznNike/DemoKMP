@@ -24,7 +24,7 @@ if ([System.IO.File]::Exists($configuration_path)) {
     } else {
         $jar_path = "application/app.jar"
         if ([System.IO.File]::Exists($jar_path)) {
-            & $java_command -jar $jar_path launchedFromScript
+            & $java_command -jar $jar_path renderApi=$($configuration.render_api)
         } else {
             ShowErrorMessage("Executable file not found")
         }

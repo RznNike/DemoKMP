@@ -1,9 +1,9 @@
 #!/bin/bash
 
 showErrorMessage() {
-    zenity --title "Launch error" --error --text "$1" || # alter os
     kdialog --title "Launch error" --error "$1" || # kde
     xdialog --title "Launch error" --msgbox "$1" || # xorg
+    zenity --title "Launch error" --error --text "$1" || # alter os
     fly-dialog --title "Launch error" --error "$1" # astra
 }
 
@@ -35,8 +35,9 @@ if [[ -f "$configuration_path" ]]; then
         showErrorMessage "Java 17+ required for launch, current version - $displayed_version"
     else
         jar_path="application/app.jar"
+        render_api=${configuration["render_api"]}
         if [[ -f "$jar_path" ]]; then
-            nohup $java_command -jar $jar_path &
+            nohup $java_command -jar $jar_path renderApi=$render_api </dev/null >/dev/null 2>&1 &
             sleep 1
         else
             showErrorMessage "Executable file not found"

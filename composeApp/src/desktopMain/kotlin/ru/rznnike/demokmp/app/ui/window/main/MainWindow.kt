@@ -30,6 +30,7 @@ import ru.rznnike.demokmp.app.utils.windowViewModel
 import ru.rznnike.demokmp.app.viewmodel.global.configuration.AppConfigurationViewModel
 import ru.rznnike.demokmp.app.viewmodel.global.configuration.WindowConfigurationViewModel
 import ru.rznnike.demokmp.app.ui.viewmodel.global.hotkeys.HotKeysViewModel
+import ru.rznnike.demokmp.domain.log.Logger
 import ru.rznnike.demokmp.generated.resources.Res
 import ru.rznnike.demokmp.generated.resources.app_name
 import ru.rznnike.demokmp.generated.resources.icon_linux
@@ -123,6 +124,10 @@ fun ApplicationScope.MainWindow(args: Array<String>) = WithWindowViewModelStoreO
                         )
                 )
             }
+        }
+
+        LaunchedEffect(Unit) {
+            Logger.i("Render API: ${window.renderApi}")
         }
     }
 

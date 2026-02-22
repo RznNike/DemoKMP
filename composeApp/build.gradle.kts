@@ -362,6 +362,7 @@ tasks.register("generateReleaseApp") {
         File("$outputPath/launcher_configuration.ini").writeText(
             """
                 java_path=
+                render_api=
                 single_instance_port=62740
             """.trimIndent()
         )
