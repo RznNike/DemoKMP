@@ -1,5 +1,6 @@
 package ru.rznnike.demokmp.app.ui.viewmodel.global.hotkeys
 
+import androidx.compose.runtime.Immutable
 import androidx.compose.ui.input.key.KeyEvent
 import kotlinx.coroutines.flow.update
 import ru.rznnike.demokmp.app.common.viewmodel.BaseUiViewModel
@@ -32,6 +33,7 @@ class HotKeysViewModel : BaseUiViewModel<HotKeysViewModel.UiState>() {
         }
     }
 
+    @Immutable
     data class UiState(
         val screenHotkeysDescription: List<HotkeyDescription> = emptyList(),
         val commonHotkeysDescription: List<HotkeyDescription> = emptyList(),

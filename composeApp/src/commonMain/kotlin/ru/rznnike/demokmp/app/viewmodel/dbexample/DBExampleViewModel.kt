@@ -1,5 +1,6 @@
 package ru.rznnike.demokmp.app.viewmodel.dbexample
 
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -114,6 +115,7 @@ class DBExampleViewModel : BaseUiViewModel<DBExampleViewModel.UiState>() {
         }
     }
 
+    @Immutable
     data class UiState(
         val isLoading: Boolean = false,
         val data: List<DBExampleData> = emptyList()

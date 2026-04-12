@@ -1,5 +1,6 @@
 package ru.rznnike.demokmp.app.viewmodel.global.configuration
 
+import androidx.compose.runtime.Immutable
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -257,6 +258,7 @@ class AppConfigurationViewModel : BaseUiViewModel<AppConfigurationViewModel.UiSt
         openHotkeysDialogCallback?.invoke()
     }
 
+    @Immutable
     data class UiState(
         val args: List<String> = emptyList(),
         val language: Language = Language.default,

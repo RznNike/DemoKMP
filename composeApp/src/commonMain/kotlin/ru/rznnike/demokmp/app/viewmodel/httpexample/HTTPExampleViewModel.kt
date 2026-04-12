@@ -1,5 +1,6 @@
 package ru.rznnike.demokmp.app.viewmodel.httpexample
 
+import androidx.compose.runtime.Immutable
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -63,6 +64,7 @@ class HTTPExampleViewModel : BaseUiViewModel<HTTPExampleViewModel.UiState>() {
         }
     }
 
+    @Immutable
     data class UiState(
         val isLoading: Boolean = false,
         val images: List<String> = emptyList()

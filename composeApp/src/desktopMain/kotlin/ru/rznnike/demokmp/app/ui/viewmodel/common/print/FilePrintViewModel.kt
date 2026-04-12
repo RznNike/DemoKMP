@@ -1,5 +1,6 @@
 package ru.rznnike.demokmp.app.ui.viewmodel.common.print
 
+import androidx.compose.runtime.Immutable
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -93,6 +94,7 @@ class FilePrintViewModel : BaseUiViewModel<FilePrintViewModel.UiState>() {
         }
     }
 
+    @Immutable
     data class UiState(
         val printSettings: PrintSettings = PrintSettings()
     )

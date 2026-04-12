@@ -1,5 +1,6 @@
 package ru.rznnike.demokmp.app.viewmodel.pdfexample
 
+import androidx.compose.runtime.Immutable
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -45,6 +46,7 @@ class PdfExampleViewModel : BaseUiViewModel<PdfExampleViewModel.UiState>() {
 
     fun getSuggestedSaveFileName() = DataConstants.EXAMPLE_PDF_SAVE_NAME
 
+    @Immutable
     data class UiState(
         val pdf: File? = null,
         val isError: Boolean = false

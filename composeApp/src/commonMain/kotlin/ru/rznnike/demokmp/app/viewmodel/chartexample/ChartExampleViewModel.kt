@@ -1,5 +1,6 @@
 package ru.rznnike.demokmp.app.viewmodel.chartexample
 
+import androidx.compose.runtime.Immutable
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -39,6 +40,7 @@ class ChartExampleViewModel : BaseUiViewModel<ChartExampleViewModel.UiState>() {
         }
     }
 
+    @Immutable
     data class UiState(
         val data: List<ChartPoint> = emptyList()
     )
