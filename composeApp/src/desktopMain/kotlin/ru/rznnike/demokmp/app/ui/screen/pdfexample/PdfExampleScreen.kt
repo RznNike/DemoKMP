@@ -106,7 +106,7 @@ class PdfExampleScreen : DesktopNavigationScreen() {
                         )
                     }
                     Spacer(Modifier.width(16.dp))
-                    TextR(
+                    Text(
                         modifier = Modifier
                             .padding(vertical = 16.dp)
                             .weight(1f),

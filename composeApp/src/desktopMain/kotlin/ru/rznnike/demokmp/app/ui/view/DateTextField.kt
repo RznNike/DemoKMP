@@ -79,7 +79,7 @@ fun DateTextField(
             value = value,
             singleLine = true,
             label = {
-                TextR(labelRes)
+                Text(labelRes)
             },
             placeholder = {
                 Text(calendarInitialDate.toDateString())

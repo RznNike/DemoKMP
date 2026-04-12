@@ -99,12 +99,12 @@ class CustomUIScreen : AndroidNavigationScreen() {
                             FilledButton(
                                 onClick = { }
                             ) {
-                                TextR(Res.string.button)
+                                Text(Res.string.button)
                             }
                             OutlinedRoundedButton(
                                 onClick = { }
                             ) {
-                                TextR(Res.string.button)
+                                Text(Res.string.button)
                             }
                             SelectableOutlinedIconButton(
                                 iconRes = Res.drawable.ic_refresh,
@@ -127,7 +127,7 @@ class CustomUIScreen : AndroidNavigationScreen() {
                                 onValueChange = viewModel::onTextInput,
                                 singleLine = true,
                                 label = {
-                                    TextR(Res.string.input_field)
+                                    Text(Res.string.input_field)
                                 }
                             )
                             Spacer(Modifier.height(8.dp))

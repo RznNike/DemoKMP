@@ -36,7 +36,7 @@ import ru.rznnike.demokmp.app.ui.screen.pdfexample.PdfExampleFlow
 import ru.rznnike.demokmp.app.ui.screen.settings.SettingsFlow
 import ru.rznnike.demokmp.app.ui.screen.wsexample.WebSocketsExampleFlow
 import ru.rznnike.demokmp.app.ui.view.SelectableButton
-import ru.rznnike.demokmp.app.ui.view.TextR
+import ru.rznnike.demokmp.app.ui.view.Text
 import ru.rznnike.demokmp.app.ui.view.Toolbar
 import ru.rznnike.demokmp.app.utils.getMacAddress
 import ru.rznnike.demokmp.app.utils.platformName
@@ -111,7 +111,7 @@ class HomeScreen : DesktopNavigationScreen() {
                                 .height(70.dp),
                             onClick = onClick
                         ) {
-                            TextR(
+                            Text(
                                 modifier = Modifier.fillMaxWidth(),
                                 textRes = textRes,
                                 textAlign = TextAlign.Center,

@@ -85,7 +85,7 @@ class WebSocketsExampleScreen : DesktopNavigationScreen() {
                         value = viewModel.messageInput,
                         singleLine = true,
                         label = {
-                            TextR(Res.string.message)
+                            Text(Res.string.message)
                         },
                         onValueChange = viewModel::onMessageInput
                     )
@@ -96,7 +96,7 @@ class WebSocketsExampleScreen : DesktopNavigationScreen() {
                             viewModel.sendMessage()
                         }
                     ) {
-                        TextR(Res.string.send)
+                        Text(Res.string.send)
                     }
                     Spacer(Modifier.width(12.dp))
                 }

@@ -29,7 +29,7 @@ import ru.rznnike.demokmp.app.ui.screen.navigation.NavigationExampleFlow
 import ru.rznnike.demokmp.app.ui.screen.settings.SettingsFlow
 import ru.rznnike.demokmp.app.ui.screen.wsexample.WebSocketsExampleFlow
 import ru.rznnike.demokmp.app.ui.view.FilledButton
-import ru.rznnike.demokmp.app.ui.view.TextR
+import ru.rznnike.demokmp.app.ui.view.Text
 import ru.rznnike.demokmp.app.ui.view.Toolbar
 import ru.rznnike.demokmp.app.utils.getFormattedAppVersion
 import ru.rznnike.demokmp.app.utils.platformName
@@ -91,7 +91,7 @@ class HomeScreen : AndroidNavigationScreen() {
                                     .height(60.dp),
                                 onClick = onClick
                             ) {
-                                TextR(
+                                Text(
                                     modifier = Modifier.fillMaxWidth(),
                                     textRes = text,
                                     textAlign = TextAlign.Center

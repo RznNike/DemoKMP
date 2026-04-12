@@ -213,7 +213,7 @@ fun <ItemType> DropdownQuerySelector(
                                 },
                                 singleLine = true,
                                 label = {
-                                    TextR(Res.string.search)
+                                    Text(Res.string.search)
                                 }
                             )
 
@@ -281,7 +281,7 @@ fun <ItemType> DropdownQuerySelector(
                                 )
 
                                 if (filteredItems.isEmpty()) {
-                                    TextR(
+                                    Text(
                                         modifier = Modifier
                                             .padding(top = 8.dp, bottom = 24.dp)
                                             .align(Alignment.Center),

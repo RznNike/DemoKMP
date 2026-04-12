@@ -19,7 +19,7 @@ import ru.rznnike.demokmp.app.model.common.HotkeyDescription
 import ru.rznnike.demokmp.app.ui.theme.bodyLargeBold
 import ru.rznnike.demokmp.app.ui.theme.bodyMediumBold
 import ru.rznnike.demokmp.app.ui.view.OutlinedRoundedButton
-import ru.rznnike.demokmp.app.ui.view.TextR
+import ru.rznnike.demokmp.app.ui.view.Text
 import ru.rznnike.demokmp.generated.resources.*
 
 private val MIN_WIDTH_DP = 400.dp
@@ -87,7 +87,7 @@ fun HotkeysDialog(
                         }
                     }
 
-                    TextR(
+                    Text(
                         modifier = Modifier
                             .padding(16.dp)
                             .align(Alignment.CenterHorizontally),
@@ -121,7 +121,7 @@ fun HotkeysDialog(
                                 )
                         ) {
                             if (screenHotkeysDescription.isNotEmpty()) {
-                                TextR(
+                                Text(
                                     textRes = Res.string.hotkeys_on_this_screen,
                                     style = MaterialTheme.typography.bodyMediumBold
                                 )
@@ -135,7 +135,7 @@ fun HotkeysDialog(
                                 Spacer(Modifier.height(24.dp))
                             }
 
-                            TextR(
+                            Text(
                                 textRes = Res.string.hotkeys_common,
                                 style = MaterialTheme.typography.bodyMediumBold
                             )
@@ -167,7 +167,7 @@ fun HotkeysDialog(
                                 showDialog.value = false
                             }
                         ) {
-                            TextR(Res.string.close)
+                            Text(Res.string.close)
                         }
                     }
                 }

@@ -74,7 +74,7 @@ class WebSocketsExampleScreen : AndroidNavigationScreen() {
                         value = viewModel.messageInput,
                         singleLine = true,
                         label = {
-                            TextR(Res.string.message)
+                            Text(Res.string.message)
                         },
                         onValueChange = viewModel::onMessageInput,
                         keyboardOptions = KeyboardOptions(
@@ -93,7 +93,7 @@ class WebSocketsExampleScreen : AndroidNavigationScreen() {
                             viewModel.sendMessage()
                         }
                     ) {
-                        TextR(Res.string.send)
+                        Text(Res.string.send)
                     }
                     Spacer(Modifier.width(16.dp))
                 }

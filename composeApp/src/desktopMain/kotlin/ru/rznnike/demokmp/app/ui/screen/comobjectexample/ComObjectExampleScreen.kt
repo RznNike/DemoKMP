@@ -81,7 +81,7 @@ class ComObjectExampleScreen : DesktopNavigationScreen() {
                         Column(
                             modifier = Modifier.padding(16.dp)
                         ) {
-                            TextR(
+                            Text(
                                 modifier = Modifier.fillMaxWidth(),
                                 textRes = Res.string.pc_data_header,
                                 style = MaterialTheme.typography.bodyLargeBold
@@ -114,7 +114,7 @@ class ComObjectExampleScreen : DesktopNavigationScreen() {
                                 value = viewModel.pathInput,
                                 singleLine = true,
                                 label = {
-                                    TextR(Res.string.path_to_folder_or_file)
+                                    Text(Res.string.path_to_folder_or_file)
                                 },
                                 onValueChange = viewModel::onPathInput
                             )
@@ -125,7 +125,7 @@ class ComObjectExampleScreen : DesktopNavigationScreen() {
                                     viewModel.openPath()
                                 }
                             ) {
-                                TextR(Res.string.open)
+                                Text(Res.string.open)
                             }
                             Spacer(Modifier.width(12.dp))
                         }
@@ -144,7 +144,7 @@ class ComObjectExampleScreen : DesktopNavigationScreen() {
                             SelectableButton(
                                 onClick = viewModel::minimizeAllWindows
                             ) {
-                                TextR(
+                                Text(
                                     textRes = Res.string.minimize_all_windows
                                 )
                             }

@@ -39,7 +39,7 @@ fun CustomCheckboxWithText(
         enabled = enabled
     )
     Spacer(Modifier.width(contentPadding))
-    TextR(
+    Text(
         textRes = textRes,
         style = textStyle,
         color = if (enabled) textColor else LocalCustomColorScheme.current.disabledText

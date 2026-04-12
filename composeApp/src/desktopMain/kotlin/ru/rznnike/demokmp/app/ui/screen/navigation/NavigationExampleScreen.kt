@@ -102,21 +102,21 @@ class NavigationExampleScreen(
                                         )
                                     }
                                 ) {
-                                    TextR(Res.string.open_new_screen)
+                                    Text(Res.string.open_new_screen)
                                 }
                                 SelectableButton(
                                     onClick = {
                                         navigator.closeScreen()
                                     }
                                 ) {
-                                    TextR(Res.string.close_screen)
+                                    Text(Res.string.close_screen)
                                 }
                                 SelectableButton(
                                     onClick = {
                                         navigator.closeFlow()
                                     }
                                 ) {
-                                    TextR(Res.string.close_flow)
+                                    Text(Res.string.close_flow)
                                 }
                             }
                         }
@@ -132,7 +132,7 @@ class NavigationExampleScreen(
                             modifier = Modifier.padding(16.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            TextR(
+                            Text(
                                 textRes = Res.string.test_counter_local,
                                 modifier = Modifier
                                     .weight(1f)

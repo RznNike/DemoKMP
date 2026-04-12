@@ -53,13 +53,13 @@ fun AppClosingPlaceholder(
             color = MaterialTheme.colorScheme.primary
         )
         Spacer(Modifier.height(32.dp))
-        TextR(
+        Text(
             textRes = Res.string.shutdown,
             style = MaterialTheme.typography.bodyLargeBold,
             color = MaterialTheme.colorScheme.primary
         )
         Spacer(Modifier.height(8.dp))
-        TextR(
+        Text(
             textRes = Res.string.please_wait,
             style = MaterialTheme.typography.bodyLargeBold,
             color = MaterialTheme.colorScheme.primary
@@ -73,7 +73,7 @@ fun AppClosingPlaceholder(
                 }
             }
         ) {
-            TextR(Res.string.force_close)
+            Text(Res.string.force_close)
         }
         Spacer(Modifier.weight(1f))
     }

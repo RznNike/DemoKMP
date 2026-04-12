@@ -110,7 +110,7 @@ class SettingsScreen : DesktopNavigationScreen() {
                                         navigator.openScreen(NestedSettingsScreen())
                                     }
                                 ) {
-                                    TextR(Res.string.nested_settings)
+                                    Text(Res.string.nested_settings)
                                 }
                             }
                         }
@@ -125,7 +125,7 @@ class SettingsScreen : DesktopNavigationScreen() {
                                 modifier = Modifier.padding(16.dp),
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
-                                TextR(
+                                Text(
                                     textRes = Res.string.test_counter,
                                     modifier = Modifier
                                         .weight(1f)

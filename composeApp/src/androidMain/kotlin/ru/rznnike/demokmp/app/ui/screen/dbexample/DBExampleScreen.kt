@@ -63,7 +63,7 @@ class DBExampleScreen : AndroidNavigationScreen() {
                     ) {
                         DropdownMenuItem(
                             text = {
-                                TextR(Res.string.delete_all)
+                                Text(Res.string.delete_all)
                             },
                             onClick = {
                                 showToolbarMenu = false
@@ -91,7 +91,7 @@ class DBExampleScreen : AndroidNavigationScreen() {
                         value = viewModel.nameInput,
                         singleLine = true,
                         label = {
-                            TextR(Res.string.db_example_input_label)
+                            Text(Res.string.db_example_input_label)
                         },
                         onValueChange = viewModel::onNameInput,
                         keyboardOptions = KeyboardOptions(
@@ -110,7 +110,7 @@ class DBExampleScreen : AndroidNavigationScreen() {
                             viewModel.addData()
                         }
                     ) {
-                        TextR(Res.string.add)
+                        Text(Res.string.add)
                     }
                     Spacer(Modifier.width(16.dp))
                 }

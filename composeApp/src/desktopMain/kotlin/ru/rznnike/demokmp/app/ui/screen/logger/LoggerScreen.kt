@@ -89,7 +89,7 @@ class LoggerScreen : DesktopNavigationScreen() {
                         value = viewModel.filterInput,
                         singleLine = true,
                         label = {
-                            TextR(Res.string.filter)
+                            Text(Res.string.filter)
                         },
                         onValueChange = viewModel::onFilterInput
                     )

@@ -27,7 +27,7 @@ import ru.rznnike.demokmp.app.ui.theme.bodyMediumMono
 import ru.rznnike.demokmp.app.ui.view.LinkifyText
 import ru.rznnike.demokmp.app.ui.view.SelectableOutlinedIconButton
 import ru.rznnike.demokmp.app.ui.view.SlimOutlinedTextField
-import ru.rznnike.demokmp.app.ui.view.TextR
+import ru.rznnike.demokmp.app.ui.view.Text
 import ru.rznnike.demokmp.app.ui.view.Tooltip
 import ru.rznnike.demokmp.app.ui.viewmodel.logger.network.NetworkLogDetailsViewModel
 import ru.rznnike.demokmp.app.ui.window.LocalWindow
@@ -112,7 +112,7 @@ class NetworkLogDetailsScreen(
                             value = viewModel.queryInput,
                             singleLine = true,
                             placeholder = {
-                                TextR(Res.string.search)
+                                Text(Res.string.search)
                             },
                             onValueChange = viewModel::onQueryInput
                         )

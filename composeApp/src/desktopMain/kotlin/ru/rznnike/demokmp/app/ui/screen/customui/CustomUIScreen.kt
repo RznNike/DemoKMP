@@ -112,24 +112,24 @@ class CustomUIScreen : DesktopNavigationScreen() {
                                 modifier = Modifier.padding(vertical = 4.dp),
                                 onClick = { }
                             ) {
-                                TextR(Res.string.button)
+                                Text(Res.string.button)
                             }
                             SelectableButton(
                                 onClick = { }
                             ) {
-                                TextR(Res.string.button)
+                                Text(Res.string.button)
                             }
                             OutlinedRoundedButton(
                                 modifier = Modifier.padding(vertical = 4.dp),
                                 onClick = { }
                             ) {
-                                TextR(Res.string.button)
+                                Text(Res.string.button)
                             }
                             SelectableOutlinedButton(
                                 modifier = Modifier.padding(vertical = 4.dp),
                                 onClick = { }
                             ) {
-                                TextR(Res.string.button)
+                                Text(Res.string.button)
                             }
                             SelectableOutlinedIconButton(
                                 modifier = Modifier.padding(vertical = 4.dp),
@@ -160,7 +160,7 @@ class CustomUIScreen : DesktopNavigationScreen() {
                                     onValueChange = viewModel::onTextInput,
                                     singleLine = true,
                                     label = {
-                                        TextR(Res.string.input_field)
+                                        Text(Res.string.input_field)
                                     }
                                 )
                                 Spacer(Modifier.width(16.dp))

@@ -73,7 +73,7 @@ class NestedSettingsScreen : AndroidNavigationScreen() {
                                 value = profileViewModel.nameInput,
                                 singleLine = true,
                                 label = {
-                                    TextR(Res.string.user_name)
+                                    Text(Res.string.user_name)
                                 },
                                 onValueChange = profileViewModel::onNameInput
                             )
@@ -87,7 +87,7 @@ class NestedSettingsScreen : AndroidNavigationScreen() {
                                     navigator.closeFlow()
                                 }
                             ) {
-                                TextR(Res.string.to_main_screen)
+                                Text(Res.string.to_main_screen)
                             }
                             Spacer(modifier = Modifier.height(16.dp))
                         }

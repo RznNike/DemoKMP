@@ -71,7 +71,7 @@ class DBExampleScreen : DesktopNavigationScreen() {
                     ) {
                         DropdownMenuItem(
                             text = {
-                                TextR(Res.string.delete_all)
+                                Text(Res.string.delete_all)
                             },
                             onClick = {
                                 showToolbarMenu = false
@@ -102,7 +102,7 @@ class DBExampleScreen : DesktopNavigationScreen() {
                         value = viewModel.nameInput,
                         singleLine = true,
                         label = {
-                            TextR(Res.string.db_example_input_label)
+                            Text(Res.string.db_example_input_label)
                         },
                         onValueChange = viewModel::onNameInput
                     )
@@ -113,7 +113,7 @@ class DBExampleScreen : DesktopNavigationScreen() {
                             viewModel.addData()
                         }
                     ) {
-                        TextR(Res.string.add)
+                        Text(Res.string.add)
                     }
                     Spacer(Modifier.width(12.dp))
                 }
