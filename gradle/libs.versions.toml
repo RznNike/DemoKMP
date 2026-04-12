@@ -1,15 +1,16 @@
 [versions]
-kotlin = "2.3.10"
-compose = "1.10.1"
+kotlin = "2.3.20"
+compose = "1.10.3"
 coroutines = "1.10.2"
-koin = "4.1.1"
+koin = "4.2.1"
 ktorfit = "2.7.2"
-ktor = "3.4.0"
-coil = "3.3.0"
+ktor = "3.4.2"
+coil = "3.4.0"
 room = "2.8.4"
-filekit = "0.12.0"
-chucker = "4.3.0"
-vico = "3.0.0"
+#noinspection NewerVersionAvailable
+filekit = "0.12.0" # version 0.13.0 requires java 21
+chucker = "4.3.1"
+vico = "3.1.0"
 
 android-minSdk = "26"
 android-targetSdk = "36"
@@ -30,7 +31,7 @@ compose-ui-tooling-preview = { module = "org.jetbrains.compose.ui:ui-tooling-pre
 # https://mvnrepository.com/artifact/org.jetbrains.androidx.lifecycle/lifecycle-viewmodel-compose
 # Update the version according to the main Compose library dependencies
 #noinspection NewerVersionAvailable
-viewmodel-compose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose", version = "2.10.0-alpha08" }
+viewmodel-compose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose", version = "2.10.0" }
 
 # Navigation
 # https://mvnrepository.com/artifact/org.jetbrains.androidx.navigation/navigation-compose
@@ -56,7 +57,7 @@ multiplatform-settings = { module = "com.russhwolf:multiplatform-settings", vers
 
 # Serialization
 # https://github.com/Kotlin/kotlinx.serialization
-kotlinx-serialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version = "1.10.0" }
+kotlinx-serialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version = "1.11.0" }
 
 # Ktorfit - network
 # https://github.com/Foso/Ktorfit
@@ -100,7 +101,7 @@ logback = { module = "ch.qos.logback:logback-classic", version = "1.5.32" }
 
 # PDF renderer
 # https://mvnrepository.com/artifact/org.apache.pdfbox/pdfbox
-pdfbox = { module = "org.apache.pdfbox:pdfbox", version = "3.0.6" }
+pdfbox = { module = "org.apache.pdfbox:pdfbox", version = "3.0.7" }
 
 # File dialogs
 # https://github.com/vinceglb/FileKit
@@ -119,7 +120,7 @@ jna-platform = { module = "net.java.dev.jna:jna-platform", version = "5.18.1" }
 desugaring = { module = "com.android.tools:desugar_jdk_libs", version = "2.1.5" }
 
 # AndroidX
-androidx-activity-compose = { module = "androidx.activity:activity-compose", version = "1.12.4" }
+androidx-activity-compose = { module = "androidx.activity:activity-compose", version = "1.13.0" }
 androidx-preference = { module = "androidx.preference:preference-ktx", version = "1.2.1" }
 
 # Network logger
@@ -137,7 +138,7 @@ jetbrains-compose = { id = "org.jetbrains.compose", version.ref = "compose" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
-android-application = { id = "com.android.application", version = "8.12.3" }
+android-application = { id = "com.android.application", version = "8.13.2" }
 
 # BuildConfig
 # https://github.com/yshrsmz/BuildKonfig
