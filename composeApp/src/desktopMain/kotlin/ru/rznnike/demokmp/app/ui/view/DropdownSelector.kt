@@ -1,7 +1,5 @@
 package ru.rznnike.demokmp.app.ui.view
 
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -9,6 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.input.key.*
@@ -26,14 +25,14 @@ fun <ItemType> DropdownSelector(
     modifier: Modifier = Modifier,
     height: Dp? = 48.dp,
     label: String,
+    alignment: DropdownSelectorAlignment = DropdownSelectorAlignment.BOTTOM,
     items: List<ItemType>,
     selectedItem: ItemType,
     itemNameRetriever: @Composable (ItemType?) -> String,
-    onItemSelected: (item: ItemType) -> Unit
+    onItemSelected: (item: ItemType) -> Unit,
+    enabled: Boolean = true
 ) {
     val isExpanded = remember { mutableStateOf(false) }
-
-    val interactionSource = remember { MutableInteractionSource() }
 
     fun expand() {
         if (items.isNotEmpty()) {
@@ -75,8 +74,7 @@ fun <ItemType> DropdownSelector(
                         }
                     } else false
                 }
-                .onEnterKey { expand() }
-                .onClick { expand() },
+                .onEnterKey { if (enabled) expand() },
             contentPadding = PaddingValues(start = 16.dp, top = 8.dp, bottom = 8.dp),
             value = itemNameRetriever(selectedItem),
             onValueChange = { },
@@ -85,6 +83,7 @@ fun <ItemType> DropdownSelector(
                 Text(label)
             },
             readOnly = true,
+            enabled = enabled,
             trailingIcon = {
                 Icon(
                     modifier = Modifier
@@ -95,17 +94,14 @@ fun <ItemType> DropdownSelector(
                     tint = LocalCustomColorScheme.current.outlineComponentContent,
                     contentDescription = null
                 )
-            },
-            interactionSource = interactionSource
+            }
         )
 
-        LaunchedEffect(Unit) {
-            interactionSource.interactions.collect { interaction ->
-                if (interaction is PressInteraction.Release) {
-                    expand()
-                }
-            }
-        }
+        Box(
+            modifier = Modifier
+                .matchParentSize()
+                .onClick { if (enabled) expand() }
+        )
 
         BoxWithConstraints(
             modifier = Modifier.fillMaxWidth()
@@ -113,11 +109,24 @@ fun <ItemType> DropdownSelector(
             PopupList(
                 modifier = Modifier.width(maxWidth),
                 showPopup = isExpanded,
-                verticalOffset = 56.dp,
+                alignment = if (alignment == DropdownSelectorAlignment.BOTTOM) Alignment.TopStart else Alignment.BottomStart,
+                verticalOffset = if (alignment == DropdownSelectorAlignment.BOTTOM) 56.dp else 0.dp,
                 items = items,
+                preselectedItem = selectedItem,
                 itemNameRetriever = itemNameRetriever,
                 onItemSelected = onItemSelected
             )
         }
     }
+
+    LaunchedEffect(enabled) {
+        if (!enabled) {
+            isExpanded.value = false
+        }
+    }
+}
+
+enum class DropdownSelectorAlignment {
+    TOP,
+    BOTTOM
 }

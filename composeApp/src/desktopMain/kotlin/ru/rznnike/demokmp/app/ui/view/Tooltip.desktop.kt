@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.dp
 actual fun Tooltip(
     tooltip: String,
     modifier: Modifier,
+    popupModifier: Modifier,
     alignment: TooltipAlignment,
     content: @Composable (() -> Unit)
 ) = if (tooltip.isBlank()) {
@@ -36,6 +37,11 @@ actual fun Tooltip(
                 alignment = Alignment.TopCenter,
                 offset = DpOffset(x = 0.dp, y = (-4).dp)
             )
+            TooltipAlignment.TOP_START -> TooltipPlacement.ComponentRect(
+                anchor = Alignment.TopStart,
+                alignment = Alignment.TopEnd,
+                offset = DpOffset(x = 0.dp, y = (-4).dp)
+            )
             TooltipAlignment.BOTTOM -> TooltipPlacement.ComponentRect(
                 anchor = Alignment.BottomCenter,
                 alignment = Alignment.BottomCenter,
@@ -44,6 +50,7 @@ actual fun Tooltip(
         },
         tooltip = {
             Surface(
+                modifier = popupModifier,
                 shadowElevation = 2.dp,
                 shape = MaterialTheme.shapes.medium,
                 border = BorderStroke(

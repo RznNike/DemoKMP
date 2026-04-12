@@ -9,6 +9,7 @@ import org.jetbrains.compose.resources.stringResource
 expect fun Tooltip(
     tooltip: String,
     modifier: Modifier = Modifier,
+    popupModifier: Modifier = Modifier,
     alignment: TooltipAlignment = TooltipAlignment.CURSOR,
     content: @Composable (() -> Unit)
 )
@@ -17,11 +18,13 @@ expect fun Tooltip(
 fun Tooltip(
     tooltipRes: StringResource,
     modifier: Modifier = Modifier,
+    popupModifier: Modifier = Modifier,
     alignment: TooltipAlignment = TooltipAlignment.CURSOR,
     content: @Composable (() -> Unit)
 ) = Tooltip(
     tooltip = stringResource(tooltipRes),
     modifier = modifier,
+    popupModifier = popupModifier,
     alignment = alignment,
     content = content
 )
@@ -29,5 +32,6 @@ fun Tooltip(
 enum class TooltipAlignment {
     CURSOR,
     TOP,
+    TOP_START,
     BOTTOM
 }

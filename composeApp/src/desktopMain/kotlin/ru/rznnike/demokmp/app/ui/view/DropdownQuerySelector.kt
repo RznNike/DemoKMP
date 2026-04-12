@@ -1,12 +1,12 @@
 package ru.rznnike.demokmp.app.ui.view
 
-import androidx.compose.foundation.*
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.interaction.PressInteraction
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.VerticalScrollbar
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollbarAdapter
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -50,9 +50,7 @@ fun <ItemType> DropdownQuerySelector(
     onItemSelected: (item: ItemType) -> Unit
 ) {
     var isExpanded by remember { mutableStateOf(false) }
-
     val canExpand = !items.isNullOrEmpty()
-    val interactionSource = remember { MutableInteractionSource() }
 
     fun expand() {
         if (canExpand) {
@@ -112,17 +110,14 @@ fun <ItemType> DropdownQuerySelector(
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
-            },
-            interactionSource = interactionSource
+            }
         )
 
-        LaunchedEffect(canExpand) {
-            interactionSource.interactions.collect { interaction ->
-                if (interaction is PressInteraction.Release) {
-                    expand()
-                }
-            }
-        }
+        Box(
+            modifier = Modifier
+                .matchParentSize()
+                .onClick { expand() }
+        )
 
         if (isExpanded) {
             BoxWithConstraints(

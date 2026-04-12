@@ -21,8 +21,9 @@ import ru.rznnike.demokmp.generated.resources.Res
 import ru.rznnike.demokmp.generated.resources.force_close
 import ru.rznnike.demokmp.generated.resources.please_wait
 import ru.rznnike.demokmp.generated.resources.shutdown
+import kotlin.time.Duration.Companion.milliseconds
 
-private const val FORCE_CLOSE_BUTTON_DELAY_MS = 5000L
+private val FORCE_CLOSE_BUTTON_DELAY_MS = 5000.milliseconds
 
 @Composable
 fun AppClosingPlaceholder(

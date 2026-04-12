@@ -7,12 +7,14 @@ import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Shape
 
 @Composable
 fun FilledButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
+    shape: Shape = MaterialTheme.shapes.extraSmall,
     colors: ButtonColors = ButtonDefaults.buttonColors(
         disabledContainerColor = MaterialTheme.colorScheme.surfaceVariant,
         disabledContentColor = MaterialTheme.colorScheme.onSurfaceVariant
@@ -26,7 +28,7 @@ fun FilledButton(
     onClick = onClick,
     modifier = modifier,
     enabled = enabled,
-    shape = MaterialTheme.shapes.extraSmall,
+    shape = shape,
     colors = colors,
     elevation = elevation,
     border = border,

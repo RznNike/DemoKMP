@@ -11,11 +11,13 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.selection.LocalTextSelectionColors
 import androidx.compose.material3.LocalTextStyle
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.TextFieldColors
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.takeOrElse
@@ -54,7 +56,7 @@ fun SlimOutlinedTextField(
     minLines: Int = 1,
     interactionSource: MutableInteractionSource? = null,
     shape: Shape = OutlinedTextFieldDefaults.shape,
-    colors: TextFieldColors = defaultColors(),
+    colors: TextFieldColors = textFieldWithBorderColors(),
     contentPadding: PaddingValues = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
 ) {
     @Suppress("NAME_SHADOWING")
@@ -164,7 +166,7 @@ fun SlimOutlinedTextField(
     minLines: Int = 1,
     interactionSource: MutableInteractionSource? = null,
     shape: Shape = OutlinedTextFieldDefaults.shape,
-    colors: TextFieldColors = defaultColors(),
+    colors: TextFieldColors = textFieldWithBorderColors(),
     contentPadding: PaddingValues = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
     selectAllOnFocus: Boolean = false
 ) {
@@ -228,7 +230,15 @@ fun SlimOutlinedTextField(
 }
 
 @Composable
-internal fun defaultColors(): TextFieldColors = OutlinedTextFieldDefaults.colors().copy(
+fun textFieldWithBorderColors(
+    focusedIndicatorColor: Color = Color.Unspecified,
+    unfocusedIndicatorColor: Color = Color.Unspecified,
+    disabledIndicatorColor: Color = Color.Unspecified
+): TextFieldColors = OutlinedTextFieldDefaults.colors().copy(
+    focusedContainerColor = MaterialTheme.colorScheme.surface,
+    unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+    disabledContainerColor = MaterialTheme.colorScheme.surface,
+    errorContainerColor = MaterialTheme.colorScheme.surface,
     unfocusedLabelColor = LocalCustomColorScheme.current.outlineComponentContent,
     disabledTextColor = LocalCustomColorScheme.current.disabledText,
     disabledLabelColor = LocalCustomColorScheme.current.disabledText,
@@ -238,5 +248,15 @@ internal fun defaultColors(): TextFieldColors = OutlinedTextFieldDefaults.colors
     disabledSupportingTextColor = LocalCustomColorScheme.current.disabledText,
     disabledLeadingIconColor = LocalCustomColorScheme.current.disabledText,
     disabledTrailingIconColor = LocalCustomColorScheme.current.disabledText,
-    disabledIndicatorColor = LocalCustomColorScheme.current.disabledText
+    focusedIndicatorColor = if (focusedIndicatorColor == Color.Unspecified) MaterialTheme.colorScheme.primary else focusedIndicatorColor,
+    unfocusedIndicatorColor = if (unfocusedIndicatorColor == Color.Unspecified) MaterialTheme.colorScheme.outline else unfocusedIndicatorColor,
+    disabledIndicatorColor = if (disabledIndicatorColor == Color.Unspecified) LocalCustomColorScheme.current.disabledText else disabledIndicatorColor
+)
+
+@Suppress("unused")
+@Composable
+fun textFieldColors(): TextFieldColors = textFieldWithBorderColors(
+    focusedIndicatorColor = Color.Transparent,
+    unfocusedIndicatorColor = Color.Transparent,
+    disabledIndicatorColor = Color.Transparent
 )

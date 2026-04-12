@@ -38,6 +38,7 @@ fun <ItemType> PopupList(
     alignment: Alignment = Alignment.TopStart,
     verticalOffset: Dp = 0.dp,
     items: List<ItemType>,
+    preselectedItem: ItemType? = null,
     itemNameRetriever: @Composable (ItemType?) -> String,
     onItemSelected: (item: ItemType) -> Unit
 ) {
@@ -81,6 +82,7 @@ fun <ItemType> PopupList(
                     val coroutineScope = rememberCoroutineScope()
                     val firstItemFocusRequester = remember { FocusRequester() }
                     val lastItemFocusRequester = remember { FocusRequester() }
+                    val preselectedItemFocusRequester = remember { FocusRequester() }
 
                     var listHeight by remember { mutableIntStateOf(0) }
                     val listHeightDp = with(LocalDensity.current) {
@@ -107,6 +109,11 @@ fun <ItemType> PopupList(
                                             items.lastIndex -> focusRequester(lastItemFocusRequester)
                                             else -> this
                                         }
+                                    }
+                                    .run {
+                                        if (item == preselectedItem) {
+                                            focusRequester(preselectedItemFocusRequester)
+                                        } else this
                                     }
                                     .onPreviewKeyEvent { keyEvent ->
                                         if (keyEvent.type == KeyEventType.KeyDown) {
@@ -153,11 +160,18 @@ fun <ItemType> PopupList(
                             .align(Alignment.CenterEnd),
                         adapter = rememberScrollbarAdapter(scrollState)
                     )
-                }
-            }
 
-            LaunchedEffect(Unit) {
-                focusManager.moveFocus(FocusDirection.Next)
+                    LaunchedEffect(Unit) {
+                        preselectedItem?.let {
+                            scrollState.smartScrollToItem(
+                                items.indexOf(preselectedItem)
+                            )
+                            preselectedItemFocusRequester.requestFocus()
+                        } ?: run {
+                            firstItemFocusRequester.requestFocus()
+                        }
+                    }
+                }
             }
         }
     }

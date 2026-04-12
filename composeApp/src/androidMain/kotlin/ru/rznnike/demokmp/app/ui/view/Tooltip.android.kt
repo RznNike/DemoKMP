@@ -7,6 +7,7 @@ import androidx.compose.ui.Modifier
 actual fun Tooltip(
     tooltip: String,
     modifier: Modifier,
+    popupModifier: Modifier,
     alignment: TooltipAlignment,
     content: @Composable (() -> Unit)
 ) = content() // stub

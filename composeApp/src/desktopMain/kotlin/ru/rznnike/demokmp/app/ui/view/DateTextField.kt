@@ -21,6 +21,7 @@ import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.painterResource
+import ru.rznnike.demokmp.app.ui.theme.LocalCustomColorScheme
 import ru.rznnike.demokmp.app.utils.onEnterKey
 import ru.rznnike.demokmp.domain.utils.toDateString
 import ru.rznnike.demokmp.domain.utils.toInputString
@@ -60,17 +61,19 @@ fun DateTextField(
             modifier = Modifier
                 .fillMaxSize()
                 .onPreviewKeyEvent { keyEvent ->
-                    when {
-                        (keyEvent.key == Key.DirectionUp) && (keyEvent.type == KeyEventType.KeyDown) -> {
-                            onDateChange(1)
-                            true
+                    if (keyEvent.type == KeyEventType.KeyDown) {
+                        when (keyEvent.key) {
+                            Key.DirectionUp -> {
+                                onDateChange(1)
+                                true
+                            }
+                            Key.DirectionDown -> {
+                                onDateChange(-1)
+                                true
+                            }
+                            else -> false
                         }
-                        (keyEvent.key == Key.DirectionDown) && (keyEvent.type == KeyEventType.KeyDown) -> {
-                            onDateChange(-1)
-                            true
-                        }
-                        else -> false
-                    }
+                    } else false
                 }
                 .onEnterKey {
                     onSave()
@@ -101,7 +104,7 @@ fun DateTextField(
                     Icon(
                         modifier = Modifier.size(24.dp),
                         painter = painterResource(Res.drawable.ic_calendar),
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                        tint = LocalCustomColorScheme.current.outlineComponentContent,
                         contentDescription = null
                     )
                 }
@@ -159,7 +162,11 @@ fun DateTextField(
                                 showModeToggle = false,
                                 colors = DatePickerDefaults.colors(
                                     containerColor = MaterialTheme.colorScheme.surface,
-                                    dividerColor = Color.Transparent
+                                    dividerColor = Color.Transparent,
+                                    navigationContentColor = MaterialTheme.colorScheme.onBackground,
+                                    yearContentColor = MaterialTheme.colorScheme.onBackground,
+                                    disabledYearContentColor = LocalCustomColorScheme.current.disabledText,
+                                    disabledDayContentColor = LocalCustomColorScheme.current.disabledText
                                 )
                             )
                         }

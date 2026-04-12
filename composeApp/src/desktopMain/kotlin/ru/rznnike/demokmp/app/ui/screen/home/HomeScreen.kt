@@ -109,6 +109,7 @@ class HomeScreen : DesktopNavigationScreen() {
                                     min = 190.dp
                                 )
                                 .height(70.dp),
+                            buttonModifier = Modifier.fillMaxSize(),
                             onClick = onClick
                         ) {
                             Text(
