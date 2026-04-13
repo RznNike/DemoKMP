@@ -25,6 +25,7 @@ compose-material3 = { module = "org.jetbrains.compose.material3:material3", vers
 compose-components-resources = { module = "org.jetbrains.compose.components:components-resources", version.ref = "compose" }
 compose-ui = { module = "org.jetbrains.compose.ui:ui", version.ref = "compose" }
 compose-ui-backhandler = { module = "org.jetbrains.compose.ui:ui-backhandler", version.ref = "compose" }
+compose-ui-tooling = { module = "org.jetbrains.compose.ui:ui-tooling", version.ref = "compose" }
 compose-ui-tooling-preview = { module = "org.jetbrains.compose.ui:ui-tooling-preview", version.ref = "compose" }
 
 # ViewModel
@@ -71,6 +72,10 @@ ktor-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
 ktor-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
 ktor-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
 ktor-websockets = { module = "io.ktor:ktor-client-websockets", version.ref = "ktor" }
+
+# OkHttp
+# https://github.com/square/okhttp
+okhttp = { module = "com.squareup.okhttp3:okhttp", version = "5.3.2" }
 
 # Image loader
 # https://github.com/coil-kt/coil

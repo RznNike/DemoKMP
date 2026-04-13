@@ -69,6 +69,7 @@ kotlin {
             implementation(libs.ktor.negotiation)
             implementation(libs.ktor.json)
             implementation(libs.ktor.websockets)
+            implementation(libs.okhttp)
 
             implementation(libs.room.runtime)
             implementation(libs.sqlite.bundled)
@@ -116,6 +117,7 @@ kotlin {
 dependencies {
     add("kspAndroid", libs.room.compiler)
     add("kspDesktop", libs.room.compiler)
+    debugImplementation(libs.compose.ui.tooling)
 }
 
 android {
