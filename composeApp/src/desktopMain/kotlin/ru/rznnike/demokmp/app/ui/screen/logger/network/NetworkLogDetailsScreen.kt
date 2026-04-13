@@ -10,7 +10,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.input.key.*
 import androidx.compose.ui.platform.LocalClipboard
 import androidx.compose.ui.text.intl.Locale
@@ -24,11 +23,7 @@ import ru.rznnike.demokmp.app.navigation.getNavigator
 import ru.rznnike.demokmp.app.navigation.navtype.networkLogMessageNavType
 import ru.rznnike.demokmp.app.ui.theme.bodyLargeBold
 import ru.rznnike.demokmp.app.ui.theme.bodyMediumMono
-import ru.rznnike.demokmp.app.ui.view.LinkifyText
-import ru.rznnike.demokmp.app.ui.view.SelectableOutlinedIconButton
-import ru.rznnike.demokmp.app.ui.view.SlimOutlinedTextField
-import ru.rznnike.demokmp.app.ui.view.Text
-import ru.rznnike.demokmp.app.ui.view.Tooltip
+import ru.rznnike.demokmp.app.ui.view.*
 import ru.rznnike.demokmp.app.ui.viewmodel.logger.network.NetworkLogDetailsViewModel
 import ru.rznnike.demokmp.app.ui.window.LocalWindow
 import ru.rznnike.demokmp.app.utils.backgroundColor
@@ -180,11 +175,7 @@ class NetworkLogDetailsScreen(
                             .weight(1f)
                     ) {
                         val scrollState = rememberScrollState()
-                        SelectionContainer(
-                            modifier = Modifier.focusProperties {
-                                canFocus = false
-                            }
-                        ) {
+                        SelectionContainer {
                             Column(
                                 modifier = Modifier
                                     .fillMaxSize()

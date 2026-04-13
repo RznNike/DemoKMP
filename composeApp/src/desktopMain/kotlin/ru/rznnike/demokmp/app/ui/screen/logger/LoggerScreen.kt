@@ -228,11 +228,7 @@ class LoggerScreen : DesktopNavigationScreen() {
                             LoggerViewModel.Tab.ALL -> allScrollState
                             LoggerViewModel.Tab.NETWORK -> networkScrollState
                         }
-                        SelectionContainer(
-                            modifier = Modifier.focusProperties {
-                                canFocus = false
-                            }
-                        ) {
+                        SelectionContainer {
                             LazyColumn(
                                 state = currentScrollState,
                                 modifier = Modifier.fillMaxSize()
