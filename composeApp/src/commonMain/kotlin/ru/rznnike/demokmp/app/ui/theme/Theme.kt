@@ -250,9 +250,9 @@ fun AppTheme(
 fun PreviewAppTheme(
     content: @Composable () -> Unit
 ) {
-    val colorScheme = lightScheme
-    val customColorScheme = lightCustomScheme
-    val customDrawables = lightCustomDrawables
+    val colorScheme = if (isSystemInDarkTheme()) darkScheme else lightScheme
+    val customColorScheme = if (isSystemInDarkTheme()) darkCustomScheme else lightCustomScheme
+    val customDrawables = if (isSystemInDarkTheme()) darkCustomDrawables else lightCustomDrawables
 
     CompositionLocalProvider(
         LocalIsDarkTheme provides false,
