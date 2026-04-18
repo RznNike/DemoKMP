@@ -147,7 +147,7 @@ android-application = { id = "com.android.application", version = "8.13.2" }
 
 # BuildConfig
 # https://github.com/yshrsmz/BuildKonfig
-buildkonfig = { id = "com.codingfeline.buildkonfig", version = "0.17.1" }
+buildkonfig = { id = "com.codingfeline.buildkonfig", version = "0.18.0" }
 
 # KSP
 # https://mvnrepository.com/artifact/com.google.devtools.ksp/com.google.devtools.ksp.gradle.plugin?repo=central
