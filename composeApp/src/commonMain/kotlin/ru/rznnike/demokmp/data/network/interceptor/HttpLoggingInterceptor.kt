@@ -6,6 +6,7 @@ import okhttp3.MediaType
 import okhttp3.Response
 import okhttp3.internal.http.promisesBody
 import okio.Buffer
+import okio.BufferedSource
 import okio.GzipSource
 import ru.rznnike.demokmp.BuildKonfig
 import ru.rznnike.demokmp.data.utils.json.prettifyJson
@@ -218,14 +219,14 @@ class HttpLoggingInterceptor(
     }
 }
 
-fun Buffer.isProbablyUtf8(): Boolean {
+private fun BufferedSource.isProbablyUtf8(): Boolean {
     try {
-        val prefix = Buffer()
-        val byteCount = size.coerceAtMost(64)
-        copyTo(prefix, 0, byteCount)
-
-        while (!prefix.exhausted()) {
-            val codePoint = prefix.readUtf8CodePoint()
+        val peek = peek()
+        for (i in 0 until 16) {
+            if (peek.exhausted()) {
+                break
+            }
+            val codePoint = peek.readUtf8CodePoint()
             if (Character.isISOControl(codePoint) && !Character.isWhitespace(codePoint)) {
                 return false
             }
@@ -236,4 +237,4 @@ fun Buffer.isProbablyUtf8(): Boolean {
     }
 }
 
-internal fun MediaType?.charsetOrUtf8() = this?.charset() ?: Charsets.UTF_8
+private fun MediaType?.charsetOrUtf8() = this?.charset() ?: Charsets.UTF_8
