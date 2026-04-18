@@ -5,8 +5,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.rememberScrollbarAdapter
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -22,6 +20,7 @@ import org.jetbrains.compose.resources.stringResource
 import ru.rznnike.demokmp.app.navigation.DesktopNavigationScreen
 import ru.rznnike.demokmp.app.navigation.getNavigator
 import ru.rznnike.demokmp.app.ui.view.*
+import ru.rznnike.demokmp.app.utils.cardBackground
 import ru.rznnike.demokmp.app.utils.onClick
 import ru.rznnike.demokmp.app.utils.onEnterKey
 import ru.rznnike.demokmp.app.viewmodel.customui.CustomUIViewModel
@@ -74,137 +73,126 @@ class CustomUIScreen : DesktopNavigationScreen() {
                         .fillMaxSize()
                         .verticalScroll(state)
                 ) {
-                    Surface(
-                        modifier = Modifier.fillMaxWidth(),
-                        shape = MaterialTheme.shapes.medium,
-                        color = MaterialTheme.colorScheme.surface
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .cardBackground()
+                            .padding(4.dp)
                     ) {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(4.dp)
-                        ) {
-                            CustomUIViewModel.Tab.entries.forEach {
-                                TabText(
-                                    modifier = Modifier
-                                        .onClick {
-                                            viewModel.onTabChanged(it)
-                                        }
-                                        .padding(12.dp),
-                                    text = stringResource(it.nameRes),
-                                    selected = it == uiState.selectedTab
-                                )
-                            }
-                        }
-                    }
-                    Spacer(Modifier.height(16.dp))
-                    Surface(
-                        modifier = Modifier.fillMaxWidth(),
-                        shape = MaterialTheme.shapes.medium,
-                        color = MaterialTheme.colorScheme.surface
-                    ) {
-                        FlowRow(
-                            modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
-                            horizontalArrangement = Arrangement.spacedBy(16.dp),
-                            verticalArrangement = Arrangement.spacedBy(16.dp)
-                        ) {
-                            FilledButton(
-                                modifier = Modifier.padding(vertical = 4.dp),
-                                onClick = { }
-                            ) {
-                                Text(Res.string.button)
-                            }
-                            SelectableButton(
-                                onClick = { }
-                            ) {
-                                Text(Res.string.button)
-                            }
-                            OutlinedRoundedButton(
-                                modifier = Modifier.padding(vertical = 4.dp),
-                                onClick = { }
-                            ) {
-                                Text(Res.string.button)
-                            }
-                            SelectableOutlinedButton(
-                                modifier = Modifier.padding(vertical = 4.dp),
-                                onClick = { }
-                            ) {
-                                Text(Res.string.button)
-                            }
-                            SelectableOutlinedIconButton(
-                                modifier = Modifier.padding(vertical = 4.dp),
-                                iconRes = Res.drawable.ic_refresh,
-                                onClick = { }
+                        CustomUIViewModel.Tab.entries.forEach {
+                            TabText(
+                                modifier = Modifier
+                                    .onClick {
+                                        viewModel.onTabChanged(it)
+                                    }
+                                    .padding(12.dp),
+                                text = stringResource(it.nameRes),
+                                selected = it == uiState.selectedTab
                             )
                         }
                     }
                     Spacer(Modifier.height(16.dp))
-                    Surface(
-                        modifier = Modifier.fillMaxWidth(),
-                        shape = MaterialTheme.shapes.medium,
-                        color = MaterialTheme.colorScheme.surface
+                    FlowRow(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .cardBackground()
+                            .padding(horizontal = 16.dp, vertical = 12.dp),
+                        horizontalArrangement = Arrangement.spacedBy(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
-                        Column(
-                            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                        FilledButton(
+                            modifier = Modifier.padding(vertical = 4.dp),
+                            onClick = { }
                         ) {
-                            Row(
-                                modifier = Modifier.fillMaxWidth()
-                            ) {
-                                SlimOutlinedTextField(
-                                    modifier = Modifier
-                                        .width(200.dp)
-                                        .onEnterKey {
-                                            focusManager.moveFocus(FocusDirection.Next)
-                                        },
-                                    value = viewModel.textInput,
-                                    onValueChange = viewModel::onTextInput,
-                                    singleLine = true,
-                                    label = {
-                                        Text(Res.string.input_field)
-                                    }
-                                )
-                                Spacer(Modifier.width(16.dp))
-                                DateTextField(
-                                    modifier = Modifier
-                                        .width(160.dp)
-                                        .height(48.dp),
-                                    labelRes = Res.string.date_selection,
-                                    value = viewModel.dateInputManager.inputString,
-                                    isError = viewModel.dateInputManager.isError,
-                                    calendarInitialDate = uiState.dateFilter.value,
-                                    calendarMinDate = uiState.dateFilter.dateMin,
-                                    calendarMaxDate = uiState.dateFilter.dateMax,
-                                    onValueChange = viewModel.dateInputManager::setInput,
-                                    onDateChange = viewModel::onDateChange,
-                                    onSave = viewModel::confirmDateInput
-                                )
-                            }
-                            Spacer(Modifier.height(8.dp))
-                            Row(
-                                modifier = Modifier.fillMaxWidth()
-                            ) {
-                                DropdownSelector(
-                                    modifier = Modifier
-                                        .width(200.dp),
-                                    label = stringResource(Res.string.dropdown),
-                                    items = uiState.dropdownOptions,
-                                    selectedItem = uiState.dropdownSelection,
-                                    itemNameRetriever = { it ?: "" },
-                                    onItemSelected = viewModel::onDropdownSelectionChanged
-                                )
-                                Spacer(Modifier.width(16.dp))
-                                DropdownQuerySelector(
-                                    modifier = Modifier
-                                        .width(200.dp),
-                                    label = stringResource(Res.string.dropdown_with_filter),
-                                    items = uiState.dropdownOptions,
-                                    selectedItem = uiState.dropdownQuerySelection,
-                                    itemNameRetriever = { it ?: "" },
-                                    onItemSelected = viewModel::onDropdownQuerySelectionChanged
-                                )
-                            }
-                            Spacer(Modifier.height(8.dp))
+                            Text(Res.string.button)
                         }
+                        SelectableButton(
+                            onClick = { }
+                        ) {
+                            Text(Res.string.button)
+                        }
+                        OutlinedRoundedButton(
+                            modifier = Modifier.padding(vertical = 4.dp),
+                            onClick = { }
+                        ) {
+                            Text(Res.string.button)
+                        }
+                        SelectableOutlinedButton(
+                            modifier = Modifier.padding(vertical = 4.dp),
+                            onClick = { }
+                        ) {
+                            Text(Res.string.button)
+                        }
+                        SelectableOutlinedIconButton(
+                            modifier = Modifier.padding(vertical = 4.dp),
+                            iconRes = Res.drawable.ic_refresh,
+                            onClick = { }
+                        )
+                    }
+                    Spacer(Modifier.height(16.dp))
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .cardBackground()
+                            .padding(horizontal = 16.dp, vertical = 8.dp)
+                    ) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            SlimOutlinedTextField(
+                                modifier = Modifier
+                                    .width(200.dp)
+                                    .onEnterKey {
+                                        focusManager.moveFocus(FocusDirection.Next)
+                                    },
+                                value = viewModel.textInput,
+                                onValueChange = viewModel::onTextInput,
+                                singleLine = true,
+                                label = {
+                                    Text(Res.string.input_field)
+                                }
+                            )
+                            Spacer(Modifier.width(16.dp))
+                            DateTextField(
+                                modifier = Modifier
+                                    .width(150.dp)
+                                    .height(48.dp),
+                                labelRes = Res.string.date_selection,
+                                value = viewModel.dateInputManager.inputString,
+                                isError = viewModel.dateInputManager.isError,
+                                calendarInitialDate = uiState.dateFilter.value,
+                                calendarMinDate = uiState.dateFilter.dateMin,
+                                calendarMaxDate = uiState.dateFilter.dateMax,
+                                onValueChange = viewModel.dateInputManager::setInput,
+                                onDateChange = viewModel::onDateChange,
+                                onSave = viewModel::confirmDateInput
+                            )
+                        }
+                        Spacer(Modifier.height(8.dp))
+                        Row(
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            DropdownSelector(
+                                modifier = Modifier
+                                    .width(200.dp),
+                                label = stringResource(Res.string.dropdown),
+                                items = uiState.dropdownOptions,
+                                selectedItem = uiState.dropdownSelection,
+                                itemNameRetriever = { it ?: "" },
+                                onItemSelected = viewModel::onDropdownSelectionChanged
+                            )
+                            Spacer(Modifier.width(16.dp))
+                            DropdownQuerySelector(
+                                modifier = Modifier
+                                    .width(200.dp),
+                                label = stringResource(Res.string.dropdown_with_filter),
+                                items = uiState.dropdownOptions,
+                                selectedItem = uiState.dropdownQuerySelection,
+                                itemNameRetriever = { it ?: "" },
+                                onItemSelected = viewModel::onDropdownQuerySelectionChanged
+                            )
+                        }
+                        Spacer(Modifier.height(8.dp))
                     }
                     Spacer(Modifier.height(16.dp))
                 }

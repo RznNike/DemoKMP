@@ -17,6 +17,7 @@ import org.koin.compose.koinInject
 import ru.rznnike.demokmp.app.navigation.AndroidNavigationScreen
 import ru.rznnike.demokmp.app.navigation.getNavigator
 import ru.rznnike.demokmp.app.ui.view.*
+import ru.rznnike.demokmp.app.utils.cardBackground
 import ru.rznnike.demokmp.app.utils.getSelectedLanguage
 import ru.rznnike.demokmp.app.utils.nameRes
 import ru.rznnike.demokmp.app.utils.navigationBarsSidesPadding
@@ -73,72 +74,66 @@ class SettingsScreen : AndroidNavigationScreen() {
                         .navigationBarsPadding()
                         .padding(bottom = 16.dp)
                 ) {
-                    Surface(
-                        modifier = Modifier.fillMaxWidth(),
-                        shape = MaterialTheme.shapes.medium,
-                        color = MaterialTheme.colorScheme.surface
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .cardBackground()
+                            .padding(16.dp)
                     ) {
-                        Column(
-                            modifier = Modifier.padding(16.dp)
-                        ) {
-                            val nameString = "%s: %s".format(
-                                stringResource(Res.string.user_name),
-                                profileViewModel.nameInput
-                            )
-                            Text(
-                                modifier = Modifier.fillMaxWidth(),
-                                text = nameString,
-                                textAlign = TextAlign.Center,
-                            )
-                            Spacer(Modifier.height(16.dp))
-                            FilledButton(
-                                modifier = Modifier.align(Alignment.CenterHorizontally),
-                                onClick = {
-                                    navigator.openScreen(NestedSettingsScreen())
-                                }
-                            ) {
-                                Text(Res.string.nested_settings)
+                        val nameString = "%s: %s".format(
+                            stringResource(Res.string.user_name),
+                            profileViewModel.nameInput
+                        )
+                        Text(
+                            modifier = Modifier.fillMaxWidth(),
+                            text = nameString,
+                            textAlign = TextAlign.Center,
+                        )
+                        Spacer(Modifier.height(16.dp))
+                        FilledButton(
+                            modifier = Modifier.align(Alignment.CenterHorizontally),
+                            onClick = {
+                                navigator.openScreen(NestedSettingsScreen())
                             }
+                        ) {
+                            Text(Res.string.nested_settings)
                         }
                     }
 
                     Spacer(Modifier.height(16.dp))
-                    Surface(
-                        modifier = Modifier.fillMaxWidth(),
-                        shape = MaterialTheme.shapes.medium,
-                        color = MaterialTheme.colorScheme.surface
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .cardBackground()
+                            .padding(16.dp),
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Row(
-                            modifier = Modifier.padding(16.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(
-                                textRes = Res.string.test_counter,
-                                modifier = Modifier
-                                    .weight(1f)
-                            )
-                            Spacer(Modifier.width(16.dp))
-                            SelectableOutlinedIconButton(
-                                iconRes = Res.drawable.ic_minus,
-                                onClick = {
-                                    viewModel.onCounterInput(uiState.counter - 1)
-                                }
-                            )
-                            Spacer(Modifier.width(8.dp))
-                            Text(
-                                text = uiState.counter.toString(),
-                                modifier = Modifier
-                                    .width(50.dp),
-                                textAlign = TextAlign.Center
-                            )
-                            Spacer(Modifier.width(8.dp))
-                            SelectableOutlinedIconButton(
-                                iconRes = Res.drawable.ic_plus,
-                                onClick = {
-                                    viewModel.onCounterInput(uiState.counter + 1)
-                                }
-                            )
-                        }
+                        Text(
+                            textRes = Res.string.test_counter,
+                            modifier = Modifier
+                                .weight(1f)
+                        )
+                        Spacer(Modifier.width(16.dp))
+                        SelectableOutlinedIconButton(
+                            iconRes = Res.drawable.ic_minus,
+                            onClick = {
+                                viewModel.onCounterInput(uiState.counter - 1)
+                            }
+                        )
+                        Spacer(Modifier.width(8.dp))
+                        Text(
+                            text = uiState.counter.toString(),
+                            modifier = Modifier
+                                .width(50.dp),
+                            textAlign = TextAlign.Center
+                        )
+                        Spacer(Modifier.width(8.dp))
+                        SelectableOutlinedIconButton(
+                            iconRes = Res.drawable.ic_plus,
+                            onClick = {
+                                viewModel.onCounterInput(uiState.counter + 1)
+                            }
+                        )
                     }
 
                     @Composable
@@ -146,42 +141,37 @@ class SettingsScreen : AndroidNavigationScreen() {
                         headerRes: StringResource,
                         buttonText: String,
                         content: @Composable (ColumnScope.(closeMenu: () -> Unit) -> Unit)
+                    ) = Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .cardBackground()
+                            .padding(12.dp),
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Surface(
-                            modifier = Modifier.fillMaxWidth(),
-                            shape = MaterialTheme.shapes.medium,
-                            color = MaterialTheme.colorScheme.surface
-                        ) {
-                            Row(
-                                modifier = Modifier.padding(12.dp),
-                                verticalAlignment = Alignment.CenterVertically
+                        Spacer(Modifier.width(4.dp))
+                        Text(
+                            textRes = headerRes,
+                            modifier = Modifier.weight(1f),
+                        )
+                        Box {
+                            var showMenu by remember { mutableStateOf(false) }
+                            SelectableButton(
+                                onClick = {
+                                    showMenu = !showMenu
+                                }
                             ) {
-                                Spacer(Modifier.width(4.dp))
-                                Text(
-                                    textRes = headerRes,
-                                    modifier = Modifier.weight(1f),
-                                )
-                                Box {
-                                    var showMenu by remember { mutableStateOf(false) }
-                                    SelectableButton(
-                                        onClick = {
-                                            showMenu = !showMenu
-                                        }
-                                    ) {
-                                        Text(buttonText)
-                                    }
-                                    Box(
-                                        modifier = Modifier.padding(end = 16.dp)
-                                    ) {
-                                        DropdownMenu(
-                                            expanded = showMenu,
-                                            onDismissRequest = { showMenu = false },
-                                            containerColor = MaterialTheme.colorScheme.surface
-                                        ) {
-                                            content {
-                                                showMenu = false
-                                            }
-                                        }
+                                Text(buttonText)
+                            }
+                            Box(
+                                modifier = Modifier.padding(end = 16.dp)
+                            ) {
+                                DropdownMenu(
+                                    expanded = showMenu,
+                                    onDismissRequest = { showMenu = false },
+                                    containerColor = MaterialTheme.colorScheme.surface
+                                ) {
+                                    content {
+                                        showMenu = false
                                     }
                                 }
                             }

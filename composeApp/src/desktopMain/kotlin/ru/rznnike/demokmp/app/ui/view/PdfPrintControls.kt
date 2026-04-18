@@ -32,7 +32,7 @@ fun PdfPrintControls(
 ) {
     DropdownSelector(
         modifier = Modifier
-            .width(220.dp)
+            .width(210.dp)
             .padding(bottom = 8.dp),
         label = stringResource(Res.string.two_sided_print),
         items = TwoSidedPrint.entries,

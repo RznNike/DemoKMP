@@ -1,5 +1,7 @@
 package ru.rznnike.demokmp.app.utils
 
+import androidx.compose.foundation.background
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
@@ -30,3 +32,9 @@ fun CustomUiScale(
         content()
     }
 }
+
+@Composable
+fun Modifier.cardBackground(): Modifier = background(
+    color = MaterialTheme.colorScheme.surface,
+    shape = MaterialTheme.shapes.medium
+)

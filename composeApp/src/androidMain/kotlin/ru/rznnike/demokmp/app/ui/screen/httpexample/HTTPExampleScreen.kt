@@ -8,7 +8,6 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,6 +23,7 @@ import ru.rznnike.demokmp.app.navigation.AndroidNavigationScreen
 import ru.rznnike.demokmp.app.navigation.getNavigator
 import ru.rznnike.demokmp.app.ui.view.Toolbar
 import ru.rznnike.demokmp.app.ui.view.ToolbarButton
+import ru.rznnike.demokmp.app.utils.cardBackground
 import ru.rznnike.demokmp.app.utils.statusBarsAndCutoutPadding
 import ru.rznnike.demokmp.app.viewmodel.httpexample.HTTPExampleViewModel
 import ru.rznnike.demokmp.generated.resources.Res
@@ -59,68 +59,63 @@ class HTTPExampleScreen : AndroidNavigationScreen() {
             )
             Spacer(Modifier.height(16.dp))
 
-            Surface(
+            Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .weight(1f),
-                shape = MaterialTheme.shapes.medium,
-                color = MaterialTheme.colorScheme.surface
+                    .weight(1f)
+                    .cardBackground()
             ) {
-                Box(
-                    modifier = Modifier.fillMaxSize()
+                val scrollState = rememberLazyGridState()
+                LazyVerticalGrid(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(horizontal = 16.dp),
+                    columns = GridCells.Adaptive(
+                        minSize = 250.dp
+                    ),
+                    state = scrollState,
+                    horizontalArrangement = Arrangement.spacedBy(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                    contentPadding = PaddingValues(vertical = 16.dp)
                 ) {
-                    val scrollState = rememberLazyGridState()
-                    LazyVerticalGrid(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(horizontal = 16.dp),
-                        columns = GridCells.Adaptive(
-                            minSize = 250.dp
-                        ),
-                        state = scrollState,
-                        horizontalArrangement = Arrangement.spacedBy(16.dp),
-                        verticalArrangement = Arrangement.spacedBy(16.dp),
-                        contentPadding = PaddingValues(vertical = 16.dp)
-                    ) {
-                        items(
-                            items = uiState.images,
-                            key = { item -> item.hashCode() }
-                        ) { image ->
-                            Box(
+                    items(
+                        items = uiState.images,
+                        key = { item -> item.hashCode() }
+                    ) { image ->
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .aspectRatio(1f),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            var showImageLoader by remember { mutableStateOf(false) }
+                            AsyncImage(
                                 modifier = Modifier
                                     .fillMaxSize()
-                                    .aspectRatio(1f),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                var showImageLoader by remember { mutableStateOf(false) }
-                                AsyncImage(
-                                    modifier = Modifier
-                                        .fillMaxSize()
-                                        .clip(MaterialTheme.shapes.medium)
-                                        .background(MaterialTheme.colorScheme.background),
-                                    model = image,
-                                    contentDescription = null,
-                                    contentScale = ContentScale.Crop,
-                                    onState = { state ->
-                                        showImageLoader = state is AsyncImagePainter.State.Loading
-                                    }
-                                )
-                                if (showImageLoader) {
-                                    CircularProgressIndicator(
-                                        modifier = Modifier.size(48.dp)
-                                    )
+                                    .clip(MaterialTheme.shapes.medium)
+                                    .background(MaterialTheme.colorScheme.background),
+                                model = image,
+                                contentDescription = null,
+                                contentScale = ContentScale.Crop,
+                                onState = { state ->
+                                    showImageLoader = state is AsyncImagePainter.State.Loading
                                 }
+                            )
+                            if (showImageLoader) {
+                                CircularProgressIndicator(
+                                    modifier = Modifier.size(48.dp)
+                                )
                             }
                         }
                     }
+                }
 
-                    if (uiState.isLoading) {
-                        CircularProgressIndicator(
-                            modifier = Modifier
-                                .size(48.dp)
-                                .align(Alignment.Center)
-                        )
-                    }
+                if (uiState.isLoading) {
+                    CircularProgressIndicator(
+                        modifier = Modifier
+                            .size(48.dp)
+                            .align(Alignment.Center)
+                    )
                 }
             }
         }

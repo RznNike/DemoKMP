@@ -34,8 +34,9 @@ import ru.rznnike.demokmp.generated.resources.Res
 import ru.rznnike.demokmp.generated.resources.error_restart_from_ide
 import java.io.File
 import java.util.*
+import kotlin.time.Duration.Companion.milliseconds
 
-private const val CLOSE_APP_TIMEOUT_MS = 20_000L
+private val CLOSE_APP_TIMEOUT_MS = 20_000.milliseconds
 
 class AppConfigurationViewModel : BaseUiViewModel<AppConfigurationViewModel.UiState>() {
     private val eventDispatcher: EventDispatcher by inject()
@@ -198,7 +199,7 @@ class AppConfigurationViewModel : BaseUiViewModel<AppConfigurationViewModel.UiSt
                 eventDispatcher.removeEventListener(eventListener)
                 destroyShellWrapperUseCase()
                 Logger.i("Application finish\n")
-                delay(100)
+                delay(100.milliseconds)
                 closeDBUseCase()
                 closeAppSingleInstanceSocketUseCase()
             }

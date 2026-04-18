@@ -40,7 +40,9 @@ fun DateTextField(
     labelRes: StringResource,
     value: String,
     isError: Boolean = false,
-    contentPadding: PaddingValues = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
+    contentPadding: PaddingValues = PaddingValues(
+        top = 8.dp, bottom = 8.dp, start = 16.dp, end = 8.dp
+    ),
     calendarInitialDate: LocalDate,
     calendarMinDate: LocalDate,
     calendarMaxDate: LocalDate,

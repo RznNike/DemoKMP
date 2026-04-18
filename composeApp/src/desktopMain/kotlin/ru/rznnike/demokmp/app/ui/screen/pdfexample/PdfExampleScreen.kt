@@ -2,7 +2,6 @@ package ru.rznnike.demokmp.app.ui.screen.pdfexample
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -23,6 +22,7 @@ import ru.rznnike.demokmp.app.navigation.getNavigator
 import ru.rznnike.demokmp.app.ui.view.*
 import ru.rznnike.demokmp.app.ui.viewmodel.common.print.FilePrintViewModel
 import ru.rznnike.demokmp.app.ui.window.LocalWindow
+import ru.rznnike.demokmp.app.utils.cardBackground
 import ru.rznnike.demokmp.app.utils.printDialog
 import ru.rznnike.demokmp.app.viewmodel.pdfexample.PdfExampleViewModel
 import ru.rznnike.demokmp.data.utils.DataConstants
@@ -83,78 +83,68 @@ class PdfExampleScreen : DesktopNavigationScreen() {
                 .fillMaxSize()
                 .padding(top = 16.dp, start = 16.dp, end = 16.dp)
         ) {
-            Surface(
-                modifier = Modifier.fillMaxWidth(),
-                color = MaterialTheme.colorScheme.surface,
-                shape = MaterialTheme.shapes.medium
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .cardBackground(),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Spacer(Modifier.width(16.dp))
-                    Tooltip("Ctrl+W") {
-                        SelectableOutlinedIconButton(
-                            modifier = Modifier
-                                .padding(vertical = 16.dp)
-                                .size(40.dp),
-                            iconRes = Res.drawable.ic_back,
-                            onClick = {
-                                navigator.closeScreen()
-                            }
-                        )
-                    }
-                    Spacer(Modifier.width(16.dp))
-                    Text(
+                Spacer(Modifier.width(16.dp))
+                Tooltip("Ctrl+W") {
+                    SelectableOutlinedIconButton(
                         modifier = Modifier
                             .padding(vertical = 16.dp)
-                            .weight(1f),
-                        textRes = Res.string.pdf_example,
-                        style = MaterialTheme.typography.titleLarge,
-                        textAlign = TextAlign.Center
-                    )
-                    Spacer(Modifier.width(8.dp))
-                    PdfPrintControls(
-                        modifier = Modifier.padding(vertical = 8.dp),
-                        pdf = uiState.pdf,
-                        printSettings = filePrintUiState.printSettings,
-                        onTwoSidedPrintChanged = filePrintViewModel::onTwoSidedPrintChanged,
-                        onPrinterSelected = filePrintViewModel::onPrinterSelected,
-                        onSaveClick = {
-                            fileSaver.launch(
-                                suggestedName = viewModel.getSuggestedSaveFileName(),
-                                extension = DataConstants.PDF_FILE_NAME_EXTENSION
-                            )
+                            .size(40.dp),
+                        iconRes = Res.drawable.ic_back,
+                        onClick = {
+                            navigator.closeScreen()
                         }
                     )
-                    Spacer(Modifier.width(16.dp))
                 }
+                Spacer(Modifier.width(16.dp))
+                Text(
+                    modifier = Modifier
+                        .padding(vertical = 16.dp)
+                        .weight(1f),
+                    textRes = Res.string.pdf_example,
+                    style = MaterialTheme.typography.titleLarge,
+                    textAlign = TextAlign.Center
+                )
+                Spacer(Modifier.width(8.dp))
+                PdfPrintControls(
+                    modifier = Modifier.padding(vertical = 8.dp),
+                    pdf = uiState.pdf,
+                    printSettings = filePrintUiState.printSettings,
+                    onTwoSidedPrintChanged = filePrintViewModel::onTwoSidedPrintChanged,
+                    onPrinterSelected = filePrintViewModel::onPrinterSelected,
+                    onSaveClick = {
+                        fileSaver.launch(
+                            suggestedName = viewModel.getSuggestedSaveFileName(),
+                            extension = DataConstants.PDF_FILE_NAME_EXTENSION
+                        )
+                    }
+                )
+                Spacer(Modifier.width(16.dp))
             }
             Spacer(Modifier.height(16.dp))
 
-            Surface(
-                modifier = Modifier
+            Box(
+                modifier = Modifier.fillMaxSize()
                     .weight(1f)
-                    .fillMaxWidth(),
-                shape = MaterialTheme.shapes.medium,
-                color = MaterialTheme.colorScheme.surface
+                    .fillMaxWidth()
+                    .cardBackground()
             ) {
-                Box(
-                    modifier = Modifier.fillMaxSize()
-                ) {
-                    PdfViewer(
-                        modifier = Modifier.fillMaxSize(),
-                        file = uiState.pdf,
-                        isError = uiState.isError,
-                        errorText = if (uiState.isError) {
-                            stringResource(Res.string.error_file_not_found).format(DataConstants.TEST_PDF_PATH)
-                        } else {
-                            null
-                        },
-                        loadingContext = dispatcherProvider.io
-                    )
-                }
+                PdfViewer(
+                    modifier = Modifier.fillMaxSize(),
+                    file = uiState.pdf,
+                    isError = uiState.isError,
+                    errorText = if (uiState.isError) {
+                        stringResource(Res.string.error_file_not_found).format(DataConstants.TEST_PDF_PATH)
+                    } else {
+                        null
+                    },
+                    loadingContext = dispatcherProvider.io
+                )
             }
         }
     }

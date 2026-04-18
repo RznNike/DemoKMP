@@ -5,11 +5,11 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.key.*
 import androidx.compose.ui.platform.LocalClipboard
 import androidx.compose.ui.text.intl.Locale
@@ -27,6 +27,7 @@ import ru.rznnike.demokmp.app.ui.view.*
 import ru.rznnike.demokmp.app.ui.viewmodel.logger.network.NetworkLogDetailsViewModel
 import ru.rznnike.demokmp.app.ui.window.LocalWindow
 import ru.rznnike.demokmp.app.utils.backgroundColor
+import ru.rznnike.demokmp.app.utils.cardBackground
 import ru.rznnike.demokmp.app.utils.highlightSubstrings
 import ru.rznnike.demokmp.app.utils.setText
 import ru.rznnike.demokmp.data.utils.DataConstants
@@ -69,153 +70,140 @@ class NetworkLogDetailsScreen(
         }
 
         @Composable
-        fun Header() {
-            Row(
-                modifier = Modifier.fillMaxWidth()
+        fun Header() = Row(
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Box(
+                modifier = Modifier.cardBackground()
             ) {
-                Surface(
-                    color = MaterialTheme.colorScheme.surface,
-                    shape = MaterialTheme.shapes.medium
-                ) {
-                    Tooltip("Ctrl+W") {
-                        SelectableOutlinedIconButton(
-                            modifier = Modifier
-                                .padding(16.dp)
-                                .size(40.dp),
-                            iconRes = Res.drawable.ic_back,
-                            onClick = {
-                                navigator.closeScreen()
-                            }
-                        )
-                    }
-                }
-                Spacer(Modifier.width(16.dp))
-                Surface(
-                    modifier = Modifier.weight(1f),
-                    color = MaterialTheme.colorScheme.surface,
-                    shape = MaterialTheme.shapes.medium
-                ) {
-                    Row(
+                Tooltip("Ctrl+W") {
+                    SelectableOutlinedIconButton(
                         modifier = Modifier
                             .padding(16.dp)
-                            .fillMaxWidth()
-                    ) {
-                        SlimOutlinedTextField(
-                            modifier = Modifier
-                                .width(300.dp)
-                                .height(40.dp),
-                            value = viewModel.queryInput,
-                            singleLine = true,
-                            placeholder = {
-                                Text(Res.string.search)
-                            },
-                            onValueChange = viewModel::onQueryInput
-                        )
-                        Spacer(Modifier.width(8.dp))
-                        if (uiState.queryMatches > 0) {
-                            Text(
-                                modifier = Modifier.align(Alignment.CenterVertically),
-                                text = uiState.queryMatches.toString(),
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
+                            .size(40.dp),
+                        iconRes = Res.drawable.ic_back,
+                        onClick = {
+                            navigator.closeScreen()
                         }
-                        Spacer(Modifier.weight(1f))
+                    )
+                }
+            }
+            Spacer(Modifier.width(16.dp))
+            Row(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth()
+                    .cardBackground()
+                    .padding(16.dp)
+            ) {
+                SlimOutlinedTextField(
+                    modifier = Modifier
+                        .width(300.dp)
+                        .height(40.dp),
+                    value = viewModel.queryInput,
+                    singleLine = true,
+                    placeholder = {
+                        Text(Res.string.search)
+                    },
+                    onValueChange = viewModel::onQueryInput
+                )
+                Spacer(Modifier.width(8.dp))
+                if (uiState.queryMatches > 0) {
+                    Text(
+                        modifier = Modifier.align(Alignment.CenterVertically),
+                        text = uiState.queryMatches.toString(),
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+                Spacer(Modifier.weight(1f))
 
-                        Spacer(Modifier.width(16.dp))
-                        SelectableOutlinedIconButton(
-                            modifier = Modifier.size(40.dp),
-                            iconRes = Res.drawable.ic_copy,
-                            onClick = {
-                                clipboard.setText(
-                                    text = uiState.networkLogMessage.getFullText(),
-                                    scope = coroutineScope
-                                )
-                            }
-                        )
-
-                        Spacer(Modifier.width(16.dp))
-                        SelectableOutlinedIconButton(
-                            modifier = Modifier.size(40.dp),
-                            iconRes = Res.drawable.ic_save,
-                            onClick = {
-                                fileSaver.launch(
-                                    suggestedName = viewModel.getSuggestedSaveFileName(),
-                                    extension = DataConstants.LOG_FILE_NAME_EXTENSION
-                                )
-                            }
+                Spacer(Modifier.width(16.dp))
+                SelectableOutlinedIconButton(
+                    modifier = Modifier.size(40.dp),
+                    iconRes = Res.drawable.ic_copy,
+                    onClick = {
+                        clipboard.setText(
+                            text = uiState.networkLogMessage.getFullText(),
+                            scope = coroutineScope
                         )
                     }
-                }
+                )
+
+                Spacer(Modifier.width(16.dp))
+                SelectableOutlinedIconButton(
+                    modifier = Modifier.size(40.dp),
+                    iconRes = Res.drawable.ic_save,
+                    onClick = {
+                        fileSaver.launch(
+                            suggestedName = viewModel.getSuggestedSaveFileName(),
+                            extension = DataConstants.LOG_FILE_NAME_EXTENSION
+                        )
+                    }
+                )
             }
         }
 
         @Composable
-        fun ColumnScope.Body() {
-            Surface(
+        fun ColumnScope.Body() = Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f)
+                .cardBackground()
+                .clip(MaterialTheme.shapes.medium)
+        ) {
+            Text(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .weight(1f),
-                color = MaterialTheme.colorScheme.surface,
-                shape = MaterialTheme.shapes.medium
+                    .background(uiState.networkLogMessage.state.backgroundColor)
+                    .padding(horizontal = 24.dp, vertical = 16.dp),
+                text = uiState.networkLogMessage.request.message.lines().first().removePrefix("--> "),
+                style = MaterialTheme.typography.bodyLargeBold
+            )
+            Box(
+                Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
             ) {
-                Column(
-                    modifier = Modifier.fillMaxSize()
-                ) {
-                    Text(
+                val scrollState = rememberScrollState()
+                SelectionContainer {
+                    Column(
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .background(uiState.networkLogMessage.state.backgroundColor)
-                            .padding(horizontal = 24.dp, vertical = 16.dp),
-                        text = uiState.networkLogMessage.request.message.lines().first().removePrefix("--> "),
-                        style = MaterialTheme.typography.bodyLargeBold
-                    )
-                    Box(
-                        Modifier
-                            .fillMaxWidth()
-                            .weight(1f)
+                            .fillMaxSize()
+                            .verticalScroll(
+                                state = scrollState
+                            )
                     ) {
-                        val scrollState = rememberScrollState()
-                        SelectionContainer {
-                            Column(
+                        @Composable
+                        fun MessageText(message: LogMessage) {
+                            val text = "%s\n%s".format(
+                                message.timestamp.toDateString(GlobalConstants.DATE_PATTERN_TIME_MS),
+                                message.getFormattedMessage()
+                            )
+                            LinkifyText(
                                 modifier = Modifier
-                                    .fillMaxSize()
-                                    .verticalScroll(
-                                        state = scrollState
-                                    )
-                            ) {
-                                @Composable
-                                fun MessageText(message: LogMessage) {
-                                    val text = "%s\n%s".format(
-                                        message.timestamp.toDateString(GlobalConstants.DATE_PATTERN_TIME_MS),
-                                        message.getFormattedMessage()
-                                    )
-                                    LinkifyText(
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .padding(16.dp),
-                                        text = text.highlightSubstrings(viewModel.queryInput),
-                                        style = MaterialTheme.typography.bodyMediumMono
-                                    )
-                                }
-
-                                MessageText(uiState.networkLogMessage.request)
-                                uiState.networkLogMessage.response?.let { response ->
-                                    HorizontalDivider(
-                                        thickness = 1.dp,
-                                        color = MaterialTheme.colorScheme.outline
-                                    )
-                                    MessageText(response)
-                                }
-                            }
+                                    .fillMaxWidth()
+                                    .padding(16.dp),
+                                text = text.highlightSubstrings(viewModel.queryInput),
+                                style = MaterialTheme.typography.bodyMediumMono
+                            )
                         }
-                        VerticalScrollbar(
-                            modifier = Modifier
-                                .align(Alignment.CenterEnd)
-                                .fillMaxHeight(),
-                            adapter = rememberScrollbarAdapter(scrollState)
-                        )
+
+                        MessageText(uiState.networkLogMessage.request)
+                        uiState.networkLogMessage.response?.let { response ->
+                            HorizontalDivider(
+                                thickness = 1.dp,
+                                color = MaterialTheme.colorScheme.outline
+                            )
+                            MessageText(response)
+                        }
                     }
                 }
+                VerticalScrollbar(
+                    modifier = Modifier
+                        .align(Alignment.CenterEnd)
+                        .fillMaxHeight(),
+                    adapter = rememberScrollbarAdapter(scrollState)
+                )
             }
         }
 

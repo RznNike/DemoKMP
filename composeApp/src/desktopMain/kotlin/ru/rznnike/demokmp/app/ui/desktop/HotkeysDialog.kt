@@ -2,13 +2,12 @@ package ru.rznnike.demokmp.app.ui.desktop
 
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextAlign
@@ -20,6 +19,7 @@ import ru.rznnike.demokmp.app.ui.theme.bodyLargeBold
 import ru.rznnike.demokmp.app.ui.theme.bodyMediumBold
 import ru.rznnike.demokmp.app.ui.view.OutlinedRoundedButton
 import ru.rznnike.demokmp.app.ui.view.Text
+import ru.rznnike.demokmp.app.utils.cardBackground
 import ru.rznnike.demokmp.generated.resources.*
 
 private val MIN_WIDTH_DP = 400.dp
@@ -43,11 +43,11 @@ fun HotkeysDialog(
                 usePlatformDefaultWidth = false
             )
         ) {
-            Card(
-                colors = CardDefaults.cardColors().copy(
-                    containerColor = MaterialTheme.colorScheme.surface,
-                    contentColor = MaterialTheme.colorScheme.onSurface
-                ),
+            Box(
+                modifier = Modifier
+                    .padding(16.dp)
+                    .cardBackground()
+                    .clip(MaterialTheme.shapes.medium)
             ) {
                 Column(
                     modifier = Modifier
@@ -158,10 +158,7 @@ fun HotkeysDialog(
                         OutlinedRoundedButton(
                             modifier = Modifier
                                 .padding(16.dp)
-                                .background(
-                                    color = MaterialTheme.colorScheme.surface,
-                                    shape = MaterialTheme.shapes.medium
-                                )
+                                .cardBackground()
                                 .align(Alignment.BottomEnd),
                             onClick = {
                                 showDialog.value = false

@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.jetbrains.compose.resources.DrawableResource
 import ru.rznnike.demokmp.app.ui.theme.PreviewAppTheme
+import ru.rznnike.demokmp.app.utils.cardBackground
 import ru.rznnike.demokmp.generated.resources.Res
 import ru.rznnike.demokmp.generated.resources.ic_back
 import ru.rznnike.demokmp.generated.resources.ic_menu
@@ -30,10 +31,7 @@ fun Toolbar(
 ) = Row(
     modifier = modifier
         .fillMaxWidth()
-        .background(
-            color = MaterialTheme.colorScheme.surface,
-            shape = MaterialTheme.shapes.medium
-        ),
+        .cardBackground(),
     verticalAlignment = Alignment.CenterVertically
 ) {
     @Composable

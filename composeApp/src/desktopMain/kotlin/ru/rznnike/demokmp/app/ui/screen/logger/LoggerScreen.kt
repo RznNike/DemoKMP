@@ -10,10 +10,10 @@ import androidx.compose.foundation.rememberScrollbarAdapter
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.input.key.*
 import androidx.compose.ui.text.intl.Locale
@@ -36,6 +36,7 @@ import ru.rznnike.demokmp.app.ui.screen.logger.network.NetworkLogDetailsScreen
 import ru.rznnike.demokmp.app.ui.view.*
 import ru.rznnike.demokmp.app.ui.viewmodel.logger.LoggerViewModel
 import ru.rznnike.demokmp.app.ui.window.LocalWindow
+import ru.rznnike.demokmp.app.utils.cardBackground
 import ru.rznnike.demokmp.app.utils.onClick
 import ru.rznnike.demokmp.data.utils.DataConstants
 import ru.rznnike.demokmp.domain.log.LogType
@@ -73,286 +74,273 @@ class LoggerScreen : DesktopNavigationScreen() {
         }
 
         @Composable
-        fun Header() {
-            Surface(
-                modifier = Modifier.fillMaxWidth(),
-                color = MaterialTheme.colorScheme.surface,
-                shape = MaterialTheme.shapes.medium
+        fun Header() = Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .cardBackground()
+                .padding(start = 16.dp, end = 16.dp, bottom = 16.dp, top = 8.dp)
+        ) {
+            SlimOutlinedTextField(
+                modifier = Modifier.width(300.dp),
+                value = viewModel.filterInput,
+                singleLine = true,
+                label = {
+                    Text(Res.string.filter)
+                },
+                onValueChange = viewModel::onFilterInput
+            )
+
+            @Composable
+            fun CheckboxWithText(
+                onClick: () -> Unit,
+                textRes: StringResource,
+                checked: Boolean,
+                enabled: Boolean = true
+            ) = CustomCheckboxWithText(
+                onClick = onClick,
+                checkboxSize = 18.dp,
+                contentPadding = 6.dp,
+                textRes = textRes,
+                textStyle = MaterialTheme.typography.bodySmall,
+                checked = checked,
+                enabled = enabled
+            )
+
+            Spacer(Modifier.width(16.dp))
+            Column(
+                modifier = Modifier.padding(top = 8.dp)
             ) {
-                Row(
-                    modifier = Modifier
-                        .padding(start = 16.dp, end = 16.dp, bottom = 16.dp, top = 8.dp)
-                        .fillMaxWidth()
-                ) {
-                    SlimOutlinedTextField(
-                        modifier = Modifier.width(300.dp),
-                        value = viewModel.filterInput,
-                        singleLine = true,
-                        label = {
-                            Text(Res.string.filter)
-                        },
-                        onValueChange = viewModel::onFilterInput
-                    )
+                CheckboxWithText(
+                    onClick = {
+                        viewModel.onAutoscrollClick()
+                    },
+                    textRes = Res.string.autoscroll,
+                    checked = uiState.autoscroll
+                )
+                Spacer(Modifier.height(4.dp))
+                CheckboxWithText(
+                    onClick = {
+                        viewModel.onShowOnlyCurrentSessionClick()
+                    },
+                    textRes = Res.string.show_only_current_session,
+                    checked = uiState.showOnlyCurrentSession
+                )
+            }
+            Spacer(Modifier.width(16.dp))
+            Column(
+                modifier = Modifier.padding(top = 8.dp)
+            ) {
+                CheckboxWithText(
+                    onClick = {
+                        viewModel.onCollapseNetworkMessagesClick()
+                    },
+                    textRes = Res.string.collapse_network_logs,
+                    checked = uiState.collapseNetworkMessages,
+                    enabled = uiState.selectedTab == LoggerViewModel.Tab.ALL
+                )
+                Spacer(Modifier.height(4.dp))
+                CheckboxWithText(
+                    onClick = {
+                        viewModel.onFilterOnlyByTagClick()
+                    },
+                    textRes = Res.string.filter_only_by_tag,
+                    checked = uiState.filterOnlyByTag,
+                    enabled = uiState.selectedTab == LoggerViewModel.Tab.ALL
+                )
+            }
+            Spacer(Modifier.weight(1f))
 
-                    @Composable
-                    fun CheckboxWithText(
-                        onClick: () -> Unit,
-                        textRes: StringResource,
-                        checked: Boolean,
-                        enabled: Boolean = true
-                    ) = CustomCheckboxWithText(
-                        onClick = onClick,
-                        checkboxSize = 18.dp,
-                        contentPadding = 6.dp,
-                        textRes = textRes,
-                        textStyle = MaterialTheme.typography.bodySmall,
-                        checked = checked,
-                        enabled = enabled
-                    )
-
-                    Spacer(Modifier.width(16.dp))
-                    Column(
-                        modifier = Modifier.padding(top = 8.dp)
-                    ) {
-                        CheckboxWithText(
-                            onClick = {
-                                viewModel.onAutoscrollClick()
-                            },
-                            textRes = Res.string.autoscroll,
-                            checked = uiState.autoscroll
-                        )
-                        Spacer(Modifier.height(4.dp))
-                        CheckboxWithText(
-                            onClick = {
-                                viewModel.onShowOnlyCurrentSessionClick()
-                            },
-                            textRes = Res.string.show_only_current_session,
-                            checked = uiState.showOnlyCurrentSession
-                        )
-                    }
-                    Spacer(Modifier.width(16.dp))
-                    Column(
-                        modifier = Modifier.padding(top = 8.dp)
-                    ) {
-                        CheckboxWithText(
-                            onClick = {
-                                viewModel.onCollapseNetworkMessagesClick()
-                            },
-                            textRes = Res.string.collapse_network_logs,
-                            checked = uiState.collapseNetworkMessages,
-                            enabled = uiState.selectedTab == LoggerViewModel.Tab.ALL
-                        )
-                        Spacer(Modifier.height(4.dp))
-                        CheckboxWithText(
-                            onClick = {
-                                viewModel.onFilterOnlyByTagClick()
-                            },
-                            textRes = Res.string.filter_only_by_tag,
-                            checked = uiState.filterOnlyByTag,
-                            enabled = uiState.selectedTab == LoggerViewModel.Tab.ALL
-                        )
-                    }
-                    Spacer(Modifier.weight(1f))
-
-                    Spacer(Modifier.width(16.dp))
-                    SelectableOutlinedIconButton(
-                        modifier = Modifier
-                            .padding(top = 8.dp)
-                            .size(40.dp),
-                        iconRes = Res.drawable.ic_delete,
-                        onClick = {
-                            viewModel.deleteLog()
-                        }
-                    )
-
-                    if (uiState.selectedTab == LoggerViewModel.Tab.ALL) {
-                        Spacer(Modifier.width(16.dp))
-                        SelectableOutlinedIconButton(
-                            modifier = Modifier
-                                .padding(top = 8.dp)
-                                .size(40.dp),
-                            iconRes = Res.drawable.ic_save,
-                            onClick = {
-                                fileSaver.launch(
-                                    suggestedName = viewModel.getSuggestedSaveFileName(),
-                                    extension = DataConstants.LOG_FILE_NAME_EXTENSION
-                                )
-                            }
-                        )
-                    }
+            Spacer(Modifier.width(16.dp))
+            SelectableOutlinedIconButton(
+                modifier = Modifier
+                    .padding(top = 8.dp)
+                    .size(40.dp),
+                iconRes = Res.drawable.ic_delete,
+                onClick = {
+                    viewModel.deleteLog()
                 }
+            )
+
+            if (uiState.selectedTab == LoggerViewModel.Tab.ALL) {
+                Spacer(Modifier.width(16.dp))
+                SelectableOutlinedIconButton(
+                    modifier = Modifier
+                        .padding(top = 8.dp)
+                        .size(40.dp),
+                    iconRes = Res.drawable.ic_save,
+                    onClick = {
+                        fileSaver.launch(
+                            suggestedName = viewModel.getSuggestedSaveFileName(),
+                            extension = DataConstants.LOG_FILE_NAME_EXTENSION
+                        )
+                    }
+                )
             }
         }
 
         @Composable
-        fun ColumnScope.Table() {
-            Surface(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f),
-                color = MaterialTheme.colorScheme.surface,
-                shape = MaterialTheme.shapes.medium
-            ) {
-                Column(
-                    modifier = Modifier.fillMaxSize()
-                ) {
-                    Row {
-                        Spacer(Modifier.width(12.dp))
-                        LoggerViewModel.Tab.entries.forEach {
-                            val tooltip = when (it) {
-                                LoggerViewModel.Tab.ALL -> "Ctrl+1"
-                                LoggerViewModel.Tab.NETWORK -> "Ctrl+2"
-                            }
-                            Tooltip(tooltip) {
-                                TabText(
-                                    modifier = Modifier
-                                        .onClick {
-                                            viewModel.onTabSelected(it)
-                                        }
-                                        .padding(12.dp),
-                                    text = stringResource(it.nameRes),
-                                    selected = it == uiState.selectedTab
-                                )
-                            }
-                        }
+        fun ColumnScope.Table() = Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f)
+                .cardBackground()
+                .clip(MaterialTheme.shapes.medium)
+        ) {
+            Row {
+                Spacer(Modifier.width(12.dp))
+                LoggerViewModel.Tab.entries.forEach {
+                    val tooltip = when (it) {
+                        LoggerViewModel.Tab.ALL -> "Ctrl+1"
+                        LoggerViewModel.Tab.NETWORK -> "Ctrl+2"
                     }
-
-                    Box(
-                        modifier = Modifier
-                            .weight(1f)
-                            .fillMaxWidth()
-                    ) {
-                        val allScrollState = rememberLazyListState()
-                        val networkScrollState = rememberLazyListState()
-                        val currentScrollState = when (uiState.selectedTab) {
-                            LoggerViewModel.Tab.ALL -> allScrollState
-                            LoggerViewModel.Tab.NETWORK -> networkScrollState
-                        }
-                        SelectionContainer {
-                            LazyColumn(
-                                state = currentScrollState,
-                                modifier = Modifier.fillMaxSize()
-                            ) {
-                                when (uiState.selectedTab) {
-                                    LoggerViewModel.Tab.ALL -> {
-                                        items(
-                                            items = uiState.filteredLog,
-                                            key = { item -> item.id }
-                                        ) { message ->
-                                            when (message.type) {
-                                                LogType.DEFAULT,
-                                                LogType.NETWORK -> {
-                                                    LogMessageItem(
-                                                        message = message,
-                                                        query = viewModel.filterInput,
-                                                        filterOnlyByTag = uiState.filterOnlyByTag,
-                                                        collapseNetworkMessages = uiState.collapseNetworkMessages
-                                                    )
-                                                }
-                                                LogType.SESSION_START -> {
-                                                    LogMessageServiceItem(
-                                                        type = message.type,
-                                                        timestamp = message.timestamp,
-                                                        isCurrentSession = message.isCurrentSession
-                                                    )
-                                                }
-                                            }
-                                        }
-                                    }
-                                    LoggerViewModel.Tab.NETWORK -> {
-                                        items(
-                                            items = uiState.filteredNetworkLog,
-                                            key = { item -> item.id }
-                                        ) { message ->
-                                            when (message.request.type) {
-                                                LogType.NETWORK -> {
-                                                    LogNetworkMessageItem(
-                                                        message = message,
-                                                        query = viewModel.filterInput,
-                                                        onClick = {
-                                                            if (BuildKonfig.DEBUG) {
-                                                                navigator.openScreen(
-                                                                    NetworkLogDetailsScreen(message)
-                                                                )
-                                                            }
-                                                        }
-                                                    )
-                                                }
-                                                LogType.SESSION_START -> {
-                                                    LogMessageServiceItem(
-                                                        type = message.request.type,
-                                                        timestamp = message.request.timestamp,
-                                                        isCurrentSession = message.isCurrentSession
-                                                    )
-                                                }
-                                                else -> Unit
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-
-                        VerticalScrollbar(
+                    Tooltip(tooltip) {
+                        TabText(
                             modifier = Modifier
-                                .align(Alignment.CenterEnd)
-                                .fillMaxHeight(),
-                            adapter = rememberScrollbarAdapter(currentScrollState)
+                                .onClick {
+                                    viewModel.onTabSelected(it)
+                                }
+                                .padding(12.dp),
+                            text = stringResource(it.nameRes),
+                            selected = it == uiState.selectedTab
                         )
+                    }
+                }
+            }
 
-                        val currentItems = when (uiState.selectedTab) {
-                            LoggerViewModel.Tab.ALL -> uiState.filteredLog
-                            LoggerViewModel.Tab.NETWORK -> uiState.filteredNetworkLog
-                        }
-                        suspend fun scrollToBottom() {
-                            currentScrollState.scrollToItem(
-                                currentItems.lastIndex.coerceAtLeast(0)
-                            )
-                            currentScrollState.scrollBy(
-                                currentScrollState.layoutInfo.visibleItemsInfo.lastOrNull()?.size?.toFloat() ?: 0f
-                            )
-                        }
-
-                        val scrolledFromBottom by remember(currentItems) {
-                            derivedStateOf {
-                                currentScrollState.layoutInfo.visibleItemsInfo.lastOrNull()?.index != currentItems.lastIndex
-                            }
-                        }
-                        if (scrolledFromBottom) {
-                            FilledButton(
-                                modifier = Modifier
-                                    .padding(16.dp)
-                                    .size(40.dp)
-                                    .focusProperties {
-                                        canFocus = false
-                                    }
-                                    .align(Alignment.BottomEnd),
-                                contentPadding = PaddingValues(0.dp),
-                                onClick = {
-                                    coroutineScope.launch {
-                                        scrollToBottom()
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth()
+            ) {
+                val allScrollState = rememberLazyListState()
+                val networkScrollState = rememberLazyListState()
+                val currentScrollState = when (uiState.selectedTab) {
+                    LoggerViewModel.Tab.ALL -> allScrollState
+                    LoggerViewModel.Tab.NETWORK -> networkScrollState
+                }
+                SelectionContainer {
+                    LazyColumn(
+                        state = currentScrollState,
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        when (uiState.selectedTab) {
+                            LoggerViewModel.Tab.ALL -> {
+                                items(
+                                    items = uiState.filteredLog,
+                                    key = { item -> item.id }
+                                ) { message ->
+                                    when (message.type) {
+                                        LogType.DEFAULT,
+                                        LogType.NETWORK -> {
+                                            LogMessageItem(
+                                                message = message,
+                                                query = viewModel.filterInput,
+                                                filterOnlyByTag = uiState.filterOnlyByTag,
+                                                collapseNetworkMessages = uiState.collapseNetworkMessages
+                                            )
+                                        }
+                                        LogType.SESSION_START -> {
+                                            LogMessageServiceItem(
+                                                type = message.type,
+                                                timestamp = message.timestamp,
+                                                isCurrentSession = message.isCurrentSession
+                                            )
+                                        }
                                     }
                                 }
-                            ) {
-                                Icon(
-                                    modifier = Modifier
-                                        .padding(vertical = 8.dp)
-                                        .size(24.dp),
-                                    painter = painterResource(Res.drawable.ic_arrow_down),
-                                    tint = MaterialTheme.colorScheme.onPrimary,
-                                    contentDescription = null
-                                )
                             }
-                        }
-
-                        if (uiState.autoscroll) {
-                            val key = when (uiState.selectedTab) {
-                                LoggerViewModel.Tab.ALL -> uiState.filteredLog
-                                LoggerViewModel.Tab.NETWORK -> uiState.filteredNetworkLog
+                            LoggerViewModel.Tab.NETWORK -> {
+                                items(
+                                    items = uiState.filteredNetworkLog,
+                                    key = { item -> item.id }
+                                ) { message ->
+                                    when (message.request.type) {
+                                        LogType.NETWORK -> {
+                                            LogNetworkMessageItem(
+                                                message = message,
+                                                query = viewModel.filterInput,
+                                                onClick = {
+                                                    if (BuildKonfig.DEBUG) {
+                                                        navigator.openScreen(
+                                                            NetworkLogDetailsScreen(message)
+                                                        )
+                                                    }
+                                                }
+                                            )
+                                        }
+                                        LogType.SESSION_START -> {
+                                            LogMessageServiceItem(
+                                                type = message.request.type,
+                                                timestamp = message.request.timestamp,
+                                                isCurrentSession = message.isCurrentSession
+                                            )
+                                        }
+                                        else -> Unit
+                                    }
+                                }
                             }
-                            LaunchedEffect(key) { scrollToBottom() }
                         }
                     }
+                }
+
+                VerticalScrollbar(
+                    modifier = Modifier
+                        .align(Alignment.CenterEnd)
+                        .fillMaxHeight(),
+                    adapter = rememberScrollbarAdapter(currentScrollState)
+                )
+
+                val currentItems = when (uiState.selectedTab) {
+                    LoggerViewModel.Tab.ALL -> uiState.filteredLog
+                    LoggerViewModel.Tab.NETWORK -> uiState.filteredNetworkLog
+                }
+                suspend fun scrollToBottom() {
+                    currentScrollState.scrollToItem(
+                        currentItems.lastIndex.coerceAtLeast(0)
+                    )
+                    currentScrollState.scrollBy(
+                        currentScrollState.layoutInfo.visibleItemsInfo.lastOrNull()?.size?.toFloat() ?: 0f
+                    )
+                }
+
+                val scrolledFromBottom by remember(currentItems) {
+                    derivedStateOf {
+                        currentScrollState.layoutInfo.visibleItemsInfo.lastOrNull()?.index != currentItems.lastIndex
+                    }
+                }
+                if (scrolledFromBottom) {
+                    FilledButton(
+                        modifier = Modifier
+                            .padding(16.dp)
+                            .size(40.dp)
+                            .focusProperties {
+                                canFocus = false
+                            }
+                            .align(Alignment.BottomEnd),
+                        contentPadding = PaddingValues(0.dp),
+                        onClick = {
+                            coroutineScope.launch {
+                                scrollToBottom()
+                            }
+                        }
+                    ) {
+                        Icon(
+                            modifier = Modifier
+                                .padding(vertical = 8.dp)
+                                .size(24.dp),
+                            painter = painterResource(Res.drawable.ic_arrow_down),
+                            tint = MaterialTheme.colorScheme.onPrimary,
+                            contentDescription = null
+                        )
+                    }
+                }
+
+                if (uiState.autoscroll) {
+                    val key = when (uiState.selectedTab) {
+                        LoggerViewModel.Tab.ALL -> uiState.filteredLog
+                        LoggerViewModel.Tab.NETWORK -> uiState.filteredNetworkLog
+                    }
+                    LaunchedEffect(key) { scrollToBottom() }
                 }
             }
         }

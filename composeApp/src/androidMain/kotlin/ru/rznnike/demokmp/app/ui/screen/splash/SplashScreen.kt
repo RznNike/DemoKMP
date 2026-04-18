@@ -23,9 +23,10 @@ import ru.rznnike.demokmp.app.ui.screen.home.HomeFlow
 import ru.rznnike.demokmp.app.ui.theme.LocalCustomDrawables
 import ru.rznnike.demokmp.app.utils.statusBarsAndCutoutPadding
 import ru.rznnike.demokmp.app.viewmodel.splash.SplashViewModel
+import kotlin.time.Duration.Companion.milliseconds
 
 private const val ANIMATION_DURATION_MS = 1000
-private const val SPLASH_DURATION_MS = 1500L
+private val SPLASH_DURATION_MS = 1500.milliseconds
 
 @Serializable
 class SplashScreen : AndroidNavigationScreen() {

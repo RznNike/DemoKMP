@@ -19,6 +19,7 @@ import ru.rznnike.demokmp.app.navigation.DesktopNavigationScreen
 import ru.rznnike.demokmp.app.navigation.getNavigator
 import ru.rznnike.demokmp.app.ui.item.DBExampleDataItem
 import ru.rznnike.demokmp.app.ui.view.*
+import ru.rznnike.demokmp.app.utils.cardBackground
 import ru.rznnike.demokmp.app.utils.onEnterKey
 import ru.rznnike.demokmp.app.viewmodel.dbexample.DBExampleViewModel
 import ru.rznnike.demokmp.generated.resources.*
@@ -83,85 +84,76 @@ class DBExampleScreen : DesktopNavigationScreen() {
             }
             Spacer(Modifier.height(16.dp))
 
-            Surface(
-                modifier = Modifier.fillMaxWidth(),
-                shape = MaterialTheme.shapes.medium,
-                color = MaterialTheme.colorScheme.surface
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .cardBackground()
             ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Spacer(Modifier.width(16.dp))
-                    SlimOutlinedTextField(
-                        modifier = Modifier
-                            .padding(top = 8.dp, bottom = 16.dp)
-                            .weight(1f)
-                            .onEnterKey {
-                                viewModel.addData()
-                            },
-                        value = viewModel.nameInput,
-                        singleLine = true,
-                        label = {
-                            Text(Res.string.db_example_input_label)
-                        },
-                        onValueChange = viewModel::onNameInput
-                    )
-                    Spacer(Modifier.width(12.dp))
-                    SelectableButton(
-                        modifier = Modifier.padding(vertical = 12.dp),
-                        onClick = {
+                Spacer(Modifier.width(16.dp))
+                SlimOutlinedTextField(
+                    modifier = Modifier
+                        .padding(top = 8.dp, bottom = 16.dp)
+                        .weight(1f)
+                        .onEnterKey {
                             viewModel.addData()
-                        }
-                    ) {
-                        Text(Res.string.add)
+                        },
+                    value = viewModel.nameInput,
+                    singleLine = true,
+                    label = {
+                        Text(Res.string.db_example_input_label)
+                    },
+                    onValueChange = viewModel::onNameInput
+                )
+                Spacer(Modifier.width(12.dp))
+                SelectableButton(
+                    modifier = Modifier.padding(vertical = 12.dp),
+                    onClick = {
+                        viewModel.addData()
                     }
-                    Spacer(Modifier.width(12.dp))
+                ) {
+                    Text(Res.string.add)
                 }
+                Spacer(Modifier.width(12.dp))
             }
 
             Spacer(Modifier.height(16.dp))
-            Surface(
+            Box(
                 modifier = Modifier
                     .weight(1f)
-                    .fillMaxWidth(),
-                shape = MaterialTheme.shapes.medium,
-                color = MaterialTheme.colorScheme.surface
+                    .fillMaxWidth()
+                    .cardBackground()
             ) {
-                Box(
-                    modifier = Modifier.fillMaxSize()
+                val state = rememberLazyListState()
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(horizontal = 16.dp),
+                    state = state,
+                    contentPadding = PaddingValues(vertical = 16.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                    val state = rememberLazyListState()
-                    LazyColumn(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(horizontal = 16.dp),
-                        state = state,
-                        contentPadding = PaddingValues(vertical = 16.dp),
-                        verticalArrangement = Arrangement.spacedBy(16.dp)
-                    ) {
-                        items(
-                            items = uiState.data,
-                            key = { it.id }
-                        ) { item ->
-                            DBExampleDataItem(item) {
-                                viewModel.deleteData(item)
-                            }
+                    items(
+                        items = uiState.data,
+                        key = { it.id }
+                    ) { item ->
+                        DBExampleDataItem(item) {
+                            viewModel.deleteData(item)
                         }
                     }
-                    VerticalScrollbar(
-                        modifier = Modifier
-                            .align(Alignment.CenterEnd)
-                            .fillMaxHeight(),
-                        adapter = rememberScrollbarAdapter(state)
-                    )
+                }
+                VerticalScrollbar(
+                    modifier = Modifier
+                        .align(Alignment.CenterEnd)
+                        .fillMaxHeight(),
+                    adapter = rememberScrollbarAdapter(state)
+                )
 
-                    if (uiState.isLoading) {
-                        CircularProgressIndicator(
-                            modifier = Modifier
-                                .size(48.dp)
-                                .align(Alignment.Center)
-                        )
-                    }
+                if (uiState.isLoading) {
+                    CircularProgressIndicator(
+                        modifier = Modifier
+                            .size(48.dp)
+                            .align(Alignment.Center)
+                    )
                 }
             }
         }

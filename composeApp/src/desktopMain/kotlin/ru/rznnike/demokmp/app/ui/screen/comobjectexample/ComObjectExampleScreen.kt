@@ -6,7 +6,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.rememberScrollbarAdapter
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -23,6 +22,7 @@ import ru.rznnike.demokmp.app.navigation.getNavigator
 import ru.rznnike.demokmp.app.ui.theme.bodyLargeBold
 import ru.rznnike.demokmp.app.ui.view.*
 import ru.rznnike.demokmp.app.ui.viewmodel.comobjectexample.ComObjectExampleViewModel
+import ru.rznnike.demokmp.app.utils.cardBackground
 import ru.rznnike.demokmp.app.utils.onEnterKey
 import ru.rznnike.demokmp.generated.resources.*
 
@@ -73,81 +73,71 @@ class ComObjectExampleScreen : DesktopNavigationScreen() {
                         .fillMaxSize()
                         .verticalScroll(state)
                 ) {
-                    Surface(
-                        modifier = Modifier.fillMaxWidth(),
-                        shape = MaterialTheme.shapes.medium,
-                        color = MaterialTheme.colorScheme.surface
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .cardBackground()
+                            .padding(16.dp)
                     ) {
-                        Column(
-                            modifier = Modifier.padding(16.dp)
-                        ) {
-                            Text(
-                                modifier = Modifier.fillMaxWidth(),
-                                textRes = Res.string.pc_data_header,
-                                style = MaterialTheme.typography.bodyLargeBold
-                            )
-                            Spacer(modifier = Modifier.height(8.dp))
-                            Text(
-                                modifier = Modifier.fillMaxWidth(),
-                                text = uiState.pcData
-                            )
-                        }
+                        Text(
+                            modifier = Modifier.fillMaxWidth(),
+                            textRes = Res.string.pc_data_header,
+                            style = MaterialTheme.typography.bodyLargeBold
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(
+                            modifier = Modifier.fillMaxWidth(),
+                            text = uiState.pcData
+                        )
                     }
 
                     Spacer(Modifier.height(16.dp))
-                    Surface(
-                        modifier = Modifier.fillMaxWidth(),
-                        shape = MaterialTheme.shapes.medium,
-                        color = MaterialTheme.colorScheme.surface
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .cardBackground()
                     ) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            Spacer(Modifier.width(16.dp))
-                            SlimOutlinedTextField(
-                                modifier = Modifier
-                                    .padding(top = 8.dp, bottom = 16.dp)
-                                    .weight(1f)
-                                    .onEnterKey {
-                                        viewModel.openPath()
-                                    },
-                                value = viewModel.pathInput,
-                                singleLine = true,
-                                label = {
-                                    Text(Res.string.path_to_folder_or_file)
-                                },
-                                onValueChange = viewModel::onPathInput
-                            )
-                            Spacer(Modifier.width(12.dp))
-                            SelectableButton(
-                                modifier = Modifier.padding(vertical = 12.dp),
-                                onClick = {
+                        Spacer(Modifier.width(16.dp))
+                        SlimOutlinedTextField(
+                            modifier = Modifier
+                                .padding(top = 8.dp, bottom = 16.dp)
+                                .weight(1f)
+                                .onEnterKey {
                                     viewModel.openPath()
-                                }
-                            ) {
-                                Text(Res.string.open)
+                                },
+                            value = viewModel.pathInput,
+                            singleLine = true,
+                            label = {
+                                Text(Res.string.path_to_folder_or_file)
+                            },
+                            onValueChange = viewModel::onPathInput
+                        )
+                        Spacer(Modifier.width(12.dp))
+                        SelectableButton(
+                            modifier = Modifier.padding(vertical = 12.dp),
+                            onClick = {
+                                viewModel.openPath()
                             }
-                            Spacer(Modifier.width(12.dp))
+                        ) {
+                            Text(Res.string.open)
                         }
+                        Spacer(Modifier.width(12.dp))
                     }
 
                     Spacer(Modifier.height(16.dp))
-                    Surface(
-                        modifier = Modifier.fillMaxWidth(),
-                        shape = MaterialTheme.shapes.medium,
-                        color = MaterialTheme.colorScheme.surface
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .cardBackground()
+                            .padding(12.dp),
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Row(
-                            modifier = Modifier.padding(12.dp),
-                            verticalAlignment = Alignment.CenterVertically
+                        SelectableButton(
+                            onClick = viewModel::minimizeAllWindows
                         ) {
-                            SelectableButton(
-                                onClick = viewModel::minimizeAllWindows
-                            ) {
-                                Text(
-                                    textRes = Res.string.minimize_all_windows
-                                )
-                            }
+                            Text(
+                                textRes = Res.string.minimize_all_windows
+                            )
                         }
                     }
                 }

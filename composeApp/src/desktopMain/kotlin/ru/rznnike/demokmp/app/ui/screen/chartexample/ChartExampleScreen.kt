@@ -2,7 +2,6 @@ package ru.rznnike.demokmp.app.ui.screen.chartexample
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -31,6 +30,7 @@ import ru.rznnike.demokmp.app.navigation.DesktopNavigationScreen
 import ru.rznnike.demokmp.app.navigation.getNavigator
 import ru.rznnike.demokmp.app.ui.view.Toolbar
 import ru.rznnike.demokmp.app.ui.view.ToolbarButton
+import ru.rznnike.demokmp.app.utils.cardBackground
 import ru.rznnike.demokmp.app.utils.getCustomVicoTheme
 import ru.rznnike.demokmp.app.viewmodel.chartexample.ChartExampleViewModel
 import ru.rznnike.demokmp.generated.resources.Res
@@ -72,79 +72,76 @@ class ChartExampleScreen : DesktopNavigationScreen() {
             )
             Spacer(Modifier.height(16.dp))
 
-            Surface(
-                modifier = Modifier.weight(1f),
-                color = MaterialTheme.colorScheme.surface,
-                shape = MaterialTheme.shapes.medium
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
+                    .cardBackground()
             ) {
-                Box(
-                    modifier = Modifier.fillMaxSize()
-                ) {
-                    val modelProducer = remember { CartesianChartModelProducer() }
-                    LaunchedEffect(uiState.data) {
-                        modelProducer.runTransaction {
-                            lineSeries {
-                                if (uiState.data.isNotEmpty()) {
-                                    series(
-                                        x = uiState.data.map { it.x },
-                                        y = uiState.data.map { it.y }
-                                    )
-                                } else {
-                                    series(
-                                        x = listOf(0),
-                                        y = listOf(0)
-                                    )
-                                }
+                val modelProducer = remember { CartesianChartModelProducer() }
+                LaunchedEffect(uiState.data) {
+                    modelProducer.runTransaction {
+                        lineSeries {
+                            if (uiState.data.isNotEmpty()) {
+                                series(
+                                    x = uiState.data.map { it.x },
+                                    y = uiState.data.map { it.y }
+                                )
+                            } else {
+                                series(
+                                    x = listOf(0),
+                                    y = listOf(0)
+                                )
                             }
                         }
                     }
-                    val lineColor = MaterialTheme.colorScheme.primary
-                    val areaColor = lineColor.copy(alpha = 0.4f)
-                    val legendItemLabelComponent = rememberTextComponent(
-                        style = TextStyle(
-                            color = MaterialTheme.colorScheme.onBackground
-                        )
+                }
+                val lineColor = MaterialTheme.colorScheme.primary
+                val areaColor = lineColor.copy(alpha = 0.4f)
+                val legendItemLabelComponent = rememberTextComponent(
+                    style = TextStyle(
+                        color = MaterialTheme.colorScheme.onBackground
                     )
-                    val legendLineLabel = stringResource(Res.string.test_data)
-                    val legendShape = MaterialTheme.shapes.extraSmall
-                    ProvideVicoTheme(getCustomVicoTheme()) {
-                        CartesianChartHost(
-                            modifier = Modifier.fillMaxSize(),
-                            chart = rememberCartesianChart(
-                                rememberLineCartesianLayer(
-                                    lineProvider = LineCartesianLayer.LineProvider.series(
-                                        LineCartesianLayer.rememberLine(
-                                            fill = LineCartesianLayer.LineFill.single(Fill(lineColor)),
-                                            areaFill = LineCartesianLayer.AreaFill.single(
-                                                fill = Fill(Brush.verticalGradient(listOf(areaColor, Color.Transparent, areaColor)))
-                                            )
+                )
+                val legendLineLabel = stringResource(Res.string.test_data)
+                val legendShape = MaterialTheme.shapes.extraSmall
+                ProvideVicoTheme(getCustomVicoTheme()) {
+                    CartesianChartHost(
+                        modifier = Modifier.fillMaxSize(),
+                        chart = rememberCartesianChart(
+                            rememberLineCartesianLayer(
+                                lineProvider = LineCartesianLayer.LineProvider.series(
+                                    LineCartesianLayer.rememberLine(
+                                        fill = LineCartesianLayer.LineFill.single(Fill(lineColor)),
+                                        areaFill = LineCartesianLayer.AreaFill.single(
+                                            fill = Fill(Brush.verticalGradient(listOf(areaColor, Color.Transparent, areaColor)))
                                         )
                                     )
-                                ),
-                                startAxis = VerticalAxis.rememberStart(),
-                                bottomAxis = HorizontalAxis.rememberBottom(),
-                                legend = rememberHorizontalLegend(
-                                    items = {
-                                        add(
-                                            LegendItem(
-                                                icon = ShapeComponent(
-                                                    fill = Fill(lineColor),
-                                                    shape = legendShape
-                                                ),
-                                                labelComponent = legendItemLabelComponent,
-                                                label = legendLineLabel
-                                            )
-                                        )
-                                    },
-                                    padding = Insets(16.dp)
                                 )
                             ),
-                            modelProducer = modelProducer,
-                            zoomState = rememberVicoZoomState(
-                                initialZoom = Zoom.Content
+                            startAxis = VerticalAxis.rememberStart(),
+                            bottomAxis = HorizontalAxis.rememberBottom(),
+                            legend = rememberHorizontalLegend(
+                                items = {
+                                    add(
+                                        LegendItem(
+                                            icon = ShapeComponent(
+                                                fill = Fill(lineColor),
+                                                shape = legendShape
+                                            ),
+                                            labelComponent = legendItemLabelComponent,
+                                            label = legendLineLabel
+                                        )
+                                    )
+                                },
+                                padding = Insets(16.dp)
                             )
+                        ),
+                        modelProducer = modelProducer,
+                        zoomState = rememberVicoZoomState(
+                            initialZoom = Zoom.Content
                         )
-                    }
+                    )
                 }
             }
         }

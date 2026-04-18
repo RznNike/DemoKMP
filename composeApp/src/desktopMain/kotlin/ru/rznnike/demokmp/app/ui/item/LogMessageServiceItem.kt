@@ -18,6 +18,7 @@ import ru.rznnike.demokmp.app.ui.theme.LocalCustomColorScheme
 import ru.rznnike.demokmp.app.ui.theme.PreviewDesktopAppTheme
 import ru.rznnike.demokmp.app.ui.theme.bodyMediumMono
 import ru.rznnike.demokmp.domain.log.LogType
+import ru.rznnike.demokmp.domain.utils.GlobalConstants
 import ru.rznnike.demokmp.domain.utils.currentTimeMillis
 import ru.rznnike.demokmp.domain.utils.toDateString
 import ru.rznnike.demokmp.generated.resources.Res
@@ -43,8 +44,8 @@ fun LogMessageServiceItem(
                 background = LocalCustomColorScheme.current.logService
             }
             text = "%s | %s".format(
-                stringResource(headerRes),
-                timestamp.toDateString()
+                timestamp.toDateString(GlobalConstants.DATE_PATTERN_SIMPLE_WITH_TIME_S),
+                stringResource(headerRes)
             )
         }
         else -> Unit
