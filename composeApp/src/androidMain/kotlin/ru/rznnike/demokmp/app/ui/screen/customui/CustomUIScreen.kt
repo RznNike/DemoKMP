@@ -14,7 +14,9 @@ import org.jetbrains.compose.resources.stringResource
 import ru.rznnike.demokmp.app.navigation.AndroidNavigationScreen
 import ru.rznnike.demokmp.app.navigation.getNavigator
 import ru.rznnike.demokmp.app.ui.view.*
+import ru.rznnike.demokmp.app.utils.cardAlterBackground
 import ru.rznnike.demokmp.app.utils.cardBackground
+import ru.rznnike.demokmp.app.utils.dashedBorder
 import ru.rznnike.demokmp.app.utils.navigationBarsSidesPadding
 import ru.rznnike.demokmp.app.utils.onClick
 import ru.rznnike.demokmp.app.utils.statusBarsAndCutoutPadding
@@ -119,6 +121,18 @@ class CustomUIScreen : AndroidNavigationScreen() {
                                 Text(Res.string.input_field)
                             }
                         )
+                        Spacer(Modifier.height(16.dp))
+                        Row(
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text(
+                                modifier = Modifier
+                                    .cardAlterBackground()
+                                    .dashedBorder()
+                                    .padding(16.dp),
+                                textRes = Res.string.dashed_border
+                            )
+                        }
                         Spacer(Modifier.height(8.dp))
                     }
                     Spacer(Modifier.height(16.dp))

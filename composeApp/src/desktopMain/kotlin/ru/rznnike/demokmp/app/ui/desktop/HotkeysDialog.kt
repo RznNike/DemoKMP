@@ -19,6 +19,7 @@ import ru.rznnike.demokmp.app.ui.theme.bodyLargeBold
 import ru.rznnike.demokmp.app.ui.theme.bodyMediumBold
 import ru.rznnike.demokmp.app.ui.view.OutlinedRoundedButton
 import ru.rznnike.demokmp.app.ui.view.Text
+import ru.rznnike.demokmp.app.utils.cardAlterBackground
 import ru.rznnike.demokmp.app.utils.cardBackground
 import ru.rznnike.demokmp.generated.resources.*
 
@@ -67,10 +68,7 @@ fun HotkeysDialog(
                             ) {
                                 Text(
                                     modifier = Modifier
-                                        .background(
-                                            color = MaterialTheme.colorScheme.background,
-                                            shape = MaterialTheme.shapes.medium
-                                        )
+                                        .cardAlterBackground()
                                         .padding(8.dp),
                                     text = data.hotkey,
                                     style = MaterialTheme.typography.bodyMedium

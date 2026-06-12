@@ -106,4 +106,5 @@
     <string name="please_wait">Please wait...</string>
     <string name="force_close">Force close</string>
     <string name="markdown_example">Markdown example</string>
+    <string name="dashed_border">Dashed border</string>
 </resources>

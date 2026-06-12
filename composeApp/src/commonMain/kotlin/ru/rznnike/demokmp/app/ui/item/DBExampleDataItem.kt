@@ -1,6 +1,5 @@
 package ru.rznnike.demokmp.app.ui.item
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -10,6 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.unit.dp
 import ru.rznnike.demokmp.app.ui.view.SelectableOutlinedIconButton
+import ru.rznnike.demokmp.app.utils.cardAlterBackground
 import ru.rznnike.demokmp.domain.model.db.DBExampleData
 import ru.rznnike.demokmp.generated.resources.Res
 import ru.rznnike.demokmp.generated.resources.ic_delete
@@ -20,10 +20,7 @@ fun DBExampleDataItem(
     onDeleteClick: () -> Unit
 ) = Row(
     modifier = Modifier
-        .background(
-            color = MaterialTheme.colorScheme.background,
-            shape = MaterialTheme.shapes.medium
-        )
+        .cardAlterBackground()
         .padding(16.dp)
         .fillMaxWidth(),
 ) {

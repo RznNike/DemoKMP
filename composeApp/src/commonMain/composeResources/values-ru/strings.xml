@@ -104,4 +104,5 @@
     <string name="please_wait">Пожалуйста, подождите...</string>
     <string name="force_close">Закрыть принудительно</string>
     <string name="markdown_example">Пример Markdown</string>
+    <string name="dashed_border">Пунктирная обводка</string>
 </resources>
