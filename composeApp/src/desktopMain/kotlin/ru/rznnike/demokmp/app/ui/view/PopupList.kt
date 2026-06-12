@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.min
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
 import kotlinx.coroutines.launch
+import ru.rznnike.demokmp.app.utils.addIf
 import ru.rznnike.demokmp.app.utils.smartScrollToItem
 
 private val MAX_HEIGHT_DP = 500.dp
@@ -110,10 +111,8 @@ fun <ItemType> PopupList(
                                             else -> this
                                         }
                                     }
-                                    .run {
-                                        if (item == preselectedItem) {
-                                            focusRequester(preselectedItemFocusRequester)
-                                        } else this
+                                    .addIf(item == preselectedItem) {
+                                        focusRequester(preselectedItemFocusRequester)
                                     }
                                     .onPreviewKeyEvent { keyEvent ->
                                         if (keyEvent.type == KeyEventType.KeyDown) {

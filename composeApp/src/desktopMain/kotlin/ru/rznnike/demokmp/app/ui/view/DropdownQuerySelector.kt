@@ -3,6 +3,7 @@ package ru.rznnike.demokmp.app.ui.view
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.VerticalScrollbar
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -29,6 +30,7 @@ import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
 import kotlinx.coroutines.launch
 import ru.rznnike.demokmp.app.ui.theme.bodyMediumBold
+import ru.rznnike.demokmp.app.utils.addIf
 import ru.rznnike.demokmp.app.utils.onClick
 import ru.rznnike.demokmp.app.utils.onEnterKey
 import ru.rznnike.demokmp.app.utils.smartScrollToItem
@@ -63,10 +65,9 @@ fun <ItemType> DropdownQuerySelector(
     }
 
     Box(
-        modifier = modifier
-            .run {
-                height?.let { height(height) } ?: this
-            }
+        modifier = modifier.addIf(height != null) {
+            height(height!!)
+        }
     ) {
         SlimOutlinedTextField(
             modifier = Modifier

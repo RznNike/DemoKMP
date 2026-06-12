@@ -15,6 +15,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.painterResource
 import ru.rznnike.demokmp.app.ui.theme.LocalCustomColorScheme
+import ru.rznnike.demokmp.app.utils.addIf
 import ru.rznnike.demokmp.app.utils.onClick
 import ru.rznnike.demokmp.app.utils.onEnterKey
 import ru.rznnike.demokmp.generated.resources.Res
@@ -41,10 +42,9 @@ fun <ItemType> DropdownSelector(
     }
 
     Box(
-        modifier = modifier
-            .run {
-                height?.let { height(height) } ?: this
-            }
+        modifier = modifier.addIf(height != null) {
+            height(height!!)
+        }
     ) {
         fun selectItem(offset: Int) {
             val currentIndex = items.indexOf(selectedItem)

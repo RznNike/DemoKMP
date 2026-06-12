@@ -30,6 +30,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import ru.rznnike.demokmp.app.ui.theme.LocalCustomColorScheme
+import ru.rznnike.demokmp.app.utils.addIf
 
 @Composable
 fun SlimOutlinedTextField(
@@ -73,14 +74,12 @@ fun SlimOutlinedTextField(
         BasicTextField(
             value = value,
             modifier = modifier
-                .run {
-                    height?.let { height(height) } ?: this
+                .addIf(height != null) {
+                    height(height!!)
                 }
-                .run {
-                    label?.let {
-                        semantics(mergeDescendants = true) {}
-                            .padding(top = 8.dp)
-                    } ?: this
+                .addIf(label != null) {
+                    semantics(mergeDescendants = true) {}
+                        .padding(top = 8.dp)
                 }
 //                .defaultErrorSemantics(isError, getString(Strings.DefaultErrorMessage))
                 .defaultMinSize(
@@ -193,16 +192,14 @@ fun SlimOutlinedTextField(
                 onValueChange(newTextFieldValueState.text)
             }
         },
-        modifier = modifier.run {
-            if (selectAllOnFocus) {
-                onFocusChanged {
-                    if (it.isFocused) {
-                        textFieldValueState = textFieldValueState.copy(
-                            selection = TextRange(0, textFieldValueState.text.length)
-                        )
-                    }
+        modifier = modifier.addIf(selectAllOnFocus) {
+            onFocusChanged {
+                if (it.isFocused) {
+                    textFieldValueState = textFieldValueState.copy(
+                        selection = TextRange(0, textFieldValueState.text.length)
+                    )
                 }
-            } else this
+            }
         },
         height = height,
         enabled = enabled,
