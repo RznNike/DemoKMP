@@ -1,21 +1,23 @@
 package ru.rznnike.demokmp.app.utils
 
-import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.key.*
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.foundation.onClick as onClickDesktop
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 actual fun Modifier.onClick(
     onDoubleClick: (() -> Unit)?,
     onLongClick: (() -> Unit)?,
     onClick: () -> Unit
-): Modifier = onClickDesktop(
+): Modifier = combinedClickable(
+    interactionSource = remember { MutableInteractionSource() },
+    indication = null,
     onDoubleClick = onDoubleClick,
     onLongClick = onLongClick,
     onClick = onClick

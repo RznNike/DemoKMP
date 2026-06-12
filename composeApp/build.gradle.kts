@@ -266,10 +266,6 @@ compose {
     }
 }
 
-ktorfit {
-    compilerPluginVersion.set("2.3.3")
-}
-
 configureBuildKonfigFlavorFromAndroidTasks()
 
 buildkonfig {
@@ -343,12 +339,14 @@ fun configureBuildKonfigFlavorFromAndroidTasks() {
 }
 
 tasks.register("clearAppBuildJarsDir") {
+    description = "Delete previous build results"
     doLast {
         delete("${project.rootDir}/composeApp/build/compose/jars")
     }
 }
 
 tasks.register("generateReleaseApp") {
+    description = "Generate release app folder"
     dependsOn("clearAppBuildJarsDir", "packageReleaseUberJarForCurrentOS")
     doLast {
         val outputPath = "${project.rootDir}/distributableOutput/$globalVersionCode"
@@ -375,6 +373,7 @@ tasks.register("generateReleaseApp") {
 }
 
 tasks.register<Zip>("generateReleaseArchive") {
+    description = "Generate release app folder and zip it"
     dependsOn("generateReleaseApp")
     val flags = mutableListOf(buildType.tag)
     archiveFileName = "DemoKMP_${os.capitalized()}_v${globalVersionName}.${globalVersionCode}_${flags.joinToString(separator = "_")}.zip"
@@ -401,6 +400,6 @@ private enum class BuildType(
     companion object {
         val default = DEBUG
 
-        operator fun get(tag: String?) = values().find { it.tag == tag } ?: default
+        operator fun get(tag: String?) = entries.find { it.tag == tag } ?: default
     }
 }
