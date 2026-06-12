@@ -6,6 +6,7 @@ import ru.rznnike.demokmp.app.ui.screen.customui.CustomUIScreen
 import ru.rznnike.demokmp.app.ui.screen.dbexample.DBExampleScreen
 import ru.rznnike.demokmp.app.ui.screen.home.HomeScreen
 import ru.rznnike.demokmp.app.ui.screen.httpexample.HTTPExampleScreen
+import ru.rznnike.demokmp.app.ui.screen.markdown.MarkdownExampleScreen
 import ru.rznnike.demokmp.app.ui.screen.navigation.NavigationExampleScreen
 import ru.rznnike.demokmp.app.ui.screen.settings.NestedSettingsScreen
 import ru.rznnike.demokmp.app.ui.screen.settings.SettingsScreen
@@ -23,4 +24,5 @@ actual fun NavGraphBuilder.buildNavGraph() {
     addToNavGraph<ChartExampleScreen>()
     addToNavGraph<CustomUIScreen>()
     addToNavGraph<NavigationExampleScreen>()
+    addToNavGraph<MarkdownExampleScreen>()
 }

@@ -105,4 +105,5 @@
     <string name="shutdown">Shutdown</string>
     <string name="please_wait">Please wait...</string>
     <string name="force_close">Force close</string>
+    <string name="markdown_example">Markdown example</string>
 </resources>

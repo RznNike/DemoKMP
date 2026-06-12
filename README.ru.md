@@ -25,9 +25,7 @@
 * Различные пользовательские элементы UI
 * Динамический BuildConfig с информацией о платформе и типе сборки
 * Графики
-* Статусбар
-* Всплывающие подсказки
-* Диалог с описанием горячих клавиш для текущего экрана
+* Markdown
 
 #### Только для ПК
 * Сборка приложения в jar файл и запуск с помощью скрипта
@@ -39,6 +37,9 @@
 * UI для кастомного логгера; модули базы данных, файла и кеша в памяти
 * Использование COM объектов (Windows)
 * Конфигурация графического API Skiko
+* Статусбар
+* Всплывающие подсказки
+* Диалог с описанием горячих клавиш для текущего экрана
 
 #### Только для Android
 * UI для просмотра сетевых логов с устройства
@@ -89,6 +90,7 @@
 * [Coil](https://coil-kt.github.io/coil/)
 * [BuildKonfig](https://github.com/yshrsmz/BuildKonfig)
 * [Vico](https://github.com/patrykandpatrick/vico)
+* [Kotlin Multiplatform Markdown Renderer](https://github.com/mikepenz/multiplatform-markdown-renderer)
 
 #### Только для ПК
 * [PDFBox](https://pdfbox.apache.org/)

@@ -25,9 +25,7 @@ This is a sample project with a set of solutions to typical problems, demonstrat
 * Various custom UI elements
 * Dynamic BuildConfig with platform and build type information
 * Charts
-* Statusbar
-* Tooltips
-* Dialog with hotkeys description for current screen
+* Markdown
 
 #### PC only
 * App building to jar file and launch using script
@@ -38,6 +36,9 @@ This is a sample project with a set of solutions to typical problems, demonstrat
 * UI for custom logger; database, file and memory cache modules
 * COM objects usage (Windows)
 * Skiko render API configuration
+* Statusbar
+* Tooltips
+* Dialog with hotkeys description for current screen
 
 #### Android only
 * UI for viewing network logs from a device
@@ -88,6 +89,7 @@ This is a sample project with a set of solutions to typical problems, demonstrat
 * [Coil](https://coil-kt.github.io/coil/)
 * [BuildKonfig](https://github.com/yshrsmz/BuildKonfig)
 * [Vico](https://github.com/patrykandpatrick/vico)
+* [Kotlin Multiplatform Markdown Renderer](https://github.com/mikepenz/multiplatform-markdown-renderer)
 
 #### PC only
 * [PDFBox](https://pdfbox.apache.org/)

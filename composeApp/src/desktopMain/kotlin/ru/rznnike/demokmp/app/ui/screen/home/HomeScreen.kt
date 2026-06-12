@@ -29,6 +29,7 @@ import ru.rznnike.demokmp.app.ui.screen.comobjectexample.ComObjectExampleFlow
 import ru.rznnike.demokmp.app.ui.screen.customui.CustomUIFlow
 import ru.rznnike.demokmp.app.ui.screen.dbexample.DBExampleFlow
 import ru.rznnike.demokmp.app.ui.screen.httpexample.HTTPExampleFlow
+import ru.rznnike.demokmp.app.ui.screen.markdown.MarkdownExampleFlow
 import ru.rznnike.demokmp.app.ui.screen.navigation.NavigationExampleFlow
 import ru.rznnike.demokmp.app.ui.screen.pdfexample.PdfExampleFlow
 import ru.rznnike.demokmp.app.ui.screen.settings.SettingsFlow
@@ -132,6 +133,9 @@ class HomeScreen : DesktopNavigationScreen() {
                     }
                     MenuButton(Res.string.chart_example) {
                         navigator.openFlow(ChartExampleFlow())
+                    }
+                    MenuButton(Res.string.markdown_example) {
+                        navigator.openFlow(MarkdownExampleFlow())
                     }
                     MenuButton(Res.string.custom_ui_elements) {
                         navigator.openFlow(CustomUIFlow())
