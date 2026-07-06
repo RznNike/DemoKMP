@@ -2,15 +2,15 @@
 kotlin = "2.4.0"
 compose = "1.11.1"
 coroutines = "1.11.0"
-koin = "4.2.1"
+koin = "4.2.2"
 ktorfit = "2.7.5"
-ktor = "3.5.0"
+ktor = "3.5.1"
 coil = "3.5.0"
 room = "2.8.4"
-filekit = "0.14.1"
+filekit = "0.14.2"
 chucker = "4.3.1"
-vico = "3.2.2"
-markdown = "0.41.0"
+vico = "3.2.3"
+markdown = "0.43.0"
 
 android-minSdk = "26"
 android-targetSdk = "36"
@@ -90,7 +90,7 @@ room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 
 # SQLite (Room dependency)
 # https://developer.android.com/jetpack/androidx/releases/sqlite
-sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version = "2.6.2" }
+sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version = "2.7.0" }
 
 # Charts
 # https://github.com/patrykandpatrick/vico
@@ -107,7 +107,7 @@ markdown-material = { module = "com.mikepenz:multiplatform-markdown-renderer-m3"
 
 # Logging (for Ktor)
 # https://mvnrepository.com/artifact/ch.qos.logback/logback-classic
-logback = { module = "ch.qos.logback:logback-classic", version = "1.5.34" }
+logback = { module = "ch.qos.logback:logback-classic", version = "1.5.37" }
 
 # PDF renderer
 # https://mvnrepository.com/artifact/org.apache.pdfbox/pdfbox
@@ -152,7 +152,7 @@ android-application = { id = "com.android.application", version = "9.0.1" }
 
 # BuildConfig
 # https://github.com/yshrsmz/BuildKonfig
-buildkonfig = { id = "com.codingfeline.buildkonfig", version = "0.21.2" }
+buildkonfig = { id = "com.codingfeline.buildkonfig", version = "0.22.0" }
 
 # KSP
 # https://mvnrepository.com/artifact/com.google.devtools.ksp/com.google.devtools.ksp.gradle.plugin?repo=central
