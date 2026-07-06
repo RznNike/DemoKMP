@@ -12,7 +12,7 @@ import androidx.compose.ui.window.rememberWindowState
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
-import ru.rznnike.demokmp.app.navigation.CreateNavHost
+import ru.rznnike.demokmp.app.navigation.CreateNavDisplay
 import ru.rznnike.demokmp.app.ui.screen.logger.LoggerFlow
 import ru.rznnike.demokmp.app.ui.theme.DesktopAppTheme
 import ru.rznnike.demokmp.app.ui.viewmodel.global.hotkeys.HotKeysViewModel
@@ -99,7 +99,7 @@ fun LoggerWindow(
                     BackgroundBox(
                         modifier = Modifier.clearFocusOnTap()
                     ) {
-                        CreateNavHost(LoggerFlow())
+                        CreateNavDisplay(LoggerFlow())
                     }
                 }
             }

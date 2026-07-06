@@ -13,7 +13,7 @@ import org.koin.compose.koinInject
 import ru.rznnike.demokmp.app.dispatcher.notifier.Notifier
 import ru.rznnike.demokmp.app.dispatcher.notifier.SystemMessage
 import ru.rznnike.demokmp.app.model.common.HotkeyDescription
-import ru.rznnike.demokmp.app.navigation.CreateNavHost
+import ru.rznnike.demokmp.app.navigation.CreateNavDisplay
 import ru.rznnike.demokmp.app.ui.desktop.HotkeysDialog
 import ru.rznnike.demokmp.app.ui.dialog.common.AlertDialogAction
 import ru.rznnike.demokmp.app.ui.dialog.common.AlertDialogType
@@ -158,7 +158,7 @@ fun MainFrame() {
                     Box(
                         modifier = Modifier.weight(1f)
                     ) {
-                        CreateNavHost(SplashFlow())
+                        CreateNavDisplay(SplashFlow())
                     }
                     BottomStatusBar(
                         isVisible = appConfigurationUiState.isBottomStatusBarVisible,

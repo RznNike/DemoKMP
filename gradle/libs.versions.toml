@@ -29,16 +29,16 @@ compose-ui-tooling = { module = "org.jetbrains.compose.ui:ui-tooling", version.r
 compose-ui-tooling-preview = { module = "org.jetbrains.compose.ui:ui-tooling-preview", version.ref = "compose" }
 
 # ViewModel
-# https://mvnrepository.com/artifact/org.jetbrains.androidx.lifecycle/lifecycle-viewmodel-compose
+# https://mvnrepository.com/artifact/org.jetbrains.androidx.lifecycle/lifecycle-viewmodel-navigation3
 # Update the version according to the main Compose library dependencies
 #noinspection NewerVersionAvailable
-viewmodel-compose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose", version = "2.11.0-beta01" }
+viewmodel-compose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-navigation3", version = "2.11.0-beta01" }
 
 # Navigation
-# https://mvnrepository.com/artifact/org.jetbrains.androidx.navigation/navigation-compose
+# https://mvnrepository.com/artifact/org.jetbrains.androidx.navigation3/navigation3-ui
 # Update the version according to the main Compose library dependencies
 #noinspection NewerVersionAvailable
-navigation = { module = "org.jetbrains.androidx.navigation:navigation-compose", version = "2.9.2" }
+navigation = { module = "org.jetbrains.androidx.navigation3:navigation3-ui", version = "1.1.1" }
 
 # Coroutines
 # https://github.com/Kotlin/kotlinx.coroutines
@@ -120,7 +120,7 @@ filekit-dialogs-compose = { module = "io.github.vinceglb:filekit-dialogs-compose
 
 # JNA Platform Library (for COM objects)
 # https://github.com/java-native-access/jna
-jna-platform = { module = "net.java.dev.jna:jna-platform", version = "5.19.0" }
+jna-platform = { module = "net.java.dev.jna:jna-platform", version = "5.19.1" }
 
 
 ### Android-specific libs ###

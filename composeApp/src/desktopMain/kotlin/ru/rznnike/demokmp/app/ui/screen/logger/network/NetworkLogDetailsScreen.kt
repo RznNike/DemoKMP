@@ -20,7 +20,6 @@ import io.github.vinceglb.filekit.dialogs.compose.rememberFileSaverLauncher
 import kotlinx.serialization.Serializable
 import ru.rznnike.demokmp.app.navigation.DesktopNavigationScreen
 import ru.rznnike.demokmp.app.navigation.getNavigator
-import ru.rznnike.demokmp.app.navigation.navtype.networkLogMessageNavType
 import ru.rznnike.demokmp.app.ui.theme.bodyLargeBold
 import ru.rznnike.demokmp.app.ui.theme.bodyMediumMono
 import ru.rznnike.demokmp.app.ui.view.*
@@ -136,7 +135,7 @@ class NetworkLogDetailsScreen(
                     onClick = {
                         fileSaver.launch(
                             suggestedName = viewModel.getSuggestedSaveFileName(),
-                            extension = DataConstants.LOG_FILE_NAME_EXTENSION
+                            defaultExtension = DataConstants.LOG_FILE_NAME_EXTENSION
                         )
                     }
                 )
@@ -219,11 +218,5 @@ class NetworkLogDetailsScreen(
                 Body()
             }
         }
-    }
-
-    companion object {
-        val typeMap = mapOf(
-            networkLogMessageNavType
-        )
     }
 }

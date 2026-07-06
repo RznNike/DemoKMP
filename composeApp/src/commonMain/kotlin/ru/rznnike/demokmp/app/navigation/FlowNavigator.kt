@@ -1,9 +1,10 @@
 package ru.rznnike.demokmp.app.navigation
 
-import androidx.navigation.NavController
+import androidx.navigation3.runtime.NavBackStack
+import androidx.navigation3.runtime.NavKey
 
 class FlowNavigator(
-    private val navController: NavController,
+    private val backStack: NavBackStack<NavigationScreen>,
     private val navigationStructure: MutableList<Int>,
     private val closeWindowCallback: () -> Unit
 ) {
@@ -11,22 +12,20 @@ class FlowNavigator(
     fun openFlow(flow: NavigationFlow) {
         navigationStructure.add(flow.screens.size)
         flow.screens.forEach {
-            navController.navigate(it)
+            backStack.add(it)
         }
     }
 
     fun openFlows(flows: List<NavigationFlow>) {
         navigationStructure.addAll(flows.map { it.screens.size })
         flows.flatMap { it.screens }.forEach {
-            navController.navigate(it)
+            backStack.add(it)
         }
     }
 
     fun replaceFlow(flow: NavigationFlow) {
         val oldFlowSize = navigationStructure.removeAt(navigationStructure.lastIndex)
-        repeat(oldFlowSize) {
-            navController.popBackStack()
-        }
+        backStack.dropLast(oldFlowSize)
         openFlow(flow)
         System.gc()
     }
@@ -34,21 +33,14 @@ class FlowNavigator(
     fun newRootFlow(flow: NavigationFlow) {
         navigationStructure.clear()
         navigationStructure.add(flow.screens.size)
-        flow.screens.forEachIndexed { index, screen ->
-            navController.navigate(screen) {
-                if (index == 0) {
-                    popUpTo(0)
-                }
-            }
-        }
+        backStack.clear()
+        backStack.addAll(flow.screens)
     }
 
     fun closeFlow() {
         if (navigationStructure.size > 1) {
             val oldFlowSize = navigationStructure.removeAt(navigationStructure.lastIndex)
-            repeat(oldFlowSize) {
-                navController.popBackStack()
-            }
+            backStack.dropLast(oldFlowSize)
         } else {
             closeWindowCallback()
         }
@@ -58,29 +50,25 @@ class FlowNavigator(
     // SCREENS
     fun openScreen(screen: NavigationScreen) {
         navigationStructure[navigationStructure.lastIndex] = navigationStructure.last() + 1
-        navController.navigate(screen)
+        backStack.add(screen)
     }
 
     fun openScreens(screens: List<NavigationScreen>) {
         navigationStructure[navigationStructure.lastIndex] = navigationStructure.last() + screens.size
-        screens.forEach {
-            navController.navigate(it)
-        }
+        backStack.addAll(screens)
     }
 
     fun replaceScreen(screen: NavigationScreen) {
-        navController.popBackStack()
-        navController.navigate(screen)
+        backStack.dropLast(1)
+        backStack.add(screen)
         System.gc()
     }
 
     fun newRootScreen(screen: NavigationScreen) {
         val flowSize = navigationStructure.last()
-        repeat(flowSize) {
-            navController.popBackStack()
-        }
+        backStack.dropLast(flowSize)
         navigationStructure[navigationStructure.lastIndex] = 1
-        navController.navigate(screen)
+        backStack.add(screen)
         System.gc()
     }
 
@@ -88,7 +76,7 @@ class FlowNavigator(
         val flowSize = navigationStructure.last()
         if (flowSize > 1) {
             navigationStructure[navigationStructure.lastIndex] = navigationStructure.last() - 1
-            navController.popBackStack()
+            backStack.dropLast(1)
         } else {
             closeFlow()
         }

@@ -120,7 +120,7 @@ class PdfExampleScreen : DesktopNavigationScreen() {
                     onSaveClick = {
                         fileSaver.launch(
                             suggestedName = viewModel.getSuggestedSaveFileName(),
-                            extension = DataConstants.PDF_FILE_NAME_EXTENSION
+                            defaultExtension = DataConstants.PDF_FILE_NAME_EXTENSION
                         )
                     }
                 )
