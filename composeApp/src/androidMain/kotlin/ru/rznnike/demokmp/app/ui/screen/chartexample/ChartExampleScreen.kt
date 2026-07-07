@@ -2,36 +2,28 @@ package ru.rznnike.demokmp.app.ui.screen.chartexample
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
 import com.patrykandpatrick.vico.compose.cartesian.Zoom
 import com.patrykandpatrick.vico.compose.cartesian.axis.HorizontalAxis
 import com.patrykandpatrick.vico.compose.cartesian.axis.VerticalAxis
-import com.patrykandpatrick.vico.compose.cartesian.data.CartesianChartModelProducer
-import com.patrykandpatrick.vico.compose.cartesian.data.lineSeries
-import com.patrykandpatrick.vico.compose.cartesian.layer.LineCartesianLayer
-import com.patrykandpatrick.vico.compose.cartesian.layer.rememberLine
 import com.patrykandpatrick.vico.compose.cartesian.layer.rememberLineCartesianLayer
 import com.patrykandpatrick.vico.compose.cartesian.rememberCartesianChart
 import com.patrykandpatrick.vico.compose.cartesian.rememberVicoZoomState
-import com.patrykandpatrick.vico.compose.common.*
-import com.patrykandpatrick.vico.compose.common.component.ShapeComponent
-import com.patrykandpatrick.vico.compose.common.component.rememberTextComponent
+import com.patrykandpatrick.vico.compose.common.Insets
+import com.patrykandpatrick.vico.compose.common.ProvideVicoTheme
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.stringResource
 import ru.rznnike.demokmp.app.navigation.AndroidNavigationScreen
 import ru.rznnike.demokmp.app.navigation.getNavigator
 import ru.rznnike.demokmp.app.ui.view.Toolbar
 import ru.rznnike.demokmp.app.ui.view.ToolbarButton
-import ru.rznnike.demokmp.app.utils.cardBackground
-import ru.rznnike.demokmp.app.utils.getCustomVicoTheme
-import ru.rznnike.demokmp.app.utils.statusBarsAndCutoutPadding
+import ru.rznnike.demokmp.app.utils.*
 import ru.rznnike.demokmp.app.viewmodel.chartexample.ChartExampleViewModel
 import ru.rznnike.demokmp.generated.resources.Res
 import ru.rznnike.demokmp.generated.resources.chart_example
@@ -69,62 +61,23 @@ class ChartExampleScreen : AndroidNavigationScreen() {
                     .weight(1f)
                     .cardBackground()
             ) {
-                val modelProducer = remember { CartesianChartModelProducer() }
-                LaunchedEffect(uiState.data) {
-                    modelProducer.runTransaction {
-                        lineSeries {
-                            if (uiState.data.isNotEmpty()) {
-                                series(
-                                    x = uiState.data.map { it.x },
-                                    y = uiState.data.map { it.y }
-                                )
-                            } else {
-                                series(
-                                    x = listOf(0),
-                                    y = listOf(0)
-                                )
-                            }
-                        }
-                    }
-                }
-                val lineColor = MaterialTheme.colorScheme.primary
-                val areaColor = lineColor.copy(alpha = 0.4f)
-                val legendItemLabelComponent = rememberTextComponent(TextStyle(MaterialTheme.colorScheme.onBackground))
-                val legendLineLabel = stringResource(Res.string.test_data)
-                val legendShape = MaterialTheme.shapes.extraSmall
                 ProvideVicoTheme(getCustomVicoTheme()) {
                     CartesianChartHost(
                         modifier = Modifier.fillMaxSize(),
                         chart = rememberCartesianChart(
                             rememberLineCartesianLayer(
-                                lineProvider = LineCartesianLayer.LineProvider.series(
-                                    LineCartesianLayer.rememberLine(
-                                        fill = LineCartesianLayer.LineFill.single(Fill(lineColor)),
-                                        areaFill = LineCartesianLayer.AreaFill.single(
-                                            Fill(Brush.verticalGradient(listOf(areaColor, Color.Transparent, areaColor)))
-                                        )
-                                    )
-                                )
+                                lineProvider = rememberGradientLineProvider()
                             ),
                             startAxis = VerticalAxis.rememberStart(),
                             bottomAxis = HorizontalAxis.rememberBottom(),
-                            legend = rememberHorizontalLegend(
-                                items = {
-                                    add(
-                                        LegendItem(
-                                            icon = ShapeComponent(
-                                                fill = Fill(lineColor),
-                                                shape = legendShape
-                                            ),
-                                            labelComponent = legendItemLabelComponent,
-                                            label = legendLineLabel
-                                        )
-                                    )
-                                },
+                            legend = rememberSimpleHorizontalLegend(
+                                items = listOf(
+                                    MaterialTheme.colorScheme.primary to stringResource(Res.string.test_data)
+                                ),
                                 padding = Insets(16.dp)
                             )
                         ),
-                        modelProducer = modelProducer,
+                        modelProducer = rememberChartPointProducer(uiState.data),
                         zoomState = rememberVicoZoomState(
                             initialZoom = Zoom.Content
                         )
