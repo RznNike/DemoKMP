@@ -1,7 +1,6 @@
 package ru.rznnike.demokmp.app.navigation
 
 import androidx.navigation3.runtime.NavBackStack
-import androidx.navigation3.runtime.NavKey
 
 class FlowNavigator(
     private val backStack: NavBackStack<NavigationScreen>,
@@ -25,7 +24,9 @@ class FlowNavigator(
 
     fun replaceFlow(flow: NavigationFlow) {
         val oldFlowSize = navigationStructure.removeAt(navigationStructure.lastIndex)
-        backStack.dropLast(oldFlowSize)
+        repeat(oldFlowSize) {
+            backStack.removeLastOrNull()
+        }
         openFlow(flow)
         System.gc()
     }
@@ -40,7 +41,9 @@ class FlowNavigator(
     fun closeFlow() {
         if (navigationStructure.size > 1) {
             val oldFlowSize = navigationStructure.removeAt(navigationStructure.lastIndex)
-            backStack.dropLast(oldFlowSize)
+            repeat(oldFlowSize) {
+                backStack.removeLastOrNull()
+            }
         } else {
             closeWindowCallback()
         }
@@ -59,14 +62,16 @@ class FlowNavigator(
     }
 
     fun replaceScreen(screen: NavigationScreen) {
-        backStack.dropLast(1)
+        backStack.removeLastOrNull()
         backStack.add(screen)
         System.gc()
     }
 
     fun newRootScreen(screen: NavigationScreen) {
         val flowSize = navigationStructure.last()
-        backStack.dropLast(flowSize)
+        repeat(flowSize) {
+            backStack.removeLastOrNull()
+        }
         navigationStructure[navigationStructure.lastIndex] = 1
         backStack.add(screen)
         System.gc()
@@ -76,7 +81,7 @@ class FlowNavigator(
         val flowSize = navigationStructure.last()
         if (flowSize > 1) {
             navigationStructure[navigationStructure.lastIndex] = navigationStructure.last() - 1
-            backStack.dropLast(1)
+            backStack.removeLastOrNull()
         } else {
             closeFlow()
         }

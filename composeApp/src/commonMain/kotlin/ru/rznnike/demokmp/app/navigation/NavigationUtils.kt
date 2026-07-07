@@ -10,6 +10,7 @@ import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDe
 import androidx.navigation3.runtime.*
 import androidx.navigation3.ui.NavDisplay
 import androidx.savedstate.serialization.SavedStateConfiguration
+import kotlinx.serialization.modules.PolymorphicModuleBuilder
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
 import ru.rznnike.demokmp.app.utils.windowViewModel
@@ -25,9 +26,10 @@ val LocalNavigationStructure = staticCompositionLocalOf { mutableListOf<Int>() }
 fun CreateNavDisplay(flow: NavigationFlow) {
     val config = SavedStateConfiguration {
         serializersModule = SerializersModule {
-            polymorphic(NavKey::class) {
-//                subclass()
-            }
+            polymorphic(
+                baseClass = NavKey::class,
+                builderAction = screenKeyList
+            )
         }
     }
     @Suppress("UNCHECKED_CAST")
@@ -69,11 +71,14 @@ fun getNavigator(): FlowNavigator {
     val windowConfigurationUiState by windowConfigurationViewModel.uiState.collectAsState()
     val backStack = LocalBackStack.current
     val navigationStructure = LocalNavigationStructure.current
-    return remember {
+    val closeWindowCallback = windowConfigurationUiState.closeWindowCallback
+    return remember(closeWindowCallback) {
         FlowNavigator(
             backStack = backStack,
             navigationStructure = navigationStructure,
-            closeWindowCallback = windowConfigurationUiState.closeWindowCallback
+            closeWindowCallback = closeWindowCallback
         )
     }
 }
+
+expect val screenKeyList: PolymorphicModuleBuilder<NavKey>.() -> Unit
