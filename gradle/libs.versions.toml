@@ -10,7 +10,7 @@ room = "2.8.4"
 filekit = "0.14.2"
 chucker = "4.3.1"
 vico = "3.2.3"
-markdown = "0.43.0"
+markdown = "0.41.0"
 
 android-minSdk = "26"
 android-targetSdk = "36"
