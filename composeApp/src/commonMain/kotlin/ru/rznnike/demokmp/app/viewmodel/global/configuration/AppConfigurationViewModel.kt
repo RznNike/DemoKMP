@@ -186,6 +186,7 @@ class AppConfigurationViewModel : BaseUiViewModel<AppConfigurationViewModel.UiSt
         closeAppJob = coroutineScopeProvider.default.launch {
             if (BuildKonfig.RUN_FROM_IDE && isRestart) {
                 notifier.sendAlert(Res.string.error_restart_from_ide)
+                closeAppJob = null
                 return@launch
             }
 

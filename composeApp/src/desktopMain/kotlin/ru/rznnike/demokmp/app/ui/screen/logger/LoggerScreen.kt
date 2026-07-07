@@ -171,7 +171,7 @@ class LoggerScreen : DesktopNavigationScreen() {
                     onClick = {
                         fileSaver.launch(
                             suggestedName = viewModel.getSuggestedSaveFileName(),
-                            extension = DataConstants.LOG_FILE_NAME_EXTENSION
+                            defaultExtension = DataConstants.LOG_FILE_NAME_EXTENSION
                         )
                     }
                 )
