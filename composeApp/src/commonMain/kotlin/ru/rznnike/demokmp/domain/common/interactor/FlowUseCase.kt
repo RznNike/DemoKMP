@@ -6,7 +6,7 @@ import ru.rznnike.demokmp.domain.common.DispatcherProvider
 
 abstract class FlowUseCase<R>(private val dispatcherProvider: DispatcherProvider) {
     suspend operator fun invoke(): Flow<R> {
-        return execute().flowOn(dispatcherProvider.default)
+        return execute().flowOn(dispatcherProvider.io)
     }
 
     @Throws(RuntimeException::class)
