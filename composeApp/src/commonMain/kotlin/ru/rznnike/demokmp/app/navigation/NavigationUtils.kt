@@ -20,7 +20,7 @@ import ru.rznnike.demokmp.domain.utils.OperatingSystem
 private const val SCREEN_ANIMATION_DURATION_MS = 500
 
 val LocalBackStack = staticCompositionLocalOf { NavBackStack<NavigationScreen>() }
-val LocalNavigationStructure = staticCompositionLocalOf { mutableListOf<Int>() }
+val LocalNavigationStructure = staticCompositionLocalOf { mutableStateListOf<NavigationFlowInfo>() }
 
 @Composable
 fun CreateNavDisplay(flow: NavigationFlow) {
@@ -37,7 +37,9 @@ fun CreateNavDisplay(flow: NavigationFlow) {
         configuration = config,
         elements = flow.screens.toTypedArray()
     ) as NavBackStack<NavigationScreen>
-    val navigationStructure = rememberSaveable { mutableListOf(flow.screens.size) }
+    val navigationStructure = rememberSaveable(saver = NavigationFlowInfo.listSaver) {
+        mutableStateListOf(flow.toInfo())
+    }
     CompositionLocalProvider(
         LocalBackStack provides backStack,
         LocalNavigationStructure provides navigationStructure

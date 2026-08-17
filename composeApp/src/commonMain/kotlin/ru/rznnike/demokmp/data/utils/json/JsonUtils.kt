@@ -19,3 +19,7 @@ fun String.prettifyJson() = try {
 } catch (_: Exception) {
     this
 }
+
+inline fun <reified T> String?.safeDecode(): T? = try {
+    this?.let { defaultJson.decodeFromString(this) }
+} catch (_: Exception) { null }
