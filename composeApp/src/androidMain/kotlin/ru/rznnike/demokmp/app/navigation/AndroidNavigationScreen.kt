@@ -5,6 +5,9 @@ import androidx.activity.compose.BackHandler
 import androidx.activity.compose.LocalActivity
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.core.view.WindowCompat
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
@@ -12,12 +15,8 @@ import ru.rznnike.demokmp.app.ui.theme.LocalIsDarkTheme
 
 @Serializable
 abstract class AndroidNavigationScreen : NavigationScreen() {
-    open val isLightStatusBar: Boolean
-        @Composable
-        get() = !LocalIsDarkTheme.current
-    open val isLightNavigationBar: Boolean
-        @Composable
-        get() = !LocalIsDarkTheme.current
+    var isLightStatusBar by mutableStateOf(false)
+    var isLightNavigationBar by mutableStateOf(false)
 
     private val activity: ComponentActivity
         @Composable
@@ -30,20 +29,28 @@ abstract class AndroidNavigationScreen : NavigationScreen() {
 
     @Composable
     final override fun Content() {
-        SetSystemBarsColors()
+        InitSystemBarsColors()
+        ApplySystemBarsColors()
         HandleBackPress()
         super.Content()
     }
 
     @Composable
-    private fun SetSystemBarsColors() {
+    open fun InitSystemBarsColors() {
+        val isDarkTheme = LocalIsDarkTheme.current
+        LaunchedEffect(isDarkTheme) {
+            isLightStatusBar = !isDarkTheme
+            isLightNavigationBar = !isDarkTheme
+        }
+    }
+
+    @Composable
+    private fun ApplySystemBarsColors() {
         activity.window?.let { window ->
-            val isLightSB = isLightStatusBar
-            val isLightNB = isLightNavigationBar
-            LaunchedEffect(isLightSB, isLightNB) {
+            LaunchedEffect(isLightStatusBar, isLightNavigationBar) {
                 WindowCompat.getInsetsController(window, window.decorView).apply {
-                    isAppearanceLightStatusBars = isLightSB
-                    isAppearanceLightNavigationBars = isLightNB
+                    isAppearanceLightStatusBars = isLightStatusBar
+                    isAppearanceLightNavigationBars = isLightNavigationBar
                 }
             }
         }
