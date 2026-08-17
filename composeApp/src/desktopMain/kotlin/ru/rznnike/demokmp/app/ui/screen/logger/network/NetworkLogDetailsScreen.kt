@@ -15,6 +15,7 @@ import androidx.compose.ui.platform.LocalClipboard
 import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import io.github.vinceglb.filekit.dialogs.FileKitDialogParent
 import io.github.vinceglb.filekit.dialogs.FileKitDialogSettings
 import io.github.vinceglb.filekit.dialogs.compose.rememberFileSaverLauncher
 import kotlinx.serialization.Serializable
@@ -52,7 +53,7 @@ class NetworkLogDetailsScreen(
         val window = LocalWindow.current
         val fileSaver = rememberFileSaverLauncher(
             dialogSettings = FileKitDialogSettings(
-                parentWindow = window
+                parent = FileKitDialogParent.awt(window)
             )
         ) { result ->
             result?.file?.let {

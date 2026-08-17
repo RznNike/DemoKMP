@@ -19,6 +19,7 @@ import androidx.compose.ui.input.key.*
 import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import io.github.vinceglb.filekit.dialogs.FileKitDialogParent
 import io.github.vinceglb.filekit.dialogs.FileKitDialogSettings
 import io.github.vinceglb.filekit.dialogs.compose.rememberFileSaverLauncher
 import kotlinx.coroutines.launch
@@ -54,7 +55,7 @@ class LoggerScreen : DesktopNavigationScreen() {
         val window = LocalWindow.current
         val fileSaver = rememberFileSaverLauncher(
             dialogSettings = FileKitDialogSettings(
-                parentWindow = window
+                parent = FileKitDialogParent.awt(window)
             )
         ) { result ->
             result?.file?.let {

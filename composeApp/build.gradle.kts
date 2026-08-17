@@ -40,7 +40,7 @@ kotlin {
     jvm("desktop")
 
     sourceSets {
-        val desktopMain by getting
+        val desktopMain = getByName("desktopMain")
 
         commonMain.dependencies {
             implementation(libs.compose.runtime)
@@ -126,7 +126,7 @@ dependencies {
 android {
     namespace = globalPackageName
     compileSdk = libs.versions.android.targetSdk.get().toInt()
-    buildToolsVersion = "36.0.0"
+    buildToolsVersion = "37.0.0"
 
     signingConfigs {
         create(
@@ -221,7 +221,7 @@ android {
     bundle.language.enableSplit = false
 
     dependencies {
-        val stagingImplementation by configurations
+        val stagingImplementation = configurations.getByName("stagingImplementation")
 
         coreLibraryDesugaring(libs.desugaring)
 
