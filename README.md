@@ -44,6 +44,7 @@ This is a sample project with a set of solutions to typical problems, demonstrat
 * UI for viewing network logs from a device
 * Convenient permissions requests
 * Image gallery dialog
+* Barcode scanner
 
 ## Screenshots
 <details>
@@ -101,6 +102,8 @@ This is a sample project with a set of solutions to typical problems, demonstrat
 * [Chucker](https://github.com/ChuckerTeam/chucker)
 * [Accompanist (permissions)](https://github.com/google/accompanist/tree/main/permissions)
 * [Telephoto](https://github.com/saket/telephoto)
+* [CameraX](https://developer.android.com/media/camera/camerax)
+* [MLKit (barcode)](https://developers.google.com/ml-kit/vision/barcode-scanning/android)
 
 ## Used example APIs
 * HTTP - [dog.ceo](https://dog.ceo/dog-api/)

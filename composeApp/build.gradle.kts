@@ -99,6 +99,12 @@ kotlin {
             implementation(libs.permissions)
 
             implementation(libs.coil.zoomable)
+
+            implementation(libs.camera)
+            implementation(libs.camera.lifecycle)
+            implementation(libs.camera.compose)
+            implementation(libs.camera.mlkit)
+            implementation(libs.mlkit.barcode)
         }
 
         desktopMain.dependencies {

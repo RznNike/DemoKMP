@@ -45,6 +45,7 @@
 * UI для просмотра сетевых логов с устройства
 * Удобный запрос разрешений
 * Диалог с галереей изображений
+* Сканер штрихкодов
 
 ## Скриншоты
 <details>
@@ -102,6 +103,8 @@
 * [Chucker](https://github.com/ChuckerTeam/chucker)
 * [Accompanist (permissions)](https://github.com/google/accompanist/tree/main/permissions)
 * [Telephoto](https://github.com/saket/telephoto)
+* [CameraX](https://developer.android.com/media/camera/camerax)
+* [MLKit (barcode)](https://developers.google.com/ml-kit/vision/barcode-scanning/android)
 
 ## Использованные примеры API
 * HTTP - [dog.ceo](https://dog.ceo/dog-api/)

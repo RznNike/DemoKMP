@@ -11,6 +11,7 @@ filekit = "0.15.0"
 chucker = "4.3.1"
 vico = "3.3.0"
 markdown = "0.43.0"
+camera = "1.6.1"
 
 android-minSdk = "26"
 android-targetSdk = "37"
@@ -145,6 +146,17 @@ permissions = { module = "com.google.accompanist:accompanist-permissions", versi
 # Zoomable image
 # https://github.com/saket/telephoto
 coil-zoomable = { module = "me.saket.telephoto:zoomable-image-coil3", version = "0.19.0" }
+
+# CameraX
+# https://developer.android.com/jetpack/androidx/releases/camera
+camera = { module = "androidx.camera:camera-camera2", version.ref = "camera" }
+camera-lifecycle = { module = "androidx.camera:camera-lifecycle", version.ref = "camera" }
+camera-compose = { module = "androidx.camera:camera-compose", version.ref = "camera" }
+camera-mlkit = { module = "androidx.camera:camera-mlkit-vision", version.ref = "camera" }
+
+# MLKit barcode
+# https://mvnrepository.com/artifact/com.google.mlkit/barcode-scanning
+mlkit-barcode = { module = "com.google.mlkit:barcode-scanning", version = "17.3.0" }
 
 
 [plugins]

@@ -105,4 +105,8 @@
     <string name="force_close">Закрыть принудительно</string>
     <string name="markdown_example">Пример Markdown</string>
     <string name="dashed_border">Пунктирная обводка</string>
+    <string name="barcode_scanner_example">Пример сканера штрихкодов</string>
+    <string name="error_barcode_camera_permission">Для сканирования требуется доступ к камере</string>
+    <string name="scan_result">Результат сканирования</string>
+    <string name="continue_title">Продолжить</string>
 </resources>

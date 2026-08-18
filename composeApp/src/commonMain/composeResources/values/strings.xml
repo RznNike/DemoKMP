@@ -107,4 +107,8 @@
     <string name="force_close">Force close</string>
     <string name="markdown_example">Markdown example</string>
     <string name="dashed_border">Dashed border</string>
+    <string name="barcode_scanner_example">Barcode scanner example</string>
+    <string name="error_barcode_camera_permission">Camera permission required for scan</string>
+    <string name="scan_result">Scan result</string>
+    <string name="continue_title">Continue</string>
 </resources>

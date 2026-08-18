@@ -19,6 +19,7 @@ import ru.rznnike.demokmp.app.permission.rememberNotificationsPermissionHandler
 import ru.rznnike.demokmp.app.ui.dialog.common.AlertDialogAction
 import ru.rznnike.demokmp.app.ui.dialog.common.AlertDialogType
 import ru.rznnike.demokmp.app.ui.dialog.common.CommonAlertDialog
+import ru.rznnike.demokmp.app.ui.screen.barcodeexample.BarcodeExampleFlow
 import ru.rznnike.demokmp.app.ui.screen.chartexample.ChartExampleFlow
 import ru.rznnike.demokmp.app.ui.screen.customui.CustomUIFlow
 import ru.rznnike.demokmp.app.ui.screen.dbexample.DBExampleFlow
@@ -112,6 +113,9 @@ class HomeScreen : AndroidNavigationScreen() {
                     }
                     MenuButton(Res.string.markdown_example) {
                         navigator.openFlow(MarkdownExampleFlow())
+                    }
+                    MenuButton(Res.string.barcode_scanner_example) {
+                        navigator.openFlow(BarcodeExampleFlow())
                     }
                     MenuButton(Res.string.custom_ui_elements) {
                         navigator.openFlow(CustomUIFlow())
