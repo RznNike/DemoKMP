@@ -1,15 +1,15 @@
 package ru.rznnike.demokmp.data.network.interceptor
 
-import kotlinx.serialization.ExperimentalSerializationApi
-import kotlinx.serialization.json.Json
 import okhttp3.Headers
 import okhttp3.Interceptor
 import okhttp3.MediaType
 import okhttp3.Response
 import okhttp3.internal.http.promisesBody
 import okio.Buffer
+import okio.BufferedSource
 import okio.GzipSource
 import ru.rznnike.demokmp.BuildKonfig
+import ru.rznnike.demokmp.data.utils.json.prettifyJson
 import ru.rznnike.demokmp.domain.log.Logger
 import ru.rznnike.demokmp.domain.log.NetworkRequestState
 import java.io.EOFException
@@ -20,17 +20,11 @@ import java.util.concurrent.TimeUnit
 
 private const val MAX_RESPONSE_BODY_SIZE_TO_LOG = 100 * 1024 // 100 KB
 
-@OptIn(ExperimentalSerializationApi::class)
-class HttpLoggingInterceptor : Interceptor {
-    private val formatter = Json {
-        prettyPrint = true
-        prettyPrintIndent = "    "
-    }
-
-    @Suppress("KotlinConstantConditions")
+class HttpLoggingInterceptor(
+    val level: Level = if (BuildKonfig.DEBUG) Level.BODY else Level.BASIC
+) : Interceptor {
     @Throws(IOException::class)
     override fun intercept(chain: Interceptor.Chain): Response {
-        val level = if (BuildKonfig.DEBUG) Level.BODY else Level.BASIC
         val logBuilder = StringBuilder()
 
         val request = chain.request()
@@ -46,7 +40,7 @@ class HttpLoggingInterceptor : Interceptor {
         val connection = chain.connection()
         var requestStartMessage =
             ("--> ${request.method} ${request.url}${if (connection != null) " " + connection.protocol() else ""}")
-        if (!logHeaders && requestBody != null) {
+        if ((!logHeaders) && (requestBody != null)) {
             requestStartMessage += " (${requestBody.contentLength()}-byte body)"
         }
         logBuilder.appendLine(requestStartMessage)
@@ -62,62 +56,51 @@ class HttpLoggingInterceptor : Interceptor {
                         logBuilder.appendLine("Content-Type: $it")
                     }
                 }
-                if (requestBody.contentLength() != -1L) {
-                    if (headers["Content-Length"] == null) {
-                        logBuilder.appendLine("Content-Length: ${requestBody.contentLength()}")
-                    }
+                if ((requestBody.contentLength() != -1L) && (headers["Content-Length"] == null)) {
+                    logBuilder.appendLine("Content-Length: ${requestBody.contentLength()}")
                 }
             }
 
-            for (i in 0 until headers.size) {
-                logHeader(logBuilder, headers, i)
+            headers.forEach { (name, value) ->
+                logBuilder.appendLine("$name: $value")
             }
 
-            if (!logBody || requestBody == null) {
-                logBuilder.appendLine("--> END ${request.method}")
-            } else if (bodyHasUnknownEncoding(request.headers)) {
-                logBuilder.appendLine("--> END ${request.method} (encoded body omitted)")
-            } else if (requestBody.isDuplex()) {
-                logBuilder.appendLine("--> END ${request.method} (duplex request body omitted)")
-            } else if (requestBody.isOneShot()) {
-                logBuilder.appendLine("--> END ${request.method} (one-shot body omitted)")
-            } else {
-                var buffer = Buffer()
-                requestBody.writeTo(buffer)
+            when {
+                (!logBody) || (requestBody == null) -> logBuilder.appendLine("--> END ${request.method}")
+                bodyHasUnknownEncoding(request.headers) -> logBuilder.appendLine("--> END ${request.method} (encoded body omitted)")
+                requestBody.isDuplex() -> logBuilder.appendLine("--> END ${request.method} (duplex request body omitted)")
+                requestBody.isOneShot() -> logBuilder.appendLine("--> END ${request.method} (one-shot body omitted)")
+                else -> {
+                    var buffer = Buffer()
+                    requestBody.writeTo(buffer)
 
-                var gzippedLength: Long? = null
-                if ("gzip".equals(headers["Content-Encoding"], ignoreCase = true)) {
-                    gzippedLength = buffer.size
-                    GzipSource(buffer).use { gzippedResponseBody ->
-                        buffer = Buffer()
-                        buffer.writeAll(gzippedResponseBody)
-                    }
-                }
-
-                val charset: Charset = requestBody.contentType().charsetOrUtf8()
-
-                logBuilder.appendLine()
-                if (!buffer.isProbablyUtf8()) {
-                    logBuilder.appendLine(
-                        "--> END ${request.method} (binary ${requestBody.contentLength()}-byte body omitted)",
-                    )
-                } else if (gzippedLength != null) {
-                    logBuilder.appendLine("--> END ${request.method} (${buffer.size}-byte, $gzippedLength-gzipped-byte body)")
-                } else {
-                    var body = buffer.readString(charset)
-
-                    if (request.url.toString().endsWith("authorization/sign-in")) {
-                        body = body.replace("\"password\" *: *\".*\"".toRegex(), "\"password\":\"***\"")
+                    var gzippedLength: Long? = null
+                    if ("gzip".equals(headers["Content-Encoding"], ignoreCase = true)) {
+                        gzippedLength = buffer.size
+                        GzipSource(buffer).use { gzippedResponseBody ->
+                            buffer = Buffer()
+                            buffer.writeAll(gzippedResponseBody)
+                        }
                     }
 
-                    val formattedBody = try {
-                        formatter.encodeToString(formatter.parseToJsonElement(body))
-                    } catch (_: Exception) {
-                        body
-                    }
-                    logBuilder.appendLine(formattedBody)
+                    val charset: Charset = requestBody.contentType().charsetOrUtf8()
 
-                    logBuilder.appendLine("--> END ${request.method} (${requestBody.contentLength()}-byte body)")
+                    logBuilder.appendLine()
+                    when {
+                        !buffer.isProbablyUtf8() -> {
+                            logBuilder.appendLine(
+                                "--> END ${request.method} (binary ${requestBody.contentLength()}-byte body omitted)",
+                            )
+                        }
+                        gzippedLength != null -> {
+                            logBuilder.appendLine("--> END ${request.method} (${buffer.size}-byte, $gzippedLength-gzipped-byte body)")
+                        }
+                        else -> {
+                            val body = buffer.readString(charset)
+                            logBuilder.appendLine(body.prettifyJson())
+                            logBuilder.appendLine("--> END ${request.method} (${requestBody.contentLength()}-byte body)")
+                        }
+                    }
                 }
             }
         }
@@ -144,7 +127,7 @@ class HttpLoggingInterceptor : Interceptor {
 
         val tookMs = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startNs)
 
-        val responseBody = response.body!!
+        val responseBody = response.body
         val contentLength = responseBody.contentLength()
         val bodySize = if (contentLength != -1L) "$contentLength-byte" else "unknown-length"
         logBuilder.append("<-- ${response.code}")
@@ -155,63 +138,57 @@ class HttpLoggingInterceptor : Interceptor {
 
         if (logHeaders) {
             val headers = response.headers
-            for (i in 0 until headers.size) {
-                logHeader(logBuilder, headers, i)
+            headers.forEach { (name, value) ->
+                logBuilder.appendLine("$name: $value")
             }
 
-            if (!logBody || !response.promisesBody()) {
-                logBuilder.appendLine("<-- END HTTP")
-            } else if (bodyHasUnknownEncoding(response.headers)) {
-                logBuilder.appendLine("<-- END HTTP (encoded body omitted)")
-            } else if (bodyIsStreaming(response)) {
-                logBuilder.appendLine("<-- END HTTP (streaming)")
-            } else {
-                val source = responseBody.source()
-                source.request(Long.MAX_VALUE) // Buffer the entire body.
+            when {
+                (!logBody) || (!response.promisesBody()) -> logBuilder.appendLine("<-- END HTTP")
+                bodyHasUnknownEncoding(response.headers) -> logBuilder.appendLine("<-- END HTTP (encoded body omitted)")
+                bodyIsStreaming(response) -> logBuilder.appendLine("<-- END HTTP (streaming)")
+                else -> {
+                    val source = responseBody.source()
+                    source.request(Long.MAX_VALUE) // Buffer the entire body.
 
-                val totalMs = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startNs)
+                    val totalMs = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startNs)
 
-                var buffer = source.buffer
+                    var buffer = source.buffer
 
-                var gzippedLength: Long? = null
-                if ("gzip".equals(headers["Content-Encoding"], ignoreCase = true)) {
-                    gzippedLength = buffer.size
-                    GzipSource(buffer.clone()).use { gzippedResponseBody ->
-                        buffer = Buffer()
-                        buffer.writeAll(gzippedResponseBody)
-                    }
-                }
-
-                if (!buffer.isProbablyUtf8()) {
-                    logBuilder.appendLine()
-                    logBuilder.appendLine("<-- END HTTP (${totalMs}ms, binary ${buffer.size}-byte body omitted)")
-                    return response
-                }
-
-                logBuilder.appendLine()
-                when {
-                    contentLength > MAX_RESPONSE_BODY_SIZE_TO_LOG -> {
-                        logBuilder.appendLine("***Too big response body omitted***")
-                    }
-                    contentLength != 0L -> {
-                        val charset: Charset = responseBody.contentType().charsetOrUtf8()
-                        val body = buffer.clone().readString(charset)
-                        if (buffer.size > MAX_RESPONSE_BODY_SIZE_TO_LOG) {
-                            logBuilder.appendLine("***Too big response body omitted***")
-                        } else {
-                            val formattedBody = try {
-                                formatter.encodeToString(formatter.parseToJsonElement(body))
-                            } catch (_: Exception) {
-                                body
-                            }
-                            logBuilder.appendLine(formattedBody)
+                    var gzippedLength: Long? = null
+                    if ("gzip".equals(headers["Content-Encoding"], ignoreCase = true)) {
+                        gzippedLength = buffer.size
+                        GzipSource(buffer.clone()).use { gzippedResponseBody ->
+                            buffer = Buffer()
+                            buffer.writeAll(gzippedResponseBody)
                         }
                     }
-                }
 
-                logBuilder.append("<-- END HTTP (${totalMs}ms, ${buffer.size}-byte")
-                if (gzippedLength != null) logBuilder.append(", $gzippedLength-gzipped-byte")
-                logBuilder.appendLine(" body)")
+                    if (!buffer.isProbablyUtf8()) {
+                        logBuilder.appendLine()
+                        logBuilder.appendLine("<-- END HTTP (${totalMs}ms, binary ${buffer.size}-byte body omitted)")
+                        return response
+                    }
+
+                    logBuilder.appendLine()
+                    when {
+                        contentLength > MAX_RESPONSE_BODY_SIZE_TO_LOG -> {
+                            logBuilder.appendLine("***Too big response body omitted***")
+                        }
+                        contentLength != 0L -> {
+                            val charset: Charset = responseBody.contentType().charsetOrUtf8()
+                            val body = buffer.clone().readString(charset)
+                            if (buffer.size > MAX_RESPONSE_BODY_SIZE_TO_LOG) {
+                                logBuilder.appendLine("***Too big response body omitted***")
+                            } else {
+                                logBuilder.appendLine(body.prettifyJson())
+                            }
+                        }
+                    }
+
+                    logBuilder.append("<-- END HTTP (${totalMs}ms, ${buffer.size}-byte")
+                    if (gzippedLength != null) logBuilder.append(", $gzippedLength-gzipped-byte")
+                    logBuilder.appendLine(" body)")
+                }
             }
         }
         Logger.networkResponse(
@@ -223,22 +200,14 @@ class HttpLoggingInterceptor : Interceptor {
         return response
     }
 
-    private fun logHeader(
-        logBuilder: StringBuilder,
-        headers: Headers,
-        i: Int,
-    ) {
-        logBuilder.appendLine(headers.name(i) + ": " + headers.value(i))
-    }
-
     private fun bodyHasUnknownEncoding(headers: Headers): Boolean {
         val contentEncoding = headers["Content-Encoding"] ?: return false
-        return !contentEncoding.equals("identity", ignoreCase = true) &&
-                !contentEncoding.equals("gzip", ignoreCase = true)
+        return (!contentEncoding.equals("identity", ignoreCase = true))
+                && (!contentEncoding.equals("gzip", ignoreCase = true))
     }
 
     private fun bodyIsStreaming(response: Response): Boolean {
-        val contentType = response.body?.contentType()
+        val contentType = response.body.contentType()
         return contentType != null && contentType.type == "text" && contentType.subtype == "event-stream"
     }
 
@@ -250,16 +219,14 @@ class HttpLoggingInterceptor : Interceptor {
     }
 }
 
-fun Buffer.isProbablyUtf8(): Boolean {
+private fun BufferedSource.isProbablyUtf8(): Boolean {
     try {
-        val prefix = Buffer()
-        val byteCount = size.coerceAtMost(64)
-        copyTo(prefix, 0, byteCount)
+        val peek = peek()
         for (i in 0 until 16) {
-            if (prefix.exhausted()) {
+            if (peek.exhausted()) {
                 break
             }
-            val codePoint = prefix.readUtf8CodePoint()
+            val codePoint = peek.readUtf8CodePoint()
             if (Character.isISOControl(codePoint) && !Character.isWhitespace(codePoint)) {
                 return false
             }
@@ -270,6 +237,4 @@ fun Buffer.isProbablyUtf8(): Boolean {
     }
 }
 
-internal fun MediaType?.charsetOrUtf8(): Charset {
-    return this?.charset() ?: Charsets.UTF_8
-}
+private fun MediaType?.charsetOrUtf8() = this?.charset() ?: Charsets.UTF_8

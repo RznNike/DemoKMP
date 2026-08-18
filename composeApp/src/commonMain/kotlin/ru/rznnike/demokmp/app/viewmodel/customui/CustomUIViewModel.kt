@@ -1,5 +1,6 @@
 package ru.rznnike.demokmp.app.viewmodel.customui
 
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -125,6 +126,7 @@ class CustomUIViewModel : BaseUiViewModel<CustomUIViewModel.UiState>() {
         }
     }
 
+    @Immutable
     data class UiState(
         val selectedTab: Tab = Tab.ONE,
         val dateFilter: DateFilter,

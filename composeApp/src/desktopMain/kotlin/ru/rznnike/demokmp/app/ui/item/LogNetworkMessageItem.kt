@@ -1,6 +1,5 @@
 package ru.rznnike.demokmp.app.ui.item
 
-import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.selection.DisableSelection
@@ -9,8 +8,9 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import ru.rznnike.demokmp.app.ui.theme.AppTheme
+import ru.rznnike.demokmp.app.ui.theme.PreviewDesktopAppTheme
 import ru.rznnike.demokmp.app.ui.theme.bodyMediumMono
 import ru.rznnike.demokmp.app.utils.backgroundColor
 import ru.rznnike.demokmp.app.utils.highlightSubstrings
@@ -33,7 +33,7 @@ fun LogNetworkMessageItem(
                 .fillMaxWidth()
                 .padding(vertical = 2.dp)
                 .background(message.state.backgroundColor)
-                .onClick(onClick)
+                .onClick { onClick() }
                 .padding(horizontal = 8.dp, vertical = 3.dp)
         ) {
             @Composable
@@ -84,7 +84,7 @@ fun LogNetworkMessageItem(
 @Preview
 @Composable
 private fun LogNetworkMessageItemPreview() {
-    AppTheme {
+    PreviewDesktopAppTheme {
         LogNetworkMessageItem(
             message = NetworkLogMessage(
                 uuid = UUID.randomUUID(),

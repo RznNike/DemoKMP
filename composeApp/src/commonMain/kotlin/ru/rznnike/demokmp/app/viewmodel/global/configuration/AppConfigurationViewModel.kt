@@ -1,9 +1,12 @@
 package ru.rznnike.demokmp.app.viewmodel.global.configuration
 
+import androidx.compose.runtime.Immutable
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withTimeoutOrNull
 import org.koin.core.component.inject
 import ru.rznnike.demokmp.BuildKonfig
 import ru.rznnike.demokmp.app.common.viewmodel.BaseUiViewModel
@@ -11,6 +14,7 @@ import ru.rznnike.demokmp.app.dispatcher.event.AppEvent
 import ru.rznnike.demokmp.app.dispatcher.event.EventDispatcher
 import ru.rznnike.demokmp.app.dispatcher.notifier.Notifier
 import ru.rznnike.demokmp.data.utils.DataConstants
+import ru.rznnike.demokmp.domain.common.CoroutineScopeProvider
 import ru.rznnike.demokmp.domain.interactor.app.CloseAppSingleInstanceSocketUseCase
 import ru.rznnike.demokmp.domain.interactor.comobjectexample.DestroyShellWrapperUseCase
 import ru.rznnike.demokmp.domain.interactor.comobjectexample.InitShellWrapperUseCase
@@ -30,10 +34,14 @@ import ru.rznnike.demokmp.generated.resources.Res
 import ru.rznnike.demokmp.generated.resources.error_restart_from_ide
 import java.io.File
 import java.util.*
+import kotlin.time.Duration.Companion.milliseconds
+
+private val CLOSE_APP_TIMEOUT_MS = 20_000.milliseconds
 
 class AppConfigurationViewModel : BaseUiViewModel<AppConfigurationViewModel.UiState>() {
     private val eventDispatcher: EventDispatcher by inject()
     private val notifier: Notifier by inject()
+    private val coroutineScopeProvider: CoroutineScopeProvider by inject()
     private val getLanguageUseCase: GetLanguageUseCase by inject()
     private val setLanguageUseCase: SetLanguageUseCase by inject()
     private val getThemeUseCase: GetThemeUseCase by inject()
@@ -46,13 +54,23 @@ class AppConfigurationViewModel : BaseUiViewModel<AppConfigurationViewModel.UiSt
     private val closeAppSingleInstanceSocketUseCase: CloseAppSingleInstanceSocketUseCase by inject()
 
     private var closeAppCallback: (() -> Unit)? = null
+    private var openLoggerWindowCallback: (() -> Unit)? = null
+    private var openHotkeysDialogCallback: (() -> Unit)? = null
+
+    private var closeAppJob: Job? = null
 
     private val eventListener = object : EventDispatcher.EventListener {
         override fun onEvent(event: AppEvent) {
             when (event) {
-                is AppEvent.RestartRequested -> {
-                    closeApplication(isRestart = true)
+                is AppEvent.RestartRequested -> closeApplication(isRestart = true)
+                is AppEvent.BottomStatusBarRequested -> {
+                    mutableUiState.update { currentState ->
+                        currentState.copy(
+                            isBottomStatusBarVisible = event.show
+                        )
+                    }
                 }
+                is AppEvent.LoggerWindowRequested -> openLoggerWindow()
                 else -> Unit
             }
         }
@@ -60,7 +78,7 @@ class AppConfigurationViewModel : BaseUiViewModel<AppConfigurationViewModel.UiSt
 
     init {
         subscribeToEvents()
-        initUiSettings()
+        initAppConfiguration()
         initShellWrapper()
     }
 
@@ -73,13 +91,15 @@ class AppConfigurationViewModel : BaseUiViewModel<AppConfigurationViewModel.UiSt
     private fun subscribeToEvents() {
         eventDispatcher.addEventListener(
             appEventClasses = listOf(
-                AppEvent.RestartRequested::class
+                AppEvent.RestartRequested::class,
+                AppEvent.BottomStatusBarRequested::class,
+                AppEvent.LoggerWindowRequested::class
             ),
             listener = eventListener
         )
     }
 
-    private fun initUiSettings() {
+    private fun initAppConfiguration() {
         viewModelScope.launch {
             val selectedLanguage = getLanguageUseCase().data ?: Language.default
             val selectedTheme = getThemeUseCase().data ?: Theme.default
@@ -161,18 +181,29 @@ class AppConfigurationViewModel : BaseUiViewModel<AppConfigurationViewModel.UiSt
     }
 
     fun closeApplication(isRestart: Boolean = false) {
-        viewModelScope.launch {
+        if (closeAppJob != null) return
+
+        closeAppJob = coroutineScopeProvider.default.launch {
             if (BuildKonfig.RUN_FROM_IDE && isRestart) {
                 notifier.sendAlert(Res.string.error_restart_from_ide)
+                closeAppJob = null
                 return@launch
             }
 
-            eventDispatcher.removeEventListener(eventListener)
-            destroyShellWrapperUseCase()
-            closeDBUseCase()
-            closeAppSingleInstanceSocketUseCase()
-            Logger.i("Application finish\n")
-            delay(100)
+            mutableUiState.update { currentState ->
+                currentState.copy(
+                    isAppClosing = true
+                )
+            }
+
+            withTimeoutOrNull(CLOSE_APP_TIMEOUT_MS) {
+                eventDispatcher.removeEventListener(eventListener)
+                destroyShellWrapperUseCase()
+                Logger.i("Application finish\n")
+                delay(100.milliseconds)
+                closeDBUseCase()
+                closeAppSingleInstanceSocketUseCase()
+            }
 
             if (OperatingSystem.isDesktop || (!isRestart)) {
                 closeAppCallback?.invoke()
@@ -181,6 +212,10 @@ class AppConfigurationViewModel : BaseUiViewModel<AppConfigurationViewModel.UiSt
                 relaunchApplication()
             }
         }
+    }
+
+    fun forceCloseApplication() {
+        closeAppCallback?.invoke()
     }
 
     private fun relaunchApplication() {
@@ -205,11 +240,34 @@ class AppConfigurationViewModel : BaseUiViewModel<AppConfigurationViewModel.UiSt
         }
     }
 
+    fun setLoggerWindowCallback(
+        openLoggerWindowCallback: () -> Unit
+    ) {
+        this.openLoggerWindowCallback = openLoggerWindowCallback
+    }
+
+    fun openLoggerWindow() {
+        openLoggerWindowCallback?.invoke()
+    }
+
+    fun setHotkeysDialogCallback(
+        openHotkeysDialogCallback: () -> Unit
+    ) {
+        this.openHotkeysDialogCallback = openHotkeysDialogCallback
+    }
+
+    fun openHotkeysDialog() {
+        openHotkeysDialogCallback?.invoke()
+    }
+
+    @Immutable
     data class UiState(
         val args: List<String> = emptyList(),
         val language: Language = Language.default,
         val theme: Theme = Theme.default,
         val uiScale: UiScale = UiScale.default,
-        val isLoaded: Boolean = false
+        val isLoaded: Boolean = false,
+        val isBottomStatusBarVisible: Boolean = false,
+        val isAppClosing: Boolean = false
     )
 }

@@ -15,7 +15,9 @@ val Theme.nameRes: StringResource
     get() = when (this) {
         Theme.AUTO -> Res.string.theme_auto
         Theme.LIGHT -> Res.string.theme_light
+        Theme.LIGHT_CONTRAST -> Res.string.theme_light_contrast
         Theme.DARK -> Res.string.theme_dark
+        Theme.DARK_CONTRAST -> Res.string.theme_dark_contrast
     }
 
 val TwoSidedPrint.nameRes: StringResource

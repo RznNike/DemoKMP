@@ -1,36 +1,44 @@
 [versions]
-kotlin = "2.2.21"
-compose = "1.9.2"
-coroutines = "1.10.2"
-koin = "4.1.1"
-ktorfit = "2.6.4"
-ktor = "3.3.1"
-coil = "3.3.0"
-room = "2.8.3"
-filekit = "0.12.0"
-chucker = "4.2.0"
-vico = "2.2.1"
+kotlin = "2.4.10"
+compose = "1.11.1"
+coroutines = "1.11.0"
+koin = "4.2.2"
+ktorfit = "2.7.5"
+ktor = "3.5.2"
+coil = "3.5.0"
+room = "2.8.4"
+filekit = "0.15.0"
+chucker = "4.3.1"
+vico = "3.3.0"
+markdown = "0.43.0"
 
 android-minSdk = "26"
-android-targetSdk = "36"
+android-targetSdk = "37"
 
 
 [libraries]
 # Compose
 # https://github.com/JetBrains/compose-multiplatform
-ui-backhandler = { module = "org.jetbrains.compose.ui:ui-backhandler", version.ref = "compose" }
+compose-runtime = { module = "org.jetbrains.compose.runtime:runtime", version.ref = "compose" }
+compose-foundation = { module = "org.jetbrains.compose.foundation:foundation", version.ref = "compose" }
+compose-material3 = { module = "org.jetbrains.compose.material3:material3", version = "1.10.0-alpha05" }
+compose-components-resources = { module = "org.jetbrains.compose.components:components-resources", version.ref = "compose" }
+compose-ui = { module = "org.jetbrains.compose.ui:ui", version.ref = "compose" }
+compose-ui-backhandler = { module = "org.jetbrains.compose.ui:ui-backhandler", version.ref = "compose" }
+compose-ui-tooling = { module = "org.jetbrains.compose.ui:ui-tooling", version.ref = "compose" }
+compose-ui-tooling-preview = { module = "org.jetbrains.compose.ui:ui-tooling-preview", version.ref = "compose" }
 
 # ViewModel
-# https://mvnrepository.com/artifact/org.jetbrains.androidx.lifecycle/lifecycle-viewmodel-compose
+# https://mvnrepository.com/artifact/org.jetbrains.androidx.lifecycle/lifecycle-viewmodel-navigation3
 # Update the version according to the main Compose library dependencies
 #noinspection NewerVersionAvailable
-viewmodel-compose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose", version = "2.9.5" }
+viewmodel-compose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-navigation3", version = "2.11.0-beta01" }
 
 # Navigation
-# https://mvnrepository.com/artifact/org.jetbrains.androidx.navigation/navigation-compose
+# https://mvnrepository.com/artifact/org.jetbrains.androidx.navigation3/navigation3-ui
 # Update the version according to the main Compose library dependencies
 #noinspection NewerVersionAvailable
-navigation = { module = "org.jetbrains.androidx.navigation:navigation-compose", version = "2.9.1" }
+navigation = { module = "org.jetbrains.androidx.navigation3:navigation3-ui", version = "1.1.1" }
 
 # Coroutines
 # https://github.com/Kotlin/kotlinx.coroutines
@@ -39,7 +47,7 @@ coroutines-swing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", 
 
 # DI
 # https://github.com/InsertKoinIO/koin
-koin-core = { module = "io.insert-koin:koin-core", version = "koin" }
+koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
 koin-compose = { module = "io.insert-koin:koin-compose", version.ref = "koin" }
 koin-compose-viewmodel = { module = "io.insert-koin:koin-compose-viewmodel", version.ref = "koin" }
 koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
@@ -50,7 +58,7 @@ multiplatform-settings = { module = "com.russhwolf:multiplatform-settings", vers
 
 # Serialization
 # https://github.com/Kotlin/kotlinx.serialization
-kotlinx-serialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version = "1.9.0" }
+kotlinx-serialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version = "1.11.0" }
 
 # Ktorfit - network
 # https://github.com/Foso/Ktorfit
@@ -65,6 +73,10 @@ ktor-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version
 ktor-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
 ktor-websockets = { module = "io.ktor:ktor-client-websockets", version.ref = "ktor" }
 
+# OkHttp
+# https://github.com/square/okhttp
+okhttp = { module = "com.squareup.okhttp3:okhttp", version = "5.5.0" }
+
 # Image loader
 # https://github.com/coil-kt/coil
 coil = { module = "io.coil-kt.coil3:coil", version.ref = "coil" }
@@ -78,23 +90,28 @@ room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 
 # SQLite (Room dependency)
 # https://developer.android.com/jetpack/androidx/releases/sqlite
-sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version = "2.6.1" }
+sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version = "2.7.0" }
 
 # Charts
 # https://github.com/patrykandpatrick/vico
-vico-multiplatform = { group = "com.patrykandpatrick.vico", name = "multiplatform", version.ref = "vico" }
-vico-multiplatform-m3 = { group = "com.patrykandpatrick.vico", name = "multiplatform-m3", version.ref = "vico" }
+vico-compose = { group = "com.patrykandpatrick.vico", name = "compose", version.ref = "vico" }
+vico-compose-m3 = { group = "com.patrykandpatrick.vico", name = "compose-m3", version.ref = "vico" }
+
+# Markdown
+# https://github.com/mikepenz/multiplatform-markdown-renderer
+markdown-core = { module = "com.mikepenz:multiplatform-markdown-renderer", version.ref = "markdown" }
+markdown-material = { module = "com.mikepenz:multiplatform-markdown-renderer-m3", version.ref = "markdown" }
 
 
 ### Desktop-specific libs ###
 
 # Logging (for Ktor)
 # https://mvnrepository.com/artifact/ch.qos.logback/logback-classic
-logback = { module = "ch.qos.logback:logback-classic", version = "1.5.20" }
+logback = { module = "ch.qos.logback:logback-classic", version = "1.6.3" }
 
 # PDF renderer
 # https://mvnrepository.com/artifact/org.apache.pdfbox/pdfbox
-pdfbox = { module = "org.apache.pdfbox:pdfbox", version = "3.0.6" }
+pdfbox = { module = "org.apache.pdfbox:pdfbox", version = "3.0.8" }
 
 # File dialogs
 # https://github.com/vinceglb/FileKit
@@ -103,7 +120,7 @@ filekit-dialogs-compose = { module = "io.github.vinceglb:filekit-dialogs-compose
 
 # JNA Platform Library (for COM objects)
 # https://github.com/java-native-access/jna
-jna-platform = { module = "net.java.dev.jna:jna-platform", version = "5.18.1" }
+jna-platform = { module = "net.java.dev.jna:jna-platform", version = "5.19.1" }
 
 
 ### Android-specific libs ###
@@ -113,7 +130,7 @@ jna-platform = { module = "net.java.dev.jna:jna-platform", version = "5.18.1" }
 desugaring = { module = "com.android.tools:desugar_jdk_libs", version = "2.1.5" }
 
 # AndroidX
-androidx-activity-compose = { module = "androidx.activity:activity-compose", version = "1.11.0" }
+androidx-activity-compose = { module = "androidx.activity:activity-compose", version = "1.13.0" }
 androidx-preference = { module = "androidx.preference:preference-ktx", version = "1.2.1" }
 
 # Network logger
@@ -131,15 +148,15 @@ jetbrains-compose = { id = "org.jetbrains.compose", version.ref = "compose" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
-android-application = { id = "com.android.application", version = "8.12.3" }
+android-application = { id = "com.android.application", version = "9.1.1" }
 
 # BuildConfig
 # https://github.com/yshrsmz/BuildKonfig
-buildkonfig = { id = "com.codingfeline.buildkonfig", version = "0.17.1" }
+buildkonfig = { id = "com.codingfeline.buildkonfig", version = "0.22.0" }
 
 # KSP
 # https://mvnrepository.com/artifact/com.google.devtools.ksp/com.google.devtools.ksp.gradle.plugin?repo=central
-ksp = { id = "com.google.devtools.ksp", version = "2.2.21-2.0.4" }
+ksp = { id = "com.google.devtools.ksp", version = "2.3.11" }
 
 # Ktorfit - network
 ktorfit = { id = "de.jensklingenberg.ktorfit", version.ref = "ktorfit" }

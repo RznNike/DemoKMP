@@ -1,5 +1,6 @@
 package ru.rznnike.demokmp.app.ui.viewmodel.common.print
 
+import androidx.compose.runtime.Immutable
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -7,16 +8,21 @@ import org.koin.core.component.inject
 import ru.rznnike.demokmp.app.common.viewmodel.BaseUiViewModel
 import ru.rznnike.demokmp.app.dispatcher.notifier.Notifier
 import ru.rznnike.demokmp.app.error.ErrorHandler
+import ru.rznnike.demokmp.domain.common.CoroutineScopeProvider
+import ru.rznnike.demokmp.domain.interactor.file.CopyFileUseCase
 import ru.rznnike.demokmp.domain.interactor.preferences.GetPrintSettingsUseCase
 import ru.rznnike.demokmp.domain.interactor.preferences.SetPrintSettingsUseCase
 import ru.rznnike.demokmp.domain.model.print.PrintSettings
 import ru.rznnike.demokmp.domain.model.print.TwoSidedPrint
+import java.io.File
 
 class FilePrintViewModel : BaseUiViewModel<FilePrintViewModel.UiState>() {
     private val notifier: Notifier by inject()
     private val errorHandler: ErrorHandler by inject()
+    private val coroutineScopeProvider: CoroutineScopeProvider by inject()
     private val getPrintSettingsUseCase: GetPrintSettingsUseCase by inject()
     private val setPrintSettingsUseCase: SetPrintSettingsUseCase by inject()
+    private val copyFileUseCase: CopyFileUseCase by inject()
 
     init {
         loadPreferences()
@@ -75,6 +81,20 @@ class FilePrintViewModel : BaseUiViewModel<FilePrintViewModel.UiState>() {
         }
     }
 
+    fun saveFile(original: File, copy: File) {
+        coroutineScopeProvider.io.launch {
+            copyFileUseCase(
+                CopyFileUseCase.Parameters(
+                    original = original,
+                    copy = copy
+                )
+            ).process(
+                { }, ::onError
+            )
+        }
+    }
+
+    @Immutable
     data class UiState(
         val printSettings: PrintSettings = PrintSettings()
     )

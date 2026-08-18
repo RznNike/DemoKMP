@@ -3,8 +3,6 @@ package ru.rznnike.demokmp.app.ui.screen.home
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
@@ -14,7 +12,6 @@ import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
-import ru.rznnike.demokmp.BuildKonfig
 import ru.rznnike.demokmp.app.dispatcher.notifier.Notifier
 import ru.rznnike.demokmp.app.navigation.AndroidNavigationScreen
 import ru.rznnike.demokmp.app.navigation.getNavigator
@@ -26,13 +23,17 @@ import ru.rznnike.demokmp.app.ui.screen.chartexample.ChartExampleFlow
 import ru.rznnike.demokmp.app.ui.screen.customui.CustomUIFlow
 import ru.rznnike.demokmp.app.ui.screen.dbexample.DBExampleFlow
 import ru.rznnike.demokmp.app.ui.screen.httpexample.HTTPExampleFlow
+import ru.rznnike.demokmp.app.ui.screen.markdown.MarkdownExampleFlow
 import ru.rznnike.demokmp.app.ui.screen.navigation.NavigationExampleFlow
 import ru.rznnike.demokmp.app.ui.screen.settings.SettingsFlow
 import ru.rznnike.demokmp.app.ui.screen.wsexample.WebSocketsExampleFlow
 import ru.rznnike.demokmp.app.ui.view.FilledButton
-import ru.rznnike.demokmp.app.ui.view.TextR
+import ru.rznnike.demokmp.app.ui.view.Text
 import ru.rznnike.demokmp.app.ui.view.Toolbar
+import ru.rznnike.demokmp.app.utils.cardBackground
+import ru.rznnike.demokmp.app.utils.getFormattedAppVersion
 import ru.rznnike.demokmp.app.utils.platformName
+import ru.rznnike.demokmp.app.utils.statusBarsAndCutoutPadding
 import ru.rznnike.demokmp.app.viewmodel.home.HomeViewModel
 import ru.rznnike.demokmp.generated.resources.*
 
@@ -52,9 +53,11 @@ class HomeScreen : AndroidNavigationScreen() {
 
         Column(
             modifier = Modifier
-                .systemBarsPadding()
-                .padding(horizontal = 16.dp)
                 .fillMaxSize()
+                .padding(horizontal = 16.dp)
+                .statusBarsAndCutoutPadding()
+                .navigationBarsPadding()
+                .imePadding()
         ) {
             Spacer(Modifier.height(16.dp))
             Toolbar(
@@ -62,82 +65,80 @@ class HomeScreen : AndroidNavigationScreen() {
                 title = stringResource(Res.string.main_screen)
             )
             Spacer(Modifier.height(16.dp))
-            Surface(
-                modifier = Modifier.weight(1f),
-                color = MaterialTheme.colorScheme.surface,
-                shape = MaterialTheme.shapes.medium
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
+                    .cardBackground()
             ) {
-                Box(
+                val verticalScrollState = rememberScrollState()
+                Column(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1f)
+                        .verticalScroll(verticalScrollState)
+                        .fillMaxSize()
+                        .padding(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                    val verticalScrollState = rememberScrollState()
-                    Column(
-                        modifier = Modifier
-                            .verticalScroll(verticalScrollState)
-                            .fillMaxSize()
-                            .padding(16.dp),
-                        verticalArrangement = Arrangement.spacedBy(16.dp)
-                    ) {
-                        @Composable
-                        fun MenuButton(text: StringResource, onClick: () -> Unit) {
-                            FilledButton(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(60.dp),
-                                onClick = onClick
-                            ) {
-                                TextR(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    textRes = text,
-                                    textAlign = TextAlign.Center
-                                )
-                            }
+                    @Composable
+                    fun MenuButton(text: StringResource, onClick: () -> Unit) {
+                        FilledButton(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(60.dp),
+                            onClick = onClick
+                        ) {
+                            Text(
+                                modifier = Modifier.fillMaxWidth(),
+                                textRes = text,
+                                textAlign = TextAlign.Center
+                            )
                         }
+                    }
 
-                        MenuButton(Res.string.settings) {
-                            navigator.openFlow(SettingsFlow())
-                        }
-                        MenuButton(Res.string.http_example) {
-                            navigator.openFlow(HTTPExampleFlow())
-                        }
-                        MenuButton(Res.string.ws_example) {
-                            navigator.openFlow(WebSocketsExampleFlow())
-                        }
-                        MenuButton(Res.string.db_example) {
-                            navigator.openFlow(DBExampleFlow())
-                        }
-                        MenuButton(Res.string.chart_example) {
-                            navigator.openFlow(ChartExampleFlow())
-                        }
-                        MenuButton(Res.string.custom_ui_elements) {
-                            navigator.openFlow(CustomUIFlow())
-                        }
-                        MenuButton(Res.string.navigation_example) {
-                            navigator.openFlow(NavigationExampleFlow())
-                        }
-                        MenuButton(Res.string.request_notifications_permission) {
-                            notificationsPermissionHandler.checkPermissions { permissionsGranted ->
-                                if (permissionsGranted) {
-                                    notifier.sendMessage(Res.string.notifications_permission_is_granted)
-                                } else {
-                                    notifier.sendMessage(Res.string.notifications_permission_is_not_granted)
-                                }
+                    MenuButton(Res.string.settings) {
+                        navigator.openFlow(SettingsFlow())
+                    }
+                    MenuButton(Res.string.http_example) {
+                        navigator.openFlow(HTTPExampleFlow())
+                    }
+                    MenuButton(Res.string.ws_example) {
+                        navigator.openFlow(WebSocketsExampleFlow())
+                    }
+                    MenuButton(Res.string.db_example) {
+                        navigator.openFlow(DBExampleFlow())
+                    }
+                    MenuButton(Res.string.chart_example) {
+                        navigator.openFlow(ChartExampleFlow())
+                    }
+                    MenuButton(Res.string.markdown_example) {
+                        navigator.openFlow(MarkdownExampleFlow())
+                    }
+                    MenuButton(Res.string.custom_ui_elements) {
+                        navigator.openFlow(CustomUIFlow())
+                    }
+                    MenuButton(Res.string.navigation_example) {
+                        navigator.openFlow(NavigationExampleFlow())
+                    }
+                    MenuButton(Res.string.request_notifications_permission) {
+                        notificationsPermissionHandler.checkPermissions { permissionsGranted ->
+                            if (permissionsGranted) {
+                                notifier.sendMessage(Res.string.notifications_permission_is_granted)
+                            } else {
+                                notifier.sendMessage(Res.string.notifications_permission_is_not_granted)
                             }
                         }
-                        MenuButton(Res.string.test_dialog) {
-                            notifier.sendAlert(Res.string.test_dialog)
-                        }
-                        MenuButton(Res.string.test_message) {
-                            notifier.sendActionMessage(Res.string.test_message, Res.string.close) {}
-                        }
-                        MenuButton(Res.string.restart) {
-                            viewModel.restartApp()
-                        }
-                        MenuButton(Res.string.about_app) {
-                            showAboutDialog = true
-                        }
+                    }
+                    MenuButton(Res.string.test_dialog) {
+                        notifier.sendAlert(Res.string.test_dialog)
+                    }
+                    MenuButton(Res.string.test_message) {
+                        notifier.sendActionMessage(Res.string.test_message, Res.string.close) {}
+                    }
+                    MenuButton(Res.string.restart) {
+                        viewModel.restartApp()
+                    }
+                    MenuButton(Res.string.about_app) {
+                        showAboutDialog = true
                     }
                 }
             }
@@ -145,11 +146,9 @@ class HomeScreen : AndroidNavigationScreen() {
         }
 
         if (showAboutDialog) {
-            val details = "%s: %s.%d%s\n%s: %s".format(
+            val details = "%s: %s\n%s: %s".format(
                 stringResource(Res.string.version),
-                BuildKonfig.VERSION_NAME,
-                BuildKonfig.VERSION_CODE,
-                if (BuildKonfig.DEBUG) " ${BuildKonfig.BUILD_TYPE}" else "",
+                getFormattedAppVersion(),
                 stringResource(Res.string.environment),
                 platformName
             )

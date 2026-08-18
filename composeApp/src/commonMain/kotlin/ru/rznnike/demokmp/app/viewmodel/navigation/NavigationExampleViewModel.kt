@@ -1,5 +1,6 @@
 package ru.rznnike.demokmp.app.viewmodel.navigation
 
+import androidx.compose.runtime.Immutable
 import kotlinx.coroutines.flow.update
 import ru.rznnike.demokmp.app.common.viewmodel.BaseUiViewModel
 
@@ -18,6 +19,7 @@ class NavigationExampleViewModel(
         }
     }
 
+    @Immutable
     data class UiState(
         val screenNumber: Int,
         val counter: Int = 0

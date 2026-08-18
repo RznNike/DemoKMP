@@ -4,20 +4,31 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import org.koin.core.component.inject
 import ru.rznnike.demokmp.app.common.viewmodel.BaseViewModel
+import ru.rznnike.demokmp.app.dispatcher.event.AppEvent
+import ru.rznnike.demokmp.app.dispatcher.event.EventDispatcher
 import ru.rznnike.demokmp.domain.interactor.app.CheckIfAppIsAlreadyRunningUseCase
 
-class SplashViewModel(
-    private val navigationCallback: (NavigationCommand) -> Unit
-) : BaseViewModel() {
+class SplashViewModel : BaseViewModel() {
+    private val eventDispatcher: EventDispatcher by inject()
     private val checkIfAppIsAlreadyRunningUseCase: CheckIfAppIsAlreadyRunningUseCase by inject()
 
     private var isUiReady = false
     private var isDataReady = false
 
+    private var navigationCallback: (NavigationCommand) -> Unit = { }
     private var showMultiLaunchDialog: () -> Unit = { }
 
     init {
         checkIfAppIsAlreadyRunning()
+        eventDispatcher.sendEvent(
+            AppEvent.BottomStatusBarRequested(
+                show = false
+            )
+        )
+    }
+
+    fun setNavigationCallback(navigationCallback: (NavigationCommand) -> Unit) {
+        this.navigationCallback = navigationCallback
     }
 
     fun setDialogCallbacks(

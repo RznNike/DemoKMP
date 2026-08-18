@@ -4,8 +4,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
+import ru.rznnike.demokmp.BuildKonfig
 import ru.rznnike.demokmp.app.ui.theme.LocalCustomColorScheme
 import java.util.regex.Pattern
+
+fun getFormattedAppVersion(): String {
+    val builder = StringBuilder()
+        .append("v ")
+        .append(BuildKonfig.VERSION_NAME)
+        .append(".${BuildKonfig.VERSION_CODE}")
+    if (BuildKonfig.BUILD_TYPE != "release") builder.append(" ${BuildKonfig.BUILD_TYPE}")
+    return builder.toString()
+}
 
 @Composable
 fun String.highlightSubstrings(substring: String): AnnotatedString {

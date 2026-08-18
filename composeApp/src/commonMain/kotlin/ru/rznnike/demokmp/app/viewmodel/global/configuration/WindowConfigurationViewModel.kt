@@ -1,5 +1,6 @@
 package ru.rznnike.demokmp.app.viewmodel.global.configuration
 
+import androidx.compose.runtime.Immutable
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -28,6 +29,7 @@ class WindowConfigurationViewModel : BaseUiViewModel<WindowConfigurationViewMode
         }
     }
 
+    @Immutable
     data class UiState(
         val windowTitle: String = "",
         val closeWindowCallback: (() -> Unit) = { }

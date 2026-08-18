@@ -30,9 +30,10 @@ import ru.rznnike.demokmp.generated.resources.Res
 import ru.rznnike.demokmp.generated.resources.close
 import ru.rznnike.demokmp.generated.resources.error
 import ru.rznnike.demokmp.generated.resources.error_app_multi_launch
+import kotlin.time.Duration.Companion.milliseconds
 
 private const val ANIMATION_DURATION_MS = 1000
-private const val SPLASH_DURATION_MS = 1500L
+private val SPLASH_DURATION_MS = 1500.milliseconds
 
 @Serializable
 class SplashScreen : DesktopNavigationScreen() {
@@ -42,11 +43,10 @@ class SplashScreen : DesktopNavigationScreen() {
 
         val showMultiLaunchDialog = remember { mutableStateOf(false) }
 
-        val viewModel = viewModel {
-            SplashViewModel { command ->
-                when (command) {
-                    SplashViewModel.NavigationCommand.MAIN -> navigator.newRootFlow(HomeFlow())
-                }
+        val viewModel = viewModel { SplashViewModel() }
+        viewModel.setNavigationCallback { command ->
+            when (command) {
+                SplashViewModel.NavigationCommand.MAIN -> navigator.newRootFlow(HomeFlow())
             }
         }
         viewModel.setDialogCallbacks(

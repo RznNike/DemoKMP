@@ -18,7 +18,7 @@ import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun TextR(
+fun Text(
     textRes: StringResource,
     modifier: Modifier = Modifier,
     color: Color = Color.Unspecified,

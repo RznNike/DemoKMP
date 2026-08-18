@@ -51,6 +51,14 @@ private val lightScheme = lightColorScheme(
     surfaceContainerHighest = surfaceContainerHighestLight,
 )
 
+private val lightContrastScheme = lightScheme.copy(
+    background = backgroundLightContrast,
+    surfaceVariant = surfaceVariantLightContrast,
+    onSurfaceVariant = onSurfaceVariantLightContrast,
+    outline = outlineLightContrast,
+    outlineVariant = outlineVariantLightContrast
+)
+
 private val darkScheme = darkColorScheme(
     primary = primaryDark,
     onPrimary = onPrimaryDark,
@@ -89,8 +97,15 @@ private val darkScheme = darkColorScheme(
     surfaceContainerHighest = surfaceContainerHighestDark,
 )
 
+private val darkContrastScheme = darkScheme.copy(
+    onSurfaceVariant = onSurfaceVariantDarkContrast,
+    outline = outlineDarkContrast,
+    outlineVariant = outlineVariantDarkContrast
+)
+
 @Immutable
 data class CustomColorScheme(
+    val outlineComponentContent: Color = Color.Unspecified,
     val surfaceContainerA50: Color = Color.Unspecified,
     val textLink: Color = Color.Unspecified,
     val logDebug: Color = Color.Unspecified,
@@ -103,10 +118,14 @@ data class CustomColorScheme(
     val logNetworkSuccess: Color = Color.Unspecified,
     val logNetworkError: Color = Color.Unspecified,
     val logNetworkCancelled: Color = Color.Unspecified,
-    val searchSelection: Color = Color.Unspecified
+    val searchSelection: Color = Color.Unspecified,
+    val disabledText: Color = Color.Unspecified,
+    val scrollbarAlpha: Float = 0.1f,
+    val scrollbarHoverAlpha: Float = 0.5f
 )
 
 val lightCustomScheme = CustomColorScheme(
+    outlineComponentContent = outlineComponentContentLight,
     surfaceContainerA50 = surfaceContainerA50Light,
     textLink = textLinkLight,
     logDebug = logDebugLight,
@@ -119,10 +138,19 @@ val lightCustomScheme = CustomColorScheme(
     logNetworkSuccess = logNetworkSuccessLight,
     logNetworkError = logNetworkErrorLight,
     logNetworkCancelled = logNetworkCancelledLight,
-    searchSelection = searchSelectionLight
+    searchSelection = searchSelectionLight,
+    disabledText = disabledTextLight
+)
+
+private val lightContrastCustomScheme = lightCustomScheme.copy(
+    outlineComponentContent = outlineComponentContentLightContrast,
+    disabledText = disabledTextLightContrast,
+    scrollbarAlpha = 0.3f,
+    scrollbarHoverAlpha = 0.8f
 )
 
 val darkCustomScheme = CustomColorScheme(
+    outlineComponentContent = outlineComponentContentDark,
     surfaceContainerA50 = surfaceContainerA50Dark,
     textLink = textLinkDark,
     logDebug = logDebugDark,
@@ -135,7 +163,13 @@ val darkCustomScheme = CustomColorScheme(
     logNetworkSuccess = logNetworkSuccessDark,
     logNetworkError = logNetworkErrorDark,
     logNetworkCancelled = logNetworkCancelledDark,
-    searchSelection = searchSelectionDark
+    searchSelection = searchSelectionDark,
+    disabledText = disabledTextDark,
+    scrollbarAlpha = 0.2f
+)
+
+val darkContrastCustomScheme = darkCustomScheme.copy(
+    outlineComponentContent = outlineComponentContentDarkContrast
 )
 
 val LocalIsDarkTheme = staticCompositionLocalOf { false }
@@ -165,23 +199,36 @@ fun AppTheme(
     val appConfigurationViewModel: AppConfigurationViewModel = koinInject()
     val appConfigurationUiState by appConfigurationViewModel.uiState.collectAsState()
 
+    val selectedTheme = if (appConfigurationUiState.theme == Theme.AUTO) {
+        if (isSystemInDarkTheme()) Theme.DARK else Theme.LIGHT
+    } else appConfigurationUiState.theme
+    val isDarkTheme = (selectedTheme == Theme.DARK) || (selectedTheme == Theme.DARK_CONTRAST)
+
     val colorScheme: ColorScheme
     val customColorScheme: CustomColorScheme
     val customDrawables: CustomDrawables
 
-    val isDarkTheme = when (appConfigurationUiState.theme) {
-        Theme.AUTO -> isSystemInDarkTheme()
-        Theme.LIGHT -> false
-        Theme.DARK -> true
-    }
-    if (isDarkTheme) {
-        colorScheme = darkScheme
-        customColorScheme = darkCustomScheme
-        customDrawables = darkCustomDrawables
-    } else {
-        colorScheme = lightScheme
-        customColorScheme = lightCustomScheme
-        customDrawables = lightCustomDrawables
+    when (selectedTheme) {
+        Theme.LIGHT_CONTRAST -> {
+            colorScheme = lightContrastScheme
+            customColorScheme = lightContrastCustomScheme
+            customDrawables = lightCustomDrawables
+        }
+        Theme.DARK -> {
+            colorScheme = darkScheme
+            customColorScheme = darkCustomScheme
+            customDrawables = darkCustomDrawables
+        }
+        Theme.DARK_CONTRAST -> {
+            colorScheme = darkContrastScheme
+            customColorScheme = darkContrastCustomScheme
+            customDrawables = darkCustomDrawables
+        }
+        else -> {
+            colorScheme = lightScheme
+            customColorScheme = lightCustomScheme
+            customDrawables = lightCustomDrawables
+        }
     }
 
     CompositionLocalProvider(
@@ -203,9 +250,9 @@ fun AppTheme(
 fun PreviewAppTheme(
     content: @Composable () -> Unit
 ) {
-    val colorScheme = lightScheme
-    val customColorScheme = lightCustomScheme
-    val customDrawables = lightCustomDrawables
+    val colorScheme = if (isSystemInDarkTheme()) darkScheme else lightScheme
+    val customColorScheme = if (isSystemInDarkTheme()) darkCustomScheme else lightCustomScheme
+    val customDrawables = if (isSystemInDarkTheme()) darkCustomDrawables else lightCustomDrawables
 
     CompositionLocalProvider(
         LocalIsDarkTheme provides false,

@@ -15,15 +15,17 @@ This is a sample project with a set of solutions to typical problems, demonstrat
 * WebSocket API usage
 * Proguard configuration (with obfuscation)
 * Two-layer screen navigation (screen flows and screens)
+* Custom logger with modular structure
 * App-wide dialogs and snackbars
 * Images loading from network
 * Material 3 theme configuration
-* Dark/Light theme with auto and manual selection
+* Dark/light/contrast themes with auto and manual selection
+* UI scaling
 * Strings localization
 * Various custom UI elements
 * Dynamic BuildConfig with platform and build type information
 * Charts
-* Custom logger with modular structure
+* Markdown
 
 #### PC only
 * App building to jar file and launch using script
@@ -33,6 +35,10 @@ This is a sample project with a set of solutions to typical problems, demonstrat
 * Basic PDF viewer, print dialog
 * UI for custom logger; database, file and memory cache modules
 * COM objects usage (Windows)
+* Skiko render API configuration
+* Statusbar
+* Tooltips
+* Dialog with hotkeys description for current screen
 
 #### Android only
 * UI for viewing network logs from a device
@@ -73,7 +79,7 @@ This is a sample project with a set of solutions to typical problems, demonstrat
 </details>
 
 ## Used libraries
-* [Compose Navigation](https://www.jetbrains.com/help/kotlin-multiplatform-dev/compose-navigation.html)
+* [Compose Navigation 3](https://kotlinlang.org/docs/multiplatform/compose-navigation-3.html)
 * [Koin](https://insert-koin.io/)
 * [Room](https://developer.android.com/jetpack/androidx/releases/room)
 * [Multiplatform Settings](https://github.com/russhwolf/multiplatform-settings)
@@ -83,6 +89,7 @@ This is a sample project with a set of solutions to typical problems, demonstrat
 * [Coil](https://coil-kt.github.io/coil/)
 * [BuildKonfig](https://github.com/yshrsmz/BuildKonfig)
 * [Vico](https://github.com/patrykandpatrick/vico)
+* [Kotlin Multiplatform Markdown Renderer](https://github.com/mikepenz/multiplatform-markdown-renderer)
 
 #### PC only
 * [PDFBox](https://pdfbox.apache.org/)

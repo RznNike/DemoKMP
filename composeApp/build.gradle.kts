@@ -7,6 +7,7 @@ import org.gradle.kotlin.dsl.register
 import org.gradle.nativeplatform.platform.internal.DefaultNativePlatform
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import java.net.URLEncoder
 
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
@@ -39,16 +40,16 @@ kotlin {
     jvm("desktop")
 
     sourceSets {
-        val desktopMain by getting
+        val desktopMain = getByName("desktopMain")
 
         commonMain.dependencies {
-            implementation(compose.runtime)
-            implementation(compose.foundation)
-            implementation(compose.material3)
-            implementation(compose.ui)
-            implementation(compose.components.resources)
-            implementation(compose.components.uiToolingPreview)
-            implementation(libs.ui.backhandler)
+            implementation(libs.compose.runtime)
+            implementation(libs.compose.foundation)
+            implementation(libs.compose.material3)
+            implementation(libs.compose.components.resources)
+            implementation(libs.compose.ui)
+            implementation(libs.compose.ui.backhandler)
+            implementation(libs.compose.ui.tooling.preview)
 
             implementation(libs.viewmodel.compose)
 
@@ -68,6 +69,7 @@ kotlin {
             implementation(libs.ktor.negotiation)
             implementation(libs.ktor.json)
             implementation(libs.ktor.websockets)
+            implementation(libs.okhttp)
 
             implementation(libs.room.runtime)
             implementation(libs.sqlite.bundled)
@@ -81,12 +83,14 @@ kotlin {
             implementation(libs.coil.compose)
             implementation(libs.coil.okhttp)
 
-            implementation(libs.vico.multiplatform)
-            implementation(libs.vico.multiplatform.m3)
+            implementation(libs.vico.compose)
+            implementation(libs.vico.compose.m3)
+
+            implementation(libs.markdown.core)
+            implementation(libs.markdown.material)
         }
 
         androidMain.dependencies {
-            implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
             implementation(libs.androidx.preference)
 
@@ -116,12 +120,13 @@ kotlin {
 dependencies {
     add("kspAndroid", libs.room.compiler)
     add("kspDesktop", libs.room.compiler)
+    debugImplementation(libs.compose.ui.tooling)
 }
 
 android {
     namespace = globalPackageName
     compileSdk = libs.versions.android.targetSdk.get().toInt()
-    buildToolsVersion = "36.0.0"
+    buildToolsVersion = "37.0.0"
 
     signingConfigs {
         create(
@@ -216,7 +221,7 @@ android {
     bundle.language.enableSplit = false
 
     dependencies {
-        val stagingImplementation by configurations
+        val stagingImplementation = configurations.getByName("stagingImplementation")
 
         coreLibraryDesugaring(libs.desugaring)
 
@@ -334,12 +339,14 @@ fun configureBuildKonfigFlavorFromAndroidTasks() {
 }
 
 tasks.register("clearAppBuildJarsDir") {
+    description = "Delete previous build results"
     doLast {
         delete("${project.rootDir}/composeApp/build/compose/jars")
     }
 }
 
 tasks.register("generateReleaseApp") {
+    description = "Generate release app folder"
     dependsOn("clearAppBuildJarsDir", "packageReleaseUberJarForCurrentOS")
     doLast {
         val outputPath = "${project.rootDir}/distributableOutput/$globalVersionCode"
@@ -358,6 +365,7 @@ tasks.register("generateReleaseApp") {
         File("$outputPath/launcher_configuration.ini").writeText(
             """
                 java_path=
+                render_api=
                 single_instance_port=62740
             """.trimIndent()
         )
@@ -365,13 +373,20 @@ tasks.register("generateReleaseApp") {
 }
 
 tasks.register<Zip>("generateReleaseArchive") {
+    description = "Generate release app folder and zip it"
     dependsOn("generateReleaseApp")
     val flags = mutableListOf(buildType.tag)
     archiveFileName = "DemoKMP_${os.capitalized()}_v${globalVersionName}.${globalVersionCode}_${flags.joinToString(separator = "_")}.zip"
     destinationDirectory = file("${project.rootDir}/distributableArchive")
     from("${project.rootDir}/distributableOutput/${globalVersionCode}")
     doLast {
-        println("Generated archive folder: ${project.rootDir}/distributableArchive")
+        val rootDirPath = project.rootDir.invariantSeparatorsPath.removePrefix("/")
+        val encodedOutputPath = "file:///%s/distributableArchive".format(
+            URLEncoder.encode(rootDirPath, Charsets.UTF_8)
+        )
+            .replace("%2F", "/")
+            .replace("%3A", ":")
+        println("Generated archive folder: $encodedOutputPath")
     }
 }
 
@@ -385,6 +400,6 @@ private enum class BuildType(
     companion object {
         val default = DEBUG
 
-        operator fun get(tag: String?) = values().find { it.tag == tag } ?: default
+        operator fun get(tag: String?) = entries.find { it.tag == tag } ?: default
     }
 }

@@ -13,6 +13,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import ru.rznnike.demokmp.app.utils.addIf
 
 @Composable
 fun DropdownSelectorItem(
@@ -31,14 +32,12 @@ fun DropdownSelectorItem(
                 indication = null,
                 onClick = onClick
             )
-            .run {
-                if (isFocused) {
-                    border(
-                        width = 1.dp,
-                        color = MaterialTheme.colorScheme.primary,
-                        shape = MaterialTheme.shapes.medium
-                    )
-                } else this
+            .addIf(isFocused) {
+                border(
+                    width = 1.dp,
+                    color = MaterialTheme.colorScheme.primary,
+                    shape = MaterialTheme.shapes.medium
+                )
             }
             .padding(horizontal = 16.dp, vertical = 8.dp),
         text = text,

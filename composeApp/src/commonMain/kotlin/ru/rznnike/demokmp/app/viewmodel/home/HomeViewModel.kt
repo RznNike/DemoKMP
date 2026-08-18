@@ -18,6 +18,14 @@ class HomeViewModel : BaseViewModel() {
     private val errorHandler: ErrorHandler by inject()
     private val eventDispatcher: EventDispatcher by inject()
 
+    init {
+        eventDispatcher.sendEvent(
+            AppEvent.BottomStatusBarRequested(
+                show = true
+            )
+        )
+    }
+
     fun restartApp() {
         eventDispatcher.sendEvent(AppEvent.RestartRequested)
     }

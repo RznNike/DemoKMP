@@ -18,13 +18,15 @@ class AppGatewayImpl(
 ) : AppGateway {
     private var singleInstanceSocket: ServerSocket? = null
 
-    override suspend fun checkIfAppIsAlreadyRunning(): Boolean = withContext(dispatcherProvider.io) {
-        if (BuildKonfig.RUN_FROM_IDE || OperatingSystem.isAndroid) return@withContext false
+    override suspend fun checkIfAppIsAlreadyRunning(): Boolean {
+        if (BuildKonfig.RUN_FROM_IDE || OperatingSystem.isAndroid) return false
 
         Logger.d("Checking if app is already running")
-        try {
+        return try {
             val port = getLauncherConfig().singleInstancePort
-            singleInstanceSocket = ServerSocket(port)
+            singleInstanceSocket = withContext(dispatcherProvider.io) {
+                ServerSocket(port)
+            }
             false
         } catch (_: Exception) {
             Logger.e("App is already running!")
@@ -39,8 +41,8 @@ class AppGatewayImpl(
         } else LauncherConfig()
     }
 
-    override suspend fun closeAppSingleInstanceSocket(): Unit = withContext(dispatcherProvider.io) {
-        if (BuildKonfig.RUN_FROM_IDE || OperatingSystem.isAndroid) return@withContext
+    override suspend fun closeAppSingleInstanceSocket() {
+        if (BuildKonfig.RUN_FROM_IDE || OperatingSystem.isAndroid) return
 
         singleInstanceSocket?.closeQuietly()
     }

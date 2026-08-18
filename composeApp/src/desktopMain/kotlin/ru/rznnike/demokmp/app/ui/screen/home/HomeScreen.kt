@@ -5,8 +5,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.rememberScrollbarAdapter
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -20,6 +18,7 @@ import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import ru.rznnike.demokmp.BuildKonfig
 import ru.rznnike.demokmp.app.dispatcher.notifier.Notifier
+import ru.rznnike.demokmp.app.model.common.HotkeyDescription
 import ru.rznnike.demokmp.app.navigation.DesktopNavigationScreen
 import ru.rznnike.demokmp.app.navigation.getNavigator
 import ru.rznnike.demokmp.app.ui.dialog.common.AlertDialogAction
@@ -30,14 +29,15 @@ import ru.rznnike.demokmp.app.ui.screen.comobjectexample.ComObjectExampleFlow
 import ru.rznnike.demokmp.app.ui.screen.customui.CustomUIFlow
 import ru.rznnike.demokmp.app.ui.screen.dbexample.DBExampleFlow
 import ru.rznnike.demokmp.app.ui.screen.httpexample.HTTPExampleFlow
+import ru.rznnike.demokmp.app.ui.screen.markdown.MarkdownExampleFlow
 import ru.rznnike.demokmp.app.ui.screen.navigation.NavigationExampleFlow
 import ru.rznnike.demokmp.app.ui.screen.pdfexample.PdfExampleFlow
 import ru.rznnike.demokmp.app.ui.screen.settings.SettingsFlow
 import ru.rznnike.demokmp.app.ui.screen.wsexample.WebSocketsExampleFlow
-import ru.rznnike.demokmp.app.ui.theme.bodyLargeItalic
 import ru.rznnike.demokmp.app.ui.view.SelectableButton
-import ru.rznnike.demokmp.app.ui.view.TextR
+import ru.rznnike.demokmp.app.ui.view.Text
 import ru.rznnike.demokmp.app.ui.view.Toolbar
+import ru.rznnike.demokmp.app.utils.cardBackground
 import ru.rznnike.demokmp.app.utils.getMacAddress
 import ru.rznnike.demokmp.app.utils.platformName
 import ru.rznnike.demokmp.app.viewmodel.global.configuration.AppConfigurationViewModel
@@ -47,7 +47,6 @@ import ru.rznnike.demokmp.generated.resources.*
 
 @Serializable
 class HomeScreen : DesktopNavigationScreen() {
-    @OptIn(ExperimentalLayoutApi::class)
     @Composable
     override fun Layout() {
         val navigator = getNavigator()
@@ -83,102 +82,92 @@ class HomeScreen : DesktopNavigationScreen() {
                 title = stringResource(Res.string.main_screen)
             )
             Spacer(Modifier.height(16.dp))
-            Surface(
-                modifier = Modifier.weight(1f),
-                color = MaterialTheme.colorScheme.surface,
-                shape = MaterialTheme.shapes.medium
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
+                    .cardBackground()
             ) {
-                Box(
+                val verticalScrollState = rememberScrollState()
+                FlowRow(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1f)
+                        .verticalScroll(verticalScrollState)
+                        .fillMaxSize()
+                        .padding(12.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    val verticalScrollState = rememberScrollState()
-                    FlowRow(
+                    @Composable
+                    fun MenuButton(textRes: StringResource, onClick: () -> Unit) = SelectableButton(
                         modifier = Modifier
-                            .verticalScroll(verticalScrollState)
-                            .fillMaxSize()
-                            .padding(12.dp),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        @Composable
-                        fun MenuButton(textRes: StringResource, onClick: () -> Unit) = SelectableButton(
-                            modifier = Modifier
-                                .weight(1f)
-                                .widthIn(
-                                    min = 190.dp
-                                )
-                                .height(70.dp),
-                            onClick = onClick
-                        ) {
-                            TextR(
-                                modifier = Modifier.fillMaxWidth(),
-                                textRes = textRes,
-                                textAlign = TextAlign.Center,
-                                maxLines = 2
+                            .weight(1f)
+                            .widthIn(
+                                min = 190.dp
                             )
-                        }
+                            .height(70.dp),
+                        buttonModifier = Modifier.fillMaxSize(),
+                        onClick = onClick
+                    ) {
+                        Text(
+                            modifier = Modifier.fillMaxWidth(),
+                            textRes = textRes,
+                            textAlign = TextAlign.Center,
+                            maxLines = 2
+                        )
+                    }
 
-                        MenuButton(Res.string.settings) {
-                            navigator.openFlow(SettingsFlow())
-                        }
-                        MenuButton(Res.string.http_example) {
-                            navigator.openFlow(HTTPExampleFlow())
-                        }
-                        MenuButton(Res.string.ws_example) {
-                            navigator.openFlow(WebSocketsExampleFlow())
-                        }
-                        MenuButton(Res.string.db_example) {
-                            navigator.openFlow(DBExampleFlow())
-                        }
-                        MenuButton(Res.string.pdf_example) {
-                            navigator.openFlow(PdfExampleFlow())
-                        }
-                        MenuButton(Res.string.chart_example) {
-                            navigator.openFlow(ChartExampleFlow())
-                        }
-                        MenuButton(Res.string.custom_ui_elements) {
-                            navigator.openFlow(CustomUIFlow())
-                        }
-                        MenuButton(Res.string.navigation_example) {
-                            navigator.openFlow(NavigationExampleFlow())
-                        }
-                        if (OperatingSystem.isWindows) {
-                            MenuButton(Res.string.com_object_example) {
-                                navigator.openFlow(ComObjectExampleFlow())
-                            }
-                        }
-                        MenuButton(Res.string.test_dialog) {
-                            notifier.sendAlert(Res.string.test_dialog)
-                        }
-                        MenuButton(Res.string.test_message) {
-                            notifier.sendActionMessage(Res.string.test_message, Res.string.close) {}
-                        }
-                        MenuButton(Res.string.restart) {
-                            viewModel.restartApp()
-                        }
-                        MenuButton(Res.string.about_app) {
-                            showAboutDialog = true
+                    MenuButton(Res.string.settings) {
+                        navigator.openFlow(SettingsFlow())
+                    }
+                    MenuButton(Res.string.http_example) {
+                        navigator.openFlow(HTTPExampleFlow())
+                    }
+                    MenuButton(Res.string.ws_example) {
+                        navigator.openFlow(WebSocketsExampleFlow())
+                    }
+                    MenuButton(Res.string.db_example) {
+                        navigator.openFlow(DBExampleFlow())
+                    }
+                    MenuButton(Res.string.pdf_example) {
+                        navigator.openFlow(PdfExampleFlow())
+                    }
+                    MenuButton(Res.string.chart_example) {
+                        navigator.openFlow(ChartExampleFlow())
+                    }
+                    MenuButton(Res.string.markdown_example) {
+                        navigator.openFlow(MarkdownExampleFlow())
+                    }
+                    MenuButton(Res.string.custom_ui_elements) {
+                        navigator.openFlow(CustomUIFlow())
+                    }
+                    MenuButton(Res.string.navigation_example) {
+                        navigator.openFlow(NavigationExampleFlow())
+                    }
+                    if (OperatingSystem.isWindows) {
+                        MenuButton(Res.string.com_object_example) {
+                            navigator.openFlow(ComObjectExampleFlow())
                         }
                     }
-                    VerticalScrollbar(
-                        modifier = Modifier
-                            .align(Alignment.CenterEnd)
-                            .fillMaxHeight(),
-                        adapter = rememberScrollbarAdapter(verticalScrollState)
-                    )
+                    MenuButton(Res.string.test_dialog) {
+                        notifier.sendAlert(Res.string.test_dialog)
+                    }
+                    MenuButton(Res.string.test_message) {
+                        notifier.sendActionMessage(Res.string.test_message, Res.string.close) {}
+                    }
+                    MenuButton(Res.string.restart) {
+                        viewModel.restartApp()
+                    }
+                    MenuButton(Res.string.about_app) {
+                        showAboutDialog = true
+                    }
                 }
+                VerticalScrollbar(
+                    modifier = Modifier
+                        .align(Alignment.CenterEnd)
+                        .fillMaxHeight(),
+                    adapter = rememberScrollbarAdapter(verticalScrollState)
+                )
             }
-            Spacer(Modifier.height(8.dp))
-            TextR(
-                modifier = Modifier.align(Alignment.CenterHorizontally),
-                textRes = Res.string.hotkeys_tip,
-                textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.bodyLargeItalic,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-            Spacer(Modifier.height(8.dp))
         }
 
         if (showAboutDialog) {
@@ -214,4 +203,12 @@ class HomeScreen : DesktopNavigationScreen() {
             )
         }
     }
+
+    @Composable
+    override fun getHotkeysDescription(): List<HotkeyDescription> = listOf(
+        HotkeyDescription(
+            hotkey = "Ctrl+F",
+            description = stringResource(Res.string.hotkey_test_combination)
+        )
+    )
 }

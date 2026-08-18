@@ -18,6 +18,7 @@ import org.jetbrains.compose.resources.stringResource
 import ru.rznnike.demokmp.app.navigation.DesktopNavigationScreen
 import ru.rznnike.demokmp.app.navigation.getNavigator
 import ru.rznnike.demokmp.app.ui.view.*
+import ru.rznnike.demokmp.app.utils.cardBackground
 import ru.rznnike.demokmp.app.viewmodel.navigation.NavigationExampleViewModel
 import ru.rznnike.demokmp.generated.resources.*
 
@@ -51,7 +52,10 @@ class NavigationExampleScreen(
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp),
                 title = stringResource(Res.string.navigation_example),
-                leftButton = ToolbarButton(Res.drawable.ic_back) {
+                leftButton = ToolbarButton(
+                    iconRes = Res.drawable.ic_back,
+                    tooltip = "Ctrl+W"
+                ) {
                     navigator.closeScreen()
                 }
             )
@@ -69,88 +73,82 @@ class NavigationExampleScreen(
                         .fillMaxSize()
                         .verticalScroll(state)
                 ) {
-                    Surface(
-                        modifier = Modifier.fillMaxWidth(),
-                        shape = MaterialTheme.shapes.medium,
-                        color = MaterialTheme.colorScheme.surface
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .cardBackground()
                     ) {
-                        Column {
-                            Text(
-                                modifier = Modifier.padding(
-                                    top = 16.dp,
-                                    start = 16.dp,
-                                    end = 16.dp
-                                ),
-                                text = "%s: %d".format(
-                                    stringResource(Res.string.screen_number_in_flow),
-                                    uiState.screenNumber
-                                )
+                        Text(
+                            modifier = Modifier.padding(
+                                top = 16.dp,
+                                start = 16.dp,
+                                end = 16.dp
+                            ),
+                            text = "%s: %d".format(
+                                stringResource(Res.string.screen_number_in_flow),
+                                uiState.screenNumber
                             )
+                        )
 
-                            FlowRow(
-                                modifier = Modifier.padding(12.dp),
-                                horizontalArrangement = Arrangement.spacedBy(12.dp),
-                                verticalArrangement = Arrangement.spacedBy(12.dp)
+                        FlowRow(
+                            modifier = Modifier.padding(12.dp),
+                            horizontalArrangement = Arrangement.spacedBy(12.dp),
+                            verticalArrangement = Arrangement.spacedBy(12.dp)
+                        ) {
+                            SelectableButton(
+                                onClick = {
+                                    navigator.openScreen(
+                                        NavigationExampleScreen(screenNumber = uiState.screenNumber + 1)
+                                    )
+                                }
                             ) {
-                                SelectableButton(
-                                    onClick = {
-                                        navigator.openScreen(
-                                            NavigationExampleScreen(screenNumber = uiState.screenNumber + 1)
-                                        )
-                                    }
-                                ) {
-                                    TextR(Res.string.open_new_screen)
+                                Text(Res.string.open_new_screen)
+                            }
+                            SelectableButton(
+                                onClick = {
+                                    navigator.closeScreen()
                                 }
-                                SelectableButton(
-                                    onClick = {
-                                        navigator.closeScreen()
-                                    }
-                                ) {
-                                    TextR(Res.string.close_screen)
+                            ) {
+                                Text(Res.string.close_screen)
+                            }
+                            SelectableButton(
+                                onClick = {
+                                    navigator.closeFlow()
                                 }
-                                SelectableButton(
-                                    onClick = {
-                                        navigator.closeFlow()
-                                    }
-                                ) {
-                                    TextR(Res.string.close_flow)
-                                }
+                            ) {
+                                Text(Res.string.close_flow)
                             }
                         }
                     }
 
                     Spacer(Modifier.height(16.dp))
-                    Surface(
-                        modifier = Modifier.fillMaxWidth(),
-                        shape = MaterialTheme.shapes.medium,
-                        color = MaterialTheme.colorScheme.surface
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .cardBackground()
+                            .padding(16.dp),
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Row(
-                            modifier = Modifier.padding(16.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            TextR(
-                                textRes = Res.string.test_counter_local,
-                                modifier = Modifier
-                                    .weight(1f)
-                            )
-                            Spacer(Modifier.width(16.dp))
-                            Text(
-                                text = uiState.counter.toString(),
-                                modifier = Modifier
-                                    .width(50.dp),
-                                textAlign = TextAlign.Center
-                            )
-                            Spacer(Modifier.width(8.dp))
-                            SelectableOutlinedIconButton(
-                                iconRes = Res.drawable.ic_plus,
-                                onClick = {
-                                    viewModel.increaseCounter()
-                                }
-                            )
-                        }
+                        Text(
+                            textRes = Res.string.test_counter_local,
+                            modifier = Modifier
+                                .weight(1f)
+                        )
+                        Spacer(Modifier.width(16.dp))
+                        Text(
+                            text = uiState.counter.toString(),
+                            modifier = Modifier
+                                .width(50.dp),
+                            textAlign = TextAlign.Center
+                        )
+                        Spacer(Modifier.width(8.dp))
+                        SelectableOutlinedIconButton(
+                            iconRes = Res.drawable.ic_plus,
+                            onClick = {
+                                viewModel.increaseCounter()
+                            }
+                        )
                     }
-                    Spacer(modifier = Modifier.height(16.dp))
                 }
                 VerticalScrollbar(
                     modifier = Modifier

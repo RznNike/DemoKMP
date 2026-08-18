@@ -15,15 +15,17 @@
 * Использование WebSocket API
 * Конфигурация Proguard (с обфускацией)
 * Двухслойная навигация между экранами (потоки экранов и экраны)
+* Кастомный логгер с модульной структурой
 * Диалоги и снекбары по всему приложению
 * Загрузка изображений по сети
 * Конфигурация темы Material 3
-* Темная/светлая тема с автоматическим и ручным выбором
+* Темная/светлая/контрастные темы с автоматическим и ручным выбором
+* Масштабирование UI
 * Локализация строк
 * Различные пользовательские элементы UI
 * Динамический BuildConfig с информацией о платформе и типе сборки
 * Графики
-* Кастомный логгер с модульной структурой
+* Markdown
 
 #### Только для ПК
 * Сборка приложения в jar файл и запуск с помощью скрипта
@@ -34,6 +36,10 @@
 * Встроенный логгер с собственным UI
 * UI для кастомного логгера; модули базы данных, файла и кеша в памяти
 * Использование COM объектов (Windows)
+* Конфигурация графического API Skiko
+* Статусбар
+* Всплывающие подсказки
+* Диалог с описанием горячих клавиш для текущего экрана
 
 #### Только для Android
 * UI для просмотра сетевых логов с устройства
@@ -74,7 +80,7 @@
 </details>
 
 ## Использованные библиотеки
-* [Compose Navigation](https://www.jetbrains.com/help/kotlin-multiplatform-dev/compose-navigation.html)
+* [Compose Navigation 3](https://kotlinlang.org/docs/multiplatform/compose-navigation-3.html)
 * [Koin](https://insert-koin.io/)
 * [Room](https://developer.android.com/jetpack/androidx/releases/room)
 * [Multiplatform Settings](https://github.com/russhwolf/multiplatform-settings)
@@ -84,6 +90,7 @@
 * [Coil](https://coil-kt.github.io/coil/)
 * [BuildKonfig](https://github.com/yshrsmz/BuildKonfig)
 * [Vico](https://github.com/patrykandpatrick/vico)
+* [Kotlin Multiplatform Markdown Renderer](https://github.com/mikepenz/multiplatform-markdown-renderer)
 
 #### Только для ПК
 * [PDFBox](https://pdfbox.apache.org/)

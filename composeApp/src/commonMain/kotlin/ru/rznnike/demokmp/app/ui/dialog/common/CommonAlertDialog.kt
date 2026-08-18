@@ -14,8 +14,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import ru.rznnike.demokmp.app.ui.view.SelectableButton
+import ru.rznnike.demokmp.app.utils.cardBackground
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun CommonAlertDialog(
     type: AlertDialogType,
@@ -36,11 +36,10 @@ fun CommonAlertDialog(
             dismissOnClickOutside = cancellable
         )
     ) {
-        Card(
-            colors = CardDefaults.cardColors().copy(
-                containerColor = MaterialTheme.colorScheme.surface,
-                contentColor = MaterialTheme.colorScheme.onSurface
-            ),
+        Box(
+            modifier = Modifier
+                .padding(16.dp)
+                .cardBackground()
         ) {
             Column(
                 modifier = Modifier.padding(16.dp),

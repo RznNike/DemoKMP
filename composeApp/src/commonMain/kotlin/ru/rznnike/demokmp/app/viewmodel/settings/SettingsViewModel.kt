@@ -1,5 +1,6 @@
 package ru.rznnike.demokmp.app.viewmodel.settings
 
+import androidx.compose.runtime.Immutable
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -48,6 +49,7 @@ class SettingsViewModel : BaseUiViewModel<SettingsViewModel.UiState>() {
         }
     }
 
+    @Immutable
     data class UiState(
         val counter: Int = 0
     )

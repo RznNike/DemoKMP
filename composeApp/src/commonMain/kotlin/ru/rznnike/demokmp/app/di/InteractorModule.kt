@@ -10,6 +10,7 @@ import ru.rznnike.demokmp.domain.interactor.comobjectexample.InitShellWrapperUse
 import ru.rznnike.demokmp.domain.interactor.comobjectexample.MinimizeAllWindowsUseCase
 import ru.rznnike.demokmp.domain.interactor.comobjectexample.OpenFolderOrFileUseCase
 import ru.rznnike.demokmp.domain.interactor.dbexample.*
+import ru.rznnike.demokmp.domain.interactor.file.CopyFileUseCase
 import ru.rznnike.demokmp.domain.interactor.httpexample.GetRandomImageLinksUseCase
 import ru.rznnike.demokmp.domain.interactor.log.AddLogMessageToDBUseCase
 import ru.rznnike.demokmp.domain.interactor.log.AddLogNetworkMessageToDBUseCase
@@ -25,7 +26,6 @@ import ru.rznnike.demokmp.domain.interactor.log.GetNewNetworkLogUseCase
 import ru.rznnike.demokmp.domain.interactor.log.SaveLogToFileUseCase
 import ru.rznnike.demokmp.domain.interactor.log.SaveNetworkLogMessageToFileUseCase
 import ru.rznnike.demokmp.domain.interactor.pdfexample.GetSamplePdfUseCase
-import ru.rznnike.demokmp.domain.interactor.pdfexample.SavePdfToFileUseCase
 import ru.rznnike.demokmp.domain.interactor.preferences.*
 import ru.rznnike.demokmp.domain.interactor.wsexample.CloseAppWSSessionUseCase
 import ru.rznnike.demokmp.domain.interactor.wsexample.GetAppWSSessionUseCase
@@ -74,7 +74,6 @@ internal val interactorModule = module {
     single { SendAppWSMessageUseCase(get(), get()) }
 
     single { GetSamplePdfUseCase(get(), get()) }
-    single { SavePdfToFileUseCase(get(), get()) }
 
     single { GetChartSampleDataUseCase(get(), get()) }
 
@@ -83,4 +82,6 @@ internal val interactorModule = module {
     single { GetPCDataUseCase(get(), get()) }
     single { OpenFolderOrFileUseCase(get(), get()) }
     single { MinimizeAllWindowsUseCase(get(), get()) }
+
+    single { CopyFileUseCase(get(), get()) }
 }

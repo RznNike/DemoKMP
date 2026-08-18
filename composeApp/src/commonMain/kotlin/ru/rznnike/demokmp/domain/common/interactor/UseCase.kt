@@ -6,7 +6,7 @@ import ru.rznnike.demokmp.domain.common.DispatcherProvider
 abstract class UseCase<R>(private val dispatcherProvider: DispatcherProvider) {
     suspend operator fun invoke(): UseCaseResult<R> {
         return try {
-            withContext(dispatcherProvider.default) {
+            withContext(dispatcherProvider.io) {
                 UseCaseResult(data = execute())
             }
         } catch (e: Exception) {

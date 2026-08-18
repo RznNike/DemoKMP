@@ -14,6 +14,7 @@ import ru.rznnike.demokmp.domain.log.Logger
 import ru.rznnike.demokmp.domain.model.websocket.WebSocketConnectionState
 import ru.rznnike.demokmp.domain.model.websocket.WebSocketSessionData
 import java.io.IOException
+import kotlin.time.Duration.Companion.milliseconds
 
 class AppWebSocketManager(
     private val client: HttpClient,
@@ -67,7 +68,7 @@ class AppWebSocketManager(
                 (error is IOException).also {
                     connectionState.value = WebSocketConnectionState.DISCONNECTED
                     session = null
-                    delay(10_000)
+                    delay(10_000.milliseconds)
                 }
             }
             WebSocketSessionData(

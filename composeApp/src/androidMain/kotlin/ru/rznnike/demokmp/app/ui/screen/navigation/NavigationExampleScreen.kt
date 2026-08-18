@@ -3,8 +3,6 @@ package ru.rznnike.demokmp.app.ui.screen.navigation
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -19,6 +17,9 @@ import org.jetbrains.compose.resources.stringResource
 import ru.rznnike.demokmp.app.navigation.AndroidNavigationScreen
 import ru.rznnike.demokmp.app.navigation.getNavigator
 import ru.rznnike.demokmp.app.ui.view.*
+import ru.rznnike.demokmp.app.utils.cardBackground
+import ru.rznnike.demokmp.app.utils.navigationBarsSidesPadding
+import ru.rznnike.demokmp.app.utils.statusBarsAndCutoutPadding
 import ru.rznnike.demokmp.app.viewmodel.navigation.NavigationExampleViewModel
 import ru.rznnike.demokmp.generated.resources.*
 
@@ -37,14 +38,14 @@ class NavigationExampleScreen(
 
         Column(
             modifier = Modifier
-                .systemBarsPadding()
                 .fillMaxSize()
+                .padding(top = 16.dp, start = 16.dp, end = 16.dp)
+                .statusBarsAndCutoutPadding()
         ) {
-            Spacer(Modifier.height(16.dp))
             Toolbar(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
+                    .navigationBarsSidesPadding(),
                 title = stringResource(Res.string.navigation_example),
                 leftButton = ToolbarButton(Res.drawable.ic_back) {
                     navigator.closeScreen()
@@ -57,94 +58,88 @@ class NavigationExampleScreen(
                     .fillMaxWidth()
                     .weight(1f)
             ) {
-                val state = rememberScrollState()
                 Column(
                     modifier = Modifier
-                        .padding(horizontal = 16.dp)
                         .fillMaxSize()
-                        .verticalScroll(state)
+                        .verticalScroll(rememberScrollState())
+                        .navigationBarsPadding()
+                        .padding(bottom = 16.dp)
                 ) {
-                    Surface(
-                        modifier = Modifier.fillMaxWidth(),
-                        shape = MaterialTheme.shapes.medium,
-                        color = MaterialTheme.colorScheme.surface
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .cardBackground()
+                            .padding(horizontal = 12.dp)
                     ) {
-                        Column(
-                            modifier = Modifier.padding(horizontal = 12.dp)
-                        ) {
-                            Spacer(Modifier.height(16.dp))
-                            Text(
-                                modifier = Modifier
-                                    .padding(horizontal = 4.dp)
-                                    .fillMaxWidth(),
-                                text = "%s: %d".format(
-                                    stringResource(Res.string.screen_number_in_flow),
-                                    uiState.screenNumber
-                                )
+                        Spacer(Modifier.height(16.dp))
+                        Text(
+                            modifier = Modifier
+                                .padding(horizontal = 4.dp)
+                                .fillMaxWidth(),
+                            text = "%s: %d".format(
+                                stringResource(Res.string.screen_number_in_flow),
+                                uiState.screenNumber
                             )
-                            Spacer(Modifier.height(12.dp))
-                            SelectableButton(
-                                modifier = Modifier.fillMaxWidth(),
-                                onClick = {
-                                    navigator.openScreen(
-                                        NavigationExampleScreen(screenNumber = uiState.screenNumber + 1)
-                                    )
-                                }
-                            ) {
-                                TextR(Res.string.open_new_screen)
+                        )
+                        Spacer(Modifier.height(12.dp))
+                        SelectableButton(
+                            modifier = Modifier.fillMaxWidth(),
+                            onClick = {
+                                navigator.openScreen(
+                                    NavigationExampleScreen(screenNumber = uiState.screenNumber + 1)
+                                )
                             }
-                            Spacer(Modifier.height(8.dp))
-                            SelectableButton(
-                                modifier = Modifier.fillMaxWidth(),
-                                onClick = {
-                                    navigator.closeScreen()
-                                }
-                            ) {
-                                TextR(Res.string.close_screen)
-                            }
-                            Spacer(Modifier.height(8.dp))
-                            SelectableButton(
-                                modifier = Modifier.fillMaxWidth(),
-                                onClick = {
-                                    navigator.closeFlow()
-                                }
-                            ) {
-                                TextR(Res.string.close_flow)
-                            }
-                            Spacer(Modifier.height(12.dp))
+                        ) {
+                            Text(Res.string.open_new_screen)
                         }
+                        Spacer(Modifier.height(8.dp))
+                        SelectableButton(
+                            modifier = Modifier.fillMaxWidth(),
+                            onClick = {
+                                navigator.closeScreen()
+                            }
+                        ) {
+                            Text(Res.string.close_screen)
+                        }
+                        Spacer(Modifier.height(8.dp))
+                        SelectableButton(
+                            modifier = Modifier.fillMaxWidth(),
+                            onClick = {
+                                navigator.closeFlow()
+                            }
+                        ) {
+                            Text(Res.string.close_flow)
+                        }
+                        Spacer(Modifier.height(12.dp))
                     }
 
                     Spacer(Modifier.height(16.dp))
-                    Surface(
-                        modifier = Modifier.fillMaxWidth(),
-                        shape = MaterialTheme.shapes.medium,
-                        color = MaterialTheme.colorScheme.surface
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .cardBackground()
+                            .padding(16.dp),
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Row(
-                            modifier = Modifier.padding(16.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            TextR(
-                                textRes = Res.string.test_counter_local,
-                                modifier = Modifier
-                                    .weight(1f)
-                            )
-                            Spacer(Modifier.width(16.dp))
-                            Text(
-                                text = uiState.counter.toString(),
-                                modifier = Modifier
-                                    .width(50.dp),
-                                textAlign = TextAlign.Center
-                            )
-                            Spacer(Modifier.width(8.dp))
-                            SelectableOutlinedIconButton(
-                                iconRes = Res.drawable.ic_plus,
-                                onClick = {
-                                    viewModel.increaseCounter()
-                                }
-                            )
-                        }
+                        Text(
+                            textRes = Res.string.test_counter_local,
+                            modifier = Modifier
+                                .weight(1f)
+                        )
+                        Spacer(Modifier.width(16.dp))
+                        Text(
+                            text = uiState.counter.toString(),
+                            modifier = Modifier
+                                .width(50.dp),
+                            textAlign = TextAlign.Center
+                        )
+                        Spacer(Modifier.width(8.dp))
+                        SelectableOutlinedIconButton(
+                            iconRes = Res.drawable.ic_plus,
+                            onClick = {
+                                viewModel.increaseCounter()
+                            }
+                        )
                     }
                     Spacer(modifier = Modifier.height(16.dp))
                 }

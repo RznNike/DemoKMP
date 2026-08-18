@@ -1,5 +1,6 @@
 package ru.rznnike.demokmp.app.ui.viewmodel.comobjectexample
 
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -77,6 +78,7 @@ class ComObjectExampleViewModel : BaseUiViewModel<ComObjectExampleViewModel.UiSt
         }
     }
 
+    @Immutable
     data class UiState(
         val pcData: String = ""
     )

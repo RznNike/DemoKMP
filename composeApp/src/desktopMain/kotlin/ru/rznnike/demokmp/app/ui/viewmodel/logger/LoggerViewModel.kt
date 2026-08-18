@@ -1,5 +1,6 @@
 package ru.rznnike.demokmp.app.ui.viewmodel.logger
 
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -243,6 +244,7 @@ class LoggerViewModel : BaseUiViewModel<LoggerViewModel.UiState>() {
         }
     }
 
+    @Immutable
     data class UiState(
         val selectedTab: Tab = Tab.ALL,
         val autoscroll: Boolean = true,

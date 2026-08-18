@@ -9,6 +9,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.KeyEventType
+import androidx.compose.ui.input.key.isCtrlPressed
 import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.type
 import androidx.compose.ui.unit.DpSize
@@ -22,13 +23,14 @@ import ru.rznnike.demokmp.app.ui.theme.backgroundLight
 import ru.rznnike.demokmp.app.ui.window.LocalWindow
 import ru.rznnike.demokmp.app.ui.window.WindowFocusRequester
 import ru.rznnike.demokmp.app.ui.window.logger.LoggerWindow
-import ru.rznnike.demokmp.app.ui.window.setMinimumSize
+import ru.rznnike.demokmp.app.ui.window.SetMinimumSize
 import ru.rznnike.demokmp.app.utils.CustomUiScale
 import ru.rznnike.demokmp.app.utils.WithWindowViewModelStoreOwner
 import ru.rznnike.demokmp.app.utils.windowViewModel
 import ru.rznnike.demokmp.app.viewmodel.global.configuration.AppConfigurationViewModel
 import ru.rznnike.demokmp.app.viewmodel.global.configuration.WindowConfigurationViewModel
-import ru.rznnike.demokmp.app.viewmodel.global.hotkeys.HotKeysViewModel
+import ru.rznnike.demokmp.app.ui.viewmodel.global.hotkeys.HotKeysViewModel
+import ru.rznnike.demokmp.domain.log.Logger
 import ru.rznnike.demokmp.generated.resources.Res
 import ru.rznnike.demokmp.generated.resources.app_name
 import ru.rznnike.demokmp.generated.resources.icon_linux
@@ -54,6 +56,15 @@ fun ApplicationScope.MainWindow(args: Array<String>) = WithWindowViewModelStoreO
     var showLoggerWindow by remember { mutableStateOf(false) }
     val loggerWindowFocusRequester = remember { WindowFocusRequester() }
 
+    fun openLoggerWindow() {
+        if (showLoggerWindow) {
+            loggerWindowFocusRequester.onFocusRequested()
+        } else {
+            showLoggerWindow = true
+        }
+    }
+    appConfigurationViewModel.setLoggerWindowCallback(::openLoggerWindow)
+
     val state = rememberWindowState(
         size = DpSize(
             width = WINDOW_START_WIDTH_DP,
@@ -63,6 +74,7 @@ fun ApplicationScope.MainWindow(args: Array<String>) = WithWindowViewModelStoreO
         placement = WindowPlacement.Floating
     )
     val hotKeysViewModel = windowViewModel<HotKeysViewModel>()
+    val hotKeysUiState by hotKeysViewModel.uiState.collectAsState()
     val defaultWindowTitle = stringResource(Res.string.app_name)
     Window(
         icon = painterResource(Res.drawable.icon_linux),
@@ -70,25 +82,30 @@ fun ApplicationScope.MainWindow(args: Array<String>) = WithWindowViewModelStoreO
         onCloseRequest = windowConfigurationUiState.closeWindowCallback,
         state = state,
         onPreviewKeyEvent = { keyEvent ->
-            if ((keyEvent.type == KeyEventType.KeyDown) && (keyEvent.key == Key.F12)) {
-                if (showLoggerWindow) {
-                    loggerWindowFocusRequester.onFocusRequested()
-                } else {
-                    showLoggerWindow = true
+            when {
+                appConfigurationUiState.isAppClosing -> true
+                (keyEvent.type == KeyEventType.KeyDown) && (keyEvent.isCtrlPressed) && (keyEvent.key == Key.F12) -> {
+                    appConfigurationViewModel.openHotkeysDialog()
+                    true
                 }
-                true
-            } else {
-                hotKeysViewModel.sendEvent(keyEvent)
-                false
+                (keyEvent.type == KeyEventType.KeyDown) && (keyEvent.key == Key.F12) -> {
+                    openLoggerWindow()
+                    true
+                }
+                else -> {
+                    hotKeysUiState.screenEventListener(keyEvent)
+                    false
+                }
             }
         }
     ) {
         CompositionLocalProvider(
             LocalWindow provides window
         ) {
-            setMinimumSize(
+            SetMinimumSize(
                 width = WINDOW_MIN_WIDTH_DP,
-                height = WINDOW_MIN_HEIGHT_DP
+                height = WINDOW_MIN_HEIGHT_DP,
+                scale = appConfigurationUiState.uiScale.value
             )
             window.title = windowConfigurationUiState.windowTitle
             if (appConfigurationUiState.isLoaded) {
@@ -96,9 +113,7 @@ fun ApplicationScope.MainWindow(args: Array<String>) = WithWindowViewModelStoreO
                     windowConfigurationViewModel.setWindowTitle(defaultWindowTitle)
                 }
 
-                CustomUiScale(
-                    appConfigurationUiState.uiScale
-                ) {
+                CustomUiScale(appConfigurationUiState.uiScale) {
                     MainFrame()
                 }
             } else { // default background while the theme has not yet loaded
@@ -110,6 +125,10 @@ fun ApplicationScope.MainWindow(args: Array<String>) = WithWindowViewModelStoreO
                         )
                 )
             }
+        }
+
+        LaunchedEffect(Unit) {
+            Logger.i("Render API: ${window.renderApi}")
         }
     }
 

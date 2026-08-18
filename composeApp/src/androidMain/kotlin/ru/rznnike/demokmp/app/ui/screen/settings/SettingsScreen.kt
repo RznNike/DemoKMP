@@ -17,9 +17,12 @@ import org.koin.compose.koinInject
 import ru.rznnike.demokmp.app.navigation.AndroidNavigationScreen
 import ru.rznnike.demokmp.app.navigation.getNavigator
 import ru.rznnike.demokmp.app.ui.view.*
+import ru.rznnike.demokmp.app.utils.cardBackground
 import ru.rznnike.demokmp.app.utils.getSelectedLanguage
 import ru.rznnike.demokmp.app.utils.nameRes
+import ru.rznnike.demokmp.app.utils.navigationBarsSidesPadding
 import ru.rznnike.demokmp.app.utils.setSelectedLanguage
+import ru.rznnike.demokmp.app.utils.statusBarsAndCutoutPadding
 import ru.rznnike.demokmp.app.utils.windowViewModel
 import ru.rznnike.demokmp.app.viewmodel.global.configuration.AppConfigurationViewModel
 import ru.rznnike.demokmp.app.viewmodel.global.profile.ProfileViewModel
@@ -43,14 +46,14 @@ class SettingsScreen : AndroidNavigationScreen() {
 
         Column(
             modifier = Modifier
-                .systemBarsPadding()
                 .fillMaxSize()
+                .padding(top = 16.dp, start = 16.dp, end = 16.dp)
+                .statusBarsAndCutoutPadding()
         ) {
-            Spacer(Modifier.height(16.dp))
             Toolbar(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
+                    .navigationBarsSidesPadding(),
                 title = stringResource(Res.string.settings),
                 leftButton = ToolbarButton(Res.drawable.ic_back) {
                     navigator.closeScreen()
@@ -66,76 +69,71 @@ class SettingsScreen : AndroidNavigationScreen() {
                 val state = rememberScrollState()
                 Column(
                     modifier = Modifier
-                        .padding(horizontal = 16.dp)
                         .fillMaxSize()
                         .verticalScroll(state)
+                        .navigationBarsPadding()
+                        .padding(bottom = 16.dp)
                 ) {
-                    Surface(
-                        modifier = Modifier.fillMaxWidth(),
-                        shape = MaterialTheme.shapes.medium,
-                        color = MaterialTheme.colorScheme.surface
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .cardBackground()
+                            .padding(16.dp)
                     ) {
-                        Column(
-                            modifier = Modifier.padding(16.dp)
-                        ) {
-                            val nameString = "%s: %s".format(
-                                stringResource(Res.string.user_name),
-                                profileViewModel.nameInput
-                            )
-                            Text(
-                                modifier = Modifier.fillMaxWidth(),
-                                text = nameString,
-                                textAlign = TextAlign.Center,
-                            )
-                            Spacer(Modifier.height(16.dp))
-                            FilledButton(
-                                modifier = Modifier.align(Alignment.CenterHorizontally),
-                                onClick = {
-                                    navigator.openScreen(NestedSettingsScreen())
-                                }
-                            ) {
-                                TextR(Res.string.nested_settings)
+                        val nameString = "%s: %s".format(
+                            stringResource(Res.string.user_name),
+                            profileViewModel.nameInput
+                        )
+                        Text(
+                            modifier = Modifier.fillMaxWidth(),
+                            text = nameString,
+                            textAlign = TextAlign.Center,
+                        )
+                        Spacer(Modifier.height(16.dp))
+                        FilledButton(
+                            modifier = Modifier.align(Alignment.CenterHorizontally),
+                            onClick = {
+                                navigator.openScreen(NestedSettingsScreen())
                             }
+                        ) {
+                            Text(Res.string.nested_settings)
                         }
                     }
 
                     Spacer(Modifier.height(16.dp))
-                    Surface(
-                        modifier = Modifier.fillMaxWidth(),
-                        shape = MaterialTheme.shapes.medium,
-                        color = MaterialTheme.colorScheme.surface
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .cardBackground()
+                            .padding(16.dp),
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Row(
-                            modifier = Modifier.padding(16.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            TextR(
-                                textRes = Res.string.test_counter,
-                                modifier = Modifier
-                                    .weight(1f)
-                            )
-                            Spacer(Modifier.width(16.dp))
-                            SelectableOutlinedIconButton(
-                                iconRes = Res.drawable.ic_minus,
-                                onClick = {
-                                    viewModel.onCounterInput(uiState.counter - 1)
-                                }
-                            )
-                            Spacer(Modifier.width(8.dp))
-                            Text(
-                                text = uiState.counter.toString(),
-                                modifier = Modifier
-                                    .width(50.dp),
-                                textAlign = TextAlign.Center
-                            )
-                            Spacer(Modifier.width(8.dp))
-                            SelectableOutlinedIconButton(
-                                iconRes = Res.drawable.ic_plus,
-                                onClick = {
-                                    viewModel.onCounterInput(uiState.counter + 1)
-                                }
-                            )
-                        }
+                        Text(
+                            textRes = Res.string.test_counter,
+                            modifier = Modifier
+                                .weight(1f)
+                        )
+                        Spacer(Modifier.width(16.dp))
+                        SelectableOutlinedIconButton(
+                            iconRes = Res.drawable.ic_minus,
+                            onClick = {
+                                viewModel.onCounterInput(uiState.counter - 1)
+                            }
+                        )
+                        Spacer(Modifier.width(8.dp))
+                        Text(
+                            text = uiState.counter.toString(),
+                            modifier = Modifier
+                                .width(50.dp),
+                            textAlign = TextAlign.Center
+                        )
+                        Spacer(Modifier.width(8.dp))
+                        SelectableOutlinedIconButton(
+                            iconRes = Res.drawable.ic_plus,
+                            onClick = {
+                                viewModel.onCounterInput(uiState.counter + 1)
+                            }
+                        )
                     }
 
                     @Composable
@@ -143,42 +141,37 @@ class SettingsScreen : AndroidNavigationScreen() {
                         headerRes: StringResource,
                         buttonText: String,
                         content: @Composable (ColumnScope.(closeMenu: () -> Unit) -> Unit)
+                    ) = Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .cardBackground()
+                            .padding(12.dp),
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Surface(
-                            modifier = Modifier.fillMaxWidth(),
-                            shape = MaterialTheme.shapes.medium,
-                            color = MaterialTheme.colorScheme.surface
-                        ) {
-                            Row(
-                                modifier = Modifier.padding(12.dp),
-                                verticalAlignment = Alignment.CenterVertically
+                        Spacer(Modifier.width(4.dp))
+                        Text(
+                            textRes = headerRes,
+                            modifier = Modifier.weight(1f),
+                        )
+                        Box {
+                            var showMenu by remember { mutableStateOf(false) }
+                            SelectableButton(
+                                onClick = {
+                                    showMenu = !showMenu
+                                }
                             ) {
-                                Spacer(Modifier.width(4.dp))
-                                TextR(
-                                    textRes = headerRes,
-                                    modifier = Modifier.weight(1f),
-                                )
-                                Box {
-                                    var showMenu by remember { mutableStateOf(false) }
-                                    SelectableButton(
-                                        onClick = {
-                                            showMenu = !showMenu
-                                        }
-                                    ) {
-                                        Text(buttonText)
-                                    }
-                                    Box(
-                                        modifier = Modifier.padding(end = 16.dp)
-                                    ) {
-                                        DropdownMenu(
-                                            expanded = showMenu,
-                                            onDismissRequest = { showMenu = false },
-                                            containerColor = MaterialTheme.colorScheme.surface
-                                        ) {
-                                            content {
-                                                showMenu = false
-                                            }
-                                        }
+                                Text(buttonText)
+                            }
+                            Box(
+                                modifier = Modifier.padding(end = 16.dp)
+                            ) {
+                                DropdownMenu(
+                                    expanded = showMenu,
+                                    onDismissRequest = { showMenu = false },
+                                    containerColor = MaterialTheme.colorScheme.surface
+                                ) {
+                                    content {
+                                        showMenu = false
                                     }
                                 }
                             }
@@ -210,7 +203,7 @@ class SettingsScreen : AndroidNavigationScreen() {
                         Theme.entries.forEach { theme ->
                             DropdownMenuItem(
                                 text = {
-                                    TextR(theme.nameRes)
+                                    Text(theme.nameRes)
                                 },
                                 onClick = {
                                     appConfigurationViewModel.setTheme(theme)
@@ -224,7 +217,7 @@ class SettingsScreen : AndroidNavigationScreen() {
                         headerRes = Res.string.ui_scale,
                         buttonText = "%d%%".format(appConfigurationUiState.uiScale.value)
                     ) { closeMenu ->
-                        UiScale.entries.forEach { uiScale ->
+                        UiScale.entries.sortedDescending().forEach { uiScale ->
                             DropdownMenuItem(
                                 text = {
                                     Text("%d%%".format(uiScale.value))
@@ -236,7 +229,6 @@ class SettingsScreen : AndroidNavigationScreen() {
                             )
                         }
                     }
-                    Spacer(Modifier.height(16.dp))
                 }
             }
         }

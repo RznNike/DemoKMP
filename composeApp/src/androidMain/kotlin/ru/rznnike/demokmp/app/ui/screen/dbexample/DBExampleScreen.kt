@@ -19,6 +19,8 @@ import ru.rznnike.demokmp.app.navigation.AndroidNavigationScreen
 import ru.rznnike.demokmp.app.navigation.getNavigator
 import ru.rznnike.demokmp.app.ui.item.DBExampleDataItem
 import ru.rznnike.demokmp.app.ui.view.*
+import ru.rznnike.demokmp.app.utils.cardBackground
+import ru.rznnike.demokmp.app.utils.statusBarsAndCutoutPadding
 import ru.rznnike.demokmp.app.viewmodel.dbexample.DBExampleViewModel
 import ru.rznnike.demokmp.generated.resources.*
 
@@ -35,10 +37,11 @@ class DBExampleScreen : AndroidNavigationScreen() {
 
         Column(
             modifier = Modifier
-                .systemBarsPadding()
-                .imePadding()
                 .fillMaxSize()
                 .padding(16.dp)
+                .statusBarsAndCutoutPadding()
+                .navigationBarsPadding()
+                .imePadding()
         ) {
             Box(
                 contentAlignment = Alignment.TopEnd
@@ -61,7 +64,7 @@ class DBExampleScreen : AndroidNavigationScreen() {
                     ) {
                         DropdownMenuItem(
                             text = {
-                                TextR(Res.string.delete_all)
+                                Text(Res.string.delete_all)
                             },
                             onClick = {
                                 showToolbarMenu = false
@@ -73,84 +76,75 @@ class DBExampleScreen : AndroidNavigationScreen() {
             }
             Spacer(Modifier.height(16.dp))
 
-            Surface(
-                modifier = Modifier.fillMaxWidth(),
-                shape = MaterialTheme.shapes.medium,
-                color = MaterialTheme.colorScheme.surface
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .cardBackground()
             ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Spacer(Modifier.width(16.dp))
-                    SlimOutlinedTextField(
-                        modifier = Modifier
-                            .padding(top = 8.dp, bottom = 16.dp)
-                            .weight(1f),
-                        value = viewModel.nameInput,
-                        singleLine = true,
-                        label = {
-                            TextR(Res.string.db_example_input_label)
-                        },
-                        onValueChange = viewModel::onNameInput,
-                        keyboardOptions = KeyboardOptions(
-                            imeAction = ImeAction.Send
-                        ),
-                        keyboardActions = KeyboardActions(
-                            onSend = {
-                                viewModel.addData()
-                            }
-                        )
-                    )
-                    Spacer(Modifier.width(16.dp))
-                    FilledButton(
-                        modifier = Modifier.padding(vertical = 16.dp),
-                        onClick = {
+                Spacer(Modifier.width(16.dp))
+                SlimOutlinedTextField(
+                    modifier = Modifier
+                        .padding(top = 8.dp, bottom = 16.dp)
+                        .weight(1f),
+                    value = viewModel.nameInput,
+                    singleLine = true,
+                    label = {
+                        Text(Res.string.db_example_input_label)
+                    },
+                    onValueChange = viewModel::onNameInput,
+                    keyboardOptions = KeyboardOptions(
+                        imeAction = ImeAction.Send
+                    ),
+                    keyboardActions = KeyboardActions(
+                        onSend = {
                             viewModel.addData()
                         }
-                    ) {
-                        TextR(Res.string.add)
+                    )
+                )
+                Spacer(Modifier.width(16.dp))
+                FilledButton(
+                    modifier = Modifier.padding(vertical = 16.dp),
+                    onClick = {
+                        viewModel.addData()
                     }
-                    Spacer(Modifier.width(16.dp))
+                ) {
+                    Text(Res.string.add)
                 }
+                Spacer(Modifier.width(16.dp))
             }
 
             Spacer(Modifier.height(16.dp))
-            Surface(
+            Box(
                 modifier = Modifier
                     .weight(1f)
-                    .fillMaxWidth(),
-                shape = MaterialTheme.shapes.medium,
-                color = MaterialTheme.colorScheme.surface
+                    .fillMaxWidth()
+                    .cardBackground()
             ) {
-                Box(
-                    modifier = Modifier.fillMaxSize()
+                val state = rememberLazyListState()
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(horizontal = 16.dp),
+                    state = state,
+                    contentPadding = PaddingValues(vertical = 16.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                    val state = rememberLazyListState()
-                    LazyColumn(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(horizontal = 16.dp),
-                        state = state,
-                        contentPadding = PaddingValues(vertical = 16.dp),
-                        verticalArrangement = Arrangement.spacedBy(16.dp)
-                    ) {
-                        items(
-                            items = uiState.data,
-                            key = { it.id }
-                        ) { item ->
-                            DBExampleDataItem(item) {
-                                viewModel.deleteData(item)
-                            }
+                    items(
+                        items = uiState.data,
+                        key = { it.id }
+                    ) { item ->
+                        DBExampleDataItem(item) {
+                            viewModel.deleteData(item)
                         }
                     }
+                }
 
-                    if (uiState.isLoading) {
-                        CircularProgressIndicator(
-                            modifier = Modifier
-                                .size(48.dp)
-                                .align(Alignment.Center)
-                        )
-                    }
+                if (uiState.isLoading) {
+                    CircularProgressIndicator(
+                        modifier = Modifier
+                            .size(48.dp)
+                            .align(Alignment.Center)
+                    )
                 }
             }
         }

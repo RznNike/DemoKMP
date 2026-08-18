@@ -5,7 +5,9 @@ enum class Theme(
 ) {
     AUTO(id = 0),
     LIGHT(id = 1),
-    DARK(id = 2);
+    LIGHT_CONTRAST(id = 2),
+    DARK(id = 3),
+    DARK_CONTRAST(id = 4);
 
     companion object {
         val default = AUTO

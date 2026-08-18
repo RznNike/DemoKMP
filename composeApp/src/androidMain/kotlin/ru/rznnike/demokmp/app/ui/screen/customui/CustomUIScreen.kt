@@ -3,8 +3,6 @@ package ru.rznnike.demokmp.app.ui.screen.customui
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -16,13 +14,17 @@ import org.jetbrains.compose.resources.stringResource
 import ru.rznnike.demokmp.app.navigation.AndroidNavigationScreen
 import ru.rznnike.demokmp.app.navigation.getNavigator
 import ru.rznnike.demokmp.app.ui.view.*
+import ru.rznnike.demokmp.app.utils.cardAlterBackground
+import ru.rznnike.demokmp.app.utils.cardBackground
+import ru.rznnike.demokmp.app.utils.dashedBorder
+import ru.rznnike.demokmp.app.utils.navigationBarsSidesPadding
 import ru.rznnike.demokmp.app.utils.onClick
+import ru.rznnike.demokmp.app.utils.statusBarsAndCutoutPadding
 import ru.rznnike.demokmp.app.viewmodel.customui.CustomUIViewModel
 import ru.rznnike.demokmp.generated.resources.*
 
 @Serializable
 class CustomUIScreen : AndroidNavigationScreen() {
-    @OptIn(ExperimentalLayoutApi::class)
     @Composable
     override fun Layout() {
         val navigator = getNavigator()
@@ -32,13 +34,14 @@ class CustomUIScreen : AndroidNavigationScreen() {
 
         Column(
             modifier = Modifier
-                .systemBarsPadding()
-                .imePadding()
                 .fillMaxSize()
-                .padding(16.dp)
+                .padding(top = 16.dp, start = 16.dp, end = 16.dp)
+                .statusBarsAndCutoutPadding()
         ) {
             Toolbar(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .navigationBarsSidesPadding(),
                 title = stringResource(Res.string.custom_ui_elements),
                 leftButton = ToolbarButton(Res.drawable.ic_back) {
                     navigator.closeScreen()
@@ -56,77 +59,81 @@ class CustomUIScreen : AndroidNavigationScreen() {
                     modifier = Modifier
                         .fillMaxSize()
                         .verticalScroll(state)
+                        .navigationBarsPadding()
+                        .imePadding()
+                        .padding(bottom = 16.dp)
                 ) {
-                    Surface(
-                        modifier = Modifier.fillMaxWidth(),
-                        shape = MaterialTheme.shapes.medium,
-                        color = MaterialTheme.colorScheme.surface
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .cardBackground()
+                            .padding(4.dp)
                     ) {
+                        CustomUIViewModel.Tab.entries.forEach {
+                            TabText(
+                                modifier = Modifier
+                                    .onClick {
+                                        viewModel.onTabChanged(it)
+                                    }
+                                    .padding(12.dp),
+                                text = stringResource(it.nameRes),
+                                selected = it == uiState.selectedTab
+                            )
+                        }
+                    }
+                    Spacer(Modifier.height(16.dp))
+                    FlowRow(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .cardBackground()
+                            .padding(16.dp),
+                        horizontalArrangement = Arrangement.spacedBy(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+                        FilledButton(
+                            onClick = { }
+                        ) {
+                            Text(Res.string.button)
+                        }
+                        OutlinedRoundedButton(
+                            onClick = { }
+                        ) {
+                            Text(Res.string.button)
+                        }
+                        SelectableOutlinedIconButton(
+                            iconRes = Res.drawable.ic_refresh,
+                            onClick = { }
+                        )
+                    }
+                    Spacer(Modifier.height(16.dp))
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .cardBackground()
+                            .padding(horizontal = 16.dp, vertical = 8.dp)
+                    ) {
+                        SlimOutlinedTextField(
+                            modifier = Modifier.fillMaxWidth(),
+                            value = viewModel.textInput,
+                            onValueChange = viewModel::onTextInput,
+                            singleLine = true,
+                            label = {
+                                Text(Res.string.input_field)
+                            }
+                        )
+                        Spacer(Modifier.height(16.dp))
                         Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(4.dp)
+                            modifier = Modifier.fillMaxWidth()
                         ) {
-                            CustomUIViewModel.Tab.entries.forEach {
-                                TabText(
-                                    modifier = Modifier
-                                        .onClick {
-                                            viewModel.onTabChanged(it)
-                                        }
-                                        .padding(12.dp),
-                                    textRes = it.nameRes,
-                                    selected = it == uiState.selectedTab
-                                )
-                            }
-                        }
-                    }
-                    Spacer(Modifier.height(16.dp))
-                    Surface(
-                        modifier = Modifier.fillMaxWidth(),
-                        shape = MaterialTheme.shapes.medium,
-                        color = MaterialTheme.colorScheme.surface
-                    ) {
-                        FlowRow(
-                            modifier = Modifier.padding(16.dp),
-                            horizontalArrangement = Arrangement.spacedBy(16.dp),
-                            verticalArrangement = Arrangement.spacedBy(16.dp)
-                        ) {
-                            FilledButton(
-                                onClick = { }
-                            ) {
-                                TextR(Res.string.button)
-                            }
-                            OutlinedRoundedButton(
-                                onClick = { }
-                            ) {
-                                TextR(Res.string.button)
-                            }
-                            SelectableOutlinedIconButton(
-                                iconRes = Res.drawable.ic_refresh,
-                                onClick = { }
+                            Text(
+                                modifier = Modifier
+                                    .cardAlterBackground()
+                                    .dashedBorder()
+                                    .padding(16.dp),
+                                textRes = Res.string.dashed_border
                             )
                         }
-                    }
-                    Spacer(Modifier.height(16.dp))
-                    Surface(
-                        modifier = Modifier.fillMaxWidth(),
-                        shape = MaterialTheme.shapes.medium,
-                        color = MaterialTheme.colorScheme.surface
-                    ) {
-                        Column(
-                            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
-                        ) {
-                            SlimOutlinedTextField(
-                                modifier = Modifier.fillMaxWidth(),
-                                value = viewModel.textInput,
-                                onValueChange = viewModel::onTextInput,
-                                singleLine = true,
-                                label = {
-                                    TextR(Res.string.input_field)
-                                }
-                            )
-                            Spacer(Modifier.height(8.dp))
-                        }
+                        Spacer(Modifier.height(8.dp))
                     }
                     Spacer(Modifier.height(16.dp))
                 }
