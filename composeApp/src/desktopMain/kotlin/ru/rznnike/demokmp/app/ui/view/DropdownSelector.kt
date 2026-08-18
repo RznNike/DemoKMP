@@ -60,19 +60,17 @@ fun <ItemType> DropdownSelector(
             modifier = Modifier
                 .fillMaxWidth()
                 .onPreviewKeyEvent { keyEvent ->
-                    if (keyEvent.type == KeyEventType.KeyDown) {
-                        when (keyEvent.key) {
-                            Key.DirectionUp -> {
-                                selectItem(-1)
-                                true
-                            }
-                            Key.DirectionDown -> {
-                                selectItem(1)
-                                true
-                            }
-                            else -> false
+                    (keyEvent.type == KeyEventType.KeyDown) && when (keyEvent.key) {
+                        Key.DirectionUp -> {
+                            selectItem(-1)
+                            true
                         }
-                    } else false
+                        Key.DirectionDown -> {
+                            selectItem(1)
+                            true
+                        }
+                        else -> false
+                    }
                 }
                 .onEnterKey { if (enabled) expand() },
             contentPadding = PaddingValues(start = 16.dp, top = 8.dp, bottom = 8.dp),

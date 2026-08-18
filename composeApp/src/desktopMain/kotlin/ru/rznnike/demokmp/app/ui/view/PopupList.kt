@@ -115,35 +115,33 @@ fun <ItemType> PopupList(
                                         focusRequester(preselectedItemFocusRequester)
                                     }
                                     .onPreviewKeyEvent { keyEvent ->
-                                        if (keyEvent.type == KeyEventType.KeyDown) {
-                                            when {
-                                                (keyEvent.isShiftPressed && (keyEvent.key == Key.Tab)) || (keyEvent.key == Key.DirectionUp) -> {
-                                                    coroutineScope.launch {
-                                                        if (index > 0) {
-                                                            scrollState.smartScrollToItem(index - 1)
-                                                            focusManager.moveFocus(FocusDirection.Previous)
-                                                        } else {
-                                                            scrollState.smartScrollToItem(items.lastIndex)
-                                                            lastItemFocusRequester.requestFocus()
-                                                        }
+                                        (keyEvent.type == KeyEventType.KeyDown) && when {
+                                            (keyEvent.isShiftPressed && (keyEvent.key == Key.Tab)) || (keyEvent.key == Key.DirectionUp) -> {
+                                                coroutineScope.launch {
+                                                    if (index > 0) {
+                                                        scrollState.smartScrollToItem(index - 1)
+                                                        focusManager.moveFocus(FocusDirection.Previous)
+                                                    } else {
+                                                        scrollState.smartScrollToItem(items.lastIndex)
+                                                        lastItemFocusRequester.requestFocus()
                                                     }
-                                                    true
                                                 }
-                                                (keyEvent.key == Key.Tab) || (keyEvent.key == Key.DirectionDown) -> {
-                                                    coroutineScope.launch {
-                                                        if (index < items.lastIndex) {
-                                                            scrollState.smartScrollToItem(index + 1)
-                                                            focusManager.moveFocus(FocusDirection.Next)
-                                                        } else {
-                                                            scrollState.smartScrollToItem(0)
-                                                            firstItemFocusRequester.requestFocus()
-                                                        }
-                                                    }
-                                                    true
-                                                }
-                                                else -> false
+                                                true
                                             }
-                                        } else false
+                                            (keyEvent.key == Key.Tab) || (keyEvent.key == Key.DirectionDown) -> {
+                                                coroutineScope.launch {
+                                                    if (index < items.lastIndex) {
+                                                        scrollState.smartScrollToItem(index + 1)
+                                                        focusManager.moveFocus(FocusDirection.Next)
+                                                    } else {
+                                                        scrollState.smartScrollToItem(0)
+                                                        firstItemFocusRequester.requestFocus()
+                                                    }
+                                                }
+                                                true
+                                            }
+                                            else -> false
+                                        }
                                     },
                                 text = itemNameRetriever(item),
                                 onClick = {
