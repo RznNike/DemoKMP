@@ -21,9 +21,11 @@ import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.stringResource
 import ru.rznnike.demokmp.app.navigation.AndroidNavigationScreen
 import ru.rznnike.demokmp.app.navigation.getNavigator
+import ru.rznnike.demokmp.app.ui.view.ImageGallery
 import ru.rznnike.demokmp.app.ui.view.Toolbar
 import ru.rznnike.demokmp.app.ui.view.ToolbarButton
 import ru.rznnike.demokmp.app.utils.cardBackground
+import ru.rznnike.demokmp.app.utils.onClick
 import ru.rznnike.demokmp.app.utils.statusBarsAndCutoutPadding
 import ru.rznnike.demokmp.app.viewmodel.httpexample.HTTPExampleViewModel
 import ru.rznnike.demokmp.generated.resources.Res
@@ -39,6 +41,10 @@ class HTTPExampleScreen : AndroidNavigationScreen() {
 
         val viewModel = viewModel { HTTPExampleViewModel() }
         val uiState by viewModel.uiState.collectAsState()
+
+        val showImageGallery = remember { mutableStateOf(false) }
+        var imageGalleryItems by remember { mutableStateOf(emptyList<String>()) }
+        var imageGalleryStartIndex by remember { mutableIntStateOf(0) }
 
         Column(
             modifier = Modifier
@@ -85,7 +91,14 @@ class HTTPExampleScreen : AndroidNavigationScreen() {
                         Box(
                             modifier = Modifier
                                 .fillMaxSize()
-                                .aspectRatio(1f),
+                                .aspectRatio(1f)
+                                .onClick {
+                                    imageGalleryItems = uiState.images
+                                    imageGalleryStartIndex = imageGalleryItems
+                                        .indexOf(image)
+                                        .coerceAtLeast(0)
+                                    showImageGallery.value = true
+                                },
                             contentAlignment = Alignment.Center
                         ) {
                             var showImageLoader by remember { mutableStateOf(false) }
@@ -119,5 +132,11 @@ class HTTPExampleScreen : AndroidNavigationScreen() {
                 }
             }
         }
+
+        ImageGallery(
+            showGallery = showImageGallery,
+            items = imageGalleryItems,
+            startIndex = imageGalleryStartIndex
+        )
     }
 }

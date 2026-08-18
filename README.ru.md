@@ -44,6 +44,7 @@
 #### Только для Android
 * UI для просмотра сетевых логов с устройства
 * Удобный запрос разрешений
+* Диалог с галереей изображений
 
 ## Скриншоты
 <details>
@@ -100,6 +101,7 @@
 #### Только для Android
 * [Chucker](https://github.com/ChuckerTeam/chucker)
 * [Accompanist (permissions)](https://github.com/google/accompanist/tree/main/permissions)
+* [Telephoto](https://github.com/saket/telephoto)
 
 ## Использованные примеры API
 * HTTP - [dog.ceo](https://dog.ceo/dog-api/)

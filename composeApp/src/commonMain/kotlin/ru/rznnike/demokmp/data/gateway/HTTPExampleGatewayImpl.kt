@@ -6,9 +6,7 @@ import ru.rznnike.demokmp.domain.gateway.HTTPExampleGateway
 class HTTPExampleGatewayImpl(
     private val appApi: AppApi
 ) : HTTPExampleGateway {
-    override suspend fun getRandomImageLinks(
-        count: Int
-    ): List<String> {
+    override suspend fun getRandomImageLinks(count: Int): List<String> {
         return appApi.getRandomImages(
             count = count
         ).links

@@ -97,6 +97,8 @@ kotlin {
             implementation(libs.koin.android)
 
             implementation(libs.permissions)
+
+            implementation(libs.coil.zoomable)
         }
 
         desktopMain.dependencies {

@@ -43,6 +43,7 @@ This is a sample project with a set of solutions to typical problems, demonstrat
 #### Android only
 * UI for viewing network logs from a device
 * Convenient permissions requests
+* Image gallery dialog
 
 ## Screenshots
 <details>
@@ -99,6 +100,7 @@ This is a sample project with a set of solutions to typical problems, demonstrat
 #### Android only
 * [Chucker](https://github.com/ChuckerTeam/chucker)
 * [Accompanist (permissions)](https://github.com/google/accompanist/tree/main/permissions)
+* [Telephoto](https://github.com/saket/telephoto)
 
 ## Used example APIs
 * HTTP - [dog.ceo](https://dog.ceo/dog-api/)
