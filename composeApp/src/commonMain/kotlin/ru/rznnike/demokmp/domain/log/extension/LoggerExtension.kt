@@ -64,7 +64,7 @@ abstract class LoggerExtension(
         )
     }
 
-    open suspend fun networkRequest(tag: String, uuid: UUID, message: String) {
+    open suspend fun networkRequest(tag: String, uuid: UUID, message: String, curl: String) {
         addMessage(
             tag = tag,
             message = message,

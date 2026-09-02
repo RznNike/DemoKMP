@@ -120,6 +120,18 @@ class NetworkLogDetailsScreen(
                 Spacer(Modifier.width(16.dp))
                 SelectableOutlinedIconButton(
                     modifier = Modifier.size(40.dp),
+                    iconRes = Res.drawable.ic_curl,
+                    onClick = {
+                        clipboard.setText(
+                            text = uiState.networkLogMessage.curl,
+                            scope = coroutineScope
+                        )
+                    }
+                )
+
+                Spacer(Modifier.width(16.dp))
+                SelectableOutlinedIconButton(
+                    modifier = Modifier.size(40.dp),
                     iconRes = Res.drawable.ic_copy,
                     onClick = {
                         clipboard.setText(

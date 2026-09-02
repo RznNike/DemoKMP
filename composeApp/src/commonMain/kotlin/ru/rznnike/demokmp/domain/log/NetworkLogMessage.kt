@@ -11,6 +11,7 @@ data class NetworkLogMessage(
     val uuid: UUIDSerializable,
     val request: LogMessage,
     val response: LogMessage? = null,
+    val curl: String = "",
     val state: NetworkRequestState = NetworkRequestState.SENT,
     val isCurrentSession: Boolean = true
 ) {

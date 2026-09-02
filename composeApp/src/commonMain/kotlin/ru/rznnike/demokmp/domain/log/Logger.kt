@@ -33,13 +33,17 @@ class Logger private constructor(
         e(tag = tag, exception = exception, message = message)
     }
 
-    fun networkRequest(message: String): UUID {
+    fun networkRequest(
+        message: String,
+        curl: String
+    ): UUID {
         val uuid = UUID.randomUUID()
         withExtensions {
             networkRequest(
                 tag = tag,
                 uuid = uuid,
-                message = message
+                message = message,
+                curl = curl
             )
         }
         return uuid
@@ -131,7 +135,13 @@ class Logger private constructor(
 
         fun e(exception: Throwable, message: String = "") = defaultLogger.e(exception, message)
 
-        fun networkRequest(message: String) = defaultLogger.networkRequest(message)
+        fun networkRequest(
+            message: String,
+            curl: String
+        ) = defaultLogger.networkRequest(
+            message = message,
+            curl = curl
+        )
 
         fun networkResponse(
             requestUuid: UUID,
