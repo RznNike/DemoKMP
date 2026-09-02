@@ -36,6 +36,6 @@ fun PreviewDesktopAppTheme(
     CompositionLocalProvider(
         LocalScrollbarStyle provides defaultScrollbarStyle()
     ) {
-        AppTheme(content)
+        PreviewAppTheme(content)
     }
 }
