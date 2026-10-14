@@ -1,16 +1,16 @@
 [versions]
-kotlin = "2.4.10"
-compose = "1.12.0"
+kotlin = "2.4.21"
+compose = "1.12.1"
 coroutines = "1.11.0"
 koin = "4.2.2"
 ktorfit = "2.7.5"
-ktor = "3.5.2"
-coil = "3.6.1"
-room = "2.8.4"
-filekit = "0.15.0"
+ktor = "3.6.0"
+coil = "3.6.3"
+room = "2.8.5"
+filekit = "0.16.0"
 chucker = "4.3.1"
 vico = "3.3.1"
-markdown = "0.45.0"
+markdown = "0.46.0"
 camera = "1.6.2"
 
 android-minSdk = "26"
@@ -22,7 +22,7 @@ android-targetSdk = "37"
 # https://github.com/JetBrains/compose-multiplatform
 compose-runtime = { module = "org.jetbrains.compose.runtime:runtime", version.ref = "compose" }
 compose-foundation = { module = "org.jetbrains.compose.foundation:foundation", version.ref = "compose" }
-compose-material3 = { module = "org.jetbrains.compose.material3:material3", version = "1.10.0-alpha05" }
+compose-material3 = { module = "org.jetbrains.compose.material3:material3", version = "1.12.0-alpha03" }
 compose-components-resources = { module = "org.jetbrains.compose.components:components-resources", version.ref = "compose" }
 compose-ui = { module = "org.jetbrains.compose.ui:ui", version.ref = "compose" }
 compose-ui-backhandler = { module = "org.jetbrains.compose.ui:ui-backhandler", version.ref = "compose" }
@@ -33,13 +33,13 @@ compose-ui-tooling-preview = { module = "org.jetbrains.compose.ui:ui-tooling-pre
 # https://mvnrepository.com/artifact/org.jetbrains.androidx.lifecycle/lifecycle-viewmodel-navigation3
 # Update the version according to the main Compose library dependencies
 #noinspection NewerVersionAvailable
-viewmodel-compose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-navigation3", version = "2.11.0-beta01" }
+viewmodel-compose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-navigation3", version = "2.11.0" }
 
 # Navigation
 # https://mvnrepository.com/artifact/org.jetbrains.androidx.navigation3/navigation3-ui
 # Update the version according to the main Compose library dependencies
 #noinspection NewerVersionAvailable
-navigation = { module = "org.jetbrains.androidx.navigation3:navigation3-ui", version = "1.1.1" }
+navigation = { module = "org.jetbrains.androidx.navigation3:navigation3-ui", version = "1.1.2" }
 
 # Coroutines
 # https://github.com/Kotlin/kotlinx.coroutines
@@ -91,7 +91,7 @@ room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 
 # SQLite (Room dependency)
 # https://developer.android.com/jetpack/androidx/releases/sqlite
-sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version = "2.7.0" }
+sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version = "2.7.1" }
 
 # Charts
 # https://github.com/patrykandpatrick/vico
@@ -108,7 +108,7 @@ markdown-material = { module = "com.mikepenz:multiplatform-markdown-renderer-m3"
 
 # Logging (for Ktor)
 # https://mvnrepository.com/artifact/ch.qos.logback/logback-classic
-logback = { module = "ch.qos.logback:logback-classic", version = "1.6.3" }
+logback = { module = "ch.qos.logback:logback-classic", version = "1.6.5" }
 
 # PDF renderer
 # https://mvnrepository.com/artifact/org.apache.pdfbox/pdfbox
@@ -168,11 +168,11 @@ android-application = { id = "com.android.application", version = "9.1.1" }
 
 # BuildConfig
 # https://github.com/yshrsmz/BuildKonfig
-buildkonfig = { id = "com.codingfeline.buildkonfig", version = "0.22.0" }
+buildkonfig = { id = "com.codingfeline.buildkonfig", version = "0.23.0" }
 
 # KSP
 # https://mvnrepository.com/artifact/com.google.devtools.ksp/com.google.devtools.ksp.gradle.plugin?repo=central
-ksp = { id = "com.google.devtools.ksp", version = "2.3.11" }
+ksp = { id = "com.google.devtools.ksp", version = "2.3.12" }
 
 # Ktorfit - network
 ktorfit = { id = "de.jensklingenberg.ktorfit", version.ref = "ktorfit" }
