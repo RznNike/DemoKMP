@@ -1,0 +1,118 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "KMP: run [debug]",
+      "detail": "Run app in debug mode (without ProGuard)",
+      "type": "shell",
+      "command": "./gradlew :composeApp:run --quiet",
+      "options": {
+        "env": {
+          "BUILD_TYPE": "debug",
+          "RUN_FROM_IDE": "true"
+        }
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": false
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "KMP: run [debug +args]",
+      "detail": "Run app in debug mode (without ProGuard) with launch args",
+      "type": "shell",
+      "command": "./gradlew :composeApp:run --args=\\\"'foo foo2' bar\\\" --quiet",
+      "options": {
+        "env": {
+          "BUILD_TYPE": "debug",
+          "RUN_FROM_IDE": "true"
+        }
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": false
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "KMP: run [staging]",
+      "detail": "Run app in debug mode (with ProGuard)",
+      "type": "shell",
+      "command": "./gradlew :composeApp:runRelease",
+      "options": {
+        "env": {
+          "BUILD_TYPE": "staging",
+          "RUN_FROM_IDE": "true"
+        }
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": false
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "KMP: run [release]",
+      "detail": "Run app in release mode (with ProGuard)",
+      "type": "shell",
+      "command": "./gradlew :composeApp:runRelease",
+      "options": {
+        "env": {
+          "BUILD_TYPE": "release",
+          "RUN_FROM_IDE": "true"
+        }
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": false
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "KMP: archive [staging]",
+      "detail": "Generate distributable archive in debug mode (with ProGuard)",
+      "type": "shell",
+      "command": "./gradlew :composeApp:generateReleaseArchive",
+      "options": {
+        "env": {
+          "BUILD_TYPE": "staging"
+        }
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": false
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "KMP: archive [release]",
+      "detail": "Generate distributable archive in release mode (with ProGuard)",
+      "type": "shell",
+      "command": "./gradlew :composeApp:generateReleaseArchive",
+      "options": {
+        "env": {
+          "BUILD_TYPE": "release"
+        }
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": false
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "KMP: clean",
+      "detail": "Full clean of build folders",
+      "type": "shell",
+      "command": "./gradlew clean",
+      "group": {
+        "kind": "build",
+        "isDefault": false
+      },
+      "problemMatcher": [
+        "$gradle"
+      ]
+    }
+  ]
+}

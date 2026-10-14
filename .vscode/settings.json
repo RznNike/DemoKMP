@@ -1,0 +1,16 @@
+{
+  "java.import.gradle.enabled": true,
+  "java.import.gradle.wrapper.enabled": true,
+  "files.exclude": {
+    "**/.gradle": true,
+    "**/build": true,
+    "**/.kotlin": true
+  },
+  "search.exclude": {
+    "**/.gradle": true,
+    "**/build": true,
+    "**/.kotlin": true
+  },
+  "files.encoding": "utf8",
+  "editor.formatOnSave": true
+}
