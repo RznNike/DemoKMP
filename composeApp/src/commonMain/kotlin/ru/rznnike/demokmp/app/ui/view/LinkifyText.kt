@@ -108,7 +108,7 @@ private val urlPattern: Pattern = Pattern.compile(
     "(?:^|\\W)(((ht|f)tp|ws)(s?)://|www\\.)"
             + "(([\\w\\-]+\\.)+([\\w\\-.~]+/?)*"
             + "[\\p{Alnum}.,%_=?&#\\-+()\\[\\]*$~@!:/{};']*)",
-    Pattern.CASE_INSENSITIVE or Pattern.MULTILINE or Pattern.DOTALL
+    Pattern.CASE_INSENSITIVE or Pattern.UNICODE_CASE or Pattern.MULTILINE or Pattern.DOTALL
 )
 
 private fun extractUrls(text: AnnotatedString): List<LinkInfo> {
