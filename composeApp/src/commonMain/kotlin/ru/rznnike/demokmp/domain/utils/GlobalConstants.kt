@@ -10,4 +10,6 @@ object GlobalConstants {
     const val DATE_PATTERN_TIME_MS = "HH:mm:ss.SSS"
     const val DATE_PATTERN_FILE_NAME_DAY = "yyyy.MM.dd"
     const val DATE_PATTERN_FILE_NAME_MS = "yyyy.MM.dd_HH.mm.ss.SSS"
+
+    const val IMPORTANT_BUTTON_CLICKS_FILTER_MS = 500L
 }

@@ -21,6 +21,7 @@ import ru.rznnike.demokmp.app.ui.item.DBExampleDataItem
 import ru.rznnike.demokmp.app.ui.view.*
 import ru.rznnike.demokmp.app.utils.cardBackground
 import ru.rznnike.demokmp.app.utils.onEnterKey
+import ru.rznnike.demokmp.app.utils.rememberClicksFilter
 import ru.rznnike.demokmp.app.viewmodel.dbexample.DBExampleViewModel
 import ru.rznnike.demokmp.generated.resources.*
 
@@ -33,10 +34,13 @@ class DBExampleScreen : DesktopNavigationScreen() {
         val viewModel = viewModel { DBExampleViewModel() }
         val uiState by viewModel.uiState.collectAsState()
 
+        val hotkeyClicksFilter = rememberClicksFilter()
         screenKeyEventCallback = { keyEvent ->
             if (keyEvent.type == KeyEventType.KeyDown) {
                 when {
-                    keyEvent.isCtrlPressed && (keyEvent.key == Key.W) -> navigator.closeScreen()
+                    keyEvent.isCtrlPressed && (keyEvent.key == Key.W) -> {
+                        hotkeyClicksFilter.filter { navigator.closeScreen() }
+                    }
                 }
             }
         }

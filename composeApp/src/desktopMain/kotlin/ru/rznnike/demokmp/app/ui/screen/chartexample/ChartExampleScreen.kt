@@ -27,6 +27,7 @@ import ru.rznnike.demokmp.app.ui.view.ToolbarButton
 import ru.rznnike.demokmp.app.utils.cardBackground
 import ru.rznnike.demokmp.app.utils.getCustomVicoTheme
 import ru.rznnike.demokmp.app.utils.rememberChartPointProducer
+import ru.rznnike.demokmp.app.utils.rememberClicksFilter
 import ru.rznnike.demokmp.app.utils.rememberGradientLineProvider
 import ru.rznnike.demokmp.app.utils.rememberSimpleHorizontalLegend
 import ru.rznnike.demokmp.app.viewmodel.chartexample.ChartExampleViewModel
@@ -44,10 +45,13 @@ class ChartExampleScreen : DesktopNavigationScreen() {
         val viewModel = viewModel { ChartExampleViewModel() }
         val uiState by viewModel.uiState.collectAsState()
 
+        val hotkeyClicksFilter = rememberClicksFilter()
         screenKeyEventCallback = { keyEvent ->
             if (keyEvent.type == KeyEventType.KeyDown) {
                 when {
-                    keyEvent.isCtrlPressed && (keyEvent.key == Key.W) -> navigator.closeScreen()
+                    keyEvent.isCtrlPressed && (keyEvent.key == Key.W) -> {
+                        hotkeyClicksFilter.filter { navigator.closeScreen() }
+                    }
                 }
             }
         }

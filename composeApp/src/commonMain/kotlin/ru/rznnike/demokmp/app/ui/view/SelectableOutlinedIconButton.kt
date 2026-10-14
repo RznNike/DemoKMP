@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 import ru.rznnike.demokmp.app.ui.theme.LocalCustomColorScheme
-import ru.rznnike.demokmp.app.utils.ClicksFilter
+import ru.rznnike.demokmp.app.utils.rememberClicksFilter
 import java.time.Clock
 
 @Composable
@@ -34,7 +34,7 @@ fun SelectableOutlinedIconButton(
     iconRes: DrawableResource
 ) {
     val isFocused by interactionSource.collectIsFocusedAsState()
-    val clicksFilter = remember { ClicksFilter(clock, clicksFilterMs) }
+    val clicksFilter = rememberClicksFilter(clock, clicksFilterMs)
 
     OutlinedIconButton(
         onClick = {
