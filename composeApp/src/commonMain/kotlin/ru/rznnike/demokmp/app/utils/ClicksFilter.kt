@@ -1,5 +1,9 @@
 package ru.rznnike.demokmp.app.utils
 
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import org.koin.compose.koinInject
+import ru.rznnike.demokmp.domain.utils.GlobalConstants
 import java.time.Clock
 
 class ClicksFilter(
@@ -16,3 +20,9 @@ class ClicksFilter(
         }
     }
 }
+
+@Composable
+fun rememberClicksFilter(
+    clock: Clock = koinInject(),
+    thresholdMs: Long = GlobalConstants.IMPORTANT_BUTTON_CLICKS_FILTER_MS
+) = remember { ClicksFilter(clock, thresholdMs) }

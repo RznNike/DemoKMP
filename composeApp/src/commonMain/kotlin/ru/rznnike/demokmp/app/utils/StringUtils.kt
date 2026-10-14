@@ -21,7 +21,7 @@ fun getFormattedAppVersion(): String {
 fun String.highlightSubstrings(substring: String): AnnotatedString {
     return buildAnnotatedString {
         val matcher = substring
-            .toPattern(Pattern.CASE_INSENSITIVE or Pattern.MULTILINE or Pattern.LITERAL)
+            .toPattern(Pattern.CASE_INSENSITIVE or Pattern.UNICODE_CASE or Pattern.MULTILINE or Pattern.LITERAL)
             .matcher(this@highlightSubstrings)
         append(this@highlightSubstrings)
         if (substring.isNotEmpty()) {

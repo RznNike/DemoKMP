@@ -63,19 +63,17 @@ fun DateTextField(
             modifier = Modifier
                 .fillMaxSize()
                 .onPreviewKeyEvent { keyEvent ->
-                    if (keyEvent.type == KeyEventType.KeyDown) {
-                        when (keyEvent.key) {
-                            Key.DirectionUp -> {
-                                onDateChange(1)
-                                true
-                            }
-                            Key.DirectionDown -> {
-                                onDateChange(-1)
-                                true
-                            }
-                            else -> false
+                    (keyEvent.type == KeyEventType.KeyDown) && when (keyEvent.key) {
+                        Key.DirectionUp -> {
+                            onDateChange(1)
+                            true
                         }
-                    } else false
+                        Key.DirectionDown -> {
+                            onDateChange(-1)
+                            true
+                        }
+                        else -> false
+                    }
                 }
                 .onEnterKey {
                     onSave()

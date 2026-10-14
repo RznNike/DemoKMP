@@ -16,7 +16,7 @@ class MemoryCacheLoggerExtension(
     private val networkLog: MutableList<NetworkLogMessage> = mutableListOf()
     private val networkLogUpdatesFlow = MutableSharedFlow<NetworkLogMessage>()
 
-    override suspend fun networkRequest(tag: String, uuid: UUID, message: String) {
+    override suspend fun networkRequest(tag: String, uuid: UUID, message: String, curl: String) {
         addMessage(
             tag = tag,
             message = message,
@@ -25,7 +25,8 @@ class MemoryCacheLoggerExtension(
         ) { request ->
             val networkLogMessage = NetworkLogMessage(
                 uuid = uuid,
-                request = request
+                request = request,
+                curl = curl
             )
             networkLog.add(networkLogMessage)
             networkLogUpdatesFlow.emit(networkLogMessage)

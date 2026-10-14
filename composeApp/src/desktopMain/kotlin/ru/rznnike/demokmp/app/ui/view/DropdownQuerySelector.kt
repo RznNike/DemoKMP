@@ -179,25 +179,23 @@ fun <ItemType> DropdownQuerySelector(
                                     .padding(top = 8.dp, start = 16.dp, end = 16.dp)
                                     .height(48.dp)
                                     .onPreviewKeyEvent { keyEvent ->
-                                        if (keyEvent.type == KeyEventType.KeyDown) {
-                                            when {
-                                                (keyEvent.isShiftPressed && (keyEvent.key == Key.Tab)) || (keyEvent.key == Key.DirectionUp) -> {
-                                                    coroutineScope.launch {
-                                                        scrollState.smartScrollToItem(filteredItems.lastIndex)
-                                                        focusManager.moveFocus(FocusDirection.Previous)
-                                                    }
-                                                    true
+                                        (keyEvent.type == KeyEventType.KeyDown) && when {
+                                            (keyEvent.isShiftPressed && (keyEvent.key == Key.Tab)) || (keyEvent.key == Key.DirectionUp) -> {
+                                                coroutineScope.launch {
+                                                    scrollState.smartScrollToItem(filteredItems.lastIndex)
+                                                    focusManager.moveFocus(FocusDirection.Previous)
                                                 }
-                                                (keyEvent.key == Key.Tab) || (keyEvent.key == Key.DirectionDown) -> {
-                                                    coroutineScope.launch {
-                                                        scrollState.smartScrollToItem(0)
-                                                        focusManager.moveFocus(FocusDirection.Next)
-                                                    }
-                                                    true
-                                                }
-                                                else -> false
+                                                true
                                             }
-                                        } else false
+                                            (keyEvent.key == Key.Tab) || (keyEvent.key == Key.DirectionDown) -> {
+                                                coroutineScope.launch {
+                                                    scrollState.smartScrollToItem(0)
+                                                    focusManager.moveFocus(FocusDirection.Next)
+                                                }
+                                                true
+                                            }
+                                            else -> false
+                                        }
                                     }
                                     .onEnterKey {
                                         focusManager.moveFocus(FocusDirection.Next)
@@ -215,16 +213,16 @@ fun <ItemType> DropdownQuerySelector(
 
                             Spacer(Modifier.height(16.dp))
                             Box {
-                                var listHeight by remember { mutableIntStateOf(0) }
-                                val listHeightDp = with(LocalDensity.current) {
-                                    listHeight.toDp()
-                                }
+                                val density = LocalDensity.current
+                                var listHeight by remember { mutableStateOf(0.dp) }
 
                                 LazyColumn(
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .onGloballyPositioned {
-                                            listHeight = it.size.height
+                                            with(density) {
+                                                listHeight = it.size.height.toDp()
+                                            }
                                         },
                                     state = scrollState,
                                     contentPadding = PaddingValues(bottom = 16.dp)
@@ -237,29 +235,27 @@ fun <ItemType> DropdownQuerySelector(
                                             modifier = Modifier
                                                 .padding(horizontal = 16.dp)
                                                 .onPreviewKeyEvent { keyEvent ->
-                                                    if (keyEvent.type == KeyEventType.KeyDown) {
-                                                        when {
-                                                            (keyEvent.key == Key.F6) || (keyEvent.isCtrlPressed && (keyEvent.key == Key.F)) -> {
-                                                                searchFieldFocusRequester.requestFocus()
-                                                                true
-                                                            }
-                                                            (keyEvent.isShiftPressed && (keyEvent.key == Key.Tab)) || (keyEvent.key == Key.DirectionUp) -> {
-                                                                coroutineScope.launch {
-                                                                    scrollState.smartScrollToItem(index - 1)
-                                                                    focusManager.moveFocus(FocusDirection.Previous)
-                                                                }
-                                                                true
-                                                            }
-                                                            (keyEvent.key == Key.Tab) || (keyEvent.key == Key.DirectionDown) -> {
-                                                                coroutineScope.launch {
-                                                                    scrollState.smartScrollToItem(index + 1)
-                                                                    focusManager.moveFocus(FocusDirection.Next)
-                                                                }
-                                                                true
-                                                            }
-                                                            else -> false
+                                                    (keyEvent.type == KeyEventType.KeyDown) && when {
+                                                        (keyEvent.key == Key.F6) || (keyEvent.isCtrlPressed && (keyEvent.key == Key.F)) -> {
+                                                            searchFieldFocusRequester.requestFocus()
+                                                            true
                                                         }
-                                                    } else false
+                                                        (keyEvent.isShiftPressed && (keyEvent.key == Key.Tab)) || (keyEvent.key == Key.DirectionUp) -> {
+                                                            coroutineScope.launch {
+                                                                scrollState.smartScrollToItem(index - 1)
+                                                                focusManager.moveFocus(FocusDirection.Previous)
+                                                            }
+                                                            true
+                                                        }
+                                                        (keyEvent.key == Key.Tab) || (keyEvent.key == Key.DirectionDown) -> {
+                                                            coroutineScope.launch {
+                                                                scrollState.smartScrollToItem(index + 1)
+                                                                focusManager.moveFocus(FocusDirection.Next)
+                                                            }
+                                                            true
+                                                        }
+                                                        else -> false
+                                                    }
                                                 },
                                             text = itemNameRetriever(item),
                                             onClick = {
@@ -271,7 +267,7 @@ fun <ItemType> DropdownQuerySelector(
                                 }
                                 VerticalScrollbar(
                                     modifier = Modifier
-                                        .height(listHeightDp)
+                                        .height(listHeight)
                                         .align(Alignment.CenterEnd),
                                     adapter = rememberScrollbarAdapter(scrollState)
                                 )

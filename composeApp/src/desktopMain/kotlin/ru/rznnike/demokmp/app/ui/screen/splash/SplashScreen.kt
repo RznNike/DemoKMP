@@ -25,6 +25,7 @@ import ru.rznnike.demokmp.app.ui.dialog.common.AlertDialogType
 import ru.rznnike.demokmp.app.ui.dialog.common.CommonAlertDialog
 import ru.rznnike.demokmp.app.ui.screen.home.HomeFlow
 import ru.rznnike.demokmp.app.ui.theme.LocalCustomDrawables
+import ru.rznnike.demokmp.app.utils.rememberClicksFilter
 import ru.rznnike.demokmp.app.viewmodel.splash.SplashViewModel
 import ru.rznnike.demokmp.generated.resources.Res
 import ru.rznnike.demokmp.generated.resources.close
@@ -55,10 +56,13 @@ class SplashScreen : DesktopNavigationScreen() {
             }
         )
 
+        val hotkeyClicksFilter = rememberClicksFilter()
         screenKeyEventCallback = { keyEvent ->
             if (keyEvent.type == KeyEventType.KeyDown) {
                 when {
-                    keyEvent.isCtrlPressed && (keyEvent.key == Key.W) -> navigator.closeScreen()
+                    keyEvent.isCtrlPressed && (keyEvent.key == Key.W) -> {
+                        hotkeyClicksFilter.filter { navigator.closeScreen() }
+                    }
                 }
             }
         }

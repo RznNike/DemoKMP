@@ -103,16 +103,16 @@ fun HotkeysDialog(
                             )
                     ) {
                         val scrollState = rememberScrollState()
-                        var listHeight by remember { mutableIntStateOf(0) }
-                        val listHeightDp = with(LocalDensity.current) {
-                            listHeight.toDp()
-                        }
+                        val density = LocalDensity.current
+                        var listHeight by remember { mutableStateOf(0.dp) }
 
                         Column(
                             modifier = Modifier
                                 .padding(horizontal = 16.dp)
                                 .onGloballyPositioned {
-                                    listHeight = it.size.height
+                                    with(density) {
+                                        listHeight = it.size.height.toDp()
+                                    }
                                 }
                                 .verticalScroll(
                                     state = scrollState
@@ -148,7 +148,7 @@ fun HotkeysDialog(
                         }
                         VerticalScrollbar(
                             modifier = Modifier
-                                .height(listHeightDp)
+                                .height(listHeight)
                                 .align(Alignment.CenterEnd),
                             adapter = rememberScrollbarAdapter(scrollState)
                         )

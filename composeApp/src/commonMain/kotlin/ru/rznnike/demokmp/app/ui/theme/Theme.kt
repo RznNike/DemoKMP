@@ -235,7 +235,8 @@ fun AppTheme(
         LocalIsDarkTheme provides isDarkTheme,
         LocalCustomColorScheme provides customColorScheme,
         LocalCustomDrawables provides customDrawables,
-        LocalMinimumInteractiveComponentSize provides Dp.Unspecified
+        LocalMinimumInteractiveComponentSize provides Dp.Unspecified,
+        LocalContentColor provides colorScheme.onBackground
     ) {
         MaterialTheme(
             colorScheme = colorScheme,
@@ -258,7 +259,8 @@ fun PreviewAppTheme(
         LocalIsDarkTheme provides false,
         LocalCustomColorScheme provides customColorScheme,
         LocalCustomDrawables provides customDrawables,
-        LocalMinimumInteractiveComponentSize provides Dp.Unspecified
+        LocalMinimumInteractiveComponentSize provides Dp.Unspecified,
+        LocalContentColor provides colorScheme.onBackground
     ) {
         MaterialTheme(
             colorScheme = colorScheme,

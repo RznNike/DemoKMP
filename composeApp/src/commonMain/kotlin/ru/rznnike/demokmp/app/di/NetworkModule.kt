@@ -22,6 +22,7 @@ import ru.rznnike.demokmp.data.network.interceptor.HttpErrorResponseInterceptor
 import ru.rznnike.demokmp.data.network.interceptor.HttpHeaderInterceptor
 import ru.rznnike.demokmp.data.network.interceptor.HttpLoggingInterceptor
 import ru.rznnike.demokmp.data.utils.DataConstants
+import ru.rznnike.demokmp.data.utils.HttpLogLevel
 import ru.rznnike.demokmp.data.utils.json.defaultJson
 import java.io.File
 import java.time.Duration
@@ -64,12 +65,6 @@ internal val networkModule = module {
         }
     }
 
-    fun OkHttpClient.Builder.addLoggingInterceptor() {
-        if (BuildKonfig.DEBUG) {
-            addInterceptor(HttpLoggingInterceptor())
-        }
-    }
-
     single {
         Ktorfit.Builder()
             .baseUrl(BuildKonfig.API_MAIN)
@@ -79,7 +74,11 @@ internal val networkModule = module {
                         addInterceptor(HttpBaseUrlInterceptor(get()))
                         addInterceptor(HttpHeaderInterceptor(get()))
                         addInterceptor(HttpErrorResponseInterceptor())
-                        addLoggingInterceptor()
+                        addInterceptor(
+                            HttpLoggingInterceptor(
+                                logLevel = if (BuildKonfig.DEBUG) HttpLogLevel.BODY else HttpLogLevel.HEADERS
+                            )
+                        )
                         getPlatformHttpInterceptors().forEach {
                             addInterceptor(it)
                         }
@@ -96,7 +95,11 @@ internal val networkModule = module {
             client = HttpClient(OkHttp) {
                 configureOkHttp {
                     pingInterval(Duration.ofMillis(WEB_SOCKET_PING_MS))
-                    addLoggingInterceptor()
+                    addInterceptor(
+                        HttpLoggingInterceptor(
+                            logLevel = if (BuildKonfig.DEBUG) HttpLogLevel.BODY else HttpLogLevel.HEADERS
+                        )
+                    )
                 }
                 install(WebSockets)
             },

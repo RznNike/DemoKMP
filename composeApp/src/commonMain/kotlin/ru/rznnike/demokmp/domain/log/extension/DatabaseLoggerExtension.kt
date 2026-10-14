@@ -48,7 +48,7 @@ class DatabaseLoggerExtension(
         deleteOldLogs()
     }
 
-    override suspend fun networkRequest(tag: String, uuid: UUID, message: String) {
+    override suspend fun networkRequest(tag: String, uuid: UUID, message: String, curl: String) {
         addMessage(
             tag = tag,
             message = message,
@@ -57,7 +57,8 @@ class DatabaseLoggerExtension(
         ) { request ->
             val networkLogMessage = NetworkLogMessage(
                 uuid = uuid,
-                request = request
+                request = request,
+                curl = curl
             )
             addLogNetworkMessageToDBUseCase(networkLogMessage)
         }

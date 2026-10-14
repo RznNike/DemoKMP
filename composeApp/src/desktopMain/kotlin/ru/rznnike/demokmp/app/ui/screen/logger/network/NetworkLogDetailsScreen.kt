@@ -29,6 +29,7 @@ import ru.rznnike.demokmp.app.ui.window.LocalWindow
 import ru.rznnike.demokmp.app.utils.backgroundColor
 import ru.rznnike.demokmp.app.utils.cardBackground
 import ru.rznnike.demokmp.app.utils.highlightSubstrings
+import ru.rznnike.demokmp.app.utils.rememberClicksFilter
 import ru.rznnike.demokmp.app.utils.setText
 import ru.rznnike.demokmp.data.utils.DataConstants
 import ru.rznnike.demokmp.domain.log.LogMessage
@@ -61,10 +62,13 @@ class NetworkLogDetailsScreen(
             }
         }
 
+        val hotkeyClicksFilter = rememberClicksFilter()
         screenKeyEventCallback = { keyEvent ->
             if (keyEvent.type == KeyEventType.KeyDown) {
                 when {
-                    keyEvent.isCtrlPressed && (keyEvent.key == Key.W) -> navigator.closeScreen()
+                    keyEvent.isCtrlPressed && (keyEvent.key == Key.W) -> {
+                        hotkeyClicksFilter.filter { navigator.closeScreen() }
+                    }
                 }
             }
         }
@@ -116,6 +120,18 @@ class NetworkLogDetailsScreen(
                     )
                 }
                 Spacer(Modifier.weight(1f))
+
+                Spacer(Modifier.width(16.dp))
+                SelectableOutlinedIconButton(
+                    modifier = Modifier.size(40.dp),
+                    iconRes = Res.drawable.ic_curl,
+                    onClick = {
+                        clipboard.setText(
+                            text = uiState.networkLogMessage.curl,
+                            scope = coroutineScope
+                        )
+                    }
+                )
 
                 Spacer(Modifier.width(16.dp))
                 SelectableOutlinedIconButton(

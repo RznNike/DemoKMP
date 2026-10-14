@@ -1,0 +1,8 @@
+{
+  "recommendations": [
+    "redhat.java",
+    "vscjava.vscode-gradle",
+    "vscjava.vscode-java-debug",
+    "jetbrains.kotlin-server"
+  ]
+}

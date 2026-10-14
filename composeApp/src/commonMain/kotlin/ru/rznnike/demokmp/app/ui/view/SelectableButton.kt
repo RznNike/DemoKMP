@@ -7,7 +7,10 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.*
+import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ButtonElevation
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -15,7 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
 import ru.rznnike.demokmp.app.ui.theme.extraSmallCorners
-import ru.rznnike.demokmp.app.utils.ClicksFilter
+import ru.rznnike.demokmp.app.utils.rememberClicksFilter
 import java.time.Clock
 
 @Composable
@@ -39,7 +42,7 @@ fun SelectableButton(
 ) {
     val isFocused by interactionSource.collectIsFocusedAsState()
     val borderWidth = 2.dp
-    val clicksFilter = remember { ClicksFilter(clock, clicksFilterMs) }
+    val clicksFilter = rememberClicksFilter(clock, clicksFilterMs)
 
     FilledButtonWithLoader(
         onClick = {

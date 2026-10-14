@@ -6,11 +6,10 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
 import ru.rznnike.demokmp.app.ui.theme.LocalCustomColorScheme
-import ru.rznnike.demokmp.app.utils.ClicksFilter
+import ru.rznnike.demokmp.app.utils.rememberClicksFilter
 import java.time.Clock
 
 @Composable
@@ -31,7 +30,7 @@ fun OutlinedRoundedButton(
     interactionSource: MutableInteractionSource? = null,
     content: @Composable RowScope.() -> Unit
 ) {
-    val clicksFilter = remember { ClicksFilter(clock, clicksFilterMs) }
+    val clicksFilter = rememberClicksFilter(clock, clicksFilterMs)
 
     OutlinedButton(
         onClick = {

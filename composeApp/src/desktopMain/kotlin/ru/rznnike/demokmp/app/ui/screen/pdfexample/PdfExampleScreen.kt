@@ -25,6 +25,7 @@ import ru.rznnike.demokmp.app.ui.viewmodel.common.print.FilePrintViewModel
 import ru.rznnike.demokmp.app.ui.window.LocalWindow
 import ru.rznnike.demokmp.app.utils.cardBackground
 import ru.rznnike.demokmp.app.utils.printDialog
+import ru.rznnike.demokmp.app.utils.rememberClicksFilter
 import ru.rznnike.demokmp.app.viewmodel.pdfexample.PdfExampleViewModel
 import ru.rznnike.demokmp.data.utils.DataConstants
 import ru.rznnike.demokmp.domain.common.DispatcherProvider
@@ -62,17 +63,22 @@ class PdfExampleScreen : DesktopNavigationScreen() {
             }
         }
 
+        val hotkeyClicksFilter = rememberClicksFilter()
         screenKeyEventCallback = { keyEvent ->
             if (keyEvent.type == KeyEventType.KeyDown) {
                 when {
-                    keyEvent.isCtrlPressed && (keyEvent.key == Key.W) -> navigator.closeScreen()
+                    keyEvent.isCtrlPressed && (keyEvent.key == Key.W) -> {
+                        hotkeyClicksFilter.filter { navigator.closeScreen() }
+                    }
                     keyEvent.isCtrlPressed && (keyEvent.key == Key.P) -> {
-                        uiState.pdf?.let { pdf ->
-                            val newPrinterName = printDialog(
-                                pdf = pdf,
-                                printSettings = filePrintUiState.printSettings
-                            )
-                            filePrintViewModel.onPrinterSelected(newPrinterName)
+                        hotkeyClicksFilter.filter {
+                            uiState.pdf?.let { pdf ->
+                                val newPrinterName = printDialog(
+                                    pdf = pdf,
+                                    printSettings = filePrintUiState.printSettings
+                                )
+                                filePrintViewModel.onPrinterSelected(newPrinterName)
+                            }
                         }
                     }
                 }

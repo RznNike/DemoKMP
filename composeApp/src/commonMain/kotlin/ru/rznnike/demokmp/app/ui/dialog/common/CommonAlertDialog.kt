@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -18,9 +19,31 @@ import ru.rznnike.demokmp.app.utils.cardBackground
 
 @Composable
 fun CommonAlertDialog(
+    showDialog: MutableState<Boolean>,
+    type: AlertDialogType = AlertDialogType.HORIZONTAL,
+    header: String,
+    message: String = "",
+    cancellable: Boolean = true,
+    onCancelListener: (() -> Unit) = { showDialog.value = false },
+    actions: List<AlertDialogAction>
+) {
+    if (showDialog.value) {
+        CommonAlertDialog(
+            type = type,
+            header = header,
+            message = message,
+            cancellable = cancellable,
+            onCancelListener = onCancelListener,
+            actions = actions
+        )
+    }
+}
+
+@Composable
+fun CommonAlertDialog(
     type: AlertDialogType,
     header: String,
-    message: String? = null,
+    message: String = "",
     cancellable: Boolean = true,
     onCancelListener: (() -> Unit)? = null,
     actions: List<AlertDialogAction>
@@ -49,7 +72,7 @@ fun CommonAlertDialog(
                     text = header,
                     textAlign = TextAlign.Center
                 )
-                if (!message.isNullOrBlank()) {
+                if (message.isNotBlank()) {
                     Text(
                         modifier = Modifier
                             .fillMaxWidth()

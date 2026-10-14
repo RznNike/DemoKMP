@@ -6,7 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import com.google.accompanist.permissions.*
 
-class PermissionsHandler(
+class PermissionHandler(
     private val permissions: List<String>
 ) {
     private var permissionsState: Any? = null
@@ -14,7 +14,7 @@ class PermissionsHandler(
 
     @OptIn(ExperimentalPermissionsApi::class)
     @Composable
-    fun register(): PermissionsHandler {
+    fun register(): PermissionHandler {
         when (permissions.size) {
             0 -> Unit
             1 -> {
@@ -56,11 +56,18 @@ class PermissionsHandler(
 
 @Composable
 fun rememberNotificationsPermissionHandler() = remember {
-    PermissionsHandler(
+    PermissionHandler(
         permissions = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             listOf(
                 Manifest.permission.POST_NOTIFICATIONS
             )
         } else emptyList()
+    )
+}.register()
+
+@Composable
+fun rememberCameraPermissionHandler() = remember {
+    PermissionHandler(
+        permissions = listOf(Manifest.permission.CAMERA)
     )
 }.register()

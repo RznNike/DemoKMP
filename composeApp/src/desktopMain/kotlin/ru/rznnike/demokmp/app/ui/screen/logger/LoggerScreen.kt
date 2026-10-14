@@ -39,6 +39,7 @@ import ru.rznnike.demokmp.app.ui.viewmodel.logger.LoggerViewModel
 import ru.rznnike.demokmp.app.ui.window.LocalWindow
 import ru.rznnike.demokmp.app.utils.cardBackground
 import ru.rznnike.demokmp.app.utils.onClick
+import ru.rznnike.demokmp.app.utils.rememberClicksFilter
 import ru.rznnike.demokmp.data.utils.DataConstants
 import ru.rznnike.demokmp.domain.log.LogType
 import ru.rznnike.demokmp.generated.resources.*
@@ -64,10 +65,13 @@ class LoggerScreen : DesktopNavigationScreen() {
         }
         val coroutineScope = rememberCoroutineScope()
 
+        val hotkeyClicksFilter = rememberClicksFilter()
         screenKeyEventCallback = { keyEvent ->
             if (keyEvent.type == KeyEventType.KeyDown) {
                 when {
-                    keyEvent.isCtrlPressed && (keyEvent.key == Key.W) -> navigator.closeScreen()
+                    keyEvent.isCtrlPressed && (keyEvent.key == Key.W) -> {
+                        hotkeyClicksFilter.filter { navigator.closeScreen() }
+                    }
                     keyEvent.isCtrlPressed && (keyEvent.key == Key.One) -> viewModel.onTabSelected(LoggerViewModel.Tab.ALL)
                     keyEvent.isCtrlPressed && (keyEvent.key == Key.Two) -> viewModel.onTabSelected(LoggerViewModel.Tab.NETWORK)
                 }

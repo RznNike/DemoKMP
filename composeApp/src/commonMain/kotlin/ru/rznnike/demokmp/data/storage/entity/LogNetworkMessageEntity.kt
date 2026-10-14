@@ -19,6 +19,7 @@ data class LogNetworkMessageEntity(
     val request: LogMessage,
     @Embedded(prefix = "response_")
     val response: LogMessage? = null,
+    val curl: String,
     val state: NetworkRequestState = NetworkRequestState.SENT,
     val sessionId: Long
 )
@@ -34,6 +35,7 @@ fun LogNetworkMessageEntity.toLogNetworkMessage(currentSessionId: Long): Network
         response = response?.copy(
             isCurrentSession = isCurrentSession
         ),
+        curl = curl,
         state = state,
         isCurrentSession = currentSessionId == sessionId
     )
@@ -44,6 +46,7 @@ fun NetworkLogMessage.toLogNetworkMessageEntity(currentSessionId: Long) = LogNet
     uuid = uuid,
     request = request,
     response = response,
+    curl = curl,
     state = state,
     sessionId = currentSessionId
 )

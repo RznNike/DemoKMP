@@ -40,6 +40,7 @@ import ru.rznnike.demokmp.app.ui.view.Toolbar
 import ru.rznnike.demokmp.app.utils.cardBackground
 import ru.rznnike.demokmp.app.utils.getMacAddress
 import ru.rznnike.demokmp.app.utils.platformName
+import ru.rznnike.demokmp.app.utils.rememberClicksFilter
 import ru.rznnike.demokmp.app.viewmodel.global.configuration.AppConfigurationViewModel
 import ru.rznnike.demokmp.app.viewmodel.home.HomeViewModel
 import ru.rznnike.demokmp.domain.utils.OperatingSystem
@@ -58,10 +59,13 @@ class HomeScreen : DesktopNavigationScreen() {
 
         val notifier: Notifier = koinInject()
 
+        val hotkeyClicksFilter = rememberClicksFilter()
         screenKeyEventCallback = { keyEvent ->
             if (keyEvent.type == KeyEventType.KeyDown) {
                 when {
-                    keyEvent.isCtrlPressed && (keyEvent.key == Key.W) -> navigator.closeScreen()
+                    keyEvent.isCtrlPressed && (keyEvent.key == Key.W) -> {
+                        hotkeyClicksFilter.filter { navigator.closeScreen() }
+                    }
                     keyEvent.isCtrlPressed && (keyEvent.key == Key.F) -> notifier.sendMessage("Ctrl+F")
                 }
             }

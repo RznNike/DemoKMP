@@ -43,6 +43,8 @@ This is a sample project with a set of solutions to typical problems, demonstrat
 #### Android only
 * UI for viewing network logs from a device
 * Convenient permissions requests
+* Image gallery dialog
+* Barcode scanner
 
 ## Screenshots
 <details>
@@ -99,6 +101,9 @@ This is a sample project with a set of solutions to typical problems, demonstrat
 #### Android only
 * [Chucker](https://github.com/ChuckerTeam/chucker)
 * [Accompanist (permissions)](https://github.com/google/accompanist/tree/main/permissions)
+* [Telephoto](https://github.com/saket/telephoto)
+* [CameraX](https://developer.android.com/media/camera/camerax)
+* [MLKit (barcode)](https://developers.google.com/ml-kit/vision/barcode-scanning/android)
 
 ## Used example APIs
 * HTTP - [dog.ceo](https://dog.ceo/dog-api/)
@@ -107,7 +112,7 @@ This is a sample project with a set of solutions to typical problems, demonstrat
 ## Project launch
 This project was created and tested using [IntelliJ IDEA](https://www.jetbrains.com/idea/). All further instructions are provided for this IDE.
 
-#### Launch from IDE (PC)
+#### Launch from IntelliJ IDEA (PC)
 To run this app on a PC, the project has several already created configurations:
 * ```run [debug]``` (with debug)
 * ```run [debug +args]``` (with debug and launch args)
@@ -118,8 +123,16 @@ You can also create your own launch configurations based on the ones already add
 
 ```Run -> Edit Configurations -> + (Add New Configuration) -> Gradle```
 
-#### Launch from IDE (Android)
+#### Launch from VS Code (PC)
+Basic support for VS Code has been added to the project. Similar кгт configurations have been created:
+* ```KMP: run [debug]``` (with debug)
+* ```KMP: run [debug +args]``` (with debug and launch args)
+* ```KMP: run [staging]``` (with debug and proguard)
+* ```KMP: run [release]``` (with proguard)
 
+You can also create your own launch configurations based on the ones already added. To do this, edit ```.vscode/tasks.json``` file.
+
+#### Launch from IntelliJ IDEA (Android)
 To run this app on Android, use the standard ```composeApp``` configuration. The build type can be selected in the ```Build Variants``` menu in the sidebar (also available under ```Build -> Select Build Variant```).
 
 #### App build launch (PC)
@@ -134,9 +147,13 @@ To run the compiled application, run the ```run.vbs``` (Windows) or ```run.sh```
 #### For PC
 This project is configured to create builds for Windows and Linux. If you want to build it for macOS, update the ```nativeDistributions``` section in ```build.gradle.kts``` accordingly.
 
-To create a distributable build, use one of the launch configurations:
+To create a distributable build, use one of the launch configurations in IntelliJ IDEA:
 * ```archive [staging]``` (with debug and proguard)
 * ```archive [release]``` (with proguard)
+
+Or in VS Code:
+* ```KMP: archive [staging]``` (with debug and proguard)
+* ```KMP: archive [release]``` (with proguard)
 
 As a result, an archive with the assembled version of the application will be created, ready for distribution. The assembled application is located in the ```distributableOutput``` folder, and its archive is in the ```distributableArchive``` folder.
 
