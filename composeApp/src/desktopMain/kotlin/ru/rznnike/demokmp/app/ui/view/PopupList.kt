@@ -85,16 +85,16 @@ fun <ItemType> PopupList(
                     val lastItemFocusRequester = remember { FocusRequester() }
                     val preselectedItemFocusRequester = remember { FocusRequester() }
 
-                    var listHeight by remember { mutableIntStateOf(0) }
-                    val listHeightDp = with(LocalDensity.current) {
-                        listHeight.toDp()
-                    }
+                    val density = LocalDensity.current
+                    var listHeight by remember { mutableStateOf(0.dp) }
 
                     LazyColumn(
                         modifier = Modifier
                             .fillMaxWidth()
                             .onGloballyPositioned {
-                                listHeight = it.size.height
+                                with(density) {
+                                    listHeight = it.size.height.toDp()
+                                }
                             },
                         state = scrollState
                     ) {
@@ -153,7 +153,7 @@ fun <ItemType> PopupList(
                     }
                     VerticalScrollbar(
                         modifier = Modifier
-                            .height(listHeightDp)
+                            .height(listHeight)
                             .align(Alignment.CenterEnd),
                         adapter = rememberScrollbarAdapter(scrollState)
                     )

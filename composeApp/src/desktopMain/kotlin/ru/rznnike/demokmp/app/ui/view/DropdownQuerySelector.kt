@@ -213,16 +213,16 @@ fun <ItemType> DropdownQuerySelector(
 
                             Spacer(Modifier.height(16.dp))
                             Box {
-                                var listHeight by remember { mutableIntStateOf(0) }
-                                val listHeightDp = with(LocalDensity.current) {
-                                    listHeight.toDp()
-                                }
+                                val density = LocalDensity.current
+                                var listHeight by remember { mutableStateOf(0.dp) }
 
                                 LazyColumn(
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .onGloballyPositioned {
-                                            listHeight = it.size.height
+                                            with(density) {
+                                                listHeight = it.size.height.toDp()
+                                            }
                                         },
                                     state = scrollState,
                                     contentPadding = PaddingValues(bottom = 16.dp)
@@ -267,7 +267,7 @@ fun <ItemType> DropdownQuerySelector(
                                 }
                                 VerticalScrollbar(
                                     modifier = Modifier
-                                        .height(listHeightDp)
+                                        .height(listHeight)
                                         .align(Alignment.CenterEnd),
                                     adapter = rememberScrollbarAdapter(scrollState)
                                 )
