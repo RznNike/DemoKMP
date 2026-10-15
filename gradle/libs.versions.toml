@@ -45,6 +45,7 @@ navigation = { module = "org.jetbrains.androidx.navigation3:navigation3-ui", ver
 # https://github.com/Kotlin/kotlinx.coroutines
 coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
 coroutines-swing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", version.ref = "coroutines" }
+coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines" }
 
 # DI
 # https://github.com/InsertKoinIO/koin
