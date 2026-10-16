@@ -9,42 +9,69 @@ import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 class FakeAppApi(
-    private val response: RandomImageLinksModel
+    private val response: RandomImageLinksModel = RandomImageLinksModel(links = emptyList()),
+    private val error: Exception? = null
 ) : AppApi {
     var lastCount: Int? = null
+
     override suspend fun getRandomImages(count: Int): RandomImageLinksModel {
         lastCount = count
+        error?.let { throw it }
         return response
     }
 }
 
 class HTTPExampleGatewayImplTest {
     @Test
-    fun `getRandomImageLinks returns links from api`() = runTest {
+    fun `returns links from api response`() = runTest {
         // Arrange
         val links = listOf("https://example.com/1.jpg", "https://example.com/2.jpg", "https://example.com/3.jpg")
-        val fakeApi = FakeAppApi(RandomImageLinksModel(links = links))
-        val gateway: HTTPExampleGateway = HTTPExampleGatewayImpl(fakeApi)
+        val gateway: HTTPExampleGateway = HTTPExampleGatewayImpl(FakeAppApi(RandomImageLinksModel(links = links)))
 
         // Act
         val result = gateway.getRandomImageLinks(count = 3)
 
         // Assert
         assertEquals(links, result)
-        assertEquals(3, fakeApi.lastCount)
     }
 
     @Test
-    fun `getRandomImageLinks passes count parameter`() = runTest {
+    fun `passes count to api`() = runTest {
         // Arrange
-        val fakeApi = FakeAppApi(RandomImageLinksModel(links = emptyList()))
+        val fakeApi = FakeAppApi()
         val gateway: HTTPExampleGateway = HTTPExampleGatewayImpl(fakeApi)
 
         // Act
-        val result = gateway.getRandomImageLinks(count = 10)
+        gateway.getRandomImageLinks(count = 10)
 
         // Assert
-        assertEquals(0, result.size)
         assertEquals(10, fakeApi.lastCount)
+    }
+
+    @Test
+    fun `returns empty list when api responds with no links`() = runTest {
+        // Arrange
+        val gateway: HTTPExampleGateway = HTTPExampleGatewayImpl(FakeAppApi())
+
+        // Act
+        val result = gateway.getRandomImageLinks(count = 5)
+
+        // Assert
+        assertEquals(emptyList(), result)
+    }
+
+    @Test
+    fun `propagates api exception`() = runTest {
+        // Arrange
+        val expected = IllegalStateException("network failure")
+        val gateway: HTTPExampleGateway = HTTPExampleGatewayImpl(FakeAppApi(error = expected))
+
+        // Act
+        // runCatching is inline, so a suspend call is allowed inside it (assertFailsWith's block is not)
+        val result = runCatching { gateway.getRandomImageLinks(count = 1) }
+
+        // Assert
+        assertTrue(result.isFailure)
+        assertEquals(expected, result.exceptionOrNull())
     }
 }
