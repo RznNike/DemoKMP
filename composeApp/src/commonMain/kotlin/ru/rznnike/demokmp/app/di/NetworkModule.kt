@@ -16,6 +16,7 @@ import org.koin.core.scope.Scope
 import org.koin.dsl.module
 import ru.rznnike.demokmp.BuildKonfig
 import ru.rznnike.demokmp.data.network.AppWebSocketManager
+import ru.rznnike.demokmp.data.network.AppWebSocketManagerImpl
 import ru.rznnike.demokmp.data.network.createAppApi
 import ru.rznnike.demokmp.data.network.interceptor.HttpBaseUrlInterceptor
 import ru.rznnike.demokmp.data.network.interceptor.HttpErrorResponseInterceptor
@@ -90,8 +91,8 @@ internal val networkModule = module {
             .createAppApi()
     }
 
-    single {
-        AppWebSocketManager(
+    single<AppWebSocketManager> {
+        AppWebSocketManagerImpl(
             client = HttpClient(OkHttp) {
                 configureOkHttp {
                     pingInterval(Duration.ofMillis(WEB_SOCKET_PING_MS))
