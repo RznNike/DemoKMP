@@ -10,7 +10,8 @@ import java.time.Clock
 import java.util.*
 
 abstract class LoggerExtension(
-    protected val stopAfterOneError: Boolean = false
+    protected val stopAfterOneError: Boolean = false,
+    protected val isDebugEnabled: Boolean = BuildKonfig.DEBUG
 ) {
     protected lateinit var clock: Clock
     protected lateinit var coroutineDispatcher: CoroutineDispatcher
@@ -22,7 +23,7 @@ abstract class LoggerExtension(
     }
 
     open suspend fun d(tag: String, message: String) {
-        if (BuildKonfig.DEBUG) {
+        if (isDebugEnabled) {
             addMessage(
                 tag = tag,
                 message = message,
