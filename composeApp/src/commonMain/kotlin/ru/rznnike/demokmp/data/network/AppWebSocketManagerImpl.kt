@@ -18,7 +18,8 @@ import kotlin.time.Duration.Companion.milliseconds
 
 class AppWebSocketManagerImpl(
     private val client: HttpClient,
-    private val preferencesManager: PreferencesManager
+    private val preferencesManager: PreferencesManager,
+    private val webSocketSessionFactory: suspend (String) -> WebSocketSession = { url -> client.webSocketSession(url) }
 ) : AppWebSocketManager {
     private val logger = Logger.withTag("AppWebSocket")
     private var session: WebSocketSession? = null
@@ -35,7 +36,7 @@ class AppWebSocketManagerImpl(
 
                 logger.i("Trying to open a session: $url")
                 connectionState.value = WebSocketConnectionState.CONNECTING
-                client.webSocketSession(url).let { newSession ->
+                webSocketSessionFactory(url).let { newSession ->
                     connectionState.value = WebSocketConnectionState.CONNECTED
                     logger.i("Session opened")
                     session = newSession
@@ -75,7 +76,9 @@ class AppWebSocketManagerImpl(
                 url = url,
                 messages = messagesFlow,
                 connectionState = connectionState.asStateFlow()
-            )
+            ).also {
+                sessionData = it
+            }
         }
     }
 
