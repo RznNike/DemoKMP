@@ -16,7 +16,8 @@ import java.io.File
 import java.time.LocalDate
 
 class FileLoggerExtension(
-    stopAfterOneError: Boolean = false
+    stopAfterOneError: Boolean = false,
+    private val logsPath: String = DataConstants.LOGS_PATH
 ) : LoggerExtension(stopAfterOneError = stopAfterOneError) {
     private val outputLock = Semaphore(1)
     private var logFile: File? = null
@@ -49,9 +50,9 @@ class FileLoggerExtension(
                             }
 
                             if (logFile == null) {
-                                File(DataConstants.LOGS_PATH).mkdirs()
+                                File(logsPath).mkdirs()
                                 val logFileName = "${currentDate.millis().toDateString(GlobalConstants.DATE_PATTERN_FILE_NAME_DAY)}.txt"
-                                logFile = File("${DataConstants.LOGS_PATH}/$logFileName")
+                                logFile = File("$logsPath/$logFileName")
                             }
                             logFile?.appendText(formatLogMessage(logMessage) + "\n")
                         } catch (_: Exception) { }
