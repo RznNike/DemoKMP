@@ -1,12 +1,17 @@
 package ru.rznnike.demokmp.domain.common.interactor
 
+import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.runTest
 import ru.rznnike.demokmp.domain.common.FakeDispatcherProvider
+import kotlin.coroutines.ContinuationInterceptor
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertSame
 import kotlin.test.assertTrue
 
 private class FakeFlowUseCase(
@@ -41,5 +46,25 @@ class FlowUseCaseTest {
         // Assert
         assertTrue(result.isFailure)
         assertEquals(expected, result.exceptionOrNull())
+    }
+
+    @Test
+    fun `emits on injected io dispatcher`() = runTest {
+        // Arrange
+        val ioDispatcher = StandardTestDispatcher(testScheduler)
+        var collectorDispatcher: ContinuationInterceptor? = null
+        val useCase = FakeFlowUseCase(FakeDispatcherProvider(ioDispatcher)) {
+            flow {
+                collectorDispatcher = currentCoroutineContext()[ContinuationInterceptor]
+                emit(1)
+            }
+        }
+
+        // Act
+        val result = useCase().toList()
+
+        // Assert
+        assertEquals(listOf(1), result)
+        assertSame(ioDispatcher, collectorDispatcher)
     }
 }

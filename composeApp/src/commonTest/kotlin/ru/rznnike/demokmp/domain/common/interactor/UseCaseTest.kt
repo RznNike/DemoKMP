@@ -1,14 +1,18 @@
 package ru.rznnike.demokmp.domain.common.interactor
 
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.runTest
 import ru.rznnike.demokmp.domain.common.FakeDispatcherProvider
+import kotlin.coroutines.ContinuationInterceptor
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
+import kotlin.test.assertSame
 
 private class FakeUseCase(
     dispatcherProvider: FakeDispatcherProvider,
-    private val result: () -> String
+    private val result: suspend () -> String
 ) : UseCase<String>(dispatcherProvider) {
     override suspend fun execute(): String = result()
 }
@@ -39,5 +43,23 @@ class UseCaseTest {
         // Assert
         assertNull(result.data)
         assertEquals(expected, result.error)
+    }
+
+    @Test
+    fun `executes on injected io dispatcher`() = runTest {
+        // Arrange
+        val ioDispatcher = StandardTestDispatcher(testScheduler)
+        var executorDispatcher: ContinuationInterceptor? = null
+        val useCase = FakeUseCase(FakeDispatcherProvider(ioDispatcher)) {
+            executorDispatcher = currentCoroutineContext()[ContinuationInterceptor]
+            "value"
+        }
+
+        // Act
+        val result = useCase()
+
+        // Assert
+        assertEquals("value", result.data)
+        assertSame(ioDispatcher, executorDispatcher)
     }
 }
