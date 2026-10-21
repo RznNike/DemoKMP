@@ -1,4 +1,4 @@
-<!-- Context: project-intelligence/business | Priority: high | Version: 1.1 | Updated: 2026-10-15 -->
+<!-- Context: project-intelligence/business | Priority: high | Version: 1.2 | Updated: 2026-10-21 -->
 
 # Business Domain
 
@@ -22,11 +22,11 @@ Solution: One runnable demo combining Clean Architecture, Compose UI, DI, DB,
 
 ## Target Users
 
-| Segment | Who | Need | Pain |
-|---------|-----|------|------|
+| Segment               | Who                                 | Need                                  | Pain                                        |
+|-----------------------|-------------------------------------|---------------------------------------|---------------------------------------------|
 | Developers / learners | KMP newcomers, Android/Desktop devs | A working reference for typical tasks | Docs are fragmented; examples don't combine |
-| Contributors | Open-source developers | Clear, idiomatic patterns to extend | Unclear conventions |
-| Author / maintainer | RznNike | Portfolio + reusable solutions | Keeping many features current |
+| Contributors          | Open-source developers              | Clear, idiomatic patterns to extend   | Unclear conventions                         |
+| Author / maintainer   | RznNike                             | Portfolio + reusable solutions        | Keeping many features current               |
 
 ## Value Proposition
 
@@ -41,43 +41,48 @@ Solution: One runnable demo combining Clean Architecture, Compose UI, DI, DB,
 
 ## Scope
 
-**In scope**: demonstrating solutions (architecture, DI, DB, HTTP/WebSocket, logging, navigation, theming, charts, markdown, PDF, custom UI).
+**In scope**: demonstrating solutions (architecture, DI, DB, HTTP/WebSocket, logging, navigation, theming, charts, markdown, PDF, custom UI, unit tests).
 
 **Out of scope**: production business logic, real backend, monetization. Uses sample APIs — dog.ceo (HTTP), echo.websocket.org (WebSocket).
 
 ## Success Metrics (qualitative)
 
-| Metric | Definition | Target |
-|--------|-----------|--------|
-| Adoption | Stars / clones / forks | Growing |
-| Completeness | Solutions demonstrated | Broad feature set |
-| Build health | Builds on Windows/Linux + Android | Green |
+| Metric       | Definition                                    | Target            |
+|--------------|-----------------------------------------------|-------------------|
+| Adoption     | Stars / clones / forks                        | Growing           |
+| Completeness | Solutions demonstrated                        | Broad feature set |
+| Build health | Builds on Windows/Linux + Android             | Green             |
+| Quality      | Solutions covered by automated tests          | Growing coverage  |
+| Testability  | Test runnable from one command on all targets | Green             |
 
 ## Roadmap Context
 
-**Current Focus**: keep feature set current with dependencies
+**Current Focus**: keep the feature set current with dependencies.
 
-**Long-term Vision**: a canonical KMP reference project
+**Long-term Vision**: a canonical KMP reference project.
 
 ## Business Constraints
 
 - Demo project: relies on public sample APIs
 - Desktop builds are OS-specific (build on the OS you target)
+- Testing uses only `kotlin.test` + fakes, deliberately avoiding a mocking framework
 
 ## Onboarding Checklist
 
 - [ ] Understand it is a reference/demo, not a product
 - [ ] Know the audience (KMP learners, contributors)
 - [ ] Know what is in/out of scope
+- [ ] Know that solutions are test-backed, and where the tests live
 
 ## 📂 Codebase References
 
-| Context | Location |
-|---------|----------|
-| Project description | `README.md`, `README.ru.md` |
-| Screenshots | `readmeFiles/` |
-| Feature demos | `composeApp/src/commonMain/kotlin/ru/rznnike/demokmp/**` |
+| Context             | Location                                                    |
+|---------------------|-------------------------------------------------------------|
+| Project description | `README.md`, `README.ru.md`                                 |
+| Screenshots         | `readmeFiles/`                                              |
+| Feature demos       | `composeApp/src/commonMain/kotlin/ru/rznnike/demokmp/**`    |
+| Test suite          | `composeApp/src/commonTest/`, `composeApp/src/desktopTest/` |
 
 ## Related Files
 
-- `technical-domain.md` · `business-tech-bridge.md` · `decisions-log.md`
+- `technical-domain.md` · `testing-strategy.md` · `business-tech-bridge.md` · `decisions-log.md`
