@@ -9,6 +9,11 @@ import kotlin.test.Test
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
+/**
+ * Lives in `desktopTest` on purpose: the single instance socket is a desktop-only feature -
+ * `AppGatewayImpl.checkIfAppIsAlreadyRunning()` short-circuits to `false` on Android
+ * (`OperatingSystem.isAndroid`), so the occupied-port behaviour cannot be reproduced there.
+ */
 class AppGatewayImplTest {
     // Mirrors the production fallback: no launcher_configuration.ini exists in the test working directory
     private val port: Int = LauncherConfig().singleInstancePort

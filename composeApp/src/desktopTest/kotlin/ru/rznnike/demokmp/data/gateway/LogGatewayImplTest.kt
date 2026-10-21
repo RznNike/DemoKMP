@@ -37,6 +37,12 @@ private const val SESSION_1_MILLIS = 1_000_000L
 private const val SESSION_2_MILLIS = 2_000_000L
 private const val SESSION_3_MILLIS = 3_000_000L
 
+/**
+ * Lives in `desktopTest` on purpose: Room's Android in-memory builder requires a `Context`, and
+ * `sqlite-bundled` ships Android-only native libraries that the host JVM running Android unit tests
+ * cannot load. The code under test is shared `commonMain` code, so this run covers it for every
+ * target - only Room's own SQLite driver differs per platform, and that is third-party code.
+ */
 @OptIn(ExperimentalCoroutinesApi::class)
 class LogGatewayImplTest {
     private val databases = mutableListOf<MainDB>()

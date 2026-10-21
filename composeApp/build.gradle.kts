@@ -231,6 +231,12 @@ android {
         jvmToolchain(17)
     }
 
+    testOptions {
+        unitTests {
+            isReturnDefaultValues = true
+        }
+    }
+
     @Suppress("UnstableApiUsage")
     bundle.language.enableSplit = false
 
