@@ -4,14 +4,7 @@ import kotlinx.coroutines.test.runTest
 import ru.rznnike.demokmp.data.utils.DataConstants
 import ru.rznnike.demokmp.domain.gateway.PdfExampleGateway
 import java.io.File
-import kotlin.test.AfterTest
-import kotlin.test.BeforeTest
-import kotlin.test.Test
-import kotlin.test.assertContentEquals
-import kotlin.test.assertEquals
-import kotlin.test.assertFailsWith
-import kotlin.test.assertFalse
-import kotlin.test.assertTrue
+import kotlin.test.*
 
 class PdfExampleGatewayImplTest {
     private val gateway: PdfExampleGateway = PdfExampleGatewayImpl()
@@ -49,46 +42,5 @@ class PdfExampleGatewayImplTest {
 
         // Act & Assert
         assertFailsWith<NoSuchFileException> { gateway.getSamplePdf() }
-    }
-
-    @Test
-    fun `savePdfToFile copies pdf content to target file`() = runTest {
-        // Arrange
-        val source = File.createTempFile("demokmp-source", ".pdf")
-        val target = File.createTempFile("demokmp-target", ".pdf")
-        try {
-            val content = "PDF sample content".toByteArray()
-            source.writeBytes(content)
-
-            // Act
-            gateway.savePdfToFile(tempPdfFile = source, saveFile = target)
-
-            // Assert
-            assertContentEquals(content, target.readBytes())
-        } finally {
-            source.delete()
-            target.delete()
-        }
-    }
-
-    @Test
-    fun `savePdfToFile overwrites existing target file`() = runTest {
-        // Arrange
-        val source = File.createTempFile("demokmp-source", ".pdf")
-        val target = File.createTempFile("demokmp-target", ".pdf")
-        try {
-            val content = "PDF new content".toByteArray()
-            source.writeBytes(content)
-            target.writeBytes("stale content".toByteArray())
-
-            // Act
-            gateway.savePdfToFile(tempPdfFile = source, saveFile = target)
-
-            // Assert
-            assertContentEquals(content, target.readBytes())
-        } finally {
-            source.delete()
-            target.delete()
-        }
     }
 }

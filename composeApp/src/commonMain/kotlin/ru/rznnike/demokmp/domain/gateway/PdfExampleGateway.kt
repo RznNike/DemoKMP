@@ -4,6 +4,4 @@ import java.io.File
 
 interface PdfExampleGateway {
     suspend fun getSamplePdf(): File
-
-    suspend fun savePdfToFile(tempPdfFile: File, saveFile: File)
 }
