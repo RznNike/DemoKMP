@@ -28,7 +28,7 @@ fun String.toTimeStamp(pattern: String = GlobalConstants.DATE_PATTERN_SIMPLE_WIT
                 ZonedDateTime.of(date, time ?: LocalTime.MIN, ZoneId.systemDefault()).millis()
             }
         } catch (_: Exception) {
-            SimpleDateFormat(pattern, Locale.getDefault()).parse(this)?.time ?: 0
+            SimpleDateFormat(pattern, Locale.getDefault()).parse(this, ParsePosition(0))?.time ?: 0
         }
     } else 0
 
