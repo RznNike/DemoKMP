@@ -1,11 +1,7 @@
 package ru.rznnike.demokmp.data.network.interceptor
 
-import okhttp3.Interceptor
 import okhttp3.OkHttpClient
-import okhttp3.Protocol
 import okhttp3.Request
-import okhttp3.Response
-import okhttp3.ResponseBody.Companion.toResponseBody
 import ru.rznnike.demokmp.data.network.error.CustomServerException
 import java.io.IOException
 import kotlin.test.Test
@@ -13,38 +9,6 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
 private const val URL = "https://example.com/api"
-
-/**
- * Terminal interceptor that returns a canned response without touching the network.
- *
- * It is registered after [HttpErrorResponseInterceptor], so OkHttp's redirect, retry and
- * authentication machinery (which sits further down the chain) never runs.
- */
-private class StubResponseInterceptor(
-    var code: Int = 200,
-    var body: String = "",
-    var headers: Map<String, String> = emptyMap(),
-) : Interceptor {
-    var proceedCount: Int = 0
-        private set
-
-    var lastRequest: Request? = null
-        private set
-
-    override fun intercept(chain: Interceptor.Chain): Response {
-        proceedCount++
-        val request = chain.request()
-        lastRequest = request
-        val builder = Response.Builder()
-            .request(request)
-            .protocol(Protocol.HTTP_1_1)
-            .code(code)
-            .message("stub")
-            .body(body.toResponseBody(null))
-        headers.forEach { (name, value) -> builder.header(name, value) }
-        return builder.build()
-    }
-}
 
 private fun clientWith(stub: StubResponseInterceptor): OkHttpClient =
     OkHttpClient.Builder()
@@ -225,7 +189,7 @@ class HttpErrorResponseInterceptorTest {
         val client = clientWith(stub)
 
         // Act
-        client.newCall(buildRequest()).execute().use { }
+        client.newCall(buildRequest()).execute().close()
 
         // Assert
         assertEquals(1, stub.proceedCount)
@@ -238,7 +202,7 @@ class HttpErrorResponseInterceptorTest {
         val client = clientWith(stub)
 
         // Act
-        client.newCall(buildRequest()).execute().use { }
+        client.newCall(buildRequest()).execute().close()
 
         // Assert
         assertEquals(URL, stub.lastRequest?.url?.toString())

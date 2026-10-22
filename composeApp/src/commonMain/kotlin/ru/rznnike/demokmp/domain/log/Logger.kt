@@ -123,6 +123,11 @@ class Logger private constructor(
             }
         }
 
+        fun reset() {
+            extensions = mutableListOf()
+            isInitialized = false
+        }
+
         fun withTag(tag: String) = Logger(tag)
 
         fun d(message: String) = defaultLogger.d(message)

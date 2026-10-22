@@ -13,6 +13,8 @@ class LoggerNotInitializedTest {
 
     @BeforeTest
     fun setUp() {
+        // the logger is a global singleton: make sure no other test class left it initialized
+        Logger.reset()
         errBuffer.reset()
         System.setErr(PrintStream(errBuffer, true))
     }
