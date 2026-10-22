@@ -3,20 +3,19 @@ package ru.rznnike.demokmp.domain.interactor.log
 import ru.rznnike.demokmp.domain.common.DispatcherProvider
 import ru.rznnike.demokmp.domain.common.interactor.UseCaseWithParams
 import ru.rznnike.demokmp.domain.gateway.LogGateway
-import ru.rznnike.demokmp.domain.log.NetworkLogMessage
 import java.io.File
 
-class SaveNetworkLogMessageToFileUseCase(
+class SaveTextToFileUseCase(
     private val logGateway: LogGateway,
     dispatcherProvider: DispatcherProvider
-) : UseCaseWithParams<SaveNetworkLogMessageToFileUseCase.Parameters, Unit>(dispatcherProvider) {
-    override suspend fun execute(parameters: Parameters) = logGateway.saveNetworkLogMessageToFile(
+) : UseCaseWithParams<SaveTextToFileUseCase.Parameters, Unit>(dispatcherProvider) {
+    override suspend fun execute(parameters: Parameters) = logGateway.saveTextToFile(
         file = parameters.file,
-        message = parameters.message
+        text = parameters.text
     )
 
     data class Parameters(
         val file: File,
-        val message: NetworkLogMessage
+        val text: String
     )
 }

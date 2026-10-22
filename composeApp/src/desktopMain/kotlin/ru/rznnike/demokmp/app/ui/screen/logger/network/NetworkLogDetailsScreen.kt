@@ -26,16 +26,10 @@ import ru.rznnike.demokmp.app.ui.theme.bodyMediumMono
 import ru.rznnike.demokmp.app.ui.view.*
 import ru.rznnike.demokmp.app.ui.viewmodel.logger.network.NetworkLogDetailsViewModel
 import ru.rznnike.demokmp.app.ui.window.LocalWindow
-import ru.rznnike.demokmp.app.utils.backgroundColor
-import ru.rznnike.demokmp.app.utils.cardBackground
-import ru.rznnike.demokmp.app.utils.highlightSubstrings
-import ru.rznnike.demokmp.app.utils.rememberClicksFilter
-import ru.rznnike.demokmp.app.utils.setText
+import ru.rznnike.demokmp.app.utils.*
 import ru.rznnike.demokmp.data.utils.DataConstants
-import ru.rznnike.demokmp.domain.log.LogMessage
 import ru.rznnike.demokmp.domain.log.NetworkLogMessage
 import ru.rznnike.demokmp.domain.utils.GlobalConstants
-import ru.rznnike.demokmp.domain.utils.toDateString
 import ru.rznnike.demokmp.generated.resources.*
 
 @Serializable
@@ -80,7 +74,7 @@ class NetworkLogDetailsScreen(
             Box(
                 modifier = Modifier.cardBackground()
             ) {
-                Tooltip("Ctrl+W") {
+                Tooltip("Shift+Esc") {
                     SelectableOutlinedIconButton(
                         modifier = Modifier
                             .padding(16.dp)
@@ -88,25 +82,26 @@ class NetworkLogDetailsScreen(
                         iconRes = Res.drawable.ic_back,
                         onClick = {
                             navigator.closeScreen()
-                        }
+                        },
+                        clicksFilterMs = GlobalConstants.IMPORTANT_BUTTON_CLICKS_FILTER_MS
                     )
                 }
             }
-            Spacer(Modifier.width(16.dp))
+            Spacer(Modifier.width(8.dp))
             Row(
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxWidth()
                     .cardBackground()
-                    .padding(16.dp)
+                    .padding(start = 16.dp, top = 8.dp, end = 16.dp, bottom = 16.dp)
             ) {
                 SlimOutlinedTextField(
                     modifier = Modifier
                         .width(300.dp)
-                        .height(40.dp),
+                        .height(48.dp),
                     value = viewModel.queryInput,
                     singleLine = true,
-                    placeholder = {
+                    label = {
                         Text(Res.string.search)
                     },
                     onValueChange = viewModel::onQueryInput
@@ -114,7 +109,9 @@ class NetworkLogDetailsScreen(
                 Spacer(Modifier.width(8.dp))
                 if (uiState.queryMatches > 0) {
                     Text(
-                        modifier = Modifier.align(Alignment.CenterVertically),
+                        modifier = Modifier
+                            .padding(top = 8.dp)
+                            .align(Alignment.CenterVertically),
                         text = uiState.queryMatches.toString(),
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -123,7 +120,9 @@ class NetworkLogDetailsScreen(
 
                 Spacer(Modifier.width(16.dp))
                 SelectableOutlinedIconButton(
-                    modifier = Modifier.size(40.dp),
+                    modifier = Modifier
+                        .padding(top = 8.dp)
+                        .size(40.dp),
                     iconRes = Res.drawable.ic_curl,
                     onClick = {
                         clipboard.setText(
@@ -135,7 +134,9 @@ class NetworkLogDetailsScreen(
 
                 Spacer(Modifier.width(16.dp))
                 SelectableOutlinedIconButton(
-                    modifier = Modifier.size(40.dp),
+                    modifier = Modifier
+                        .padding(top = 8.dp)
+                        .size(40.dp),
                     iconRes = Res.drawable.ic_copy,
                     onClick = {
                         clipboard.setText(
@@ -147,7 +148,9 @@ class NetworkLogDetailsScreen(
 
                 Spacer(Modifier.width(16.dp))
                 SelectableOutlinedIconButton(
-                    modifier = Modifier.size(40.dp),
+                    modifier = Modifier
+                        .padding(top = 8.dp)
+                        .size(40.dp),
                     iconRes = Res.drawable.ic_save,
                     onClick = {
                         fileSaver.launch(
@@ -185,31 +188,20 @@ class NetworkLogDetailsScreen(
                     Column(
                         modifier = Modifier
                             .fillMaxSize()
-                            .verticalScroll(
-                                state = scrollState
-                            )
+                            .verticalScroll(scrollState)
                     ) {
                         @Composable
-                        fun MessageText(message: LogMessage) {
-                            val text = "%s\n%s".format(
-                                message.timestamp.toDateString(GlobalConstants.DATE_PATTERN_TIME_MS),
-                                message.getFormattedMessage()
-                            )
-                            LinkifyText(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(16.dp),
-                                text = text.highlightSubstrings(viewModel.queryInput),
-                                style = MaterialTheme.typography.bodyMediumMono
-                            )
-                        }
+                        fun MessageText(message: String) = LinkifyText(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp),
+                            text = message.highlightSubstrings(viewModel.queryInput),
+                            style = MaterialTheme.typography.bodyMediumMono
+                        )
 
-                        MessageText(uiState.networkLogMessage.request)
-                        uiState.networkLogMessage.response?.let { response ->
-                            HorizontalDivider(
-                                thickness = 1.dp,
-                                color = MaterialTheme.colorScheme.outline
-                            )
+                        MessageText(uiState.requestFormattedText)
+                        uiState.responseFormattedText?.let { response ->
+                            HorizontalDivider()
                             MessageText(response)
                         }
                     }

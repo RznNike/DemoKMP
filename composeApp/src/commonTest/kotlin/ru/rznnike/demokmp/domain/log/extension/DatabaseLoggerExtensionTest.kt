@@ -89,10 +89,7 @@ class DatabaseLoggerExtensionTest {
 
         override suspend fun saveLogToFile(file: File): Unit = notUsed("saveLogToFile")
 
-        override suspend fun saveNetworkLogMessageToFile(
-            file: File,
-            message: NetworkLogMessage
-        ): Unit = notUsed("saveNetworkLogMessageToFile")
+        override suspend fun saveTextToFile(file: File, text: String): Unit = notUsed("saveTextToFile")
 
         private fun <T> notUsed(name: String): T =
             error("LogGateway.$name is not expected to be called by DatabaseLoggerExtension")

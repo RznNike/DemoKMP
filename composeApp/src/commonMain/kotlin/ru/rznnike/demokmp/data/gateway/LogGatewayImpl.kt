@@ -123,7 +123,5 @@ class LogGatewayImpl(
         }
     }
 
-    override suspend fun saveNetworkLogMessageToFile(file: File, message: NetworkLogMessage) {
-        file.writeText(message.getFullText())
-    }
+    override suspend fun saveTextToFile(file: File, text: String) = file.writeText(text)
 }

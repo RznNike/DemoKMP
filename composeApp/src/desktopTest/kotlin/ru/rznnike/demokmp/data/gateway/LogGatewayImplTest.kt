@@ -472,25 +472,16 @@ class LogGatewayImplTest {
     }
 
     @Test
-    fun `saveNetworkLogMessageToFile writes full message text`() = runTest {
+    fun `saveTextToFile writes the given text`() = runTest {
         // Arrange
         val gateway = createGateway()
-        val message = networkLogMessage(
-            request = logMessage(timestamp = SESSION_1_MILLIS, message = "request body"),
-            response = logMessage(
-                timestamp = SESSION_1_MILLIS + 1_000,
-                message = "response body"
-            )
-        )
+        val text = "request body\nresponse body"
         val file = tempFile()
 
         // Act
-        gateway.saveNetworkLogMessageToFile(file, message)
+        gateway.saveTextToFile(file, text)
 
         // Assert
-        val content = file.readText()
-        assertEquals(message.getFullText(), content)
-        assertTrue(content.contains("request body"))
-        assertTrue(content.contains("response body"))
+        assertEquals(text, file.readText())
     }
 }

@@ -24,7 +24,7 @@ import ru.rznnike.demokmp.domain.interactor.log.GetNetworkLogUseCase
 import ru.rznnike.demokmp.domain.interactor.log.GetNewLogUseCase
 import ru.rznnike.demokmp.domain.interactor.log.GetNewNetworkLogUseCase
 import ru.rznnike.demokmp.domain.interactor.log.SaveLogToFileUseCase
-import ru.rznnike.demokmp.domain.interactor.log.SaveNetworkLogMessageToFileUseCase
+import ru.rznnike.demokmp.domain.interactor.log.SaveTextToFileUseCase
 import ru.rznnike.demokmp.domain.interactor.pdfexample.GetSamplePdfUseCase
 import ru.rznnike.demokmp.domain.interactor.preferences.*
 import ru.rznnike.demokmp.domain.interactor.wsexample.CloseAppWSSessionUseCase
@@ -47,7 +47,7 @@ internal val interactorModule = module {
     single { ClearNetworkLogUseCase(get(), get()) }
     single { DeleteOldLogsUseCase(get(), get()) }
     single { SaveLogToFileUseCase(get(), get()) }
-    single { SaveNetworkLogMessageToFileUseCase(get(), get()) }
+    single { SaveTextToFileUseCase(get(), get()) }
 
     single { GetTestCounterUseCase(get(), get()) }
     single { SetTestCounterUseCase(get(), get()) }

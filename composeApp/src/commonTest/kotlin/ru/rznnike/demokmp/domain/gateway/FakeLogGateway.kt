@@ -26,7 +26,7 @@ class FakeLogGateway : LogGateway {
     val flowRequestedUuids = mutableListOf<UUID>()
     var networkMessageFlow: Flow<NetworkLogMessage?> = emptyFlow()
 
-    val savedNetworkMessages = mutableListOf<Pair<File, NetworkLogMessage>>()
+    val savedTexts = mutableListOf<Pair<File, String>>()
 
     val addedMessages = mutableListOf<LogMessage>()
     val addedNetworkMessages = mutableListOf<NetworkLogMessage>()
@@ -56,9 +56,9 @@ class FakeLogGateway : LogGateway {
         return networkMessageFlow
     }
 
-    override suspend fun saveNetworkLogMessageToFile(file: File, message: NetworkLogMessage) {
+    override suspend fun saveTextToFile(file: File, text: String) {
         errorToThrow?.let { throw it }
-        savedNetworkMessages += file to message
+        savedTexts += file to text
     }
 
     override suspend fun addLogMessageToDB(message: LogMessage) {

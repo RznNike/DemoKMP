@@ -3,28 +3,28 @@ package ru.rznnike.demokmp.domain.interactor.log
 import kotlinx.coroutines.test.runTest
 import ru.rznnike.demokmp.domain.common.FakeDispatcherProvider
 import ru.rznnike.demokmp.domain.gateway.FakeLogGateway
-import ru.rznnike.demokmp.domain.log.testNetworkLogMessage
 import java.io.File
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
 
-class SaveNetworkLogMessageToFileUseCaseTest {
+class SaveTextToFileUseCaseTest {
     @Test
-    fun `forwards file and message to the gateway`() = runTest {
+    fun `forwards the file and text to the gateway`() = runTest {
         // Arrange
         val file = File("network.log")
-        val message = testNetworkLogMessage()
+        val text = "request body\nresponse body"
         val gateway = FakeLogGateway()
-        val useCase = SaveNetworkLogMessageToFileUseCase(gateway, FakeDispatcherProvider())
+        val useCase = SaveTextToFileUseCase(gateway, FakeDispatcherProvider())
 
         // Act
         val result = useCase(
-            SaveNetworkLogMessageToFileUseCase.Parameters(file = file, message = message)
+            SaveTextToFileUseCase.Parameters(file = file, text = text)
         )
 
         // Assert
-        assertEquals(listOf(file to message), gateway.savedNetworkMessages)
+        assertEquals(listOf(file to text), gateway.savedTexts)
+        assertEquals(Unit, result.data)
         assertNull(result.error)
     }
 
@@ -33,11 +33,11 @@ class SaveNetworkLogMessageToFileUseCaseTest {
         // Arrange
         val expected = IllegalStateException("boom")
         val gateway = FakeLogGateway().apply { errorToThrow = expected }
-        val useCase = SaveNetworkLogMessageToFileUseCase(gateway, FakeDispatcherProvider())
+        val useCase = SaveTextToFileUseCase(gateway, FakeDispatcherProvider())
 
         // Act
         val result = useCase(
-            SaveNetworkLogMessageToFileUseCase.Parameters(file = File("network.log"), message = testNetworkLogMessage())
+            SaveTextToFileUseCase.Parameters(file = File("network.log"), text = "text")
         )
 
         // Assert
