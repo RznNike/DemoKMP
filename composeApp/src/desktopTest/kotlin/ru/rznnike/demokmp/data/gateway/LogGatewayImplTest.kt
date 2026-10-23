@@ -20,6 +20,7 @@ import ru.rznnike.demokmp.domain.log.extension.DatabaseLoggerExtension.LogsReten
 import ru.rznnike.demokmp.domain.utils.GlobalConstants
 import ru.rznnike.demokmp.domain.utils.toDateString
 import java.io.File
+import java.io.IOException
 import java.nio.file.Files
 import java.time.Clock
 import java.time.Instant
@@ -28,6 +29,7 @@ import java.util.UUID
 import kotlin.test.AfterTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
@@ -614,6 +616,56 @@ class LogGatewayImplTest {
         val expected = SESSION_1_MILLIS.toDateString(GlobalConstants.DATE_PATTERN_TIME_MS) +
             " | I | Tag | hello\n"
         assertEquals(expected, file.readText())
+    }
+
+    @Test
+    fun `saveLogToFile with an empty log truncates the target to an empty file`() = runTest {
+        // Arrange
+        val gateway = createGateway()
+        val file = tempFile().also { it.writeText("stale content\n") }
+
+        // Act
+        gateway.saveLogToFile(file)
+
+        // Assert
+        assertEquals("", file.readText())
+    }
+
+    @Test
+    fun `saveLogToFile writes one newline terminated line per message in insertion order`() = runTest {
+        // Arrange
+        val gateway = createGateway()
+        gateway.addLogMessageToDB(logMessage(message = "first"))
+        gateway.addLogMessageToDB(
+            logMessage(level = LogLevel.WARNING, tag = "Second", message = "second")
+        )
+        gateway.addLogMessageToDB(
+            logMessage(timestamp = SESSION_1_MILLIS + 3_000, message = "third")
+        )
+        val file = tempFile()
+        val prefix = SESSION_1_MILLIS.toDateString(GlobalConstants.DATE_PATTERN_TIME_MS)
+        val laterPrefix = (SESSION_1_MILLIS + 3_000)
+            .toDateString(GlobalConstants.DATE_PATTERN_TIME_MS)
+
+        // Act
+        gateway.saveLogToFile(file)
+
+        // Assert
+        val expected = "$prefix | I | Tag | first\n" +
+            "$prefix | W | Second | second\n" +
+            "$laterPrefix | I | Tag | third\n"
+        assertEquals(expected, file.readText())
+    }
+
+    @Test
+    fun `saveLogToFile fails when the target directory does not exist`() = runTest {
+        // Arrange
+        val gateway = createGateway()
+        gateway.addLogMessageToDB(logMessage(message = "hello"))
+        val file = File("${tempFile().absolutePath}-missing", "log.txt")
+
+        // Act & Assert
+        assertFailsWith<IOException> { gateway.saveLogToFile(file) }
     }
 
     @Test
