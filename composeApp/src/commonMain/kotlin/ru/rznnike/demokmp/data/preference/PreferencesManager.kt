@@ -16,6 +16,5 @@ class PreferencesManager(
     val twoSidedPrint = Preference.TwoSidedPrintPreference(settings, "twoSidedPrint", TwoSidedPrint.default)
     val uiScale = Preference.UiScalePreference(settings, "uiScale", UiScale.default)
 
-    @Suppress("unused")
     fun clearAll() = settings.clear()
 }
