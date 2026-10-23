@@ -103,11 +103,6 @@ internal val networkModule = module {
             client = HttpClient(OkHttp) {
                 configureOkHttp {
                     pingInterval(Duration.ofMillis(WEB_SOCKET_PING_MS))
-                    addInterceptor(
-                        HttpLoggingInterceptor(
-                            logLevel = if (BuildKonfig.DEBUG) HttpLogLevel.BODY else HttpLogLevel.HEADERS
-                        )
-                    )
                 }
                 install(WebSockets)
             },

@@ -32,8 +32,6 @@ class AppWebSocketManagerImpl(
 //            val url = preferencesManager.wsServerUrl.get()
             val url = BuildKonfig.API_WEBSOCKETS
             val messagesFlow = flow {
-                if (connectionState.value == WebSocketConnectionState.CLOSED) return@flow
-
                 logger.i("Trying to open a session: $url")
                 connectionState.value = WebSocketConnectionState.CONNECTING
                 webSocketSessionFactory(url).let { newSession ->
