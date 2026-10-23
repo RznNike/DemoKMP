@@ -94,6 +94,7 @@ kotlin {
             implementation(kotlin("test"))
             implementation(libs.coroutines.test)
             implementation(libs.multiplatform.settings.test)
+            implementation(libs.ktor.mock)
         }
 
         androidMain.dependencies {
