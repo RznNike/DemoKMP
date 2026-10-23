@@ -250,4 +250,82 @@ class AppWebSocketManagerImplTest {
         assertSame(first, second)
         assertNotSame(first, third)
     }
+
+    @Test
+    fun `closeSession on an open session sends close frame and resets state`() = runTest {
+        // Arrange
+        val session = FakeWebSocketSession()
+        val manager = createManager(session)
+        val collected = mutableListOf<WebSocketMessageModel>()
+        collectMessages(manager, collected)
+        advanceUntilIdle()
+        val sessionData = manager.getSession()
+        assertEquals(WebSocketConnectionState.CONNECTED, sessionData.connectionState.value)
+
+        // Act
+        manager.closeSession()
+
+        // Assert
+        val sentFrames = session.sentFrames
+        assertTrue(sentFrames.any { it is Frame.Close })
+        assertEquals(WebSocketConnectionState.CLOSED, sessionData.connectionState.value)
+        // After close, session data should be cleared so getSession creates a new one
+        val newSessionData = manager.getSession()
+        assertNotSame(sessionData, newSessionData)
+    }
+
+    @Test
+    fun `sendMessage propagates a send failure to the caller`() = runTest {
+        // Arrange
+        val failingSession = object : WebSocketSession {
+            override val coroutineContext = SupervisorJob()
+            override val incoming: ReceiveChannel<Frame> = Channel(Channel.UNLIMITED)
+            override val outgoing: SendChannel<Frame> = Channel(Channel.UNLIMITED)
+            override val extensions: List<WebSocketExtension<*>> = emptyList()
+            override var maxFrameSize: Long = Long.MAX_VALUE
+            override var masking: Boolean = false
+
+            override suspend fun send(frame: Frame) {
+                throw IOException("send failed")
+            }
+
+            override suspend fun flush() = Unit
+
+            @Suppress("OVERRIDE_DEPRECATION")
+            override fun terminate() = cancel()
+        }
+        val manager = createManager(sessionFactory = { failingSession })
+        val collected = mutableListOf<WebSocketMessageModel>()
+        collectMessages(manager, collected)
+        advanceUntilIdle()
+
+        // Act & Assert
+        assertFailsWith<IOException> {
+            manager.sendMessage(WebSocketMessageModel(text = "ping"))
+        }
+    }
+
+    @Test
+    fun `retry predicate only retries on IOException and resets state on non io errors`() = runTest {
+        // Arrange - non-IO error on connection
+        val session = FakeWebSocketSession()
+        var attempts = 0
+        val manager = createManager(session) {
+            attempts++
+            throw IllegalStateException("bad state")
+        }
+        val collected = mutableListOf<WebSocketMessageModel>()
+        val collector = launch(UnconfinedTestDispatcher(testScheduler)) {
+            try {
+                manager.getSession().messages.toList(collected)
+            } catch (_: Exception) {
+            }
+        }
+        advanceUntilIdle()
+
+        // Assert - should not retry on non-IOException
+        assertEquals(1, attempts)
+        assertNotEquals(WebSocketConnectionState.CONNECTED, manager.getSession().connectionState.value)
+        collector.cancel()
+    }
 }

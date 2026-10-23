@@ -64,10 +64,10 @@ class AppWebSocketManagerImpl(
                 }
             }.retry { error ->
                 logger.w("Connection error")
-                (error is IOException).also {
-                    connectionState.value = WebSocketConnectionState.DISCONNECTED
-                    session = null
-                    delay(10_000.milliseconds)
+                connectionState.value = WebSocketConnectionState.DISCONNECTED
+                session = null
+                (error is IOException).also { shouldRetry ->
+                    if (shouldRetry) { delay(10_000.milliseconds) }
                 }
             }
             WebSocketSessionData(
@@ -94,7 +94,9 @@ class AppWebSocketManagerImpl(
         session?.let { session ->
             val json = defaultJson.encodeToString(message)
             session.send(json)
-            logger.i("Message sent:\n$json")
+            logger.i("Message sent:")
+            delay(1.milliseconds)
+            logger.i(json)
         }
     }
 }
