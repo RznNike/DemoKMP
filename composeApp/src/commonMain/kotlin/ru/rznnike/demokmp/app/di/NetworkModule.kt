@@ -33,12 +33,19 @@ private const val CACHE_MAX_SIZE = 10 * 1024 * 1024 // 10 MB
 private const val TIMEOUT_MS = 60_000L // 60 sec
 private const val WEB_SOCKET_PING_MS = 10_000L // 10 sec
 
-internal val networkModule = module {
-    fun getCache() = try {
-        val cacheDirectory = File(DataConstants.NETWORK_CACHE_PATH)
-        Cache(cacheDirectory, CACHE_MAX_SIZE.toLong())
-    } catch (_: Exception) { null }
+internal fun createNetworkCache(
+    directory: File = File(DataConstants.NETWORK_CACHE_PATH)
+): Cache? = try {
+    if (!directory.isDirectory && !directory.mkdirs()) {
+        null
+    } else {
+        Cache(directory, CACHE_MAX_SIZE.toLong())
+    }
+} catch (_: Exception) {
+    null
+}
 
+internal val networkModule = module {
     fun OkHttpClient.Builder.allTimeoutsMs(timeout: Long) =
         this.callTimeout(timeout, TimeUnit.MILLISECONDS)
             .connectTimeout(timeout, TimeUnit.MILLISECONDS)
@@ -51,7 +58,7 @@ internal val networkModule = module {
         engine {
             config {
                 additionalConfiguration()
-                cache(getCache())
+                cache(createNetworkCache())
                 allTimeoutsMs(TIMEOUT_MS)
             }
         }
