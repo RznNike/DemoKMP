@@ -453,6 +453,151 @@ class LogGatewayImplTest {
         }
 
     @Test
+    fun `deleteOldLogs with LastNMessages of zero clears both tables`() = runTest {
+        // Arrange
+        val gateway = createGateway()
+        repeat(4) { index -> gateway.addLogMessageToDB(logMessage(message = "log$index")) }
+        repeat(3) { index ->
+            gateway.addLogNetworkMessageToDB(
+                networkLogMessage(request = logMessage(message = "network$index"))
+            )
+        }
+
+        // Act
+        gateway.deleteOldLogs(
+            LogsRetentionMode.LastNMessages(
+                messagesCount = 0,
+                networkMessagesCount = 0,
+                clearingPeriodMs = 60_000
+            )
+        )
+
+        // Assert (zero keeps nothing: the implementation deletes below `Long.MAX_VALUE`)
+        assertEquals(emptyList(), gateway.getLog().log)
+        assertEquals(emptyList(), gateway.getNetworkLog().log)
+    }
+
+    @Test
+    fun `deleteOldLogs with LastNMessages above the stored count keeps every message`() =
+        runTest {
+            // Arrange
+            val gateway = createGateway()
+            repeat(4) { index -> gateway.addLogMessageToDB(logMessage(message = "log$index")) }
+            repeat(3) { index ->
+                gateway.addLogNetworkMessageToDB(
+                    networkLogMessage(request = logMessage(message = "network$index"))
+                )
+            }
+
+            // Act
+            gateway.deleteOldLogs(
+                LogsRetentionMode.LastNMessages(
+                    messagesCount = 10,
+                    networkMessagesCount = 10,
+                    clearingPeriodMs = 60_000
+                )
+            )
+
+            // Assert (no nth row exists, so no border is applied and nothing is deleted)
+            assertEquals(
+                listOf("log0", "log1", "log2", "log3"),
+                gateway.getLog().log.sortedBy { it.id }.map { it.message }
+            )
+            assertEquals(
+                listOf("network0", "network1", "network2"),
+                gateway.getNetworkLog().log.sortedBy { it.id }.map { it.request.message }
+            )
+        }
+
+    @Test
+    fun `deleteOldLogs with LastNMessages of one keeps only the newest message in both tables`() =
+        runTest {
+            // Arrange
+            val gateway = createGateway()
+            repeat(4) { index -> gateway.addLogMessageToDB(logMessage(message = "log$index")) }
+            repeat(3) { index ->
+                gateway.addLogNetworkMessageToDB(
+                    networkLogMessage(request = logMessage(message = "network$index"))
+                )
+            }
+
+            // Act
+            gateway.deleteOldLogs(
+                LogsRetentionMode.LastNMessages(
+                    messagesCount = 1,
+                    networkMessagesCount = 1,
+                    clearingPeriodMs = 60_000
+                )
+            )
+
+            // Assert
+            assertEquals(
+                listOf("log3"),
+                gateway.getLog().log.sortedBy { it.id }.map { it.message }
+            )
+            assertEquals(
+                listOf("network2"),
+                gateway.getNetworkLog().log.sortedBy { it.id }.map { it.request.message }
+            )
+        }
+
+    @Test
+    fun `deleteOldLogs with TimePeriod keeps an entry exactly on the border`() = runTest {
+        // Arrange
+        val gateway = createGateway()
+        val borderTimestamp = SESSION_1_MILLIS - 2_000
+        gateway.addLogMessageToDB(
+            logMessage(timestamp = borderTimestamp - 1, message = "older log")
+        )
+        gateway.addLogMessageToDB(
+            logMessage(timestamp = borderTimestamp, message = "border log")
+        )
+        gateway.addLogNetworkMessageToDB(
+            networkLogMessage(
+                request = logMessage(timestamp = borderTimestamp - 1, message = "older network")
+            )
+        )
+        gateway.addLogNetworkMessageToDB(
+            networkLogMessage(
+                request = logMessage(timestamp = borderTimestamp, message = "border network")
+            )
+        )
+
+        // Act
+        gateway.deleteOldLogs(
+            LogsRetentionMode.TimePeriod(logsRetentionMs = 2_000, clearingPeriodMs = 60_000)
+        )
+
+        // Assert (the query uses a strict `<`, so the border entry itself survives)
+        assertEquals(listOf("border log"), gateway.getLog().log.map { it.message })
+        assertEquals(
+            listOf("border network"),
+            gateway.getNetworkLog().log.map { it.request.message }
+        )
+    }
+
+    @Test
+    fun `deleteOldLogs on empty tables emits cleanup on both flows`() = runTest {
+        // Arrange
+        val gateway = createGateway()
+        val log = gateway.getLog()
+        val networkLog = gateway.getNetworkLog()
+        val logEvent = async(UnconfinedTestDispatcher(testScheduler)) { log.eventsFlow.first() }
+        val networkEvent = async(UnconfinedTestDispatcher(testScheduler)) {
+            networkLog.eventsFlow.first()
+        }
+
+        // Act
+        gateway.deleteOldLogs(
+            LogsRetentionMode.TimePeriod(logsRetentionMs = 2_000, clearingPeriodMs = 60_000)
+        )
+
+        // Assert
+        assertEquals(LogEvent.Cleanup, logEvent.await())
+        assertEquals(LogEvent.Cleanup, networkEvent.await())
+    }
+
+    @Test
     fun `saveLogToFile writes formatted messages except session start`() = runTest {
         // Arrange
         val gateway = createGateway()
