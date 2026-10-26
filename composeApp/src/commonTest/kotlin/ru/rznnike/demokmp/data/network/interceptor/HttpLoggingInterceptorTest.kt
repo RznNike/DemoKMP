@@ -56,10 +56,17 @@ private class RecordingLoggerExtension : LoggerExtension(isDebugEnabled = true) 
         message: String,
         level: LogLevel,
         type: LogType,
+        timestamp: Long,
         callback: suspend (LogMessage) -> Unit
     ) = Unit
 
-    override suspend fun networkRequest(tag: String, uuid: UUID, message: String, curl: String) {
+    override suspend fun networkRequest(
+        tag: String,
+        uuid: UUID,
+        message: String,
+        curl: String,
+        timestamp: Long
+    ) {
         networkRequests += RecordedNetworkRequest(uuid = uuid, message = message, curl = curl)
     }
 
@@ -67,7 +74,8 @@ private class RecordingLoggerExtension : LoggerExtension(isDebugEnabled = true) 
         tag: String,
         requestUuid: UUID,
         message: String,
-        state: NetworkRequestState
+        state: NetworkRequestState,
+        timestamp: Long
     ) {
         networkResponses += RecordedNetworkResponse(
             requestUuid = requestUuid,

@@ -95,7 +95,6 @@ class AppWebSocketManagerImpl(
             val json = defaultJson.encodeToString(message)
             session.send(json)
             logger.i("Message sent:")
-            delay(1.milliseconds)
             logger.i(json)
         }
     }

@@ -31,12 +31,14 @@ class DatabaseLoggerExtension(
 
     override fun init(clock: Clock, coroutineDispatcher: CoroutineDispatcher) {
         super.init(clock, coroutineDispatcher)
+        val sessionStartTimestamp = clock.millis()
         runBlocking {
             addMessage(
                 tag = "",
                 message = "",
                 level = LogLevel.INFO,
-                type = LogType.SESSION_START
+                type = LogType.SESSION_START,
+                timestamp = sessionStartTimestamp
             ) { serviceMessage ->
                 val networkLogMessage = NetworkLogMessage(
                     uuid = UUID.randomUUID(),
@@ -48,12 +50,19 @@ class DatabaseLoggerExtension(
         deleteOldLogs()
     }
 
-    override suspend fun networkRequest(tag: String, uuid: UUID, message: String, curl: String) {
+    override suspend fun networkRequest(
+        tag: String,
+        uuid: UUID,
+        message: String,
+        curl: String,
+        timestamp: Long
+    ) {
         addMessage(
             tag = tag,
             message = message,
             level = LogLevel.INFO,
-            type = LogType.NETWORK
+            type = LogType.NETWORK,
+            timestamp = timestamp
         ) { request ->
             val networkLogMessage = NetworkLogMessage(
                 uuid = uuid,
@@ -64,12 +73,19 @@ class DatabaseLoggerExtension(
         }
     }
 
-    override suspend fun networkResponse(tag: String, requestUuid: UUID, message: String, state: NetworkRequestState) {
+    override suspend fun networkResponse(
+        tag: String,
+        requestUuid: UUID,
+        message: String,
+        state: NetworkRequestState,
+        timestamp: Long
+    ) {
         addMessage(
             tag = tag,
             message = message,
             level = LogLevel.INFO,
-            type = LogType.NETWORK
+            type = LogType.NETWORK,
+            timestamp = timestamp
         ) { response ->
             getLogNetworkMessageUseCase(requestUuid).process(
                 { result ->
@@ -92,13 +108,14 @@ class DatabaseLoggerExtension(
         message: String,
         level: LogLevel,
         type: LogType,
+        timestamp: Long,
         callback: suspend (LogMessage) -> Unit
     ) {
         if ((!stopAfterOneError) || (!isErrorDetected)) {
             val logMessage = LogMessage(
                 type = type,
                 level = level,
-                timestamp = clock.millis(),
+                timestamp = timestamp,
                 tag = tag,
                 message = message
             )

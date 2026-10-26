@@ -22,55 +22,88 @@ abstract class LoggerExtension(
         this.coroutineDispatcher = coroutineDispatcher
     }
 
-    open suspend fun d(tag: String, message: String) {
+    open suspend fun d(
+        tag: String,
+        message: String,
+        timestamp: Long = clock.millis()
+    ) {
         if (isDebugEnabled) {
             addMessage(
                 tag = tag,
                 message = message,
-                level = LogLevel.DEBUG
+                level = LogLevel.DEBUG,
+                timestamp = timestamp
             )
         }
     }
 
-    open suspend fun i(tag: String, message: String) {
-        addMessage(
-            tag = tag,
-            message = message,
-            level = LogLevel.INFO
-        )
-    }
-
-    open suspend fun w(tag: String, message: String) {
-        addMessage(
-            tag = tag,
-            message = message,
-            level = LogLevel.WARNING
-        )
-    }
-
-    open suspend fun e(tag: String, message: String) {
-        addMessage(
-            tag = tag,
-            message = message,
-            level = LogLevel.ERROR
-        )
-    }
-
-    open suspend fun e(tag: String, exception: Throwable, message: String) {
-        val formattedMessage = "$message\n${exception.stackTraceToString()}"
-        addMessage(
-            tag = tag,
-            message = formattedMessage,
-            level = LogLevel.ERROR
-        )
-    }
-
-    open suspend fun networkRequest(tag: String, uuid: UUID, message: String, curl: String) {
+    open suspend fun i(
+        tag: String,
+        message: String,
+        timestamp: Long = clock.millis()
+    ) {
         addMessage(
             tag = tag,
             message = message,
             level = LogLevel.INFO,
-            type = LogType.NETWORK
+            timestamp = timestamp
+        )
+    }
+
+    open suspend fun w(
+        tag: String,
+        message: String,
+        timestamp: Long = clock.millis()
+    ) {
+        addMessage(
+            tag = tag,
+            message = message,
+            level = LogLevel.WARNING,
+            timestamp = timestamp
+        )
+    }
+
+    open suspend fun e(
+        tag: String,
+        message: String,
+        timestamp: Long = clock.millis()
+    ) {
+        addMessage(
+            tag = tag,
+            message = message,
+            level = LogLevel.ERROR,
+            timestamp = timestamp
+        )
+    }
+
+    open suspend fun e(
+        tag: String,
+        exception: Throwable,
+        message: String,
+        timestamp: Long = clock.millis()
+    ) {
+        val formattedMessage = "$message\n${exception.stackTraceToString()}"
+        addMessage(
+            tag = tag,
+            message = formattedMessage,
+            level = LogLevel.ERROR,
+            timestamp = timestamp
+        )
+    }
+
+    open suspend fun networkRequest(
+        tag: String,
+        uuid: UUID,
+        message: String,
+        curl: String,
+        timestamp: Long = clock.millis()
+    ) {
+        addMessage(
+            tag = tag,
+            message = message,
+            level = LogLevel.INFO,
+            type = LogType.NETWORK,
+            timestamp = timestamp
         )
     }
 
@@ -78,13 +111,15 @@ abstract class LoggerExtension(
         tag: String,
         requestUuid: UUID,
         message: String,
-        state: NetworkRequestState
+        state: NetworkRequestState,
+        timestamp: Long = clock.millis()
     ) {
         addMessage(
             tag = tag,
             message = message,
             level = LogLevel.INFO,
-            type = LogType.NETWORK
+            type = LogType.NETWORK,
+            timestamp = timestamp
         )
     }
 
@@ -93,6 +128,7 @@ abstract class LoggerExtension(
         message: String,
         level: LogLevel,
         type: LogType = LogType.DEFAULT,
+        timestamp: Long = clock.millis(),
         callback: suspend (LogMessage) -> Unit = { }
     )
 }

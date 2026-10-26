@@ -50,6 +50,7 @@ class LoggerExtensionTest {
             message: String,
             level: LogLevel,
             type: LogType,
+            timestamp: Long,
             callback: suspend (LogMessage) -> Unit
         ) {
             readClockMillis += clock.millis()
@@ -69,6 +70,7 @@ class LoggerExtensionTest {
             message: String,
             level: LogLevel,
             type: LogType,
+            timestamp: Long,
             callback: suspend (LogMessage) -> Unit
         ) = Unit
     }

@@ -69,13 +69,20 @@ private class RecordingLoggerExtension(
         message: String,
         level: LogLevel,
         type: LogType,
+        timestamp: Long,
         callback: suspend (LogMessage) -> Unit
     ) {
         loggingFailure?.let { throw it }
         calls += RecordedCall(tag = tag, message = message, level = level, type = type)
     }
 
-    override suspend fun networkRequest(tag: String, uuid: UUID, message: String, curl: String) {
+    override suspend fun networkRequest(
+        tag: String,
+        uuid: UUID,
+        message: String,
+        curl: String,
+        timestamp: Long
+    ) {
         loggingFailure?.let { throw it }
         networkRequests += RecordedNetworkRequest(tag = tag, uuid = uuid, message = message, curl = curl)
     }
@@ -84,7 +91,8 @@ private class RecordingLoggerExtension(
         tag: String,
         requestUuid: UUID,
         message: String,
-        state: NetworkRequestState
+        state: NetworkRequestState,
+        timestamp: Long
     ) {
         loggingFailure?.let { throw it }
         networkResponses += RecordedNetworkResponse(

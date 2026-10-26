@@ -18,13 +18,14 @@ class ConsoleLoggerExtension(
         message: String,
         level: LogLevel,
         type: LogType,
+        timestamp: Long,
         callback: suspend (LogMessage) -> Unit
     ) {
         if ((!stopAfterOneError) || (!isErrorDetected)) {
             val logMessage = LogMessage(
                 type = type,
                 level = level,
-                timestamp = clock.millis(),
+                timestamp = timestamp,
                 tag = tag,
                 message = message
             )
