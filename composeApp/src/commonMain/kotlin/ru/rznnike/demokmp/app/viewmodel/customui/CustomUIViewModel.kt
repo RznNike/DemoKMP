@@ -30,7 +30,7 @@ class CustomUIViewModel : BaseUiViewModel<CustomUIViewModel.UiState>() {
     )
 
     init {
-        dateInputManager.copyFilterToDateInput(mutableUiState.value.dateFilter)
+        dateInputManager.copyFilterToDateInput(uiState.value.dateFilter)
         setupDropdownOptions()
     }
 
@@ -64,7 +64,7 @@ class CustomUIViewModel : BaseUiViewModel<CustomUIViewModel.UiState>() {
     }
 
     private fun updateDateFilter() {
-        if (dateInputManager.inputValue == mutableUiState.value.dateFilter.value) return
+        if (dateInputManager.inputValue == uiState.value.dateFilter.value) return
 
         mutableUiState.update { currentState ->
             currentState.copy(
@@ -74,7 +74,7 @@ class CustomUIViewModel : BaseUiViewModel<CustomUIViewModel.UiState>() {
                 )
             )
         }
-        dateInputManager.copyFilterToDateInput(mutableUiState.value.dateFilter)
+        dateInputManager.copyFilterToDateInput(uiState.value.dateFilter)
     }
 
     private fun setupDropdownOptions() {
@@ -93,7 +93,7 @@ class CustomUIViewModel : BaseUiViewModel<CustomUIViewModel.UiState>() {
     }
 
     fun onTabChanged(newValue: Tab) {
-        if (newValue == mutableUiState.value.selectedTab) return
+        if (newValue == uiState.value.selectedTab) return
 
         mutableUiState.update { currentState ->
             currentState.copy(
@@ -107,7 +107,7 @@ class CustomUIViewModel : BaseUiViewModel<CustomUIViewModel.UiState>() {
     }
 
     fun onDropdownSelectionChanged(newValue: String) {
-        if (newValue == mutableUiState.value.dropdownSelection) return
+        if (newValue == uiState.value.dropdownSelection) return
 
         mutableUiState.update { currentState ->
             currentState.copy(
@@ -117,7 +117,7 @@ class CustomUIViewModel : BaseUiViewModel<CustomUIViewModel.UiState>() {
     }
 
     fun onDropdownQuerySelectionChanged(newValue: String) {
-        if (newValue == mutableUiState.value.dropdownSelection) return
+        if (newValue == uiState.value.dropdownQuerySelection) return
 
         mutableUiState.update { currentState ->
             currentState.copy(

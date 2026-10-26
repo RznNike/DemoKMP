@@ -125,7 +125,7 @@ class AppConfigurationViewModel : BaseUiViewModel<AppConfigurationViewModel.UiSt
 
     fun setLanguage(newValue: Language) {
         viewModelScope.launch {
-            if (newValue != mutableUiState.value.language) {
+            if (newValue != uiState.value.language) {
                 setLanguageUseCase(newValue)
                 applySelectedLanguage(newValue)
 
@@ -140,7 +140,7 @@ class AppConfigurationViewModel : BaseUiViewModel<AppConfigurationViewModel.UiSt
 
     fun setTheme(newValue: Theme) {
         viewModelScope.launch {
-            if (newValue != mutableUiState.value.theme) {
+            if (newValue != uiState.value.theme) {
                 setThemeUseCase(newValue)
 
                 mutableUiState.update { currentState ->
@@ -154,7 +154,7 @@ class AppConfigurationViewModel : BaseUiViewModel<AppConfigurationViewModel.UiSt
 
     fun setUiScale(newValue: UiScale) {
         viewModelScope.launch {
-            if (newValue != mutableUiState.value.uiScale) {
+            if (newValue != uiState.value.uiScale) {
                 setUiScaleUseCase(newValue)
 
                 mutableUiState.update { currentState ->
