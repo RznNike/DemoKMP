@@ -23,9 +23,11 @@ abstract class BaseUiViewModel<State> : BaseViewModel() {
         progressTask?.cancel()
         if (immediately || (progressDelayMs <= 0)) {
             onProgressStateChanged(show)
+            progressTask = null
         } else {
             progressTask = Timer().schedule(progressDelayMs) {
                 onProgressStateChanged(show)
+                progressTask = null
             }
         }
     }
