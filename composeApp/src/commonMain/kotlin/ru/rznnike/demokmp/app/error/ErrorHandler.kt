@@ -1,6 +1,7 @@
 package ru.rznnike.demokmp.app.error
 
 import io.ktor.serialization.JsonConvertException
+import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.getString
 import ru.rznnike.demokmp.data.network.error.CustomServerException
 import ru.rznnike.demokmp.domain.log.Logger
@@ -20,7 +21,9 @@ import java.net.UnknownHostException
 import javax.net.ssl.SSLHandshakeException
 import kotlin.coroutines.cancellation.CancellationException
 
-class ErrorHandler {
+class ErrorHandler(
+    private val stringRetriever: suspend (StringResource) -> String = ::getString
+) {
     private val logger = Logger.withTag("ErrorHandler")
 
     suspend fun proceed(error: Throwable, callback: suspend (String) -> Unit) {
@@ -40,12 +43,12 @@ class ErrorHandler {
         is ConnectException,
         is InterruptedIOException,
         is SocketException,
-        is SSLHandshakeException -> getString(Res.string.error_no_connection_to_server)
-        is CustomServerException -> getString(if (error.isServerSide) Res.string.error_on_server else Res.string.unknown_error)
-        is JsonConvertException -> getString(Res.string.error_json_convert)
-        is UnsupportedOperationException -> getString(Res.string.error_unsupported_operation)
-        is IOException -> getString(Res.string.error_io)
-        is SecurityException -> getString(Res.string.error_security)
-        else -> error.message ?: getString(Res.string.unknown_error)
+        is SSLHandshakeException -> stringRetriever(Res.string.error_no_connection_to_server)
+        is CustomServerException -> stringRetriever(if (error.isServerSide) Res.string.error_on_server else Res.string.unknown_error)
+        is JsonConvertException -> stringRetriever(Res.string.error_json_convert)
+        is UnsupportedOperationException -> stringRetriever(Res.string.error_unsupported_operation)
+        is IOException -> stringRetriever(Res.string.error_io)
+        is SecurityException -> stringRetriever(Res.string.error_security)
+        else -> error.message ?: stringRetriever(Res.string.unknown_error)
     }
 }
