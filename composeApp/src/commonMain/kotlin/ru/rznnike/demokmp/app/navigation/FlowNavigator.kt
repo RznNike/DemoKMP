@@ -43,7 +43,7 @@ class FlowNavigator(
     fun openFlowSingle(flow: NavigationFlow) {
         val newFlowInfo = flow.toInfo()
         var indexOffset = 0
-        navigationStructure.forEach { oldFlowInfo ->
+        navigationStructure.toList().forEach { oldFlowInfo ->
             if (oldFlowInfo.type == newFlowInfo.type) {
                 navigationStructure.remove(oldFlowInfo)
                 repeat(oldFlowInfo.screenCount) {
