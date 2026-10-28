@@ -15,7 +15,6 @@ class FlowNavigator(
         }
     }
 
-    @Suppress("unused")
     fun openFlows(flows: List<NavigationFlow>) {
         navigationStructure.addAll(
             flows.map { it.toInfo() }
@@ -60,7 +59,7 @@ class FlowNavigator(
 
     fun closeFlow() {
         if (navigationStructure.size > 1) {
-            val oldFlowSize = navigationStructure.removeLast().screenCount
+            val oldFlowSize = navigationStructure.removeAt(navigationStructure.lastIndex).screenCount
             repeat(oldFlowSize) {
                 backStack.removeLastOrNull()
             }
@@ -76,7 +75,6 @@ class FlowNavigator(
         backStack.add(screen)
     }
 
-    @Suppress("unused")
     fun openScreens(screens: List<NavigationScreen>) {
         navigationStructure.last().screenCount += screens.size
         backStack.addAll(screens)
