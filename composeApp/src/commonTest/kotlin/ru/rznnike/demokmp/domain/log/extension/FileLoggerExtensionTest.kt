@@ -6,6 +6,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
+import ru.rznnike.demokmp.app.utils.MutableClock
 import ru.rznnike.demokmp.domain.log.LogLevel
 import ru.rznnike.demokmp.domain.log.LogMessage
 import ru.rznnike.demokmp.domain.log.LogType
@@ -16,26 +17,12 @@ import ru.rznnike.demokmp.domain.utils.toDateString
 import ru.rznnike.demokmp.domain.utils.toLocalDate
 import java.io.File
 import java.nio.file.Files
-import java.time.Clock
 import java.time.Instant
-import java.time.ZoneId
-import java.time.ZoneOffset
-import kotlin.test.AfterTest
-import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertFailsWith
-import kotlin.test.assertSame
-import kotlin.test.assertTrue
+import kotlin.test.*
 
 private const val INITIAL_MILLIS = 1_700_000_000_000L
 // +30h guarantees a different local date in every time zone, including DST transitions
 private const val NEXT_DAY_MILLIS = INITIAL_MILLIS + 30 * 60 * 60 * 1000L
-
-private class MutableClock(var currentMillis: Long) : Clock() {
-    override fun getZone(): ZoneId = ZoneOffset.UTC
-    override fun withZone(zone: ZoneId?): Clock = this
-    override fun instant(): Instant = Instant.ofEpochMilli(currentMillis)
-}
 
 private fun logFileNameAt(millis: Long): String =
     "${millis.toLocalDate().millis().toDateString(GlobalConstants.DATE_PATTERN_FILE_NAME_DAY)}.txt"
@@ -43,7 +30,7 @@ private fun logFileNameAt(millis: Long): String =
 @OptIn(ExperimentalCoroutinesApi::class)
 class FileLoggerExtensionTest {
     private val tempDirs = mutableListOf<File>()
-    private val clock = MutableClock(INITIAL_MILLIS)
+    private val clock = MutableClock(Instant.ofEpochMilli(INITIAL_MILLIS))
 
     private fun createTempDir(): File =
         Files.createTempDirectory("demokmp-file-logger").toFile().also { tempDirs += it }
@@ -156,7 +143,7 @@ class FileLoggerExtensionTest {
 
         // Act
         extension.addMessage(tag = "Tag", message = "day one", level = LogLevel.INFO)
-        clock.currentMillis = NEXT_DAY_MILLIS
+        clock.current = Instant.ofEpochMilli(NEXT_DAY_MILLIS)
         extension.addMessage(tag = "Tag", message = "day two", level = LogLevel.INFO)
 
         // Assert
