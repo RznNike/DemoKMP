@@ -7,6 +7,7 @@ import org.koin.dsl.module
 import ru.rznnike.demokmp.app.dispatcher.event.EventDispatcher
 import ru.rznnike.demokmp.app.dispatcher.notifier.Notifier
 import ru.rznnike.demokmp.app.error.ErrorHandler
+import ru.rznnike.demokmp.app.error.ErrorHandlerImpl
 import ru.rznnike.demokmp.data.shell.getShellManager
 import ru.rznnike.demokmp.domain.common.CoroutineScopeProvider
 import ru.rznnike.demokmp.domain.common.DispatcherProvider
@@ -14,7 +15,7 @@ import java.time.Clock
 
 internal val appModule = module {
     single { Clock.systemUTC() }
-    single { ErrorHandler() }
+    single<ErrorHandler> { ErrorHandlerImpl() }
     single { Notifier(get()) }
     single { EventDispatcher(get()) }
     single { getShellManager() }

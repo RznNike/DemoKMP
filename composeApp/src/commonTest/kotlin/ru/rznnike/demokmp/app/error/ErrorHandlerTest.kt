@@ -22,7 +22,7 @@ import kotlin.coroutines.cancellation.CancellationException
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class ErrorHandlerTest {
+class ErrorHandlerImplTest {
     private class FakeStringRetriever {
         val calls = mutableListOf<StringResource>()
         fun create(): suspend (StringResource) -> String = { res ->
@@ -43,7 +43,7 @@ class ErrorHandlerTest {
     @Test
     fun `CancellationException produces no callback`() = runTest {
         val fake = FakeStringRetriever()
-        val handler = ErrorHandler(fake.create())
+        val handler = ErrorHandlerImpl(fake.create())
         var called = false
         handler.proceed(CancellationException("cancelled")) { called = true }
         assertEquals(false, called)
@@ -53,7 +53,7 @@ class ErrorHandlerTest {
     @Test
     fun `InterruptedIOException uses connection error message without logging path`() = runTest {
         val fake = FakeStringRetriever()
-        val handler = ErrorHandler(fake.create())
+        val handler = ErrorHandlerImpl(fake.create())
         var result: String? = null
         handler.proceed(InterruptedIOException("interrupted")) { result = it }
         assertEquals("NO_CONNECTION", result)
@@ -63,7 +63,7 @@ class ErrorHandlerTest {
     @Test
     fun `CustomServerException serverSide true maps to server error`() = runTest {
         val fake = FakeStringRetriever()
-        val handler = ErrorHandler(fake.create())
+        val handler = ErrorHandlerImpl(fake.create())
         var result: String? = null
         handler.proceed(CustomServerException(500)) { result = it }
         assertEquals("SERVER_ERROR", result)
@@ -73,7 +73,7 @@ class ErrorHandlerTest {
     @Test
     fun `CustomServerException serverSide false maps to unknown error`() = runTest {
         val fake = FakeStringRetriever()
-        val handler = ErrorHandler(fake.create())
+        val handler = ErrorHandlerImpl(fake.create())
         var result: String? = null
         handler.proceed(CustomServerException(400)) { result = it }
         assertEquals("UNKNOWN", result)
@@ -83,7 +83,7 @@ class ErrorHandlerTest {
     @Test
     fun `UnknownHostException maps to no connection`() = runTest {
         val fake = FakeStringRetriever()
-        val handler = ErrorHandler(fake.create())
+        val handler = ErrorHandlerImpl(fake.create())
         var result: String? = null
         handler.proceed(UnknownHostException("host")) { result = it }
         assertEquals("NO_CONNECTION", result)
@@ -93,7 +93,7 @@ class ErrorHandlerTest {
     @Test
     fun `ConnectException maps to no connection`() = runTest {
         val fake = FakeStringRetriever()
-        val handler = ErrorHandler(fake.create())
+        val handler = ErrorHandlerImpl(fake.create())
         var result: String? = null
         handler.proceed(ConnectException("refused")) { result = it }
         assertEquals("NO_CONNECTION", result)
@@ -102,7 +102,7 @@ class ErrorHandlerTest {
     @Test
     fun `SocketException maps to no connection`() = runTest {
         val fake = FakeStringRetriever()
-        val handler = ErrorHandler(fake.create())
+        val handler = ErrorHandlerImpl(fake.create())
         var result: String? = null
         handler.proceed(SocketException("reset")) { result = it }
         assertEquals("NO_CONNECTION", result)
@@ -111,7 +111,7 @@ class ErrorHandlerTest {
     @Test
     fun `SSLHandshakeException maps to no connection`() = runTest {
         val fake = FakeStringRetriever()
-        val handler = ErrorHandler(fake.create())
+        val handler = ErrorHandlerImpl(fake.create())
         var result: String? = null
         handler.proceed(SSLHandshakeException("ssl")) { result = it }
         assertEquals("NO_CONNECTION", result)
@@ -120,7 +120,7 @@ class ErrorHandlerTest {
     @Test
     fun `JsonConvertException maps to json convert error`() = runTest {
         val fake = FakeStringRetriever()
-        val handler = ErrorHandler(fake.create())
+        val handler = ErrorHandlerImpl(fake.create())
         var result: String? = null
         handler.proceed(JsonConvertException("bad json", null)) { result = it }
         assertEquals("JSON_CONVERT", result)
@@ -130,7 +130,7 @@ class ErrorHandlerTest {
     @Test
     fun `UnsupportedOperationException maps to unsupported error`() = runTest {
         val fake = FakeStringRetriever()
-        val handler = ErrorHandler(fake.create())
+        val handler = ErrorHandlerImpl(fake.create())
         var result: String? = null
         handler.proceed(UnsupportedOperationException("nope")) { result = it }
         assertEquals("UNSUPPORTED", result)
@@ -140,7 +140,7 @@ class ErrorHandlerTest {
     @Test
     fun `IOException maps to io error`() = runTest {
         val fake = FakeStringRetriever()
-        val handler = ErrorHandler(fake.create())
+        val handler = ErrorHandlerImpl(fake.create())
         var result: String? = null
         handler.proceed(IOException("io")) { result = it }
         assertEquals("IO_ERROR", result)
@@ -150,7 +150,7 @@ class ErrorHandlerTest {
     @Test
     fun `SecurityException maps to security error`() = runTest {
         val fake = FakeStringRetriever()
-        val handler = ErrorHandler(fake.create())
+        val handler = ErrorHandlerImpl(fake.create())
         var result: String? = null
         handler.proceed(SecurityException("denied")) { result = it }
         assertEquals("SECURITY_ERROR", result)
@@ -160,7 +160,7 @@ class ErrorHandlerTest {
     @Test
     fun `unknown exception with message uses error message directly`() = runTest {
         val fake = FakeStringRetriever()
-        val handler = ErrorHandler(fake.create())
+        val handler = ErrorHandlerImpl(fake.create())
         var result: String? = null
         handler.proceed(IllegalStateException("boom")) { result = it }
         assertEquals("boom", result)
@@ -170,7 +170,7 @@ class ErrorHandlerTest {
     @Test
     fun `unknown exception without message falls back to unknown error`() = runTest {
         val fake = FakeStringRetriever()
-        val handler = ErrorHandler(fake.create())
+        val handler = ErrorHandlerImpl(fake.create())
         var result: String? = null
         handler.proceed(IllegalStateException()) { result = it }
         assertEquals("UNKNOWN", result)
@@ -180,7 +180,7 @@ class ErrorHandlerTest {
     @Test
     fun `CustomServerException takes precedence over logging path`() = runTest {
         val fake = FakeStringRetriever()
-        val handler = ErrorHandler(fake.create())
+        val handler = ErrorHandlerImpl(fake.create())
         var result: String? = null
         handler.proceed(CustomServerException(503)) { result = it }
         assertEquals("SERVER_ERROR", result)
