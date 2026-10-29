@@ -20,8 +20,6 @@ class WindowConfigurationViewModel : BaseUiViewModel<WindowConfigurationViewMode
     }
 
     fun setCloseWindowCallback(newValue: (() -> Unit)) {
-        if (uiState.value.closeWindowCallback == newValue) return
-
         mutableUiState.update { currentState ->
             currentState.copy(
                 closeWindowCallback = newValue
