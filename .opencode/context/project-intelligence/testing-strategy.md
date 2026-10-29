@@ -19,15 +19,16 @@
 | `kotlin("test")`              | Assertions and test annotations (common)   |
 | `kotlinx-coroutines-test`     | Coroutine test control                     |
 | `multiplatform-settings-test` | In-memory `Settings` for preferences tests |
+| `koin-test`                   | DI graph validation (`verify()` — JVM-only API) |
 
 Declared in `composeApp/build.gradle.kts` → `commonTest.dependencies`.
 
 ## Source Sets
 
-| Source Set        | Files | Contents                                            |
-|-------------------|-------|-----------------------------------------------------|
-| `commonTest`      | 82    | Platform-independent tests + all fakes              |
-| `desktopTest`     | 4     | Platform-bound desktop tests                        |
+| Source Set        | Test files | Contents                                            |
+|-------------------|------------|-----------------------------------------------------|
+| `commonTest`      | 95         | Platform-independent tests + all fakes              |
+| `desktopTest`     | 10         | Platform-bound desktop tests                        |
 | `androidUnitTest` | —     | **Not present** — Android platform code is untested |
 | `androidTest`     | —     | **Not present** — no instrumented tests             |
 
@@ -53,7 +54,7 @@ class FakeHTTPExampleGateway : HTTPExampleGateway {
 }
 ```
 
-**FakeDispatcherProvider** defaults to `Dispatchers.Unconfined` — eager execution, no scheduler plumbing needed for delay-free code.
+**FakeDispatcherProvider** defaults to `Dispatchers.Unconfined` — eager execution, no scheduler plumbing needed for delay-free code. **Do not** use that default in ViewModel tests: a real `Unconfined` leaks `withContext(...)` off the test scheduler. Pass a `TestDispatcher` instead (see below).
 
 ```kotlin
 class FakeDispatcherProvider(
@@ -65,6 +66,41 @@ class FakeDispatcherProvider(
     override val unconfined = dispatcher
 }
 ```
+
+## ViewModel Tests — `Dispatchers.setMain`
+
+`viewModelScope` hardcodes `Dispatchers.Main`, so it cannot be replaced by injection. Without
+`Dispatchers.setMain`, a ViewModel's `init` coroutines run on the Swing EDT under `desktopTest` and
+**throw** under `testDebugUnitTest` (no `Main` at all). Use the shared rule:
+
+```kotlin
+// app/common/viewmodel/ViewModelTestRule.kt
+class ViewModelTestRule(val dispatcher: TestDispatcher = UnconfinedTestDispatcher()) {
+    val dispatcherProvider = FakeDispatcherProvider(dispatcher)
+    val coroutineScopeProvider = FakeCoroutineScopeProvider(dispatcher)
+    fun start() = Dispatchers.setMain(dispatcher)
+    fun stop() = Dispatchers.resetMain()
+}
+```
+
+```kotlin
+private val rule = ViewModelTestRule()
+
+@BeforeTest fun setUp() { rule.start(); startKoin { modules(module { /* … */ }) } }
+@AfterTest fun tearDown() { stopKoin(); rule.stop() }
+
+@Test
+fun `state is loaded`() = runTest(rule.dispatcher) {   // ← must share the rule's scheduler
+    val viewModel = MyViewModel()
+    advanceUntilIdle()
+    assertEquals(expected, viewModel.uiState.value)
+}
+```
+
+- `UnconfinedTestDispatcher` (default) runs VM `init` eagerly — right for "state after construction".
+- Use `StandardTestDispatcher` when a test must observe an *intermediate* state (e.g. `isLoading`).
+- Never poll the wall clock (`LinkedBlockingQueue.poll`, `Thread.sleep`) — advance virtual time.
+- Reference implementations: `SettingsViewModelTest`, `BaseUiViewModelTest`.
 
 ## Coverage Map
 

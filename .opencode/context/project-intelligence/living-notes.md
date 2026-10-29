@@ -37,13 +37,17 @@
 - Clean Architecture + Koin keeps features isolated and copyable
 - `expect/actual` cleanly separates platform code
 - `UseCaseResult` keeps error handling explicit
-- Splitting tests into `commonTest` + `desktopTest` keeps 82 of 86 tests target-independent
+- Splitting tests into `commonTest` + `desktopTest` keeps almost all tests target-independent
+- ViewModel tests need no refactor: `Dispatchers.setMain(TestDispatcher)` makes `viewModelScope` testable
 - Handwritten fakes make test state inspectable and avoid a mocking-framework dependency
 
 ### Gotchas for Maintainers
 - `expect`/`actual` pairs must be updated together across source sets
 - KSP codegen (Room/Ktorfit) must run before compile; clean build if types are stale
-- `BaseUiViewModel.setProgress` debounces via a `Timer` (250ms default)
+- `BaseUiViewModel.setProgress` debounces via `viewModelScope.launch { delay(250) }` — virtual time
+  controls it, so VM tests must call `Dispatchers.setMain(TestDispatcher)` (see `ViewModelTestRule`)
+- `viewModelScope` hardcodes `Dispatchers.Main`: without `setMain` a VM's `init` coroutines run on
+  the Swing EDT (`desktopTest`) and throw on the Android host JVM (`testDebugUnitTest`)
 - Fakes must be updated by hand whenever a gateway interface changes — nothing regenerates them
 - `commonTest` cannot touch JVM/desktop-only APIs; such tests belong in `desktopTest`
 

@@ -1,40 +1,40 @@
 package ru.rznnike.demokmp.app.common.viewmodel
 
-import java.util.concurrent.LinkedBlockingQueue
-import java.util.concurrent.TimeUnit
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.advanceUntilIdle
+import kotlinx.coroutines.test.runTest
+import kotlin.test.AfterTest
+import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertTrue
-
-private const val AWAIT_TIMEOUT_MS = 2_000L
-private const val NO_CHANGE_WINDOW_MS = 400L
 
 private class TestableUiViewModel(
     override var progressDelayMs: Long = 0L
 ) : BaseUiViewModel<Unit>() {
-    private val progressChanges = LinkedBlockingQueue<Boolean>()
+    val progressChanges = mutableListOf<Boolean>()
 
     override fun provideDefaultUIState() = Unit
 
     override fun onProgressStateChanged(show: Boolean) {
-        progressChanges.add(show)
+        progressChanges += show
     }
 
     fun requestProgress(show: Boolean, immediately: Boolean = false) =
         setProgress(show = show, immediately = immediately)
-
-    fun awaitProgressChange(timeoutMs: Long = AWAIT_TIMEOUT_MS): Boolean =
-        requireNotNull(progressChanges.poll(timeoutMs, TimeUnit.MILLISECONDS)) {
-            "no progress change reported within $timeoutMs ms"
-        }
-
-    fun awaitNoProgressChange(timeoutMs: Long = NO_CHANGE_WINDOW_MS): Boolean =
-        progressChanges.poll(timeoutMs, TimeUnit.MILLISECONDS) == null
 }
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class BaseUiViewModelTest {
+    private val rule = ViewModelTestRule()
+
+    @BeforeTest
+    fun setUp() = rule.start()
+
+    @AfterTest
+    fun tearDown() = rule.stop()
+
     @Test
-    fun `immediate progress is reported synchronously`() {
+    fun `immediate progress is reported synchronously`() = runTest(rule.dispatcher) {
         // Arrange
         val viewModel = TestableUiViewModel(progressDelayMs = 5_000L)
 
@@ -42,11 +42,11 @@ class BaseUiViewModelTest {
         viewModel.requestProgress(show = true, immediately = true)
 
         // Assert
-        assertEquals(true, viewModel.awaitProgressChange(timeoutMs = 0L))
+        assertEquals(listOf(true), viewModel.progressChanges)
     }
 
     @Test
-    fun `zero delay reports progress synchronously`() {
+    fun `zero delay reports progress synchronously`() = runTest(rule.dispatcher) {
         // Arrange
         val viewModel = TestableUiViewModel(progressDelayMs = 0L)
 
@@ -54,23 +54,26 @@ class BaseUiViewModelTest {
         viewModel.requestProgress(show = true)
 
         // Assert
-        assertEquals(true, viewModel.awaitProgressChange(timeoutMs = 0L))
+        assertEquals(listOf(true), viewModel.progressChanges)
     }
 
     @Test
-    fun `delayed progress is reported after the delay`() {
+    fun `delayed progress is reported only after the delay elapses`() = runTest(rule.dispatcher) {
         // Arrange
         val viewModel = TestableUiViewModel(progressDelayMs = 30L)
 
         // Act
         viewModel.requestProgress(show = true)
 
-        // Assert
-        assertEquals(true, viewModel.awaitProgressChange())
+        // Assert (virtual time — nothing reported until the delay is advanced)
+        assertEquals(emptyList(), viewModel.progressChanges)
+
+        advanceUntilIdle()
+        assertEquals(listOf(true), viewModel.progressChanges)
     }
 
     @Test
-    fun `duplicate same goal request is ignored while pending`() {
+    fun `duplicate same goal request is ignored while pending`() = runTest(rule.dispatcher) {
         // Arrange
         val viewModel = TestableUiViewModel(progressDelayMs = 100L)
 
@@ -79,12 +82,12 @@ class BaseUiViewModelTest {
         viewModel.requestProgress(show = true)
 
         // Assert
-        assertEquals(true, viewModel.awaitProgressChange())
-        assertTrue(viewModel.awaitNoProgressChange())
+        advanceUntilIdle()
+        assertEquals(listOf(true), viewModel.progressChanges)
     }
 
     @Test
-    fun `state flip cancels the pending update`() {
+    fun `state flip cancels the pending update`() = runTest(rule.dispatcher) {
         // Arrange
         val viewModel = TestableUiViewModel(progressDelayMs = 200L)
         viewModel.requestProgress(show = true)
@@ -93,37 +96,40 @@ class BaseUiViewModelTest {
         viewModel.requestProgress(show = false, immediately = true)
 
         // Assert
-        assertEquals(false, viewModel.awaitProgressChange())
-        assertTrue(viewModel.awaitNoProgressChange())
+        assertEquals(listOf(false), viewModel.progressChanges)
+
+        advanceUntilIdle()
+        assertEquals(listOf(false), viewModel.progressChanges)
     }
 
     @Test
-    fun `duplicate same goal request after completion is reported again`() {
+    fun `duplicate same goal request after completion is reported again`() = runTest(rule.dispatcher) {
         // Arrange
         val viewModel = TestableUiViewModel(progressDelayMs = 20L)
         viewModel.requestProgress(show = true)
-        assertEquals(true, viewModel.awaitProgressChange())
-        // the timer task clears the pending task right after the callback fires
-        assertTrue(viewModel.awaitNoProgressChange(timeoutMs = 50L))
+        advanceUntilIdle()
+        assertEquals(listOf(true), viewModel.progressChanges)
 
         // Act
         viewModel.requestProgress(show = true)
 
         // Assert
-        assertEquals(true, viewModel.awaitProgressChange())
+        advanceUntilIdle()
+        assertEquals(listOf(true, true), viewModel.progressChanges)
     }
 
     @Test
-    fun `opposite goal after completion is reported`() {
+    fun `opposite goal after completion is reported`() = runTest(rule.dispatcher) {
         // Arrange
         val viewModel = TestableUiViewModel(progressDelayMs = 20L)
         viewModel.requestProgress(show = true)
-        assertEquals(true, viewModel.awaitProgressChange())
+        advanceUntilIdle()
 
         // Act
         viewModel.requestProgress(show = false)
 
         // Assert
-        assertEquals(false, viewModel.awaitProgressChange())
+        advanceUntilIdle()
+        assertEquals(listOf(true, false), viewModel.progressChanges)
     }
 }
