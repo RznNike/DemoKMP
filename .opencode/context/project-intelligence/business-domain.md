@@ -1,4 +1,4 @@
-<!-- Context: project-intelligence/business | Priority: high | Version: 1.2 | Updated: 2026-10-21 -->
+<!-- Context: project-intelligence/business | Priority: high | Version: 1.3 | Updated: 2026-10-30 -->
 
 # Business Domain
 
@@ -47,17 +47,17 @@ Solution: One runnable demo combining Clean Architecture, Compose UI, DI, DB,
 
 ## Success Metrics (qualitative)
 
-| Metric       | Definition                                    | Target            |
-|--------------|-----------------------------------------------|-------------------|
-| Adoption     | Stars / clones / forks                        | Growing           |
-| Completeness | Solutions demonstrated                        | Broad feature set |
-| Build health | Builds on Windows/Linux + Android             | Green             |
-| Quality      | Solutions covered by automated tests          | Growing coverage  |
-| Testability  | Test runnable from one command on all targets | Green             |
+| Metric       | Definition                                    | Target                                          |
+|--------------|-----------------------------------------------|-------------------------------------------------|
+| Adoption     | Stars / clones / forks                        | Growing                                         |
+| Completeness | Solutions demonstrated                        | Broad feature set                               |
+| Build health | Builds on Windows/Linux + Android             | Green                                           |
+| Quality      | Solutions covered by automated tests          | Broad (765 test cases; every ViewModel but one) |
+| Testability  | Test runnable from one command on all targets | Green                                           |
 
 ## Roadmap Context
 
-**Current Focus**: keep the feature set current with dependencies.
+**Current Focus**: keep the feature set current with dependencies and broaden test coverage (Android is the remaining gap).
 
 **Long-term Vision**: a canonical KMP reference project.
 
@@ -66,6 +66,7 @@ Solution: One runnable demo combining Clean Architecture, Compose UI, DI, DB,
 - Demo project: relies on public sample APIs
 - Desktop builds are OS-specific (build on the OS you target)
 - Testing uses only `kotlin.test` + fakes, deliberately avoiding a mocking framework
+- Android coverage is limited to host-JVM ViewModel tests; no instrumented tests
 
 ## Onboarding Checklist
 
@@ -76,12 +77,12 @@ Solution: One runnable demo combining Clean Architecture, Compose UI, DI, DB,
 
 ## 📂 Codebase References
 
-| Context             | Location                                                    |
-|---------------------|-------------------------------------------------------------|
-| Project description | `README.md`, `README.ru.md`                                 |
-| Screenshots         | `readmeFiles/`                                              |
-| Feature demos       | `composeApp/src/commonMain/kotlin/ru/rznnike/demokmp/**`    |
-| Test suite          | `composeApp/src/commonTest/`, `composeApp/src/desktopTest/` |
+| Context             | Location                                                         |
+|---------------------|------------------------------------------------------------------|
+| Project description | `README.md`, `README.ru.md`                                      |
+| Screenshots         | `readmeFiles/`                                                   |
+| Feature demos       | `composeApp/src/commonMain/kotlin/ru/rznnike/demokmp/**`         |
+| Test suite          | `composeApp/src/commonTest/`, `desktopTest/`, `androidUnitTest/` |
 
 ## Related Files
 

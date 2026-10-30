@@ -1,8 +1,8 @@
-<!-- Context: project-intelligence/testing-strategy | Priority: high | Version: 1.0 | Updated: 2026-10-21 -->
+<!-- Context: project-intelligence/testing-strategy | Priority: high | Version: 2.0 | Updated: 2026-10-30 -->
 
 # Testing Strategy
 
-> How DemoKMP is tested: source sets, test stack, and the fakes-over-mocks convention.
+> How DemoKMP is tested: source sets, test stack, shared test rules, and the fakes-over-mocks convention.
 
 ## Quick Reference
 
@@ -14,36 +14,40 @@
 
 ## Test Stack
 
-| Dependency                    | Purpose                                    |
-|-------------------------------|--------------------------------------------|
-| `kotlin("test")`              | Assertions and test annotations (common)   |
-| `kotlinx-coroutines-test`     | Coroutine test control                     |
-| `multiplatform-settings-test` | In-memory `Settings` for preferences tests |
-| `koin-test`                   | DI graph validation (`verify()` — JVM-only API) |
+| Dependency                    | Purpose                                             |
+|-------------------------------|-----------------------------------------------------|
+| `kotlin("test")`              | Assertions and test annotations (common)            |
+| `kotlinx-coroutines-test`     | Coroutine test control (`setMain`, `runTest`, time) |
+| `multiplatform-settings-test` | In-memory `Settings` for preferences tests          |
+| `ktor-mock`                   | `MockEngine` for HTTP/interceptor tests             |
+| `koin-test`                   | DI graph validation (`verify()` — JVM-only API)     |
 
 Declared in `composeApp/build.gradle.kts` → `commonTest.dependencies`.
 
 ## Source Sets
 
-| Source Set        | Test files | Contents                                            |
-|-------------------|------------|-----------------------------------------------------|
-| `commonTest`      | 95         | Platform-independent tests + all fakes              |
-| `desktopTest`     | 10         | Platform-bound desktop tests                        |
-| `androidUnitTest` | —     | **Not present** — Android platform code is untested |
-| `androidTest`     | —     | **Not present** — no instrumented tests             |
+| Source Set        | Files | Test classes | Contents                                                                |
+|-------------------|-------|--------------|-------------------------------------------------------------------------|
+| `commonTest`      | 125   | 107          | Platform-independent tests, all fakes, shared test rules                |
+| `desktopTest`     | 15    | 15           | Platform-bound desktop tests (COM, shell, DB, printing, desktop VMs)    |
+| `androidUnitTest` | 2     | 2            | Android-only ViewModel tests (host JVM, `isReturnDefaultValues = true`) |
+| `androidTest`     | —     | —            | **Not present** — no instrumented/UI tests                              |
 
-**Why the split**: tests that touch JVM/desktop-only APIs (COM, shell, Room on desktop, log formatting) cannot live in `commonTest`. Everything else does, so it runs on every target.
+**Total: 765 `@Test` cases.** **Why the split**: tests that touch JVM/desktop-only APIs (COM, shell, Room on desktop, log formatting) cannot live in `commonTest`; Android-only ViewModels cannot run on the desktop host. Everything else stays in `commonTest` so it runs on every target.
 
 ## Convention: Fakes, Not Mocks
 
-No mocking framework. Test doubles are hand-written classes in `commonTest`, placed in the **same package as the production interface** so they can implement it directly.
+No mocking framework. Test doubles are handwritten classes in `commonTest`, placed in the **same package as the production type** so they can implement/extend it directly.
 
-| Location                                  | Contents                                                                        |
-|-------------------------------------------|---------------------------------------------------------------------------------|
-| `domain/gateway/Fake*.kt`                 | 10 fakes: `FakeHTTPExampleGateway`, `FakeLogGateway`, `FakeDBExampleGateway`, … |
-| `domain/common/FakeDispatcherProvider.kt` | Substitutes `DispatcherProvider`                                                |
+| Location                                              | Contents                                                                                |
+|-------------------------------------------------------|-----------------------------------------------------------------------------------------|
+| `domain/gateway/Fake*.kt`                             | 10 gateway fakes: `FakeHTTPExampleGateway`, `FakeLogGateway`, `FakeDBExampleGateway`, … |
+| `domain/common/FakeDispatcherProvider.kt`             | Substitutes `DispatcherProvider`                                                        |
+| `domain/common/FakeCoroutineScopeProvider.kt`         | Substitutes `CoroutineScopeProvider` for `Notifier` / `EventDispatcher`                 |
+| `app/error/FakeErrorHandler.kt`                       | Substitutes the `ErrorHandler` interface                                                |
+| `data/network/interceptor/StubResponseInterceptor.kt` | Canned HTTP responses for interceptor tests                                             |
 
-**Fake shape** — expose the collaborators as mutable state, record calls, allow failure injection:
+**Fake shape** — expose collaborators as mutable state, record calls, allow failure injection:
 
 ```kotlin
 class FakeHTTPExampleGateway : HTTPExampleGateway {
@@ -54,27 +58,14 @@ class FakeHTTPExampleGateway : HTTPExampleGateway {
 }
 ```
 
-**FakeDispatcherProvider** defaults to `Dispatchers.Unconfined` — eager execution, no scheduler plumbing needed for delay-free code. **Do not** use that default in ViewModel tests: a real `Unconfined` leaks `withContext(...)` off the test scheduler. Pass a `TestDispatcher` instead (see below).
+**FakeDispatcherProvider** defaults to `Dispatchers.Unconfined`, but **do not** use that default in ViewModel tests: a real `Unconfined` leaks `withContext(...)` off the test scheduler. Pass a `TestDispatcher` (the rule does this for you).
+
+## ViewModel Tests — `ViewModelTestRule`
+
+`viewModelScope` hardcodes `Dispatchers.Main`, so it cannot be replaced by injection. Without `Dispatchers.setMain`, a ViewModel's `init` coroutines run on the Swing EDT under `desktopTest` and **throw** under `testDebugUnitTest` (no `Main` at all). The shared rule hides both:
 
 ```kotlin
-class FakeDispatcherProvider(
-    dispatcher: CoroutineDispatcher = Dispatchers.Unconfined
-) : DispatcherProvider {
-    override val ui = dispatcher
-    override val default = dispatcher
-    override val io = dispatcher
-    override val unconfined = dispatcher
-}
-```
-
-## ViewModel Tests — `Dispatchers.setMain`
-
-`viewModelScope` hardcodes `Dispatchers.Main`, so it cannot be replaced by injection. Without
-`Dispatchers.setMain`, a ViewModel's `init` coroutines run on the Swing EDT under `desktopTest` and
-**throw** under `testDebugUnitTest` (no `Main` at all). Use the shared rule:
-
-```kotlin
-// app/common/viewmodel/ViewModelTestRule.kt
+// app/common/viewmodel/ViewModelTestRule.kt (commonTest)
 class ViewModelTestRule(val dispatcher: TestDispatcher = UnconfinedTestDispatcher()) {
     val dispatcherProvider = FakeDispatcherProvider(dispatcher)
     val coroutineScopeProvider = FakeCoroutineScopeProvider(dispatcher)
@@ -99,22 +90,35 @@ fun `state is loaded`() = runTest(rule.dispatcher) {   // ← must share the rul
 
 - `UnconfinedTestDispatcher` (default) runs VM `init` eagerly — right for "state after construction".
 - Use `StandardTestDispatcher` when a test must observe an *intermediate* state (e.g. `isLoading`).
-- Never poll the wall clock (`LinkedBlockingQueue.poll`, `Thread.sleep`) — advance virtual time.
+- `BaseUiViewModel.progressDelayMs` is an `open var`: set it to `0` in a test to bypass the 250 ms debounce, or `setProgress(show, immediately = true)`.
+- Never poll the wall clock (`Thread.sleep`, `LinkedBlockingQueue.poll`) — advance virtual time.
 - Reference implementations: `SettingsViewModelTest`, `BaseUiViewModelTest`.
+
+## Android-Only ViewModel Tests
+
+`androidUnitTest` hosts ViewModels that live in `androidMain` (`ActivityViewModel`, `BarcodeExampleViewModel`). They run on the host JVM, so Android framework types must not be loaded:
+
+- `composeApp/build.gradle.kts` sets `testOptions.unitTests.isReturnDefaultValues = true` — Android methods return defaults instead of throwing.
+- Same `ViewModelTestRule` applies (host JVM has no `Main` dispatcher at all).
+- `BarcodeScannerViewModel` (camera/MLKit-bound) has no test yet.
 
 ## Coverage Map
 
-| Layer                                          | Tested                                                                                     |
-|------------------------------------------------|--------------------------------------------------------------------------------------------|
-| UseCases (all 10 feature folders)              | ✅ `domain/interactor/**`                                                                  |
-| UseCase bases                                  | ✅ `UseCase`, `UseCaseWithParams`, `FlowUseCase`, `FlowUseCaseWithParams`, `UseCaseResult` |
-| Gateways (data)                                | ✅ 7 in `commonTest` + 3 in `desktopTest`                                                  |
-| Logger extensions                              | ✅ all 4 sinks + the `LoggerExtension` base                                                |
-| Domain utils                                   | ✅ `CollectionUtils`, `DateUtils`, `OperatingSystem`, `StringUtils`                        |
-| Domain models                                  | ✅ `LauncherConfig`, model defaults, `LogMessage`, `NetworkLogMessage`                     |
-| Preferences                                    | ✅ 10 `Get/Set*UseCase` tests                                                              |
-| Desktop-only (COM, shell, App, DB, log format) | ✅ `desktopTest`                                                                           |
-| Android-only (camera, MLKit, permissions)      | ❌ no `androidUnitTest` source set                                                         |
+| Layer                                          | Tested                                                                                                                            |
+|------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------|
+| UseCases (all feature folders)                 | ✅ `domain/interactor/**`                                                                                                         |
+| UseCase bases / `UseCaseResult`                | ✅ `domain/common/interactor/**`                                                                                                  |
+| ViewModels                                     | ✅ every ViewModel except `BarcodeScannerViewModel` (14 `commonTest`, 5 `desktopTest`, 2 `androidUnitTest`)                       |
+| DI graph                                       | ✅ `AppComponentTest` (`verify()`), `NetworkModuleTest` (`createNetworkCache`)                                                    |
+| Gateways (data)                                | ✅ 7 in `commonTest` + 3 in `desktopTest`                                                                                         |
+| Network                                        | ✅ `AppApi`, `AppWebSocketManagerImpl`, 4 interceptors, `CustomServerException`                                                   |
+| Logger                                         | ✅ `Logger`, 4 sinks + base, `LogMessage`, `NetworkLogMessage`, not-initialized path                                              |
+| Storage                                        | ✅ entities (3), DAOs (3), `MainDB`                                                                                               |
+| Preferences                                    | ✅ `Preference`, `PreferencesManager`, 10 `Get/Set*UseCase`                                                                       |
+| App layer                                      | ✅ `ErrorHandler`, `EventDispatcher`, `Notifier`, `FlowNavigator`, `NavigationFlowInfo`, `DateInputManager`, `ClicksFilter`       |
+| Data/domain utils & models                     | ✅ `HttpUtils`, `JsonUtils`, `UUIDSerializer`, `CollectionUtils`, `DateUtils`, `StringUtils`, `OperatingSystem`, `LauncherConfig` |
+| Desktop-only (COM, shell, App, DB, log format) | ✅ `desktopTest`                                                                                                                  |
+| Android camera/MLKit/permissions               | ❌ beyond the 2 host-JVM ViewModel tests                                                                                          |
 
 ## Conventions
 
@@ -122,16 +126,17 @@ fun `state is loaded`() = runTest(rule.dispatcher) {   // ← must share the rul
 - Test package: identical to the production package.
 - Arrange → Act → Assert, with the **Arrange** block first.
 - Error branches are exercised via the fake's `errorToThrow`, never via mocking.
-- Platform-bound tests go in `desktopTest`; everything else in `commonTest`.
+- Platform-bound tests go in `desktopTest`; Android-bound tests in `androidUnitTest`; everything else in `commonTest`.
 
 ## 📂 Codebase References
 
-| Context        | Code                                                                  |
-|----------------|-----------------------------------------------------------------------|
-| Test deps      | `composeApp/build.gradle.kts` (`commonTest.dependencies`)             |
-| Fakes          | `composeApp/src/commonTest/kotlin/ru/rznnike/demokmp/domain/gateway/` |
-| Platform tests | `composeApp/src/desktopTest/kotlin/ru/rznnike/demokmp/`               |
-| LauncherConfig | `domain/model/common/LauncherConfig.kt`                               |
+| Context        | Code                                                                      |
+|----------------|---------------------------------------------------------------------------|
+| Test deps      | `composeApp/build.gradle.kts` (`commonTest.dependencies`, `testOptions`)  |
+| Shared rule    | `composeApp/src/commonTest/.../app/common/viewmodel/ViewModelTestRule.kt` |
+| Fakes          | `composeApp/src/commonTest/kotlin/ru/rznnike/demokmp/domain/gateway/`     |
+| Android tests  | `composeApp/src/androidUnitTest/kotlin/ru/rznnike/demokmp/`               |
+| Platform tests | `composeApp/src/desktopTest/kotlin/ru/rznnike/demokmp/`                   |
 
 ## Related Files
 

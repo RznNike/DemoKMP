@@ -1,4 +1,4 @@
-<!-- Context: project-intelligence/nav | Priority: high | Version: 1.2 | Updated: 2026-10-21 -->
+<!-- Context: project-intelligence/nav | Priority: high | Version: 1.3 | Updated: 2026-10-30 -->
 
 # Project Intelligence
 
@@ -56,6 +56,7 @@ Trigger → Action:
 - Stack change → update `technical-domain.md`
 - New pattern shape → update `code-patterns.md`
 - Test stack / source-set change → update `testing-strategy.md`
+- New shared test rule or fake kind → update `testing-strategy.md` + `living-notes.md`
 - New decision → add to `decisions-log.md`
 - New debt/issue → update `living-notes.md`
 - Feature change → update `business-tech-bridge.md`
@@ -66,7 +67,8 @@ Trigger → Action:
 |-------------------|-------------------------------------------------------------|
 | Stack & structure | `gradle/libs.versions.toml`, `composeApp/build.gradle.kts`  |
 | Source root       | `composeApp/src/commonMain/kotlin/ru/rznnike/demokmp/`      |
-| Test roots        | `composeApp/src/commonTest/`, `composeApp/src/desktopTest/` |
+| Test roots        | `commonTest/`, `desktopTest/`, `androidUnitTest/`           |
+| Test rule         | `commonTest/.../app/common/viewmodel/ViewModelTestRule.kt`  |
 
 ## Related Files
 

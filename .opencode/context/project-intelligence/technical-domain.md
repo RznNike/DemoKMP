@@ -1,4 +1,4 @@
-<!-- Context: project-intelligence/technical | Priority: critical | Version: 1.2 | Updated: 2026-10-21 -->
+<!-- Context: project-intelligence/technical | Priority: critical | Version: 1.3 | Updated: 2026-10-30 -->
 
 # Technical Domain
 
@@ -54,26 +54,28 @@ composeApp/src/
 ├── commonMain/kotlin/ru/rznnike/demokmp/   # shared code
 ├── androidMain/                             # Android expect/actual
 ├── desktopMain/                             # Desktop expect/actual
-├── commonTest/                              # platform-independent tests + fakes (82 files)
-└── desktopTest/                             # platform-bound desktop tests (4 files)
+├── commonTest/                              # platform-independent tests + fakes (125 files)
+├── desktopTest/                             # platform-bound desktop tests (15 files)
+└── androidUnitTest/                         # host-JVM Android tests (2 files)
 ```
 
 ### Package Map
 
-| Package                                                 | Contents                                                                                                                                   |
-|---------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------|
-| `app/viewmodel/**`                                      | Feature VMs: chartexample, customui, dbexample, global, home, httpexample, navigation, pdfexample, settings, splash, wsexample             |
-| `app/ui/{view,item,dialog,theme}`                       | Compose screens, list items, dialogs, theme                                                                                                |
-| `app/di`                                                | 8 Koin modules: AppComponent, AppModule, DatabaseModule, GatewayModule, InteractorModule, NetworkModule, PreferenceModule, ViewModelModule |
-| `app/dispatcher/{event,notifier}`                       | `EventDispatcher` (typed pub/sub), `Notifier` (system messages)                                                                            |
-| `app/common/viewmodel`                                  | `BaseViewModel`, `BaseUiViewModel`                                                                                                         |
-| `app/{error,model,utils}`                               | Error handling, shared models, Compose/platform utils                                                                                      |
-| `domain/interactor/**`                                  | UseCases per feature: app, chartexample, comobjectexample, dbexample, file, httpexample, log, pdfexample, preferences, wsexample           |
-| `domain/common/interactor`                              | `UseCase`, `UseCaseWithParams`, `FlowUseCase`, `FlowUseCaseWithParams`, `UseCaseResult`                                                    |
-| `domain/gateway`                                        | Gateway interfaces (implemented in `data`)                                                                                                 |
-| `domain/log` + `domain/log/extension`                   | Logger model, `LoggerExtension` base + 4 sinks (Console/File/Database/MemoryCache)                                                         |
-| `domain/{model,utils}`                                  | Domain models, pure utilities                                                                                                              |
-| `data/{gateway,network,storage,preference,shell,utils}` | Implementations; `shell` = `ShellManager`                                                                                                  |
+| Package                                                 | Contents                                                                                                                                                                                     |
+|---------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `app/viewmodel/**`                                      | Feature VMs: chartexample, customui, dbexample, global (configuration, profile, hotkeys), home, httpexample, navigation, pdfexample, settings, splash, wsexample + desktop `ui/viewmodel/**` |
+| `app/ui/{view,item,dialog,theme}`                       | Compose screens, list items, dialogs, theme                                                                                                                                                  |
+| `app/error`                                             | `ErrorHandler` interface + `ErrorHandlerImpl` (error → message mapping)                                                                                                                      |
+| `app/di`                                                | 8 Koin modules: AppComponent, AppModule, DatabaseModule, GatewayModule, InteractorModule, NetworkModule, PreferenceModule, ViewModelModule                                                   |
+| `app/dispatcher/{event,notifier}`                       | `EventDispatcher` (typed pub/sub), `Notifier` (system messages)                                                                                                                              |
+| `app/common/viewmodel`                                  | `BaseViewModel`, `BaseUiViewModel`                                                                                                                                                           |
+| `app/{model,utils}`                                     | Shared models, Compose/platform utils                                                                                                                                                        |
+| `domain/interactor/**`                                  | UseCases per feature: app, chartexample, comobjectexample, dbexample, file, httpexample, log, pdfexample, preferences, wsexample                                                             |
+| `domain/common/interactor`                              | `UseCase`, `UseCaseWithParams`, `FlowUseCase`, `FlowUseCaseWithParams`, `UseCaseResult`                                                                                                      |
+| `domain/gateway`                                        | Gateway interfaces (implemented in `data`)                                                                                                                                                   |
+| `domain/log` + `domain/log/extension`                   | `Logger` (single-consumer queue), `LoggerExtension` base + 4 sinks (Console/File/Database/MemoryCache)                                                                                       |
+| `domain/{model,utils}`                                  | Domain models, pure utilities                                                                                                                                                                |
+| `data/{gateway,network,storage,preference,shell,utils}` | Implementations; `network` has 4 interceptors + `CustomServerException`; `shell` = `ShellManager`                                                                                            |
 
 ## Code Standards
 
@@ -81,23 +83,26 @@ composeApp/src/
 - One Koin module per concern: `AppModule`, `NetworkModule`, `DatabaseModule`, `GatewayModule`, `InteractorModule`, `PreferenceModule`, `ViewModelModule`.
 - UseCases extend `UseCase`/`UseCaseWithParams`/`FlowUseCase*`, return `UseCaseResult` (errors-as-values, no exceptions across layers).
 - Suspend work runs on injected `DispatcherProvider.io`, never hard-coded dispatchers.
-- ViewModels extend `BaseViewModel`/`BaseUiViewModel`, expose immutable `StateFlow` UI state.
+- ViewModels extend `BaseViewModel`/`BaseUiViewModel`, expose immutable `StateFlow` UI state; `progressDelayMs` is overridable for tests.
 - Platform code via `expect`/`actual` (`androidMain`/`desktopMain`).
+- Errors are surfaced through the `ErrorHandler` interface (`ErrorHandlerImpl` in `app/error`), so ViewModels depend on an interface.
 - Room entities + DAOs in `data/storage`, mapped to domain models via extension functions.
 - KSP generates Room + Ktorfit code.
-- Logging via `Logger` + `LoggerExtension` sinks; each sink implements `addMessage`.
+- Logging via `Logger` + `LoggerExtension` sinks; `Logger` serializes messages through one consumer coroutine (ordered, one timestamp per message).
+- Navigation screens log their name on resume (`NavigationScreen` + `Logger.withTag("Navigation")`).
 - Cross-screen communication via `EventDispatcher` (typed `AppEvent`), system messages via `Notifier`.
-- Tests use handwritten fakes, not mocks — see `testing-strategy.md`.
+- Tests use handwritten fakes, not mocks; ViewModels are tested through `ViewModelTestRule` (`Dispatchers.setMain`) — see `testing-strategy.md`.
 - Android Lint strict: `abortOnError = true`, `checkAllWarnings = true`.
 
 ## Testing
 
-| Aspect      | Detail                                                                          |
-|-------------|---------------------------------------------------------------------------------|
-| Stack       | `kotlin("test")`, `kotlinx-coroutines-test`, `multiplatform-settings-test`      |
-| Source sets | `commonTest` (82 files), `desktopTest` (4 files)                                |
-| Doubles     | Hand-written `Fake*` classes in `domain/gateway`, plus `FakeDispatcherProvider` |
-| Gap         | No `androidUnitTest`/`androidTest` — Android platform code is untested          |
+| Aspect      | Detail                                                                                                    |
+|-------------|-----------------------------------------------------------------------------------------------------------|
+| Stack       | `kotlin("test")`, `kotlinx-coroutines-test`, `multiplatform-settings-test`, `ktor-mock`, `koin-test`      |
+| Source sets | `commonTest` (125 files / 107 test classes), `desktopTest` (15), `androidUnitTest` (2)                    |
+| Doubles     | Hand-written `Fake*` gateways, `FakeDispatcherProvider`, `FakeCoroutineScopeProvider`, `FakeErrorHandler` |
+| Scale       | 765 `@Test` cases; every ViewModel except `BarcodeScannerViewModel`                                       |
+| Gap         | No `androidTest` — camera/MLKit/permissions UI is untested                                                |
 
 Full detail: `testing-strategy.md`.
 
@@ -111,18 +116,19 @@ Full detail: `testing-strategy.md`.
 
 ## 📂 Codebase References
 
-| Context        | Code                                                       |
-|----------------|------------------------------------------------------------|
-| Stack versions | `gradle/libs.versions.toml`, `composeApp/build.gradle.kts` |
-| DI modules     | `app/di/*.kt`                                              |
-| API definition | `data/network/AppApi.kt`                                   |
-| UseCase base   | `domain/common/interactor/*.kt`                            |
-| ViewModels     | `app/viewmodel/**`, `app/common/viewmodel/*.kt`            |
-| Room DB        | `data/storage/MainDB.kt`, `data/storage/entity/*.kt`       |
-| Navigation     | `app/navigation/*.kt`                                      |
-| UI components  | `app/ui/view/*.kt`, `app/ui/item/*.kt`                     |
-| Logging        | `domain/log/**`, `domain/log/extension/*.kt`               |
-| Events         | `app/dispatcher/event/EventDispatcher.kt`                  |
+| Context        | Code                                                         |
+|----------------|--------------------------------------------------------------|
+| Stack versions | `gradle/libs.versions.toml`, `composeApp/build.gradle.kts`   |
+| DI modules     | `app/di/*.kt`                                                |
+| API / network  | `data/network/AppApi.kt`, `data/network/error/*.kt`          |
+| UseCase base   | `domain/common/interactor/*.kt`                              |
+| ViewModels     | `app/viewmodel/**`, `app/common/viewmodel/*.kt`              |
+| Room DB        | `data/storage/MainDB.kt`, `data/storage/entity/*.kt`         |
+| Navigation     | `app/navigation/*.kt`                                        |
+| UI components  | `app/ui/view/*.kt`, `app/ui/item/*.kt`                       |
+| Errors         | `app/error/ErrorHandler.kt`, `app/error/ErrorHandlerImpl.kt` |
+| Logging        | `domain/log/**`, `domain/log/extension/*.kt`                 |
+| Events         | `app/dispatcher/event/EventDispatcher.kt`                    |
 
 ## Related Files
 

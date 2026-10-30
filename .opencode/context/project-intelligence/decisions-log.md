@@ -1,4 +1,4 @@
-<!-- Context: project-intelligence/decisions | Priority: medium | Version: 1.2 | Updated: 2026-10-21 -->
+<!-- Context: project-intelligence/decisions | Priority: medium | Version: 1.3 | Updated: 2026-10-30 -->
 
 # Decisions Log
 
@@ -91,11 +91,11 @@
 - **Decision**: `commonTest` with `kotlin("test")` + `kotlinx-coroutines-test`; platform-bound tests live in `desktopTest`.
 - **Rationale**: Platform-independent tests run on every target; `kotlin.test` keeps dependencies minimal.
 - **Alternatives**: Per-target duplicated test sets — drift. Kotest/MockK — heavier multiplatform setup for a demo.
-- **Impact**: ✅ 86 test files, one source of truth · ⚠️ Android platform code remains untested (no `androidUnitTest`).
+- **Impact**: ✅ 765 test cases over 3 source sets, one source of truth · ⚠️ Android platform code needs its own source set and remains thin.
 
 ---
 
-## Decision: Hand-written fakes over a mocking framework
+## Decision: Handwritten fakes over a mocking framework
 
 **Date**: 2026-10-16 · **Status**: Decided · **Owner**: Project author *(inferred)*
 
@@ -104,6 +104,54 @@
 - **Rationale**: Keeps dependencies minimal, makes fake state inspectable, behaves identically on every target.
 - **Alternatives**: MockK / Turbine — multiplatform setup cost and harder-to-read expectations.
 - **Impact**: ✅ Explicit, inspectable test state · ⚠️ Fakes must be updated when interfaces change.
+
+---
+
+## Decision: ViewModel tests via `Dispatchers.setMain` + shared rule
+
+**Date**: 2026-10-29 · **Status**: Decided · **Owner**: Project author
+
+- **Context**: `viewModelScope` hardcodes `Dispatchers.Main`; without replacement, VM `init` coroutines run on the Swing EDT (desktop) or throw on the Android host JVM.
+- **Decision**: Test ViewModels through a shared `ViewModelTestRule` that calls `Dispatchers.setMain`/`resetMain` and hands out `FakeDispatcherProvider` + `FakeCoroutineScopeProvider` on one `TestDispatcher`.
+- **Rationale**: No production refactor needed; virtual time controls the 250 ms progress debounce; a single scheduler is shared with `runTest`.
+- **Alternatives**: Inject a scope into every ViewModel — invasive. Poll wall-clock time — flaky.
+- **Impact**: ✅ All ViewModels testable unchanged · ⚠️ Tests must pass `runTest(rule.dispatcher)` and pair `start()`/`stop()`.
+
+---
+
+## Decision: `ErrorHandler` as an interface
+
+**Date**: 2026-10-29 · **Status**: Decided · **Owner**: Project author
+
+- **Context**: ViewModels needed a substitutable error-mapping collaborator for tests.
+- **Decision**: Extract `ErrorHandler` (interface, `suspend fun proceed`) and `ErrorHandlerImpl` (implementation) in `app/error`; bind the impl in Koin.
+- **Rationale**: Lets tests inject `FakeErrorHandler`; keeps ViewModels depending on an abstraction.
+- **Alternatives**: Keep a concrete class — forces real error mapping in every VM test.
+- **Impact**: ✅ Testable error paths · ⚠️ One extra binding to keep registered.
+
+---
+
+## Decision: Logger serialized through one consumer channel
+
+**Date**: 2026-10-26 · **Status**: Decided · **Owner**: Project author
+
+- **Context**: Concurrent logging could interleave sink writes and produce inconsistent timestamps.
+- **Decision**: `Logger` captures one timestamp per message and enqueues the write on a single-consumer `Channel`; extensions receive `timestamp`.
+- **Rationale**: Guarantees ordered, non-interleaved output without per-call semaphore locking.
+- **Alternatives**: Semaphore around each extension call — was replaced; allowed interleaving across sinks.
+- **Impact**: ✅ Ordered logs, one timestamp per message · ⚠️ `Logger` must be initialized (`reset()` in tests) and assertions must wait for the queue to drain.
+
+---
+
+## Decision: `androidUnitTest` for Android-only ViewModels
+
+**Date**: 2026-10-29 · **Status**: Decided · **Owner**: Project author
+
+- **Context**: `ActivityViewModel` and `BarcodeExampleViewModel` live in `androidMain` and cannot run in `commonTest`/`desktopTest`.
+- **Decision**: Add an `androidUnitTest` source set with host-JVM tests and `isReturnDefaultValues = true`; reuse `ViewModelTestRule`.
+- **Rationale**: Covers Android-specific logic without an emulator, while keeping `commonTest` platform-independent.
+- **Alternatives**: Instrumented tests only — slow, device-bound. Leave Android VMs untested — accepted before, now improved.
+- **Impact**: ✅ 2 Android VMs covered · ⚠️ Android framework types must stay out of the tested paths; no `androidTest` yet.
 
 ---
 
@@ -116,20 +164,21 @@
 ## Onboarding Checklist
 
 - [ ] Understand why KMP, Compose, Clean Arch, Koin, Room were chosen
-- [ ] Understand the errors-as-values choice
-- [ ] Understand the test source-set split and the fakes-over-mocks convention
+- [ ] Understand the errors-as-values choice and the `ErrorHandler` interface split
+- [ ] Understand the test source-set split, `ViewModelTestRule`, and the fakes-over-mocks convention
 
 ## 📂 Codebase References
 
-| Decision         | Code                                                        |
-|------------------|-------------------------------------------------------------|
-| Layering         | `app/`, `domain/`, `data/`                                  |
-| DI               | `app/di/*.kt`                                               |
-| DB               | `data/storage/`                                             |
-| Network          | `data/network/`                                             |
-| Errors           | `domain/common/interactor/UseCaseResult.kt`                 |
-| Test source sets | `composeApp/src/commonTest/`, `composeApp/src/desktopTest/` |
-| Fakes            | `composeApp/src/commonTest/.../domain/gateway/Fake*.kt`     |
+| Decision         | Code                                                                     |
+|------------------|--------------------------------------------------------------------------|
+| Layering         | `app/`, `domain/`, `data/`                                               |
+| DI               | `app/di/*.kt`                                                            |
+| DB               | `data/storage/`                                                          |
+| Network          | `data/network/`                                                          |
+| Errors           | `domain/common/interactor/UseCaseResult.kt`, `app/error/ErrorHandler.kt` |
+| Logging          | `domain/log/Logger.kt`                                                   |
+| Test source sets | `commonTest/`, `desktopTest/`, `androidUnitTest/`                        |
+| Fakes            | `composeApp/src/commonTest/.../domain/gateway/Fake*.kt`                  |
 
 ## Related Files
 

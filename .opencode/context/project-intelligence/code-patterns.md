@@ -1,4 +1,4 @@
-<!-- Context: project-intelligence/code-patterns | Priority: high | Version: 1.0 | Updated: 2026-10-21 -->
+<!-- Context: project-intelligence/code-patterns | Priority: high | Version: 1.1 | Updated: 2026-10-30 -->
 
 # Code Patterns
 
@@ -81,24 +81,35 @@ fun DBExampleDataEntity.toDBExampleData() = DBExampleData(id = id, name = name)
 
 ## 6. Logger Extension
 
-`LoggerExtension` is the abstract base; each sink implements `addMessage`.
+`LoggerExtension` is the abstract base; each sink implements `addMessage`. `Logger` captures one timestamp
+per message and feeds extensions through a single-consumer queue, so `timestamp` is always passed down.
 
 ```kotlin
 abstract class LoggerExtension(
     protected val stopAfterOneError: Boolean = false,
     protected val isDebugEnabled: Boolean = BuildKonfig.DEBUG
 ) {
+    protected lateinit var clock: Clock
+    protected lateinit var coroutineDispatcher: CoroutineDispatcher
+
+    open fun init(clock: Clock, coroutineDispatcher: CoroutineDispatcher)
+
+    open suspend fun i(tag: String, message: String, timestamp: Long = clock.millis()) =
+        addMessage(tag, message, LogLevel.INFO, timestamp = timestamp)
+
     abstract suspend fun addMessage(
         tag: String,
         message: String,
         level: LogLevel,
         type: LogType = LogType.DEFAULT,
+        timestamp: Long = clock.millis(),
         callback: suspend (LogMessage) -> Unit = { }
     )
 }
 ```
 
 **Sinks**: `ConsoleLoggerExtension`, `FileLoggerExtension`, `DatabaseLoggerExtension`, `MemoryCacheLoggerExtension`.
+**Init**: `Logger.init(clock, coroutineDispatcher, extensions)`; tag-scoped calls via `Logger.withTag("Navigation").i(...)`.
 
 ## 7. Event Dispatcher
 
@@ -131,6 +142,25 @@ class FakeHTTPExampleGateway : HTTPExampleGateway {
 }
 ```
 
+## 9. Error Handling (interface + impl)
+
+ViewModels depend on the `ErrorHandler` interface; the implementation maps throwables to user-facing text.
+Tests substitute `FakeErrorHandler`.
+
+```kotlin
+// app/error/ErrorHandler.kt
+interface ErrorHandler {
+    suspend fun proceed(error: Throwable, callback: suspend (String) -> Unit)
+}
+
+// usage inside a ViewModel
+private val errorHandler: ErrorHandler by inject()
+
+errorHandler.proceed(throwable) { message ->
+    // map message into UiState
+}
+```
+
 ---
 
 ## Naming Conventions
@@ -154,6 +184,7 @@ class FakeHTTPExampleGateway : HTTPExampleGateway {
 | API              | `data/network/AppApi.kt`                                       |
 | UseCase bases    | `domain/common/interactor/*.kt`                                |
 | ViewModel bases  | `app/common/viewmodel/*.kt`                                    |
+| Error handler    | `app/error/ErrorHandler.kt`, `app/error/ErrorHandlerImpl.kt`   |
 | Room entities    | `data/storage/entity/*.kt`                                     |
 | Logger bases     | `domain/log/extension/*.kt`                                    |
 | Event dispatcher | `app/dispatcher/event/EventDispatcher.kt`                      |
