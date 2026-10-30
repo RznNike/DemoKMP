@@ -19,7 +19,9 @@ import java.time.LocalDate
 
 private const val DATE_YEAR_MIN = 2000
 
-class CustomUIViewModel : BaseUiViewModel<CustomUIViewModel.UiState>() {
+class CustomUIViewModel(
+    private val stringRetriever: suspend (StringResource) -> String = ::getString
+) : BaseUiViewModel<CustomUIViewModel.UiState>() {
     private val clock: Clock by inject()
 
     var textInput by mutableStateOf("")
@@ -60,7 +62,6 @@ class CustomUIViewModel : BaseUiViewModel<CustomUIViewModel.UiState>() {
 
     fun onDateChange(delta: Int) {
         dateInputManager.changeDate(delta)
-        updateDateFilter()
     }
 
     private fun updateDateFilter() {
@@ -79,7 +80,7 @@ class CustomUIViewModel : BaseUiViewModel<CustomUIViewModel.UiState>() {
 
     private fun setupDropdownOptions() {
         viewModelScope.launch {
-            val name = getString(Res.string.option)
+            val name = stringRetriever(Res.string.option)
             val options = (1..20).map { "$name $it" }
 
             mutableUiState.update { currentState ->
