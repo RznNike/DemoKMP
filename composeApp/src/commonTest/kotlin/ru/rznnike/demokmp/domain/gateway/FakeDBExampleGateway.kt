@@ -1,5 +1,6 @@
 package ru.rznnike.demokmp.domain.gateway
 
+import kotlinx.coroutines.CompletableDeferred
 import ru.rznnike.demokmp.domain.model.db.DBExampleData
 
 /**
@@ -7,6 +8,9 @@ import ru.rznnike.demokmp.domain.model.db.DBExampleData
  *
  * Mutations are recorded in collections, so tests can assert what was forwarded to the gateway.
  * [errorToThrow] makes the next call throw, so the `UseCaseResult.Error` branch is reachable.
+ *
+ * Set [gate] to suspend [getAll] until the test completes it — the only way to observe a caller's
+ * intermediate state (`isLoading`) while the list request is in flight.
  */
 class FakeDBExampleGateway : DBExampleGateway {
     var errorToThrow: Exception? = null
@@ -15,6 +19,8 @@ class FakeDBExampleGateway : DBExampleGateway {
     var getResult: DBExampleData? = null
 
     var allResult: List<DBExampleData> = emptyList()
+    var getAllCalls = 0
+    var gate: CompletableDeferred<Unit>? = null
     val addedData = mutableListOf<DBExampleData>()
     val deletedData = mutableListOf<DBExampleData>()
     var deleteAllCalls = 0
@@ -28,6 +34,8 @@ class FakeDBExampleGateway : DBExampleGateway {
 
     override suspend fun getAll(): List<DBExampleData> {
         errorToThrow?.let { throw it }
+        getAllCalls++
+        gate?.await()
         return allResult
     }
 
