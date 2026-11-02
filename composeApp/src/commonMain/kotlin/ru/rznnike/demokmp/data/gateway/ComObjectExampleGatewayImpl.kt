@@ -7,36 +7,39 @@ import ru.rznnike.demokmp.domain.gateway.ComObjectExampleGateway
 import ru.rznnike.demokmp.domain.utils.OperatingSystem
 
 class ComObjectExampleGatewayImpl(
-    private val shellManager: ShellManager
+    private val shellManager: ShellManager,
+    private val isWindows: Boolean = OperatingSystem.isWindows,
+    private val initComCallback: () -> Unit = ::initCOMLibrary,
+    private val destroyComCallback: () -> Unit = ::destroyCOMLibrary
 ) : ComObjectExampleGateway {
     override suspend fun initShellWrapper() {
-        if (!OperatingSystem.isWindows) return
+        if (!isWindows) return
 
-        initCOMLibrary()
+        initComCallback()
         shellManager.initWrapper()
     }
 
     override suspend fun destroyShellWrapper() {
-        if (!OperatingSystem.isWindows) return
+        if (!isWindows) return
 
         shellManager.destroyWrapper()
-        destroyCOMLibrary()
+        destroyComCallback()
     }
 
     override suspend fun getPCData(): String {
-        if (!OperatingSystem.isWindows) return ""
+        if (!isWindows) return ""
 
         return shellManager.getPCData()
     }
 
     override suspend fun openFolderOrFile(path: String) {
-        if (!OperatingSystem.isWindows) return
+        if (!isWindows) return
 
         shellManager.openFolderOrFile(path)
     }
 
     override suspend fun minimizeAllWindows() {
-        if (!OperatingSystem.isWindows) return
+        if (!isWindows) return
 
         shellManager.minimizeAllWindows()
     }

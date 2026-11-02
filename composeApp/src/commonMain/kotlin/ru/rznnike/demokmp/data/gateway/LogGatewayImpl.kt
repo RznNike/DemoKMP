@@ -95,10 +95,19 @@ class LogGatewayImpl(
                     }
             }
             is LogsRetentionMode.LastNMessages -> {
-                logMessageDao.getNthId(offset = logsRetentionMode.messagesCount)?.let { borderId ->
+                if (logsRetentionMode.messagesCount > 0) {
+                    logMessageDao.getNthId(offset = logsRetentionMode.messagesCount)
+                } else {
+                    Long.MAX_VALUE
+                }?.let { borderId ->
                     logMessageDao.deleteOldById(borderId = borderId)
                 }
-                logNetworkMessageDao.getNthId(offset = logsRetentionMode.networkMessagesCount)?.let { borderId ->
+
+                if (logsRetentionMode.networkMessagesCount > 0) {
+                    logNetworkMessageDao.getNthId(offset = logsRetentionMode.networkMessagesCount)
+                } else {
+                    Long.MAX_VALUE
+                }?.let { borderId ->
                     logNetworkMessageDao.deleteOldById(borderId = borderId)
                 }
             }
@@ -123,7 +132,5 @@ class LogGatewayImpl(
         }
     }
 
-    override suspend fun saveNetworkLogMessageToFile(file: File, message: NetworkLogMessage) {
-        file.writeText(message.getFullText())
-    }
+    override suspend fun saveTextToFile(file: File, text: String) = file.writeText(text)
 }

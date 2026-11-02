@@ -8,6 +8,7 @@ This is a sample project with a set of solutions to typical problems, demonstrat
 ## Implemented solutions
 * Project architecture - [Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)
 * UI layer architecture - [Compose](https://developer.android.com/develop/ui/compose/documentation) + [MVVM](https://developer.android.com/topic/libraries/architecture/viewmodel)
+* Unit tests
 * Dependency Injection
 * Local database (SQL)
 * Shared preferences (with custom classes storage)
@@ -91,7 +92,8 @@ This is a sample project with a set of solutions to typical problems, demonstrat
 * [Coil](https://coil-kt.github.io/coil/)
 * [BuildKonfig](https://github.com/yshrsmz/BuildKonfig)
 * [Vico](https://github.com/patrykandpatrick/vico)
-* [Kotlin Multiplatform Markdown Renderer](https://github.com/mikepenz/multiplatform-markdown-renderer)
+* [Multiplatform Markdown Renderer](https://github.com/mikepenz/multiplatform-markdown-renderer)
+* [Kover](https://github.com/Kotlin/kotlinx-kover)
 
 #### PC only
 * [PDFBox](https://pdfbox.apache.org/)
@@ -124,7 +126,7 @@ You can also create your own launch configurations based on the ones already add
 ```Run -> Edit Configurations -> + (Add New Configuration) -> Gradle```
 
 #### Launch from VS Code (PC)
-Basic support for VS Code has been added to the project. Similar кгт configurations have been created:
+Basic support for VS Code has been added to the project. Similar run configurations have been created:
 * ```KMP: run [debug]``` (with debug)
 * ```KMP: run [debug +args]``` (with debug and launch args)
 * ```KMP: run [staging]``` (with debug and proguard)
@@ -168,3 +170,6 @@ If you have problems building your application, it is recommended to select JDK 
 Use the standard tools provided by the IDE to build an Android application. You can build a signed APK or Bundle by going to ```Build -> Generate Signed App Bundle / APK```.
 
 *Note: don't forget to create your own signing key and replace the stub key from this project with it. Also, don't publish the signing key (don't put it in a repository, as this project does for simplicity) if you plan to release the source code of your application to the public. You can add the ```.jks``` key file to ```gitignore```, and move its passwords from ```gradle.properties``` to ```local.properties``` (by changing the ```signingConfigs``` block in ```build.gradle.kts```).*
+
+## Use of AI
+In this project, AI was used solely to assist in writing tests. Everything else was written by hand by one meatbag (me).

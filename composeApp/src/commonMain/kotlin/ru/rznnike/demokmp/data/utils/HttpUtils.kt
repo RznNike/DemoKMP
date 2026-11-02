@@ -75,12 +75,7 @@ fun Request.toLog(level: HttpLogLevel): String {
                         logBuilder.appendLine("--> END $method (${buffer.size}-byte, $gzippedLength-gzipped-byte body)")
                     }
                     else -> {
-                        var body = buffer.readString(charset)
-                        if (url.toString().endsWith("authorization/sign-in")) {
-                            body = body.replace("\"password\" *: *\".*\"".toRegex(), "\"password\":\"***\"")
-                        }
-
-                        logBuilder.appendLine(body.prettifyJson())
+                        logBuilder.appendLine(buffer.readString(charset).prettifyJson())
                         logBuilder.appendLine("--> END $method (${requestBody.contentLength()}-byte body)")
                     }
                 }

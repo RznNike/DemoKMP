@@ -1,6 +1,8 @@
 import com.android.build.api.dsl.ApkSigningConfig
 import com.codingfeline.buildkonfig.compiler.FieldSpec
 import com.codingfeline.buildkonfig.gradle.TargetConfigDsl
+import kotlinx.kover.gradle.plugin.dsl.AggregationType
+import kotlinx.kover.gradle.plugin.dsl.CoverageUnit
 import org.gradle.internal.extensions.stdlib.capitalized
 import org.gradle.internal.extensions.stdlib.toDefaultLowerCase
 import org.gradle.kotlin.dsl.register
@@ -19,6 +21,7 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.ktorfit)
     alias(libs.plugins.room)
+    alias(libs.plugins.kover)
 }
 
 private val globalPackageName = "ru.rznnike.demokmp"
@@ -45,13 +48,16 @@ kotlin {
         commonMain.dependencies {
             implementation(libs.compose.runtime)
             implementation(libs.compose.foundation)
-            implementation(libs.compose.material3)
             implementation(libs.compose.components.resources)
             implementation(libs.compose.ui)
             implementation(libs.compose.ui.backhandler)
             implementation(libs.compose.ui.tooling.preview)
 
-            implementation(libs.viewmodel.compose)
+            implementation(libs.compose.material3)
+
+            implementation(libs.compose.viewmodel)
+
+            implementation(libs.compose.navigation)
 
             implementation(libs.multiplatform.settings)
 
@@ -77,8 +83,6 @@ kotlin {
             implementation(libs.filekit.core)
             implementation(libs.filekit.dialogs.compose)
 
-            implementation(libs.navigation)
-
             implementation(libs.coil)
             implementation(libs.coil.compose)
             implementation(libs.coil.okhttp)
@@ -88,6 +92,14 @@ kotlin {
 
             implementation(libs.markdown.core)
             implementation(libs.markdown.material)
+        }
+
+        commonTest.dependencies {
+            implementation(kotlin("test"))
+            implementation(libs.coroutines.test)
+            implementation(libs.multiplatform.settings.test)
+            implementation(libs.ktor.mock)
+            implementation(libs.koin.test)
         }
 
         androidMain.dependencies {
@@ -129,6 +141,51 @@ dependencies {
     add("kspAndroid", libs.room.compiler)
     add("kspDesktop", libs.room.compiler)
     debugImplementation(libs.compose.ui.tooling)
+}
+
+kover {
+    currentProject {
+        sources {
+            excludedSourceSets.add("dev")
+        }
+
+        createVariant("desktopDebug") {
+            add("desktop")
+            add("debug")
+        }
+    }
+
+    reports {
+        filters {
+            excludes {
+                // Room / KSP generated code
+                classes("*_Impl", "*_Impl$*", "*_Factory", "*_Factory$*", "*Dao_Impl*", "*Database_Impl*")
+                // BuildKonfig generated object
+                classes("*BuildKonfig", "*BuildKonfigKt")
+                // Compose Multiplatform generated resources
+                packages("*.generated.resources")
+                classes("*Res", "*ResKt", "*_Res")
+                // Compose compiler output
+                classes("*ComposableSingletons*", "*ComposableSingletons$*", $$"*$ComposableLambda*")
+                // Composable previews (tooling only)
+                annotatedBy("androidx.compose.ui.tooling.preview.Preview")
+            }
+        }
+
+        variant("desktopDebug") {
+            verify {
+                // Advisory only for the first run: report the number, do not fail the build
+                warningInsteadOfFailure = true
+                rule("desktop + android debug unit tests") {
+                    bound {
+                        minValue = 70
+                        coverageUnits = CoverageUnit.LINE
+                        aggregationForGroup = AggregationType.COVERED_PERCENTAGE
+                    }
+                }
+            }
+        }
+    }
 }
 
 android {
@@ -223,6 +280,12 @@ android {
     }
     kotlin {
         jvmToolchain(17)
+    }
+
+    testOptions {
+        unitTests {
+            isReturnDefaultValues = true
+        }
     }
 
     @Suppress("UnstableApiUsage")

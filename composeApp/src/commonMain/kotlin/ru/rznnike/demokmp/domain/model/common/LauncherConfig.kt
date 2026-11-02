@@ -13,10 +13,12 @@ data class LauncherConfig(
 )
 
 fun String.toLauncherConfig(): LauncherConfig {
-    val configMap = split("\n").associate { line ->
-        val parts = line.split("=")
-        (parts.getOrNull(0) ?: "") to (parts.getOrNull(1) ?: "")
-    }
+    val configMap = split("\n", "\r")
+        .filter { it.isNotBlank() }
+        .associate { line ->
+            val parts = line.split("=", limit = 2)
+            (parts.getOrNull(0) ?: "") to (parts.getOrNull(1) ?: "")
+        }
     return LauncherConfig(
         javaPath = configMap[JAVA_PATH_KEY] ?: "",
         renderApi = configMap[RENDER_API_KEY] ?: "",

@@ -12,7 +12,7 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun DesktopAppTheme(
     content: @Composable () -> Unit
-) {
+) = AppTheme {
     val scrollbarStyle = ScrollbarStyle(
         minimalHeight = 16.dp,
         thickness = 8.dp,
@@ -25,17 +25,17 @@ fun DesktopAppTheme(
     CompositionLocalProvider(
         LocalScrollbarStyle provides scrollbarStyle
     ) {
-        AppTheme(content)
+        content()
     }
 }
 
 @Composable
 fun PreviewDesktopAppTheme(
     content: @Composable () -> Unit
-) {
+) = PreviewAppTheme {
     CompositionLocalProvider(
         LocalScrollbarStyle provides defaultScrollbarStyle()
     ) {
-        PreviewAppTheme(content)
+        content()
     }
 }

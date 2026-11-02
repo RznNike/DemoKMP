@@ -15,9 +15,9 @@ open class COMObjectWrapper(name: String) : COMLateBindingObject(name, false) {
     }
 
     protected fun boolProperty(key: String) = object : Property<Boolean> {
-        override fun get(): Boolean = getIntProperty(key) != 0
+        override fun get(): Boolean = getBooleanProperty(key)
 
-        override fun set(value: Boolean) = setProperty(key, if (value) 1 else 0)
+        override fun set(value: Boolean) = setProperty(key, value)
     }
 
     protected fun stringProperty(key: String) = object : Property<String> {
@@ -45,7 +45,6 @@ open class COMObjectWrapper(name: String) : COMLateBindingObject(name, false) {
         return result.doubleValue()
     }
 
-    @Suppress("SameParameterValue")
     protected fun dateProperty(key: String) = object : Property<Date> {
         override fun get(): Date = getDateProperty(key)
 
@@ -53,18 +52,12 @@ open class COMObjectWrapper(name: String) : COMLateBindingObject(name, false) {
     }
 
     companion object {
-        private var isInitialized: Boolean = false
-
         @JvmStatic
         fun initialize() {
-            when {
-                !OperatingSystem.isWindows -> {
-                    throw UnsupportedOperationException("This driver only supports Windows!")
-                }
-                !isInitialized -> {
-                    Ole32.INSTANCE.CoInitializeEx(null, Ole32.COINIT_APARTMENTTHREADED)
-                    isInitialized = true
-                }
+            if (OperatingSystem.isWindows) {
+                Ole32.INSTANCE.CoInitializeEx(null, Ole32.COINIT_APARTMENTTHREADED)
+            } else {
+                throw UnsupportedOperationException("This driver only supports Windows!")
             }
         }
 

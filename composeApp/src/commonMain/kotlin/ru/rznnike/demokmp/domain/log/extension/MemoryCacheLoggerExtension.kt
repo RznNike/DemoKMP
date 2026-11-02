@@ -16,12 +16,19 @@ class MemoryCacheLoggerExtension(
     private val networkLog: MutableList<NetworkLogMessage> = mutableListOf()
     private val networkLogUpdatesFlow = MutableSharedFlow<NetworkLogMessage>()
 
-    override suspend fun networkRequest(tag: String, uuid: UUID, message: String, curl: String) {
+    override suspend fun networkRequest(
+        tag: String,
+        uuid: UUID,
+        message: String,
+        curl: String,
+        timestamp: Long
+    ) {
         addMessage(
             tag = tag,
             message = message,
             level = LogLevel.INFO,
-            type = LogType.NETWORK
+            type = LogType.NETWORK,
+            timestamp = timestamp
         ) { request ->
             val networkLogMessage = NetworkLogMessage(
                 uuid = uuid,
@@ -33,12 +40,19 @@ class MemoryCacheLoggerExtension(
         }
     }
 
-    override suspend fun networkResponse(tag: String, requestUuid: UUID, message: String, state: NetworkRequestState) {
+    override suspend fun networkResponse(
+        tag: String,
+        requestUuid: UUID,
+        message: String,
+        state: NetworkRequestState,
+        timestamp: Long
+    ) {
         addMessage(
             tag = tag,
             message = message,
             level = LogLevel.INFO,
-            type = LogType.NETWORK
+            type = LogType.NETWORK,
+            timestamp = timestamp
         ) { response ->
             networkLog.firstOrNull { it.uuid == requestUuid }?.let { logNetworkMessage ->
                 val updatedMessage = logNetworkMessage.copy(
@@ -57,13 +71,14 @@ class MemoryCacheLoggerExtension(
         message: String,
         level: LogLevel,
         type: LogType,
+        timestamp: Long,
         callback: suspend (LogMessage) -> Unit
     ) {
         if ((!stopAfterOneError) || (!isErrorDetected)) {
             val logMessage = LogMessage(
                 type = type,
                 level = level,
-                timestamp = clock.millis(),
+                timestamp = timestamp,
                 tag = tag,
                 message = message
             )

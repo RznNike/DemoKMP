@@ -16,6 +16,7 @@ import org.koin.core.scope.Scope
 import org.koin.dsl.module
 import ru.rznnike.demokmp.BuildKonfig
 import ru.rznnike.demokmp.data.network.AppWebSocketManager
+import ru.rznnike.demokmp.data.network.AppWebSocketManagerImpl
 import ru.rznnike.demokmp.data.network.createAppApi
 import ru.rznnike.demokmp.data.network.interceptor.HttpBaseUrlInterceptor
 import ru.rznnike.demokmp.data.network.interceptor.HttpErrorResponseInterceptor
@@ -32,12 +33,19 @@ private const val CACHE_MAX_SIZE = 10 * 1024 * 1024 // 10 MB
 private const val TIMEOUT_MS = 60_000L // 60 sec
 private const val WEB_SOCKET_PING_MS = 10_000L // 10 sec
 
-internal val networkModule = module {
-    fun getCache() = try {
-        val cacheDirectory = File(DataConstants.NETWORK_CACHE_PATH)
-        Cache(cacheDirectory, CACHE_MAX_SIZE.toLong())
-    } catch (_: Exception) { null }
+internal fun createNetworkCache(
+    directory: File = File(DataConstants.NETWORK_CACHE_PATH)
+): Cache? = try {
+    if (!directory.isDirectory && !directory.mkdirs()) {
+        null
+    } else {
+        Cache(directory, CACHE_MAX_SIZE.toLong())
+    }
+} catch (_: Exception) {
+    null
+}
 
+internal val networkModule = module {
     fun OkHttpClient.Builder.allTimeoutsMs(timeout: Long) =
         this.callTimeout(timeout, TimeUnit.MILLISECONDS)
             .connectTimeout(timeout, TimeUnit.MILLISECONDS)
@@ -50,7 +58,7 @@ internal val networkModule = module {
         engine {
             config {
                 additionalConfiguration()
-                cache(getCache())
+                cache(createNetworkCache())
                 allTimeoutsMs(TIMEOUT_MS)
             }
         }
@@ -90,16 +98,11 @@ internal val networkModule = module {
             .createAppApi()
     }
 
-    single {
-        AppWebSocketManager(
+    single<AppWebSocketManager> {
+        AppWebSocketManagerImpl(
             client = HttpClient(OkHttp) {
                 configureOkHttp {
                     pingInterval(Duration.ofMillis(WEB_SOCKET_PING_MS))
-                    addInterceptor(
-                        HttpLoggingInterceptor(
-                            logLevel = if (BuildKonfig.DEBUG) HttpLogLevel.BODY else HttpLogLevel.HEADERS
-                        )
-                    )
                 }
                 install(WebSockets)
             },

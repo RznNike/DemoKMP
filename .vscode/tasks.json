@@ -102,6 +102,19 @@
       "problemMatcher": []
     },
     {
+      "label": "KMP: test [desktop]",
+      "detail": "Run desktop target tests",
+      "type": "shell",
+      "command": "./gradlew :composeApp:desktopTest",
+      "group": {
+        "kind": "test",
+        "isDefault": false
+      },
+      "problemMatcher": [
+        "$gradle"
+      ]
+    },
+    {
       "label": "KMP: clean",
       "detail": "Full clean of build folders",
       "type": "shell",

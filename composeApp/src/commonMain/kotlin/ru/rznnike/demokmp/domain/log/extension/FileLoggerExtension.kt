@@ -16,7 +16,8 @@ import java.io.File
 import java.time.LocalDate
 
 class FileLoggerExtension(
-    stopAfterOneError: Boolean = false
+    stopAfterOneError: Boolean = false,
+    private val logsPath: String = DataConstants.LOGS_PATH
 ) : LoggerExtension(stopAfterOneError = stopAfterOneError) {
     private val outputLock = Semaphore(1)
     private var logFile: File? = null
@@ -27,13 +28,14 @@ class FileLoggerExtension(
         message: String,
         level: LogLevel,
         type: LogType,
+        timestamp: Long,
         callback: suspend (LogMessage) -> Unit
     ) {
         if ((!stopAfterOneError) || (!isErrorDetected)) {
             val logMessage = LogMessage(
                 type = type,
                 level = level,
-                timestamp = clock.millis(),
+                timestamp = timestamp,
                 tag = tag,
                 message = message
             )
@@ -42,16 +44,16 @@ class FileLoggerExtension(
                 withContext(coroutineDispatcher) {
                     outputLock.withPermit {
                         try {
-                            val currentDate = clock.millis().toLocalDate()
+                            val currentDate = timestamp.toLocalDate()
                             if (logFileDate != currentDate) {
                                 logFileDate = currentDate
                                 logFile = null
                             }
 
                             if (logFile == null) {
-                                File(DataConstants.LOGS_PATH).mkdirs()
+                                File(logsPath).mkdirs()
                                 val logFileName = "${currentDate.millis().toDateString(GlobalConstants.DATE_PATTERN_FILE_NAME_DAY)}.txt"
-                                logFile = File("${DataConstants.LOGS_PATH}/$logFileName")
+                                logFile = File("$logsPath/$logFileName")
                             }
                             logFile?.appendText(formatLogMessage(logMessage) + "\n")
                         } catch (_: Exception) { }

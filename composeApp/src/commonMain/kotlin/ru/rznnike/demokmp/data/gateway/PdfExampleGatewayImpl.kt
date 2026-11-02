@@ -12,11 +12,4 @@ class PdfExampleGatewayImpl: PdfExampleGateway {
         }
         return result
     }
-
-    override suspend fun savePdfToFile(tempPdfFile: File, saveFile: File) {
-        tempPdfFile.copyTo(
-            target = saveFile,
-            overwrite = true
-        )
-    }
 }

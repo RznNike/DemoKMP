@@ -19,7 +19,9 @@ import java.time.LocalDate
 
 private const val DATE_YEAR_MIN = 2000
 
-class CustomUIViewModel : BaseUiViewModel<CustomUIViewModel.UiState>() {
+class CustomUIViewModel(
+    private val stringRetriever: suspend (StringResource) -> String = ::getString
+) : BaseUiViewModel<CustomUIViewModel.UiState>() {
     private val clock: Clock by inject()
 
     var textInput by mutableStateOf("")
@@ -30,7 +32,7 @@ class CustomUIViewModel : BaseUiViewModel<CustomUIViewModel.UiState>() {
     )
 
     init {
-        dateInputManager.copyFilterToDateInput(mutableUiState.value.dateFilter)
+        dateInputManager.copyFilterToDateInput(uiState.value.dateFilter)
         setupDropdownOptions()
     }
 
@@ -60,11 +62,10 @@ class CustomUIViewModel : BaseUiViewModel<CustomUIViewModel.UiState>() {
 
     fun onDateChange(delta: Int) {
         dateInputManager.changeDate(delta)
-        updateDateFilter()
     }
 
     private fun updateDateFilter() {
-        if (dateInputManager.inputValue == mutableUiState.value.dateFilter.value) return
+        if (dateInputManager.inputValue == uiState.value.dateFilter.value) return
 
         mutableUiState.update { currentState ->
             currentState.copy(
@@ -74,12 +75,12 @@ class CustomUIViewModel : BaseUiViewModel<CustomUIViewModel.UiState>() {
                 )
             )
         }
-        dateInputManager.copyFilterToDateInput(mutableUiState.value.dateFilter)
+        dateInputManager.copyFilterToDateInput(uiState.value.dateFilter)
     }
 
     private fun setupDropdownOptions() {
         viewModelScope.launch {
-            val name = getString(Res.string.option)
+            val name = stringRetriever(Res.string.option)
             val options = (1..20).map { "$name $it" }
 
             mutableUiState.update { currentState ->
@@ -93,7 +94,7 @@ class CustomUIViewModel : BaseUiViewModel<CustomUIViewModel.UiState>() {
     }
 
     fun onTabChanged(newValue: Tab) {
-        if (newValue == mutableUiState.value.selectedTab) return
+        if (newValue == uiState.value.selectedTab) return
 
         mutableUiState.update { currentState ->
             currentState.copy(
@@ -107,7 +108,7 @@ class CustomUIViewModel : BaseUiViewModel<CustomUIViewModel.UiState>() {
     }
 
     fun onDropdownSelectionChanged(newValue: String) {
-        if (newValue == mutableUiState.value.dropdownSelection) return
+        if (newValue == uiState.value.dropdownSelection) return
 
         mutableUiState.update { currentState ->
             currentState.copy(
@@ -117,7 +118,7 @@ class CustomUIViewModel : BaseUiViewModel<CustomUIViewModel.UiState>() {
     }
 
     fun onDropdownQuerySelectionChanged(newValue: String) {
-        if (newValue == mutableUiState.value.dropdownSelection) return
+        if (newValue == uiState.value.dropdownQuerySelection) return
 
         mutableUiState.update { currentState ->
             currentState.copy(

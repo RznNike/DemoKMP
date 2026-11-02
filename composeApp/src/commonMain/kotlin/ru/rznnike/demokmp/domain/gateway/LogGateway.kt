@@ -34,5 +34,5 @@ interface LogGateway {
 
     suspend fun saveLogToFile(file: File)
 
-    suspend fun saveNetworkLogMessageToFile(file: File, message: NetworkLogMessage)
+    suspend fun saveTextToFile(file: File, text: String)
 }

@@ -50,8 +50,10 @@ class SplashViewModel : BaseViewModel() {
     }
 
     fun setUiReady() {
-        isUiReady = true
-        processScreenState()
+        if (!isUiReady) {
+            isUiReady = true
+            processScreenState()
+        }
     }
 
     private fun processScreenState() {
