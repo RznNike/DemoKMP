@@ -1,6 +1,8 @@
 import com.android.build.api.dsl.ApkSigningConfig
 import com.codingfeline.buildkonfig.compiler.FieldSpec
 import com.codingfeline.buildkonfig.gradle.TargetConfigDsl
+import kotlinx.kover.gradle.plugin.dsl.AggregationType
+import kotlinx.kover.gradle.plugin.dsl.CoverageUnit
 import org.gradle.internal.extensions.stdlib.capitalized
 import org.gradle.internal.extensions.stdlib.toDefaultLowerCase
 import org.gradle.kotlin.dsl.register
@@ -19,6 +21,7 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.ktorfit)
     alias(libs.plugins.room)
+    alias(libs.plugins.kover)
 }
 
 private val globalPackageName = "ru.rznnike.demokmp"
@@ -137,6 +140,51 @@ dependencies {
     add("kspAndroid", libs.room.compiler)
     add("kspDesktop", libs.room.compiler)
     debugImplementation(libs.compose.ui.tooling)
+}
+
+kover {
+    currentProject {
+        sources {
+            excludedSourceSets.add("dev")
+        }
+
+        createVariant("desktopDebug") {
+            add("desktop")
+            add("debug")
+        }
+    }
+
+    reports {
+        filters {
+            excludes {
+                // Room / KSP generated code
+                classes("*_Impl", "*_Impl$*", "*_Factory", "*_Factory$*", "*Dao_Impl*", "*Database_Impl*")
+                // BuildKonfig generated object
+                classes("*BuildKonfig", "*BuildKonfigKt")
+                // Compose Multiplatform generated resources
+                packages("*.generated.resources")
+                classes("*Res", "*ResKt", "*_Res")
+                // Compose compiler output
+                classes("*ComposableSingletons*", "*ComposableSingletons$*", $$"*$ComposableLambda*")
+                // Composable previews (tooling only)
+                annotatedBy("androidx.compose.ui.tooling.preview.Preview")
+            }
+        }
+
+        variant("desktopDebug") {
+            verify {
+                // Advisory only for the first run: report the number, do not fail the build
+                warningInsteadOfFailure = true
+                rule("desktop + android debug unit tests") {
+                    bound {
+                        minValue = 70
+                        coverageUnits = CoverageUnit.LINE
+                        aggregationForGroup = AggregationType.COVERED_PERCENTAGE
+                    }
+                }
+            }
+        }
+    }
 }
 
 android {

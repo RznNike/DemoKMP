@@ -184,3 +184,7 @@ ktorfit = { id = "de.jensklingenberg.ktorfit", version.ref = "ktorfit" }
 
 # Room
 room = { id = "androidx.room", version.ref = "room" }
+
+# Test coverage
+# https://github.com/Kotlin/kotlinx-kover
+kover = { id = "org.jetbrains.kotlinx.kover", version = "0.9.11" }
