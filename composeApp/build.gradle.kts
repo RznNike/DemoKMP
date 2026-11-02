@@ -48,13 +48,16 @@ kotlin {
         commonMain.dependencies {
             implementation(libs.compose.runtime)
             implementation(libs.compose.foundation)
-            implementation(libs.compose.material3)
             implementation(libs.compose.components.resources)
             implementation(libs.compose.ui)
             implementation(libs.compose.ui.backhandler)
             implementation(libs.compose.ui.tooling.preview)
 
-            implementation(libs.viewmodel.compose)
+            implementation(libs.compose.material3)
+
+            implementation(libs.compose.viewmodel)
+
+            implementation(libs.compose.navigation)
 
             implementation(libs.multiplatform.settings)
 
@@ -79,8 +82,6 @@ kotlin {
 
             implementation(libs.filekit.core)
             implementation(libs.filekit.dialogs.compose)
-
-            implementation(libs.navigation)
 
             implementation(libs.coil)
             implementation(libs.coil.compose)
