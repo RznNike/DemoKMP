@@ -8,6 +8,7 @@
 ## Реализованные решения
 * Архитектура проекта - [Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)
 * Архитектура UI слоя - [Compose](https://developer.android.com/develop/ui/compose/documentation) + [MVVM](https://developer.android.com/topic/libraries/architecture/viewmodel)
+* Unit тесты
 * Инъекция зависимостей
 * Локальная база данных (SQL)
 * Хранилище настроек (с хранением пользовательских классов)
@@ -92,7 +93,8 @@
 * [Coil](https://coil-kt.github.io/coil/)
 * [BuildKonfig](https://github.com/yshrsmz/BuildKonfig)
 * [Vico](https://github.com/patrykandpatrick/vico)
-* [Kotlin Multiplatform Markdown Renderer](https://github.com/mikepenz/multiplatform-markdown-renderer)
+* [Multiplatform Markdown Renderer](https://github.com/mikepenz/multiplatform-markdown-renderer)
+* [Kover](https://github.com/Kotlin/kotlinx-kover)
 
 #### Только для ПК
 * [PDFBox](https://pdfbox.apache.org/)
@@ -170,3 +172,6 @@
 Используйте стандартные средства для сборки Android-приложения, предоставляемые IDE. Вы можете собрать подписанный APK или Bundle, перейдя по пути ```Build -> Generate Signed App Bundle / APK```.
 
 *Примечание: не забудьте создать собственный ключ подписи и заменить им ключ-заглушку из этого проекта. Также не публикуйте ключ подписи (не выкладывайте его в репозиторий, как сделано в этом проекте для простоты), если вы планируете выкладывать исходный код своего приложения в открытый доступ. Вы можете добавить ```.jks``` файл ключа в ```gitignore```, а также перенести пароли от него из ```gradle.properties``` в ```local.properties``` (изменив блок ```signingConfigs``` в ```build.gradle.kts```).*
+
+## Использование ИИ
+В этом проекте ИИ было использовано только для помощи в написании тестов. Всё остальное было написано вручную одним кожаным мешком (мной).
