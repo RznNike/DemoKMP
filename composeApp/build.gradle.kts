@@ -130,6 +130,11 @@ kotlin {
 
             implementation(libs.jna.platform)
         }
+
+        getByName("desktopTest").dependencies {
+            implementation(libs.compose.ui.test)
+            implementation(libs.compose.ui.test.junit4)
+        }
     }
 
     room {
