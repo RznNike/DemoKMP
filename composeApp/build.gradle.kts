@@ -95,14 +95,6 @@ kotlin {
             implementation(libs.markdown.material)
         }
 
-        commonTest.dependencies {
-            implementation(kotlin("test"))
-            implementation(libs.coroutines.test)
-            implementation(libs.multiplatform.settings.test)
-            implementation(libs.ktor.mock)
-            implementation(libs.koin.test)
-        }
-
         androidMain.dependencies {
             implementation(libs.androidx.activity.compose)
             implementation(libs.androidx.preference)
@@ -132,14 +124,23 @@ kotlin {
             implementation(libs.jna.platform)
         }
 
+        commonTest.dependencies {
+            implementation(kotlin("test"))
+            implementation(libs.coroutines.test)
+            implementation(libs.multiplatform.settings.test)
+            implementation(libs.ktor.mock)
+            implementation(libs.koin.test)
+            implementation(libs.compose.ui.test.junit4)
+        }
+
         getByName("desktopTest").dependencies {
             implementation(libs.compose.ui.test)
-            implementation(libs.compose.ui.test.junit4)
         }
 
         getByName("androidUnitTest").dependencies {
             implementation(libs.robolectric)
             implementation(libs.junit4)
+            implementation(libs.androidx.espresso.core)
         }
     }
 
@@ -152,6 +153,7 @@ dependencies {
     add("kspAndroid", libs.room.compiler)
     add("kspDesktop", libs.room.compiler)
     debugImplementation(libs.compose.ui.tooling)
+    debugImplementation(libs.androidx.ui.test.manifest)
 }
 
 kover {

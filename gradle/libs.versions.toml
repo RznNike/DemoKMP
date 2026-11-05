@@ -178,6 +178,16 @@ robolectric = { module = "org.robolectric:robolectric", version = "4.17" }
 # https://github.com/junit-team/junit4
 junit4 = { module = "junit:junit", version = "4.13.2" }
 
+# AndroidX Test Espresso
+# https://mvnrepository.com/artifact/androidx.test.espresso/espresso-core
+androidx-espresso-core = { module = "androidx.test.espresso:espresso-core", version = "3.7.0" }
+
+# UI test
+# https://mvnrepository.com/artifact/androidx.compose.ui/ui-test-manifest
+# Update the version according to the main Compose library dependencies
+#noinspection NewerVersionAvailable
+androidx-ui-test-manifest = { module = "androidx.compose.ui:ui-test-manifest", version = "1.12.1" }
+
 
 [plugins]
 jetbrains-compose = { id = "org.jetbrains.compose", version.ref = "compose" }
