@@ -170,6 +170,14 @@ camera-mlkit = { module = "androidx.camera:camera-mlkit-vision", version.ref = "
 # https://mvnrepository.com/artifact/com.google.mlkit/barcode-scanning
 mlkit-barcode = { module = "com.google.mlkit:barcode-scanning", version = "17.3.0" }
 
+# Robolectric
+# https://github.com/robolectric/robolectric
+robolectric = { module = "org.robolectric:robolectric", version = "4.17" }
+
+# JUnit 4
+# https://github.com/junit-team/junit4
+junit4 = { module = "junit:junit", version = "4.13.2" }
+
 
 [plugins]
 jetbrains-compose = { id = "org.jetbrains.compose", version.ref = "compose" }

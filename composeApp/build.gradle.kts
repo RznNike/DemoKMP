@@ -6,6 +6,7 @@ import kotlinx.kover.gradle.plugin.dsl.CoverageUnit
 import org.gradle.internal.extensions.stdlib.capitalized
 import org.gradle.internal.extensions.stdlib.toDefaultLowerCase
 import org.gradle.kotlin.dsl.register
+import org.gradle.jvm.toolchain.JavaLanguageVersion
 import org.gradle.nativeplatform.platform.internal.DefaultNativePlatform
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
@@ -134,6 +135,11 @@ kotlin {
         getByName("desktopTest").dependencies {
             implementation(libs.compose.ui.test)
             implementation(libs.compose.ui.test.junit4)
+        }
+
+        getByName("androidUnitTest").dependencies {
+            implementation(libs.robolectric)
+            implementation(libs.junit4)
         }
     }
 
@@ -289,6 +295,7 @@ android {
 
     testOptions {
         unitTests {
+            isIncludeAndroidResources = true
             isReturnDefaultValues = true
         }
     }
@@ -340,6 +347,25 @@ compose {
             }
         }
     }
+}
+
+tasks.withType<Test>().configureEach {
+    javaLauncher.set(
+        javaToolchains.launcherFor {
+            languageVersion.set(JavaLanguageVersion.of(21))
+        }
+    )
+    jvmArgs(
+        "--add-opens=java.base/java.lang=ALL-UNNAMED",
+        "--add-opens=java.base/java.util=ALL-UNNAMED",
+        "--add-opens=java.base/java.io=ALL-UNNAMED",
+        "--add-opens=java.base/java.net=ALL-UNNAMED",
+        "--add-opens=java.base/java.security=ALL-UNNAMED",
+        "--add-opens=java.base/java.text=ALL-UNNAMED",
+        "--add-opens=java.base/jdk.internal.access=ALL-UNNAMED",
+        "--add-opens=java.desktop/java.awt.font=ALL-UNNAMED",
+        "--add-opens=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED",
+    )
 }
 
 configureBuildKonfigFlavorFromAndroidTasks()
