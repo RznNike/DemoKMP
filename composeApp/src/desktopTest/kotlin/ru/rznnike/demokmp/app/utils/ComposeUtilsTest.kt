@@ -12,8 +12,9 @@ private const val CHAIN_TAG = "addIf-chain"
 
 /**
  * `Modifier.addIf` takes a `@Composable` chain lambda, so it can only be invoked from a composition.
- * That makes this the first Compose UI test in the project — it lives in `desktopTest` because the
- * UI-test APIs are not available to `testDebugUnitTest` without Robolectric or a device.
+ * It stays in `desktopTest` because the behavior is pure common
+ * code with nothing platform-specific to assert, and the desktop host is far cheaper than the
+ * Robolectric host available to `androidUnitTest` (`ComposeUiHostSmokeTest`).
  *
  * The applied chain is observed through `testTag`, the standard way to assert a [Modifier] was
  * applied without pixel snapshots.
