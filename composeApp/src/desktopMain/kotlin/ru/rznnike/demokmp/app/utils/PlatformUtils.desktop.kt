@@ -9,8 +9,7 @@ import java.net.URI
 
 actual val platformName: String = "Java ${System.getProperty("java.version")} | ${System.getProperty("java.vm.name")} | ${System.getProperty("java.vm.vendor")}"
 
-internal fun formatMacAddress(address: ByteArray?): String? =
-    address?.joinToString(separator = "-") { "%02X".format(it) }
+internal fun ByteArray.formatMacAddress() = joinToString(separator = "-") { "%02X".format(it) }
 
 actual fun getMacAddress(): String? =
     NetworkInterface
@@ -23,7 +22,7 @@ actual fun getMacAddress(): String? =
                 { it.displayName.contains(Regex("Virtual", RegexOption.IGNORE_CASE)) }
             )
         )
-        .firstNotNullOfOrNull { element -> formatMacAddress(element.hardwareAddress) }
+        .firstNotNullOfOrNull { it.hardwareAddress?.formatMacAddress() }
 
 actual fun KoinComponent.openLink(link: String) {
     Desktop.getDesktop().browse(URI(link))
