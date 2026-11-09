@@ -12,6 +12,12 @@ import javax.print.attribute.HashPrintRequestAttributeSet
 import javax.print.attribute.standard.DialogTypeSelection
 import javax.print.attribute.standard.Sides
 
+internal fun TwoSidedPrint.toSides() = when (this) {
+    TwoSidedPrint.DISABLED -> Sides.ONE_SIDED
+    TwoSidedPrint.TWO_SIDED_LONG_EDGE -> Sides.TWO_SIDED_LONG_EDGE
+    TwoSidedPrint.TWO_SIDED_SHORT_EDGE -> Sides.TWO_SIDED_SHORT_EDGE
+}
+
 fun printDialog(
     pdf: File,
     printSettings: PrintSettings
@@ -19,13 +25,7 @@ fun printDialog(
     val printerJob = PrinterJob.getPrinterJob()
 
     val attributes = HashPrintRequestAttributeSet()
-    attributes.add(
-        when (printSettings.twoSidedPrint) {
-            TwoSidedPrint.DISABLED -> Sides.ONE_SIDED
-            TwoSidedPrint.TWO_SIDED_LONG_EDGE -> Sides.TWO_SIDED_LONG_EDGE
-            TwoSidedPrint.TWO_SIDED_SHORT_EDGE -> Sides.TWO_SIDED_SHORT_EDGE
-        }
-    )
+    attributes.add(printSettings.twoSidedPrint.toSides())
     attributes.add(DialogTypeSelection.NATIVE)
 
     val document = Loader.loadPDF(pdf)

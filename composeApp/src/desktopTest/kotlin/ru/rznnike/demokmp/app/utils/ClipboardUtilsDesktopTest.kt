@@ -3,8 +3,11 @@ package ru.rznnike.demokmp.app.utils
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.platform.ClipEntry
 import androidx.compose.ui.platform.Clipboard
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.withContext
 import java.awt.datatransfer.DataFlavor
 import java.awt.datatransfer.StringSelection
 import kotlin.test.Test
@@ -16,7 +19,7 @@ import kotlin.test.assertTrue
  * [StringSelection] and hands it to Compose's [Clipboard] from the supplied scope. The scope is the
  * seam under test, so the write must not happen before the scope runs.
  */
-@OptIn(ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalComposeUiApi::class, ExperimentalCoroutinesApi::class)
 class ClipboardUtilsDesktopTest {
     private class FakeClipboard : Clipboard {
         val entries = mutableListOf<ClipEntry?>()
@@ -27,6 +30,8 @@ class ClipboardUtilsDesktopTest {
             entries += clipEntry
         }
     }
+
+    private suspend fun StringSelection.getData() = withContext(Dispatchers.IO) { getTransferData(DataFlavor.stringFlavor) }
 
     @Test
     fun `setText dispatches the clipboard write on the supplied scope`() = runTest {
@@ -42,7 +47,7 @@ class ClipboardUtilsDesktopTest {
         advanceUntilIdle()
 
         val selection = clipboard.entries.single()?.nativeClipEntry as StringSelection
-        assertEquals("hello", selection.getTransferData(DataFlavor.stringFlavor))
+        assertEquals("hello", selection.getData())
     }
 
     @Test
@@ -57,6 +62,6 @@ class ClipboardUtilsDesktopTest {
 
         // Assert
         val selection = clipboard.entries.single()?.nativeClipEntry as StringSelection
-        assertEquals(text, selection.getTransferData(DataFlavor.stringFlavor))
+        assertEquals(text, selection.getData())
     }
 }
