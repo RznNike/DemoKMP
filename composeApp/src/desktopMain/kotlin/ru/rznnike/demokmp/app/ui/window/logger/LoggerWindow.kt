@@ -1,5 +1,6 @@
 package ru.rznnike.demokmp.app.ui.window.logger
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -16,7 +17,6 @@ import ru.rznnike.demokmp.app.navigation.CreateNavDisplay
 import ru.rznnike.demokmp.app.ui.screen.logger.LoggerFlow
 import ru.rznnike.demokmp.app.ui.theme.DesktopAppTheme
 import ru.rznnike.demokmp.app.ui.viewmodel.global.hotkeys.HotKeysViewModel
-import ru.rznnike.demokmp.app.ui.window.BackgroundBox
 import ru.rznnike.demokmp.app.ui.window.LocalWindow
 import ru.rznnike.demokmp.app.ui.window.SetMinimumSize
 import ru.rznnike.demokmp.app.ui.window.WindowFocusRequester
@@ -96,7 +96,7 @@ fun LoggerWindow(
                 appConfigurationUiState.uiScale
             ) {
                 DesktopAppTheme {
-                    BackgroundBox(
+                    Box(
                         modifier = Modifier.clearFocusOnTap()
                     ) {
                         CreateNavDisplay(LoggerFlow())
