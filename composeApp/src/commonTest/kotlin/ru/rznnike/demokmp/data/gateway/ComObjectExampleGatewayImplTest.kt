@@ -1,7 +1,7 @@
 package ru.rznnike.demokmp.data.gateway
 
 import kotlinx.coroutines.test.runTest
-import ru.rznnike.demokmp.data.shell.ShellManager
+import ru.rznnike.demokmp.data.shell.FakeShellManager
 import ru.rznnike.demokmp.domain.gateway.ComObjectExampleGateway
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -11,30 +11,6 @@ private const val COM_INIT = "comInit"
 private const val COM_DESTROY = "comDestroy"
 
 class ComObjectExampleGatewayImplTest {
-    private class FakeShellManager : ShellManager {
-        val calls = mutableListOf<String>()
-        var pcData: String = ""
-        var failure: Throwable? = null
-
-        override suspend fun initWrapper() = record("initWrapper")
-
-        override suspend fun destroyWrapper() = record("destroyWrapper")
-
-        override suspend fun getPCData(): String {
-            record("getPCData")
-            return pcData
-        }
-
-        override suspend fun openFolderOrFile(path: String) = record("openFolderOrFile:$path")
-
-        override suspend fun minimizeAllWindows() = record("minimizeAllWindows")
-
-        private fun record(call: String) {
-            failure?.let { throw it }
-            calls += call
-        }
-    }
-
     /** COM calls are recorded into the same log as the shell manager calls, so their order is asserted. */
     private fun createGateway(
         shellManager: FakeShellManager = FakeShellManager(),

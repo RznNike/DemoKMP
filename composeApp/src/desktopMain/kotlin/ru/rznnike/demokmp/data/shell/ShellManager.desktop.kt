@@ -5,9 +5,12 @@ import kotlinx.coroutines.sync.withLock
 import ru.rznnike.demokmp.data.comobject.COMObjectWrapper
 import ru.rznnike.demokmp.domain.log.Logger
 
-class ShellManagerImpl : ShellManager {
+internal class ShellManagerImpl(
+    private val createWrapper: () -> PCShell = ::PowerShellWrapper,
+    private val initializeCom: () -> Unit = COMObjectWrapper::initialize
+) : ShellManager {
     private val logger = Logger.withTag("ShellManager")
-    private var wrapper: PowerShellWrapper? = null
+    private var wrapper: PCShell? = null
     private var wrapperLock = Mutex()
 
     override suspend fun initWrapper(): Unit = wrapperLock.withLock {
@@ -18,8 +21,8 @@ class ShellManagerImpl : ShellManager {
 
         logger.i("Initializing PowerShellWrapper")
         try {
-            COMObjectWrapper.initialize()
-            wrapper = PowerShellWrapper()
+            initializeCom()
+            wrapper = createWrapper()
         } catch (e: Exception) {
             logger.e(e, "PowerShellWrapper initialization failed")
         }
@@ -59,7 +62,7 @@ class ShellManagerImpl : ShellManager {
     }
 
     private suspend fun withWrapper(
-        action: suspend PowerShellWrapper.() -> Unit
+        action: suspend PCShell.() -> Unit
     ): Unit = wrapperLock.withLock {
         wrapper?.action() ?: throw IllegalStateException("PowerShellWrapper is not initialized")
     }
