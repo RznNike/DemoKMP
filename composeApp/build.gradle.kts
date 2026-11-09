@@ -244,12 +244,14 @@ android {
         }
         register("staging") {
             isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-android.pro")
             signingConfig = signingConfigs.getByName("config")
             versionNameSuffix = ".${globalVersionCode} staging"
         }
         release {
             isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-android.pro")
             signingConfig = signingConfigs.getByName("config")
             versionNameSuffix = ".${globalVersionCode}"
