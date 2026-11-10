@@ -166,6 +166,10 @@ kover {
             add("desktop")
             add("debug")
         }
+
+        copyVariant("domainTier", "desktopDebug")
+        copyVariant("dataTier", "desktopDebug")
+        copyVariant("appTier", "desktopDebug")
     }
 
     reports {
@@ -185,13 +189,53 @@ kover {
             }
         }
 
-        variant("desktopDebug") {
+        variant("domainTier") {
+            filtersAppend {
+                includes {
+                    packages("ru.rznnike.demokmp.domain")
+                }
+            }
             verify {
-                // Advisory only for the first run: report the number, do not fail the build
                 warningInsteadOfFailure = true
-                rule("desktop + android debug unit tests") {
+                rule("domain layer — line ratchet (tier target 100)") {
                     bound {
-                        minValue = 70
+                        minValue = 97
+                        coverageUnits = CoverageUnit.LINE
+                        aggregationForGroup = AggregationType.COVERED_PERCENTAGE
+                    }
+                }
+            }
+        }
+
+        variant("dataTier") {
+            filtersAppend {
+                includes {
+                    packages("ru.rznnike.demokmp.data")
+                }
+            }
+            verify {
+                warningInsteadOfFailure = true
+                rule("data layer — line ratchet (tier target 80)") {
+                    bound {
+                        minValue = 93
+                        coverageUnits = CoverageUnit.LINE
+                        aggregationForGroup = AggregationType.COVERED_PERCENTAGE
+                    }
+                }
+            }
+        }
+
+        variant("appTier") {
+            filtersAppend {
+                includes {
+                    packages("ru.rznnike.demokmp.app")
+                }
+            }
+            verify {
+                warningInsteadOfFailure = true
+                rule("app layer — line ratchet (tier target 90)") {
+                    bound {
+                        minValue = 40
                         coverageUnits = CoverageUnit.LINE
                         aggregationForGroup = AggregationType.COVERED_PERCENTAGE
                     }
@@ -264,10 +308,8 @@ android {
         ignoreWarnings = false
         warningsAsErrors = false
         checkDependencies = true
-        htmlReport = true
         explainIssues = true
         noLines = false
-        textOutput = file("stdout")
         disable.add("MissingClass")
         disable.add("NewApi")
     }
