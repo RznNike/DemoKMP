@@ -149,6 +149,7 @@ fun HotkeysDialog(
                         VerticalScrollbar(
                             modifier = Modifier
                                 .height(listHeight)
+                                .padding(2.dp)
                                 .align(Alignment.CenterEnd),
                             adapter = rememberScrollbarAdapter(scrollState)
                         )

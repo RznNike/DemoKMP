@@ -120,7 +120,7 @@ data class CustomColorScheme(
     val logNetworkCancelled: Color = Color.Unspecified,
     val searchSelection: Color = Color.Unspecified,
     val disabledText: Color = Color.Unspecified,
-    val scrollbarAlpha: Float = 0.1f,
+    val scrollbarAlpha: Float = 0.2f,
     val scrollbarHoverAlpha: Float = 0.5f
 )
 

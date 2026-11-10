@@ -104,6 +104,7 @@ fun PdfViewer(
     VerticalScrollbar(
         modifier = Modifier
             .align(Alignment.CenterEnd)
+            .padding(2.dp)
             .fillMaxHeight(),
         adapter = rememberScrollbarAdapter(scrollState)
     )
