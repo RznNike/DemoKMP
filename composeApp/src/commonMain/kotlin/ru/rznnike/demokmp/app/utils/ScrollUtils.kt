@@ -2,25 +2,49 @@ package ru.rznnike.demokmp.app.utils
 
 import androidx.compose.foundation.lazy.LazyListState
 
-suspend fun LazyListState.smartScrollToItem(index: Int) {
-    if (layoutInfo.totalItemsCount == 0) return
+internal data class VisibleItem(
+    val index: Int,
+    val offset: Int,
+    val size: Int,
+)
 
-    val safeItemIndex = index.coerceIn(0, layoutInfo.totalItemsCount - 1)
+internal data class ScrollTarget(
+    val index: Int,
+    val offset: Int,
+)
 
-    if (firstVisibleItemIndex > safeItemIndex) {
-        scrollToItem(safeItemIndex)
-    } else {
-        val itemHeight = layoutInfo.visibleItemsInfo.lastOrNull()?.size ?: 0
-        val lastVisibleItemOffset = layoutInfo.visibleItemsInfo.lastOrNull()?.let {
-            it.offset + itemHeight - layoutInfo.viewportSize.height
-        } ?: 0
-        val lastIndexCorrection = if (lastVisibleItemOffset < 0) 0 else 1
-        val lastVisibleIndex = (layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: 0) - lastIndexCorrection
-        if (lastVisibleIndex < (safeItemIndex)) {
-            scrollToItem(
-                index = safeItemIndex,
-                scrollOffset = itemHeight - layoutInfo.viewportSize.height
-            )
-        }
-    }
+internal fun computeScrollTarget(
+    targetIndex: Int,
+    totalItemsCount: Int,
+    firstVisibleItemIndex: Int,
+    lastVisibleItem: VisibleItem?,
+    viewportHeight: Int,
+): ScrollTarget? {
+    if (totalItemsCount == 0) return null
+
+    val safeItemIndex = targetIndex.coerceIn(0, totalItemsCount - 1)
+
+    if (firstVisibleItemIndex > safeItemIndex) return ScrollTarget(index = safeItemIndex, offset = 0)
+
+    val lastVisibleItemOffset = lastVisibleItem?.let {
+        it.offset + it.size - viewportHeight
+    } ?: 0
+    val lastIndexCorrection = if (lastVisibleItemOffset < 0) 0 else 1
+    val lastVisibleIndex = (lastVisibleItem?.index ?: 0) - lastIndexCorrection
+
+    if (lastVisibleIndex >= safeItemIndex) return null
+
+    val itemHeight = lastVisibleItem?.size ?: 0
+    return ScrollTarget(index = safeItemIndex, offset = itemHeight - viewportHeight)
+}
+
+suspend fun LazyListState.smartScrollToItem(index: Int) = computeScrollTarget(
+    targetIndex = index,
+    totalItemsCount = layoutInfo.totalItemsCount,
+    firstVisibleItemIndex = firstVisibleItemIndex,
+    lastVisibleItem = layoutInfo.visibleItemsInfo.lastOrNull()
+        ?.let { VisibleItem(it.index, it.offset, it.size) },
+    viewportHeight = layoutInfo.viewportSize.height,
+)?.let { target ->
+    scrollToItem(target.index, target.offset)
 }

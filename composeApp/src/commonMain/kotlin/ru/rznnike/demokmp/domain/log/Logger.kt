@@ -75,6 +75,7 @@ class Logger private constructor(
                 try {
                     extension.action(timestamp)
                 } catch (exception: Exception) {
+                    currentCoroutineContext().ensureActive()
                     printLoggerError("Error in logger extension ${extension::class.java.name}:\n${exception.stackTraceToString()}")
                 }
             }
@@ -124,9 +125,8 @@ class Logger private constructor(
                 for (task in queue) {
                     try {
                         task()
-                    } catch (cancellation: CancellationException) {
-                        throw cancellation
                     } catch (exception: Exception) {
+                        currentCoroutineContext().ensureActive()
                         printLoggerError("Error while processing log message:\n${exception.stackTraceToString()}")
                     }
                 }

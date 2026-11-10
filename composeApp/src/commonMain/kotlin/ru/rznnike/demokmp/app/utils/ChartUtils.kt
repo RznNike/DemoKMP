@@ -71,7 +71,7 @@ fun <M : MeasuringContext, D : DrawingContext> rememberSimpleHorizontalLegend(
 fun rememberChartPointProducer(data: List<ChartPoint>): CartesianChartModelProducer {
     val modelProducer = remember { CartesianChartModelProducer() }
     LaunchedEffect(data) {
-        val finalData = if (data.isEmpty()) listOf(ChartPoint()) else data
+        val finalData = data.ifEmpty { listOf(ChartPoint()) }
         modelProducer.runTransaction {
             lineModel {
                 series(

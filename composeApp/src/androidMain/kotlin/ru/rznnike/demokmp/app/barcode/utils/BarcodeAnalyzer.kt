@@ -47,7 +47,7 @@ class BarcodeAnalyzer(
                     .addOnCompleteListener {
                         imageProxy.close()
                     }
-            }
+            } ?: imageProxy.close()
         } else {
             imageProxy.close()
         }

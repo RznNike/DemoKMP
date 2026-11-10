@@ -23,7 +23,6 @@ import ru.rznnike.demokmp.app.ui.theme.DesktopAppTheme
 import ru.rznnike.demokmp.app.ui.view.AppClosingPlaceholder
 import ru.rznnike.demokmp.app.ui.view.BottomStatusBar
 import ru.rznnike.demokmp.app.ui.viewmodel.global.hotkeys.HotKeysViewModel
-import ru.rznnike.demokmp.app.ui.window.BackgroundBox
 import ru.rznnike.demokmp.app.utils.clearFocusOnTap
 import ru.rznnike.demokmp.app.utils.onClick
 import ru.rznnike.demokmp.app.utils.windowViewModel
@@ -151,23 +150,21 @@ fun MainFrame() {
                 }
             }
         ) {
-            BackgroundBox {
-                Column(
-                    modifier = Modifier.fillMaxSize()
+            Column(
+                modifier = Modifier.fillMaxSize()
+            ) {
+                Box(
+                    modifier = Modifier.weight(1f)
                 ) {
-                    Box(
-                        modifier = Modifier.weight(1f)
-                    ) {
-                        CreateNavDisplay(SplashFlow())
-                    }
-                    BottomStatusBar(
-                        isVisible = appConfigurationUiState.isBottomStatusBarVisible,
-                        uiScale = appConfigurationUiState.uiScale,
-                        onLoggerClick = appConfigurationViewModel::openLoggerWindow,
-                        onKeyboardShortcutsClick = appConfigurationViewModel::openHotkeysDialog,
-                        onUiScaleChanged = appConfigurationViewModel::setUiScale
-                    )
+                    CreateNavDisplay(SplashFlow())
                 }
+                BottomStatusBar(
+                    isVisible = appConfigurationUiState.isBottomStatusBarVisible,
+                    uiScale = appConfigurationUiState.uiScale,
+                    onLoggerClick = appConfigurationViewModel::openLoggerWindow,
+                    onKeyboardShortcutsClick = appConfigurationViewModel::openHotkeysDialog,
+                    onUiScaleChanged = appConfigurationViewModel::setUiScale
+                )
             }
 
             NotifierDialog()

@@ -1,4 +1,4 @@
-<!-- Context: project-intelligence/business | Priority: high | Version: 1.3 | Updated: 2026-10-30 -->
+<!-- Context: project-intelligence/business | Priority: high | Version: 1.4 | Updated: 2026-11-09 -->
 
 # Business Domain
 
@@ -47,17 +47,18 @@ Solution: One runnable demo combining Clean Architecture, Compose UI, DI, DB,
 
 ## Success Metrics (qualitative)
 
-| Metric       | Definition                                    | Target                                          |
-|--------------|-----------------------------------------------|-------------------------------------------------|
-| Adoption     | Stars / clones / forks                        | Growing                                         |
-| Completeness | Solutions demonstrated                        | Broad feature set                               |
-| Build health | Builds on Windows/Linux + Android             | Green                                           |
-| Quality      | Solutions covered by automated tests          | Broad (765 test cases; every ViewModel but one) |
-| Testability  | Test runnable from one command on all targets | Green                                           |
+| Metric       | Definition                                    | Target                                                      |
+|--------------|-----------------------------------------------|-------------------------------------------------------------|
+| Adoption     | Stars / clones / forks                        | Growing                                                     |
+| Completeness | Solutions demonstrated                        | Broad feature set                                           |
+| Build health | Builds on Windows/Linux + Android             | Green                                                       |
+| Quality      | Solutions covered by automated tests          | Broad (867 source tests; every ViewModel but one; UI smoke) |
+| Testability  | Test runnable from one command on all targets | Green (desktop + Android host JVM)                          |
+| Coverage     | Kover line coverage on the merged variant     | Measured; 32.84 % baseline (advisory 70 % floor)            |
 
 ## Roadmap Context
 
-**Current Focus**: keep the feature set current with dependencies and broaden test coverage (Android is the remaining gap).
+**Current Focus**: broaden test coverage (Kover baseline, Robolectric Android host tests, Compose UI smoke tests); Android platform hardening is the next gap, CI/instrumentation are optional.
 
 **Long-term Vision**: a canonical KMP reference project.
 
@@ -66,7 +67,8 @@ Solution: One runnable demo combining Clean Architecture, Compose UI, DI, DB,
 - Demo project: relies on public sample APIs
 - Desktop builds are OS-specific (build on the OS you target)
 - Testing uses only `kotlin.test` + fakes, deliberately avoiding a mocking framework
-- Android coverage is limited to host-JVM ViewModel tests; no instrumented tests
+- Android coverage uses host-JVM tests (Robolectric) + Compose UI smoke; no instrumented/device tests
+- No CI — tests run locally; non-interactive Gradle invocations must supply the signing properties
 
 ## Onboarding Checklist
 

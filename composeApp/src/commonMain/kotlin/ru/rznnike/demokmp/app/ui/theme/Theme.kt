@@ -192,6 +192,18 @@ val darkCustomDrawables = CustomDrawables(
 
 val LocalCustomDrawables = staticCompositionLocalOf { lightCustomDrawables }
 
+internal fun resolveTheme(theme: Theme, systemIsDark: Boolean) = when {
+    theme != Theme.AUTO -> theme
+    systemIsDark -> Theme.DARK
+    else -> Theme.LIGHT
+}
+
+internal fun Theme.isDark() = when (this) {
+    Theme.DARK,
+    Theme.DARK_CONTRAST -> true
+    else -> false
+}
+
 @Composable
 fun AppTheme(
     content: @Composable () -> Unit
@@ -199,10 +211,11 @@ fun AppTheme(
     val appConfigurationViewModel: AppConfigurationViewModel = koinInject()
     val appConfigurationUiState by appConfigurationViewModel.uiState.collectAsState()
 
-    val selectedTheme = if (appConfigurationUiState.theme == Theme.AUTO) {
-        if (isSystemInDarkTheme()) Theme.DARK else Theme.LIGHT
-    } else appConfigurationUiState.theme
-    val isDarkTheme = (selectedTheme == Theme.DARK) || (selectedTheme == Theme.DARK_CONTRAST)
+    val selectedTheme = resolveTheme(
+        theme = appConfigurationUiState.theme,
+        systemIsDark = isSystemInDarkTheme()
+    )
+    val isDarkTheme = selectedTheme.isDark()
 
     val colorScheme: ColorScheme
     val customColorScheme: CustomColorScheme

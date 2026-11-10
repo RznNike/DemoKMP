@@ -1,4 +1,4 @@
-<!-- Context: project-intelligence/code-patterns | Priority: high | Version: 1.1 | Updated: 2026-10-30 -->
+<!-- Context: project-intelligence/code-patterns | Priority: high | Version: 1.2 | Updated: 2026-11-09 -->
 
 # Code Patterns
 
@@ -54,18 +54,7 @@ class HTTPExampleViewModel : BaseUiViewModel<HTTPExampleViewModel.UiState>() {
 }
 ```
 
-## 4. UI Component
-
-```kotlin
-@Composable
-fun FilledButtonWithLoader(
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit,
-    content: @Composable RowScope.() -> Unit
-) { /* ... */ }
-```
-
-## 5. Room Entity + Mapper
+## 4. Room Entity + Mapper
 
 Entities live in `data/storage/entity`; mapping to domain models uses extension functions.
 
@@ -79,30 +68,21 @@ data class DBExampleDataEntity(
 fun DBExampleDataEntity.toDBExampleData() = DBExampleData(id = id, name = name)
 ```
 
-## 6. Logger Extension
+## 5. Logger Extension
 
-`LoggerExtension` is the abstract base; each sink implements `addMessage`. `Logger` captures one timestamp
-per message and feeds extensions through a single-consumer queue, so `timestamp` is always passed down.
+`LoggerExtension` is the abstract base; each sink implements `addMessage`. `Logger` captures one timestamp per message and feeds extensions through a single-consumer queue.
 
 ```kotlin
 abstract class LoggerExtension(
     protected val stopAfterOneError: Boolean = false,
     protected val isDebugEnabled: Boolean = BuildKonfig.DEBUG
 ) {
-    protected lateinit var clock: Clock
-    protected lateinit var coroutineDispatcher: CoroutineDispatcher
-
     open fun init(clock: Clock, coroutineDispatcher: CoroutineDispatcher)
-
     open suspend fun i(tag: String, message: String, timestamp: Long = clock.millis()) =
         addMessage(tag, message, LogLevel.INFO, timestamp = timestamp)
-
     abstract suspend fun addMessage(
-        tag: String,
-        message: String,
-        level: LogLevel,
-        type: LogType = LogType.DEFAULT,
-        timestamp: Long = clock.millis(),
+        tag: String, message: String, level: LogLevel,
+        type: LogType = LogType.DEFAULT, timestamp: Long = clock.millis(),
         callback: suspend (LogMessage) -> Unit = { }
     )
 }
@@ -111,20 +91,7 @@ abstract class LoggerExtension(
 **Sinks**: `ConsoleLoggerExtension`, `FileLoggerExtension`, `DatabaseLoggerExtension`, `MemoryCacheLoggerExtension`.
 **Init**: `Logger.init(clock, coroutineDispatcher, extensions)`; tag-scoped calls via `Logger.withTag("Navigation").i(...)`.
 
-## 7. Event Dispatcher
-
-Typed, tag-aware pub/sub over `AppEvent` subclasses.
-
-```kotlin
-class EventDispatcher(private val coroutineScopeProvider: CoroutineScopeProvider) {
-    fun addEventListener(appEventClass: KClass<out AppEvent>, listener: EventListener)
-    fun addSingleByTagEventListener(appEventClass: KClass<out AppEvent>, listener: EventListener)
-    fun removeEventListener(listener: EventListener)
-    fun sendEvent(appEvent: AppEvent)   // dispatches on coroutineScopeProvider.ui
-}
-```
-
-## 8. Test Double (Fake)
+## 6. Test Double (Fake)
 
 Fakes are handwritten classes in `commonTest`, mirroring the production package.
 
@@ -142,40 +109,76 @@ class FakeHTTPExampleGateway : HTTPExampleGateway {
 }
 ```
 
-## 9. Error Handling (interface + impl)
+## 7. Pure-Function Seam (testability)
 
-ViewModels depend on the `ErrorHandler` interface; the implementation maps throwables to user-facing text.
-Tests substitute `FakeErrorHandler`.
+Extract the decision into an `internal` pure function; keep the platform call site thin. This is the preferred way to make platform code testable without changing behavior.
 
 ```kotlin
-// app/error/ErrorHandler.kt
-interface ErrorHandler {
-    suspend fun proceed(error: Throwable, callback: suspend (String) -> Unit)
-}
+// production
+internal fun calculateMinimumSize(width: Dp, height: Dp, density: Density): Dimension? =
+    if (width.isSpecified && height.isSpecified) Dimension(/* ... */) else null
 
-// usage inside a ViewModel
-private val errorHandler: ErrorHandler by inject()
-
-errorHandler.proceed(throwable) { message ->
-    // map message into UiState
+fun Window.SetMinimumSize(width: Dp = Dp.Unspecified, height: Dp = Dp.Unspecified) {
+    calculateMinimumSize(width, height, density)?.let { minimumSize = it }
 }
 ```
 
----
+Other examples: `internal resolveTheme` / `Theme.isDark`, `internal formatMacAddress`, `internal TwoSidedPrint.toSides`.
+
+## 8. Compose UI Smoke Test (desktop)
+
+Use `createComposeRule()` from the `v2` package and the DI-free `PreviewDesktopAppTheme`. Assert semantics-observable behavior only.
+
+```kotlin
+class DropdownSelectorTest {
+    @get:Rule val rule = createComposeRule()   // androidx.compose.ui.test.junit4.v2
+
+    @Test
+    fun `emits tapped item`() {
+        var selected = ""
+        rule.setContent {
+            PreviewDesktopAppTheme {
+                DropdownSelector(items = listOf("One"), onSelect = { selected = it })
+            }
+        }
+        rule.onNodeWithText("One").performClick()
+        rule.runOnIdle { assertEquals("One", selected) }
+    }
+}
+```
+
+Do **not** compose screens that need `LocalWindow`, `ViewModelStoreOwner`, `getNavigator()` or global Koin — accepted gap.
+
+## 9. Robolectric Host Test (Android)
+
+Android framework code runs on the host JVM; no emulator.
+
+```kotlin
+@RunWith(RobolectricTestRunner::class)
+@Config(sdk = [37], application = Application::class)
+@GraphicsMode(GraphicsMode.Mode.NATIVE)   // Compose only
+class KoinModuleAndroidTest {
+    @Test
+    fun `resolves Android preferences`() {
+        val app = koinApplication {
+            androidContext(RuntimeEnvironment.getApplication())
+            modules(appComponent)
+        }
+        // assert a real SharedPreferences / Room round-trip
+    }
+}
+```
 
 ## Naming Conventions
 
 | Type                | Convention                | Example                           |
 |---------------------|---------------------------|-----------------------------------|
-| Files               | PascalCase, matches class | `HTTPExampleViewModel.kt`         |
-| Classes/Interfaces  | PascalCase                | `AppApi`, `HTTPExampleGateway`    |
-| Functions/variables | camelCase                 | `getRandomImageLinks()`           |
-| Constants           | SCREAMING_SNAKE_CASE      | `IMAGES_COUNT`, `TIMEOUT_MS`      |
-| Packages            | lowercase, dot-separated  | `ru.rznnike.demokmp.data.network` |
 | UseCases            | Verb+Noun+`UseCase`       | `GetRandomImageLinksUseCase`      |
 | Gateway impls       | interface name + `Impl`   | `HTTPExampleGatewayImpl`          |
 | Room entities       | `...Entity`               | `DBExampleDataEntity`             |
 | Logger sinks        | `...LoggerExtension`      | `FileLoggerExtension`             |
+| Test classes        | `<ClassUnderTest>Test`    | `SettingsViewModelTest`           |
+| Internal seams      | `internal` + intent verb  | `calculateMinimumSize`            |
 
 ## 📂 Codebase References
 
@@ -187,8 +190,9 @@ errorHandler.proceed(throwable) { message ->
 | Error handler    | `app/error/ErrorHandler.kt`, `app/error/ErrorHandlerImpl.kt`   |
 | Room entities    | `data/storage/entity/*.kt`                                     |
 | Logger bases     | `domain/log/extension/*.kt`                                    |
-| Event dispatcher | `app/dispatcher/event/EventDispatcher.kt`                      |
 | Fakes            | `commonTest/kotlin/ru/rznnike/demokmp/domain/gateway/Fake*.kt` |
+| UI tests         | `desktopTest/.../app/ui/**`, `androidUnitTest/.../ComposeUiHostSmokeTest.kt` |
+| Test rule        | `commonTest/.../app/common/viewmodel/ViewModelTestRule.kt`     |
 
 ## Related Files
 

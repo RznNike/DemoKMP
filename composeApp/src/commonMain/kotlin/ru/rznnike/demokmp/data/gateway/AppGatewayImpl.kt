@@ -1,5 +1,7 @@
 package ru.rznnike.demokmp.data.gateway
 
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.withContext
 import okhttp3.internal.closeQuietly
 import ru.rznnike.demokmp.BuildKonfig
@@ -29,6 +31,7 @@ class AppGatewayImpl(
             }
             false
         } catch (_: Exception) {
+            currentCoroutineContext().ensureActive()
             Logger.e("App is already running!")
             true
         }

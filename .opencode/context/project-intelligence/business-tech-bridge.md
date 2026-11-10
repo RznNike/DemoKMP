@@ -1,4 +1,4 @@
-<!-- Context: project-intelligence/bridge | Priority: high | Version: 1.3 | Updated: 2026-10-30 -->
+<!-- Context: project-intelligence/bridge | Priority: high | Version: 1.4 | Updated: 2026-11-09 -->
 
 # Business ↔ Tech Bridge
 
@@ -11,15 +11,15 @@
 
 ## Core Mapping
 
-| Goal                                | Technical Solution                                          | Why                                           | Value                            |
-|-------------------------------------|-------------------------------------------------------------|-----------------------------------------------|----------------------------------|
-| Cross-platform code sharing         | Kotlin Multiplatform `commonMain` + `expect/actual`         | Single source of truth                        | Learn once, run on PC + Android  |
-| Maintainable architecture           | Clean Architecture (app/domain/data)                        | Testable, decoupled                           | Patterns learners can copy       |
-| Modern declarative UI               | Compose MP + Material 3 + MVVM                              | Shared UI across targets                      | One UI skill set                 |
-| Realistic backend usage             | Ktor + Ktorfit HTTP & WebSocket demos                       | Real network integration                      | Ready-made reference             |
-| Persistence demos                   | Room (SQL) + Multiplatform Settings                         | Show DB + prefs patterns                      | Copy-paste persistence           |
-| Platform-specific power             | COM objects (Win), PDF, camera/barcode (Android)            | Show native interop                           | Beyond common code               |
-| Verified, regression-safe solutions | `commonTest` + `desktopTest` + `androidUnitTest` with fakes | Every layer/ViewModel exercised automatically | Learners can trust the reference |
+| Goal                                | Technical Solution                                                                                  | Why                                                            | Value                            |
+|-------------------------------------|-----------------------------------------------------------------------------------------------------|----------------------------------------------------------------|----------------------------------|
+| Cross-platform code sharing         | Kotlin Multiplatform `commonMain` + `expect/actual`                                                 | Single source of truth                                         | Learn once, run on PC + Android  |
+| Maintainable architecture           | Clean Architecture (app/domain/data)                                                                | Testable, decoupled                                            | Patterns learners can copy       |
+| Modern declarative UI               | Compose MP + Material 3 + MVVM                                                                      | Shared UI across targets                                       | One UI skill set                 |
+| Realistic backend usage             | Ktor + Ktorfit HTTP & WebSocket demos                                                               | Real network integration                                       | Ready-made reference             |
+| Persistence demos                   | Room (SQL) + Multiplatform Settings                                                                 | Show DB + prefs patterns                                       | Copy-paste persistence           |
+| Platform-specific power             | COM objects (Win), PDF, camera/barcode (Android)                                                    | Show native interop                                            | Beyond common code               |
+| Verified, regression-safe solutions | `commonTest` + `desktopTest` + `androidUnitTest` with fakes; Kover + Robolectric + Compose UI smoke | Every layer/ViewModel exercised automatically; UI infra proven | Learners can trust the reference |
 
 ## Feature Mapping Examples
 
@@ -54,26 +54,28 @@
 - Business goal: make the demo trustworthy and regression-safe
 
 **Technical Implementation**:
-- Solution: `commonTest` (125 files / 107 test classes) with `kotlin.test` + `kotlinx-coroutines-test` + `ktor-mock`; `desktopTest` (15) for platform-bound tests; `androidUnitTest` (2) for Android-only ViewModels — 765 `@Test` cases
-- Architecture: handwritten `Fake*` gateways in `domain/gateway`; `FakeDispatcherProvider`, `FakeCoroutineScopeProvider`, `FakeErrorHandler` for collaborators; `ViewModelTestRule` for `Dispatchers.setMain`
-- Coverage: all UseCases, all ViewModels except `BarcodeScannerViewModel`, all gateway impls, Koin graph (`verify()`), network interceptors, DAOs, logger sinks, navigation, domain utils/models
+- Solution: `commonTest` (130 files / 111 classes / 679 tests) with `kotlin.test` + `kotlinx-coroutines-test` + `ktor-mock` + Compose UI test; `desktopTest` (30 / 176) for platform-bound + UI smoke tests; `androidUnitTest` (5 / 12) for Android host-JVM tests — **867 source-level `@Test` cases**. Executed: `desktopTest` 141 suites / 855 tests; `testDebugUnitTest` 116 / 691.
+- Architecture: handwritten `Fake*` gateways in `domain/gateway`, `FakeShellManager`, `FakeDispatcherProvider`, `FakeCoroutineScopeProvider`, `FakeErrorHandler`, `StubResponseInterceptor`; `ViewModelTestRule` for `Dispatchers.setMain`; Robolectric for Android framework; Kover for coverage.
+- Coverage: all UseCases, all ViewModels except `BarcodeScannerViewModel`, all 10 gateway impls, Koin graph (`verify()` + runtime resolution on both platforms), screen registration, network interceptors, DAOs, logger sinks, navigation, domain utils/models, desktop platform helpers, 5 Compose UI smoke classes. Kover baseline 32.84 % line.
 
 **Connection**: turns the demo from "code that looks right" into "code that is verified" — the strongest teaching signal the project can send.
 
 ## Trade-off Decisions
 
-| Situation                       | Business Priority     | Technical Priority         | Decision                                                  | Rationale                                         |
-|---------------------------------|-----------------------|----------------------------|-----------------------------------------------------------|---------------------------------------------------|
-| Demo clarity vs completeness    | Show many features    | Keep codebase small        | Many small isolated demo screens                          | Each solution stays standalone and copyable       |
-| Demo simplicity vs test tooling | Minimize deps & setup | Maximize regression safety | `kotlin.test` + fakes + `ktor-mock`, no mocking framework | Both goals met; no heavy multiplatform test setup |
-| Android coverage vs demo scope  | Keep demo light       | Cover platform VMs         | Host-JVM `androidUnitTest` for 2 VMs, no emulator tests   | Real value without instrumented-test overhead     |
+| Situation                       | Business Priority     | Technical Priority         | Decision                                                             | Rationale                                         |
+|---------------------------------|-----------------------|----------------------------|----------------------------------------------------------------------|---------------------------------------------------|
+| Demo clarity vs completeness    | Show many features    | Keep codebase small        | Many small isolated demo screens                                     | Each solution stays standalone and copyable       |
+| Demo simplicity vs test tooling | Minimize deps & setup | Maximize regression safety | `kotlin.test` + fakes + `ktor-mock`, no mocking framework            | Both goals met; no heavy multiplatform test setup |
+| Android coverage vs demo scope  | Keep demo light       | Cover platform code        | Host-JVM `androidUnitTest` with Robolectric (5 classes), no emulator | Real framework coverage without device overhead   |
+| UI coverage vs harness cost     | Show working UI       | Avoid fake harnesses       | 5 component-level Compose smoke tests, no screen composition         | Proves the infra; screens need global Koin        |
 
 ## Common Misalignments
 
-| Misalignment              | Warning Signs                           | Resolution                                |
-|---------------------------|-----------------------------------------|-------------------------------------------|
-| Over-engineering the demo | Production-grade abstractions appear    | Keep demos minimal and illustrative       |
-| Untested "done"           | A feature is merged without a test file | Add a `Fake` + test alongside the feature |
+| Misalignment              | Warning Signs                           | Resolution                                       |
+|---------------------------|-----------------------------------------|--------------------------------------------------|
+| Over-engineering the demo | Production-grade abstractions appear    | Keep demos minimal and illustrative              |
+| Untested "done"           | A feature is merged without a test file | Add a `Fake` + test alongside the feature        |
+| "UI is covered"           | Only component smoke tests exist        | State that screen composition is an accepted gap |
 
 ## Onboarding Checklist
 
@@ -89,6 +91,7 @@
 | Logger     | `domain/log/**`                                                                                                                                                                        |
 | Screens    | `app/viewmodel/**`, `app/ui/**`                                                                                                                                                        |
 | Test suite | `composeApp/src/commonTest/`, `desktopTest/`, `androidUnitTest/`                                                                                                                       |
+| Coverage   | `composeApp/build.gradle.kts` (`kover`)                                                                                                                                                |
 
 ## Related Files
 

@@ -1,4 +1,4 @@
-<!-- Context: project-intelligence/nav | Priority: high | Version: 1.3 | Updated: 2026-10-30 -->
+<!-- Context: project-intelligence/nav | Priority: high | Version: 1.4 | Updated: 2026-11-09 -->
 
 # Project Intelligence
 
@@ -57,6 +57,7 @@ Trigger → Action:
 - New pattern shape → update `code-patterns.md`
 - Test stack / source-set change → update `testing-strategy.md`
 - New shared test rule or fake kind → update `testing-strategy.md` + `living-notes.md`
+- Coverage / test-infra change → update `testing-strategy.md` + `living-notes.md`
 - New decision → add to `decisions-log.md`
 - New debt/issue → update `living-notes.md`
 - Feature change → update `business-tech-bridge.md`
@@ -69,6 +70,7 @@ Trigger → Action:
 | Source root       | `composeApp/src/commonMain/kotlin/ru/rznnike/demokmp/`      |
 | Test roots        | `commonTest/`, `desktopTest/`, `androidUnitTest/`           |
 | Test rule         | `commonTest/.../app/common/viewmodel/ViewModelTestRule.kt`  |
+| Coverage report   | `:composeApp:koverHtmlReportDesktopDebug`                   |
 
 ## Related Files
 

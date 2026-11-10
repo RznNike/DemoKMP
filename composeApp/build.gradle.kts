@@ -6,6 +6,7 @@ import kotlinx.kover.gradle.plugin.dsl.CoverageUnit
 import org.gradle.internal.extensions.stdlib.capitalized
 import org.gradle.internal.extensions.stdlib.toDefaultLowerCase
 import org.gradle.kotlin.dsl.register
+import org.gradle.jvm.toolchain.JavaLanguageVersion
 import org.gradle.nativeplatform.platform.internal.DefaultNativePlatform
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
@@ -94,14 +95,6 @@ kotlin {
             implementation(libs.markdown.material)
         }
 
-        commonTest.dependencies {
-            implementation(kotlin("test"))
-            implementation(libs.coroutines.test)
-            implementation(libs.multiplatform.settings.test)
-            implementation(libs.ktor.mock)
-            implementation(libs.koin.test)
-        }
-
         androidMain.dependencies {
             implementation(libs.androidx.activity.compose)
             implementation(libs.androidx.preference)
@@ -130,6 +123,25 @@ kotlin {
 
             implementation(libs.jna.platform)
         }
+
+        commonTest.dependencies {
+            implementation(kotlin("test"))
+            implementation(libs.coroutines.test)
+            implementation(libs.multiplatform.settings.test)
+            implementation(libs.ktor.mock)
+            implementation(libs.koin.test)
+            implementation(libs.compose.ui.test.junit4)
+        }
+
+        getByName("desktopTest").dependencies {
+            implementation(libs.compose.ui.test)
+        }
+
+        getByName("androidUnitTest").dependencies {
+            implementation(libs.robolectric)
+            implementation(libs.junit4)
+            implementation(libs.androidx.espresso.core)
+        }
     }
 
     room {
@@ -141,6 +153,7 @@ dependencies {
     add("kspAndroid", libs.room.compiler)
     add("kspDesktop", libs.room.compiler)
     debugImplementation(libs.compose.ui.tooling)
+    debugImplementation(libs.androidx.ui.test.manifest)
 }
 
 kover {
@@ -153,6 +166,10 @@ kover {
             add("desktop")
             add("debug")
         }
+
+        copyVariant("domainTier", "desktopDebug")
+        copyVariant("dataTier", "desktopDebug")
+        copyVariant("appTier", "desktopDebug")
     }
 
     reports {
@@ -172,13 +189,53 @@ kover {
             }
         }
 
-        variant("desktopDebug") {
+        variant("domainTier") {
+            filtersAppend {
+                includes {
+                    packages("ru.rznnike.demokmp.domain")
+                }
+            }
             verify {
-                // Advisory only for the first run: report the number, do not fail the build
                 warningInsteadOfFailure = true
-                rule("desktop + android debug unit tests") {
+                rule("domain layer — line ratchet (tier target 100)") {
                     bound {
-                        minValue = 70
+                        minValue = 97
+                        coverageUnits = CoverageUnit.LINE
+                        aggregationForGroup = AggregationType.COVERED_PERCENTAGE
+                    }
+                }
+            }
+        }
+
+        variant("dataTier") {
+            filtersAppend {
+                includes {
+                    packages("ru.rznnike.demokmp.data")
+                }
+            }
+            verify {
+                warningInsteadOfFailure = true
+                rule("data layer — line ratchet (tier target 80)") {
+                    bound {
+                        minValue = 93
+                        coverageUnits = CoverageUnit.LINE
+                        aggregationForGroup = AggregationType.COVERED_PERCENTAGE
+                    }
+                }
+            }
+        }
+
+        variant("appTier") {
+            filtersAppend {
+                includes {
+                    packages("ru.rznnike.demokmp.app")
+                }
+            }
+            verify {
+                warningInsteadOfFailure = true
+                rule("app layer — line ratchet (tier target 90)") {
+                    bound {
+                        minValue = 40
                         coverageUnits = CoverageUnit.LINE
                         aggregationForGroup = AggregationType.COVERED_PERCENTAGE
                     }
@@ -231,12 +288,14 @@ android {
         }
         register("staging") {
             isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-android.pro")
             signingConfig = signingConfigs.getByName("config")
             versionNameSuffix = ".${globalVersionCode} staging"
         }
         release {
             isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-android.pro")
             signingConfig = signingConfigs.getByName("config")
             versionNameSuffix = ".${globalVersionCode}"
@@ -249,10 +308,8 @@ android {
         ignoreWarnings = false
         warningsAsErrors = false
         checkDependencies = true
-        htmlReport = true
         explainIssues = true
         noLines = false
-        textOutput = file("stdout")
         disable.add("MissingClass")
         disable.add("NewApi")
     }
@@ -284,6 +341,7 @@ android {
 
     testOptions {
         unitTests {
+            isIncludeAndroidResources = true
             isReturnDefaultValues = true
         }
     }
@@ -335,6 +393,25 @@ compose {
             }
         }
     }
+}
+
+tasks.withType<Test>().configureEach {
+    javaLauncher.set(
+        javaToolchains.launcherFor {
+            languageVersion.set(JavaLanguageVersion.of(21))
+        }
+    )
+    jvmArgs(
+        "--add-opens=java.base/java.lang=ALL-UNNAMED",
+        "--add-opens=java.base/java.util=ALL-UNNAMED",
+        "--add-opens=java.base/java.io=ALL-UNNAMED",
+        "--add-opens=java.base/java.net=ALL-UNNAMED",
+        "--add-opens=java.base/java.security=ALL-UNNAMED",
+        "--add-opens=java.base/java.text=ALL-UNNAMED",
+        "--add-opens=java.base/jdk.internal.access=ALL-UNNAMED",
+        "--add-opens=java.desktop/java.awt.font=ALL-UNNAMED",
+        "--add-opens=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED",
+    )
 }
 
 configureBuildKonfigFlavorFromAndroidTasks()

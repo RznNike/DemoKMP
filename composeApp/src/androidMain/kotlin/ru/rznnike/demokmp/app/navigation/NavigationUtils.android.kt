@@ -3,6 +3,7 @@ package ru.rznnike.demokmp.app.navigation
 import androidx.navigation3.runtime.NavKey
 import kotlinx.serialization.modules.PolymorphicModuleBuilder
 import kotlinx.serialization.modules.subclass
+import ru.rznnike.demokmp.app.ui.screen.barcodeexample.BarcodeExampleScreen
 import ru.rznnike.demokmp.app.ui.screen.chartexample.ChartExampleScreen
 import ru.rznnike.demokmp.app.ui.screen.customui.CustomUIScreen
 import ru.rznnike.demokmp.app.ui.screen.dbexample.DBExampleScreen
@@ -27,4 +28,5 @@ actual val screenKeyList: PolymorphicModuleBuilder<NavKey>.() -> Unit = {
     subclass(CustomUIScreen::class)
     subclass(NavigationExampleScreen::class)
     subclass(MarkdownExampleScreen::class)
+    subclass(BarcodeExampleScreen::class)
 }
