@@ -95,6 +95,7 @@
 * [Vico](https://github.com/patrykandpatrick/vico)
 * [Multiplatform Markdown Renderer](https://github.com/mikepenz/multiplatform-markdown-renderer)
 * [Kover](https://github.com/Kotlin/kotlinx-kover)
+* [JUnit 4](https://github.com/junit-team/junit4)
 
 #### Только для ПК
 * [PDFBox](https://pdfbox.apache.org/)
@@ -107,6 +108,7 @@
 * [Telephoto](https://github.com/saket/telephoto)
 * [CameraX](https://developer.android.com/media/camera/camerax)
 * [MLKit (barcode)](https://developers.google.com/ml-kit/vision/barcode-scanning/android)
+* [Robolectric](https://github.com/robolectric/robolectric)
 
 ## Использованные примеры API
 * HTTP - [dog.ceo](https://dog.ceo/dog-api/)

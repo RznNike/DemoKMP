@@ -94,6 +94,7 @@ This is a sample project with a set of solutions to typical problems, demonstrat
 * [Vico](https://github.com/patrykandpatrick/vico)
 * [Multiplatform Markdown Renderer](https://github.com/mikepenz/multiplatform-markdown-renderer)
 * [Kover](https://github.com/Kotlin/kotlinx-kover)
+* [JUnit 4](https://github.com/junit-team/junit4)
 
 #### PC only
 * [PDFBox](https://pdfbox.apache.org/)
@@ -106,6 +107,7 @@ This is a sample project with a set of solutions to typical problems, demonstrat
 * [Telephoto](https://github.com/saket/telephoto)
 * [CameraX](https://developer.android.com/media/camera/camerax)
 * [MLKit (barcode)](https://developers.google.com/ml-kit/vision/barcode-scanning/android)
+* [Robolectric](https://github.com/robolectric/robolectric)
 
 ## Used example APIs
 * HTTP - [dog.ceo](https://dog.ceo/dog-api/)
