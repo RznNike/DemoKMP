@@ -60,6 +60,11 @@ internal actual fun captureCommandOutput(executable: String, arguments: List<Str
     }
 }
 
+internal actual fun windowlessJavaCommand(
+    javaCommand: String,
+    pathExists: (String) -> Boolean
+): String = javaCommand
+
 internal actual fun launchDetached(
     executable: String,
     arguments: List<String>,

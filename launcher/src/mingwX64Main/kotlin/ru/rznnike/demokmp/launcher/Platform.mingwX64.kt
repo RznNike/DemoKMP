@@ -7,6 +7,9 @@ import platform.windows.*
 
 private const val EXECUTABLE_PATH_BUFFER_SIZE = 32768
 private const val FILE_READ_BUFFER_SIZE = 8192
+private const val JAVA_EXECUTABLE_NAME = "java"
+private const val WINDOWLESS_JAVA_EXECUTABLE_NAME = "javaw.exe"
+private const val EXECUTABLE_EXTENSION = ".exe"
 
 internal actual val pathSeparator: Char = '\\'
 
@@ -91,6 +94,25 @@ internal actual fun captureCommandOutput(executable: String, arguments: List<Str
     output
 }
 
+internal actual fun windowlessJavaCommand(
+    javaCommand: String,
+    pathExists: (String) -> Boolean
+): String {
+    val separatorIndex = maxOf(javaCommand.lastIndexOf('\\'), javaCommand.lastIndexOf('/'))
+    val directory = javaCommand.take(separatorIndex + 1)
+    val fileName = javaCommand.drop(separatorIndex + 1)
+    val baseName = if (fileName.endsWith(EXECUTABLE_EXTENSION, ignoreCase = true)) {
+        fileName.dropLast(EXECUTABLE_EXTENSION.length)
+    } else {
+        fileName
+    }
+    if (!baseName.equals(JAVA_EXECUTABLE_NAME, ignoreCase = true)) return javaCommand
+    if (directory.isEmpty()) return WINDOWLESS_JAVA_EXECUTABLE_NAME
+
+    val windowlessPath = directory + WINDOWLESS_JAVA_EXECUTABLE_NAME
+    return if (pathExists(windowlessPath)) windowlessPath else javaCommand
+}
+
 internal actual fun launchDetached(
     executable: String,
     arguments: List<String>,
@@ -99,8 +121,6 @@ internal actual fun launchDetached(
     val commandLine = buildWindowsCommandLine(executable, arguments)
     val startupInfo = alloc<STARTUPINFOW>().apply {
         cb = sizeOf<STARTUPINFOW>().convert()
-        dwFlags = STARTF_USESHOWWINDOW.convert()
-        wShowWindow = SW_HIDE.toUShort()
     }
     val processInfo = alloc<PROCESS_INFORMATION>()
     val created = CreateProcessW(
@@ -109,7 +129,7 @@ internal actual fun launchDetached(
         lpProcessAttributes = null,
         lpThreadAttributes = null,
         bInheritHandles = FALSE,
-        dwCreationFlags = (CREATE_NO_WINDOW or DETACHED_PROCESS or CREATE_NEW_PROCESS_GROUP).convert(),
+        dwCreationFlags = (DETACHED_PROCESS or CREATE_NEW_PROCESS_GROUP).convert(),
         lpEnvironment = null,
         lpCurrentDirectory = allocWideString(workingDirectory),
         lpStartupInfo = startupInfo.ptr,

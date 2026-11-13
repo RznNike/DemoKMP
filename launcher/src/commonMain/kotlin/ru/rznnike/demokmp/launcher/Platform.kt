@@ -10,6 +10,11 @@ internal expect fun readTextFile(path: String): String?
 
 internal expect fun captureCommandOutput(executable: String, arguments: List<String>): String?
 
+internal expect fun windowlessJavaCommand(
+    javaCommand: String,
+    pathExists: (String) -> Boolean = ::pathExists
+): String
+
 internal expect fun launchDetached(
     executable: String,
     arguments: List<String>,

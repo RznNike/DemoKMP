@@ -35,7 +35,7 @@ internal fun runLauncher() {
     }
 
     launchDetached(
-        executable = javaCommand,
+        executable = windowlessJavaCommand(javaCommand),
         arguments = buildLaunchArguments(
             jarPath = jarPath,
             renderApi = config.renderApi
