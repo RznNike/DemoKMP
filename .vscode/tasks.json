@@ -105,7 +105,7 @@
       "label": "KMP: test [desktop]",
       "detail": "Run desktop target tests",
       "type": "shell",
-      "command": "./gradlew :composeApp:desktopTest",
+      "command": "./gradlew :composeApp:desktopTest :launcher:allTests",
       "group": {
         "kind": "test",
         "isDefault": false
