@@ -22,7 +22,7 @@ object DataConstants {
     const val LOGS_RETENTION_TIME_MS = 172800000L // 2 days
     const val LOGS_CLEARING_PERIOD_MS = 3600000L // 1 hour
 
-    val RUN_SCRIPT_NAME = if (OperatingSystem.isWindows) "run.vbs" else "run.sh"
+    val LAUNCHER_EXECUTABLE_NAME = if (OperatingSystem.isWindows) "launcher.exe" else "launcher"
 
     const val HEADER_TEST = "Test"
 

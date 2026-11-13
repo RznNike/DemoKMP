@@ -222,15 +222,14 @@ class AppConfigurationViewModel : BaseUiViewModel<AppConfigurationViewModel.UiSt
         if (OperatingSystem.isAndroid) {
             eventDispatcher.sendEvent(AppEvent.ActivityRestartRequested)
         } else {
-            ProcessBuilder(
-                if (OperatingSystem.isLinux) {
-                    listOf("sh", "./${DataConstants.RUN_SCRIPT_NAME}")
-                } else {
-                    listOf("wscript", DataConstants.RUN_SCRIPT_NAME)
-                }
-            )
-                .directory(File(DataConstants.ROOT_DIR))
-                .start()
+            val launcher = File(DataConstants.ROOT_DIR, DataConstants.LAUNCHER_EXECUTABLE_NAME)
+            runCatching {
+                ProcessBuilder(launcher.absolutePath)
+                    .directory(File(DataConstants.ROOT_DIR))
+                    .start()
+            }.onFailure { exception ->
+                Logger.e(exception, "Failed to restart application")
+            }
         }
     }
 

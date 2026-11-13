@@ -31,7 +31,13 @@ private val globalVersionCode = 1
 private val buildType = BuildType[System.getenv("BUILD_TYPE")]
 private val debug = buildType != BuildType.RELEASE
 private val runFromIDE = System.getenv("RUN_FROM_IDE").toBoolean()
-private val os = if (DefaultNativePlatform.getCurrentOperatingSystem().isWindows) "windows" else "linux"
+private val isWindows = DefaultNativePlatform.getCurrentOperatingSystem().isWindows
+private val os = if (isWindows) "windows" else "linux"
+private val launcherTarget = if (isWindows) "mingwX64" else "linuxX64"
+private val launcherExecutableName = if (isWindows) "launcher.exe" else "launcher"
+private val launcherSourceFileName = if (isWindows) "launcher.exe" else "launcher.kexe"
+private val launcherLinkTask = ":launcher:linkReleaseExecutable" + if (isWindows) "MingwX64" else "LinuxX64"
+private val launcherBinaryDir = "${project.rootDir}/launcher/build/bin/$launcherTarget/releaseExecutable"
 private val apkName = "DemoKMP"
 
 kotlin {
@@ -495,21 +501,33 @@ tasks.register("clearAppBuildJarsDir") {
 
 tasks.register("generateReleaseApp") {
     description = "Generate release app folder"
-    dependsOn("clearAppBuildJarsDir", "packageReleaseUberJarForCurrentOS")
+    dependsOn("clearAppBuildJarsDir", "packageReleaseUberJarForCurrentOS", launcherLinkTask)
+
     doLast {
         val outputPath = "${project.rootDir}/distributableOutput/$globalVersionCode"
         val executablePath = "$outputPath/application"
 
         delete(outputPath)
         File(executablePath).mkdirs()
+
         File("${project.rootDir}/composeApp/build/compose/jars")
             .listFiles()
             ?.firstOrNull()
             ?.copyTo(File("$executablePath/app.jar"))
+
+        val launcherSource = File("$launcherBinaryDir/$launcherSourceFileName")
+        check(launcherSource.isFile) {
+            "Launcher executable not found: ${launcherSource.path}. Build it with $launcherLinkTask"
+        }
+        val launcherDestination = File("$outputPath/$launcherExecutableName")
+        launcherSource.copyTo(launcherDestination)
+        launcherDestination.setExecutable(true)
+
         copy {
             from("${project.rootDir}/runScripts/${os}")
             into(outputPath)
         }
+
         File("$outputPath/launcher_configuration.ini").writeText(
             """
                 java_path=
@@ -523,10 +541,19 @@ tasks.register("generateReleaseApp") {
 tasks.register<Zip>("generateReleaseArchive") {
     description = "Generate release app folder and zip it"
     dependsOn("generateReleaseApp")
+
     val flags = mutableListOf(buildType.tag)
     archiveFileName = "DemoKMP_${os.capitalized()}_v${globalVersionName}.${globalVersionCode}_${flags.joinToString(separator = "_")}.zip"
     destinationDirectory = file("${project.rootDir}/distributableArchive")
-    from("${project.rootDir}/distributableOutput/${globalVersionCode}")
+    from("${project.rootDir}/distributableOutput/${globalVersionCode}") {
+        exclude(launcherExecutableName)
+    }
+    from("${project.rootDir}/distributableOutput/${globalVersionCode}/$launcherExecutableName") {
+        filePermissions {
+            unix("0755")
+        }
+    }
+
     doLast {
         val rootDirPath = project.rootDir.invariantSeparatorsPath.removePrefix("/")
         val encodedOutputPath = "file:///%s/distributableArchive".format(
