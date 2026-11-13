@@ -524,7 +524,7 @@ tasks.register("generateReleaseApp") {
         launcherDestination.setExecutable(true)
 
         copy {
-            from("${project.rootDir}/runScripts/${os}")
+            from("${project.rootDir}/runtimeFiles/${os}")
             into(outputPath)
         }
 
@@ -545,6 +545,7 @@ tasks.register<Zip>("generateReleaseArchive") {
     val flags = mutableListOf(buildType.tag)
     archiveFileName = "DemoKMP_${os.capitalized()}_v${globalVersionName}.${globalVersionCode}_${flags.joinToString(separator = "_")}.zip"
     destinationDirectory = file("${project.rootDir}/distributableArchive")
+
     from("${project.rootDir}/distributableOutput/${globalVersionCode}") {
         exclude(launcherExecutableName)
     }
