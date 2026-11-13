@@ -142,9 +142,9 @@ To run this app on Android, use the standard ```composeApp``` configuration. The
 #### App build launch (PC)
 This project is configured to build the application into a jar file. The target computer requires JVM version 17 or later to be installed.
 
-To make the application easier to launch, the project includes launch scripts (for Windows and Linux). These scripts also perform additional checks, in particular - whether the required version of the JVM is installed.
+To make the application easier to launch, the project includes a launcher executable (for Windows and Linux). The launcher also performs additional checks, in particular - whether the required version of the JVM is installed.
 
-To run the compiled application, run the ```run.vbs``` (Windows) or ```run.sh``` (Linux) script located in the application's root directory. You can also create a shortcut to the application on your desktop by running the script ```create_desktop_shortcut.vbs``` / ```create_desktop_shortcut.sh```.
+To run the compiled application, run the ```launcher.exe``` (Windows) or ```launcher``` (Linux) executable located in the application's root directory. You can also create a shortcut to the application on your desktop by running the script ```create_desktop_shortcut.vbs``` / ```create_desktop_shortcut.sh```.
 
 ## Building
 
