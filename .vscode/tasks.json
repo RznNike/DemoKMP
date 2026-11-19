@@ -126,6 +126,22 @@
       "problemMatcher": [
         "$gradle"
       ]
+    },
+    {
+      "label": "KMP: archive [release] (Linux/WSL)",
+      "detail": "Generate distributable archive for Linux in release mode via WSL (with ProGuard)",
+      "type": "shell",
+      "command": ".\\scripts\\wsl-archive-release-linux.cmd",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": false
+      },
+      "problemMatcher": [
+        "$gradle"
+      ]
     }
   ]
 }
