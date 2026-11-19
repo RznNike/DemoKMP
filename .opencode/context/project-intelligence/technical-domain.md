@@ -20,7 +20,7 @@
 | UI            | Compose Multiplatform                | 1.12.2         | One declarative UI for all targets   |
 | Material      | Compose Material 3                   | 1.12.0-alpha03 | Material 3 across targets            |
 | ViewModel     | JetBrains AndroidX Lifecycle         | 2.11.0         | MPP ViewModel + Navigation3          |
-| Targets       | Android (SDK 26–37) + Desktop JVM 17 | —              | PC (Win/Linux) + Android             |
+| Targets       | Android (SDK 26–37) + Desktop JVM 21 | —              | PC (Win/Linux) + Android             |
 | DI            | Koin                                 | 4.2.2          | Multiplatform-friendly DI            |
 | Network       | Ktor + Ktorfit                       | 3.6.1 / 2.7.5  | HTTP/WebSocket client; type-safe API |
 | HTTP engine   | OkHttp                               | 5.5.1          | Ktor engine for Desktop + Android    |

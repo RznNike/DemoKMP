@@ -7,14 +7,14 @@ private const val DEFAULT_JAVA_COMMAND = "java"
 private const val JAVA_VERSION_LAUNCH_ARGUMENT = "-version"
 private const val JAR_LAUNCH_ARGUMENT = "-jar"
 private const val RENDER_API_ARGUMENT = "renderApi"
-private const val MINIMUM_JAVA_MAJOR_VERSION = 17
+private const val MINIMUM_JAVA_MAJOR_VERSION = 21
 
 internal fun runLauncher() {
     val applicationDirectory = executableDirectory()
 
     val configString = readTextFile(joinPath(applicationDirectory, CONFIGURATION_FILE_NAME))
     if (configString == null) {
-        showErrorMessage("Launch configuration not found")
+        showErrorMessage("Launcher configuration not found")
         return
     }
 

@@ -140,7 +140,7 @@ You can also create your own launch configurations based on the ones already add
 To run this app on Android, use the standard ```composeApp``` configuration. The build type can be selected in the ```Build Variants``` menu in the sidebar (also available under ```Build -> Select Build Variant```).
 
 #### App build launch (PC)
-This project is configured to build the application into a jar file. The target computer requires JVM version 17 or later to be installed.
+This project is configured to build the application into a jar file. The target computer requires JVM version 21 or later to be installed.
 
 To make the application easier to launch, the project includes a launcher executable (for Windows and Linux). The launcher also performs additional checks, in particular - whether the required version of the JVM is installed.
 
@@ -161,9 +161,9 @@ Or in VS Code:
 
 As a result, an archive with the assembled version of the application will be created, ready for distribution. The assembled application is located in the ```distributableOutput``` folder, and its archive is in the ```distributableArchive``` folder.
 
-If you have problems building your application, it is recommended to select JDK version ```17```. To do this:
-* Select JDK version ```17``` at path ```File -> Project Structure -> Project -> SDK```, and also ```Language level``` under it.
-* At path ```Settings -> Build -> Compiler -> Java compiler -> Project bytecode version``` select ```17```.
+If you have problems building your application, it is recommended to select JDK version ```21```. To do this:
+* Select JDK version ```21``` at path ```File -> Project Structure -> Project -> SDK```, and also ```Language level``` under it.
+* At path ```Settings -> Build -> Compiler -> Java compiler -> Project bytecode version``` select ```21```.
 * At path ```Settings -> Build -> Build tools -> Gradle -> Gradle JVM``` select ```Project JDK```.
 
 *Note: you can build your application only for the OS you are currently using. If, for example, you use Windows and need to create a build for Linux, consider doing it in a virtual machine.*

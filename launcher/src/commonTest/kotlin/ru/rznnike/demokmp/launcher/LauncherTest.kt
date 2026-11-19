@@ -37,7 +37,7 @@ class LauncherTest {
     @Test
     fun `formatJavaVersionError includes the detected version`() {
         assertEquals(
-            "Java 17+ required for launch, current version - 11",
+            "Java 21+ required for launch, current version - 11",
             formatJavaVersionError(11)
         )
     }
@@ -45,7 +45,7 @@ class LauncherTest {
     @Test
     fun `formatJavaVersionError reports none when version is unknown`() {
         assertEquals(
-            "Java 17+ required for launch, current version - none",
+            "Java 21+ required for launch, current version - none",
             formatJavaVersionError(null)
         )
     }
