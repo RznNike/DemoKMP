@@ -7,11 +7,11 @@ ktorfit = "2.7.5"
 ktor = "3.6.1"
 coil = "3.6.3"
 room = "2.8.5"
-filekit = "0.17.0"
-chucker = "4.3.1"
+filekit = "0.17.1"
+chucker = "4.4.0"
 vico = "3.3.1"
 markdown = "0.46.0"
-camera = "1.6.2"
+camera = "1.7.0"
 settings = "1.3.0"
 
 android-minSdk = "26"
@@ -70,7 +70,7 @@ multiplatform-settings-test = { module = "com.russhwolf:multiplatform-settings-t
 
 # Serialization
 # https://github.com/Kotlin/kotlinx.serialization
-kotlinx-serialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version = "1.12.0" }
+kotlinx-serialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version = "1.13.0" }
 
 # Ktorfit - network
 # https://github.com/Foso/Ktorfit
@@ -120,7 +120,7 @@ markdown-material = { module = "com.mikepenz:multiplatform-markdown-renderer-m3"
 
 # Logging (for Ktor)
 # https://mvnrepository.com/artifact/ch.qos.logback/logback-classic
-logback = { module = "ch.qos.logback:logback-classic", version = "1.6.6" }
+logback = { module = "ch.qos.logback:logback-classic", version = "1.6.7" }
 
 # PDF renderer
 # https://mvnrepository.com/artifact/org.apache.pdfbox/pdfbox
@@ -172,7 +172,7 @@ mlkit-barcode = { module = "com.google.mlkit:barcode-scanning", version = "17.3.
 
 # Robolectric
 # https://github.com/robolectric/robolectric
-robolectric = { module = "org.robolectric:robolectric", version = "4.17" }
+robolectric = { module = "org.robolectric:robolectric", version = "4.18.1" }
 
 # JUnit 4
 # https://github.com/junit-team/junit4
@@ -202,7 +202,7 @@ buildkonfig = { id = "com.codingfeline.buildkonfig", version = "0.24.0" }
 
 # KSP
 # https://mvnrepository.com/artifact/com.google.devtools.ksp/com.google.devtools.ksp.gradle.plugin?repo=central
-ksp = { id = "com.google.devtools.ksp", version = "2.3.13" }
+ksp = { id = "com.google.devtools.ksp", version = "2.3.14" }
 
 # Ktorfit - network
 ktorfit = { id = "de.jensklingenberg.ktorfit", version.ref = "ktorfit" }
