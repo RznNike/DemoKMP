@@ -6,8 +6,8 @@ import ru.rznnike.demokmp.data.comobject.COMObjectWrapper
 import ru.rznnike.demokmp.domain.log.Logger
 
 internal class ShellManagerImpl(
-    private val createWrapper: () -> PCShell = ::PowerShellWrapper,
-    private val initializeCom: () -> Unit = COMObjectWrapper::initialize
+    private val createWrapper: () -> PCShell = { PowerShellWrapper() },
+    private val initializeCom: () -> Unit = { COMObjectWrapper.initialize() }
 ) : ShellManager {
     private val logger = Logger.withTag("ShellManager")
     private var wrapper: PCShell? = null
