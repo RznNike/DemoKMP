@@ -149,15 +149,17 @@ To run the compiled application, run the ```launcher.exe``` (Windows) or ```laun
 ## Building
 
 #### For PC
-This project is configured to create builds for Windows and Linux. If you want to build it for macOS, update the ```nativeDistributions``` section in ```build.gradle.kts``` accordingly.
+This project is configured to create builds for Windows and Linux.
 
 To create a distributable build, use one of the launch configurations in IntelliJ IDEA:
 * ```archive [staging]``` (with debug and proguard)
 * ```archive [release]``` (with proguard)
+* ```archive [release] (Linux/WSL)``` (with proguard; build for Linux from Windows using WSL)
 
 Or in VS Code:
 * ```KMP: archive [staging]``` (with debug and proguard)
 * ```KMP: archive [release]``` (with proguard)
+* ```KMP: archive [release] (Linux/WSL)``` (with proguard; build for Linux from Windows using WSL)
 
 As a result, an archive with the assembled version of the application will be created, ready for distribution. The assembled application is located in the ```distributableOutput``` folder, and its archive is in the ```distributableArchive``` folder.
 
@@ -166,7 +168,7 @@ If you have problems building your application, it is recommended to select JDK 
 * At path ```Settings -> Build -> Compiler -> Java compiler -> Project bytecode version``` select ```21```.
 * At path ```Settings -> Build -> Build tools -> Gradle -> Gradle JVM``` select ```Project JDK```.
 
-*Note: you can build your application only for the OS you are currently using. If, for example, you use Windows and need to create a build for Linux, consider doing it in a virtual machine.*
+*Note: you can build your application only for the OS you are currently using. If you need to create a build for a different OS, consider doing it in a virtual machine. The only exception is building for Linux from Windows using WSL. This requires setting up WSL beforehand and installing JDK 21 within it.*
 
 #### For Android
 Use the standard tools provided by the IDE to build an Android application. You can build a signed APK or Bundle by going to ```Build -> Generate Signed App Bundle / APK```.
