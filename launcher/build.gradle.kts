@@ -1,3 +1,4 @@
+import org.gradle.nativeplatform.platform.internal.DefaultNativePlatform
 import org.jetbrains.kotlin.gradle.tasks.KotlinNativeLink
 
 plugins {
@@ -32,6 +33,8 @@ kotlin {
 }
 
 val compileWindowsResources = tasks.register<Exec>("compileWindowResources") {
+    if (!DefaultNativePlatform.getCurrentOperatingSystem().isWindows) return@register
+
     description = "compileWindowResources"
     val konanDir = System.getProperty("user.home") + "/.konan"
     val windres = fileTree(konanDir) {
@@ -60,6 +63,8 @@ val compileWindowsResources = tasks.register<Exec>("compileWindowResources") {
 }
 
 tasks.withType<KotlinNativeLink>().configureEach {
+    if (!DefaultNativePlatform.getCurrentOperatingSystem().isWindows) return@configureEach
+
     if (name.contains("mingw", ignoreCase = true)) {
         dependsOn(compileWindowsResources)
         val resFile = compileWindowsResources.get().outputs.files.singleFile
