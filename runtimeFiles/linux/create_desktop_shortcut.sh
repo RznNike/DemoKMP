@@ -8,6 +8,6 @@ echo "[Desktop Entry]
 Type=Application
 Name=$name
 Icon=$PWD/icon.png
-Exec=\"$PWD/run.sh\"
+Exec=\"$PWD/launcher\"
 Path=$PWD" > "$shortcut"
 chmod +x "$shortcut"

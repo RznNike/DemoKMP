@@ -140,33 +140,35 @@ You can also create your own launch configurations based on the ones already add
 To run this app on Android, use the standard ```composeApp``` configuration. The build type can be selected in the ```Build Variants``` menu in the sidebar (also available under ```Build -> Select Build Variant```).
 
 #### App build launch (PC)
-This project is configured to build the application into a jar file. The target computer requires JVM version 17 or later to be installed.
+This project is configured to build the application into a jar file. The target computer requires JVM version 21 or later to be installed.
 
-To make the application easier to launch, the project includes launch scripts (for Windows and Linux). These scripts also perform additional checks, in particular - whether the required version of the JVM is installed.
+To make the application easier to launch, the project includes a launcher executable (for Windows and Linux). The launcher also performs additional checks, in particular - whether the required version of the JVM is installed.
 
-To run the compiled application, run the ```run.vbs``` (Windows) or ```run.sh``` (Linux) script located in the application's root directory. You can also create a shortcut to the application on your desktop by running the script ```create_desktop_shortcut.vbs``` / ```create_desktop_shortcut.sh```.
+To run the compiled application, run the ```launcher.exe``` (Windows) or ```launcher``` (Linux) executable located in the application's root directory. You can also create a shortcut to the application on your desktop by running the script ```create_desktop_shortcut.vbs``` / ```create_desktop_shortcut.sh```.
 
 ## Building
 
 #### For PC
-This project is configured to create builds for Windows and Linux. If you want to build it for macOS, update the ```nativeDistributions``` section in ```build.gradle.kts``` accordingly.
+This project is configured to create builds for Windows and Linux.
 
 To create a distributable build, use one of the launch configurations in IntelliJ IDEA:
 * ```archive [staging]``` (with debug and proguard)
 * ```archive [release]``` (with proguard)
+* ```archive [release] (Linux/WSL)``` (with proguard; build for Linux from Windows using WSL)
 
 Or in VS Code:
 * ```KMP: archive [staging]``` (with debug and proguard)
 * ```KMP: archive [release]``` (with proguard)
+* ```KMP: archive [release] (Linux/WSL)``` (with proguard; build for Linux from Windows using WSL)
 
 As a result, an archive with the assembled version of the application will be created, ready for distribution. The assembled application is located in the ```distributableOutput``` folder, and its archive is in the ```distributableArchive``` folder.
 
-If you have problems building your application, it is recommended to select JDK version ```17```. To do this:
-* Select JDK version ```17``` at path ```File -> Project Structure -> Project -> SDK```, and also ```Language level``` under it.
-* At path ```Settings -> Build -> Compiler -> Java compiler -> Project bytecode version``` select ```17```.
+If you have problems building your application, it is recommended to select JDK version ```21```. To do this:
+* Select JDK version ```21``` at path ```File -> Project Structure -> Project -> SDK```, and also ```Language level``` under it.
+* At path ```Settings -> Build -> Compiler -> Java compiler -> Project bytecode version``` select ```21```.
 * At path ```Settings -> Build -> Build tools -> Gradle -> Gradle JVM``` select ```Project JDK```.
 
-*Note: you can build your application only for the OS you are currently using. If, for example, you use Windows and need to create a build for Linux, consider doing it in a virtual machine.*
+*Note: you can build your application only for the OS you are currently using. If you need to create a build for a different OS, consider doing it in a virtual machine. The only exception is building for Linux from Windows using WSL. This requires setting up WSL beforehand and installing JDK 21 within it.*
 
 #### For Android
 Use the standard tools provided by the IDE to build an Android application. You can build a signed APK or Bundle by going to ```Build -> Generate Signed App Bundle / APK```.

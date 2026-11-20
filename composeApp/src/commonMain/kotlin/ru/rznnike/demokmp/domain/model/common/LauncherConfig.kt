@@ -17,7 +17,7 @@ fun String.toLauncherConfig(): LauncherConfig {
         .filter { it.isNotBlank() }
         .associate { line ->
             val parts = line.split("=", limit = 2)
-            (parts.getOrNull(0) ?: "") to (parts.getOrNull(1) ?: "")
+            (parts.getOrNull(0)?.trim() ?: "") to (parts.getOrNull(1)?.trim() ?: "")
         }
     return LauncherConfig(
         javaPath = configMap[JAVA_PATH_KEY] ?: "",

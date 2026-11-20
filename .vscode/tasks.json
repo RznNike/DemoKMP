@@ -22,7 +22,10 @@
       "label": "KMP: run [debug +args]",
       "detail": "Run app in debug mode (without ProGuard) with launch args",
       "type": "shell",
-      "command": "./gradlew :composeApp:run --args=\\\"'foo foo2' bar\\\" --quiet",
+      "command": "./gradlew :composeApp:run --args=\"'foo foo2' bar\" --quiet",
+      "windows": {
+        "command": "./gradlew :composeApp:run --args=\\\"'foo foo2' bar\\\" --quiet"
+      },
       "options": {
         "env": {
           "BUILD_TYPE": "debug",
@@ -102,10 +105,26 @@
       "problemMatcher": []
     },
     {
+      "label": "KMP: archive [release] (Linux/WSL)",
+      "detail": "Generate distributable archive for Linux in release mode via WSL (with ProGuard)",
+      "type": "shell",
+      "command": ".\\scripts\\wsl-archive-release-linux.cmd",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": false
+      },
+      "problemMatcher": [
+        "$gradle"
+      ]
+    },
+    {
       "label": "KMP: test [desktop]",
       "detail": "Run desktop target tests",
       "type": "shell",
-      "command": "./gradlew :composeApp:desktopTest",
+      "command": "./gradlew :composeApp:desktopTest :launcher:allTests",
       "group": {
         "kind": "test",
         "isDefault": false
