@@ -546,12 +546,18 @@ tasks.register<Zip>("generateReleaseArchive") {
     archiveFileName = "DemoKMP_${os.capitalized()}_v${globalVersionName}.${globalVersionCode}_${flags.joinToString(separator = "_")}.zip"
     destinationDirectory = file("${project.rootDir}/distributableArchive")
 
+    val linuxExecutableFiles = if (isWindows) emptyList() else listOf(
+        launcherExecutableName,
+        "create_desktop_shortcut.sh"
+    )
     from("${project.rootDir}/distributableOutput/${globalVersionCode}") {
-        exclude(launcherExecutableName)
+        exclude(linuxExecutableFiles)
     }
-    from("${project.rootDir}/distributableOutput/${globalVersionCode}/$launcherExecutableName") {
-        filePermissions {
-            unix("0755")
+    linuxExecutableFiles.forEach { fileName ->
+        from("${project.rootDir}/distributableOutput/${globalVersionCode}/$fileName") {
+            filePermissions {
+                unix("0755")
+            }
         }
     }
 
