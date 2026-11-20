@@ -22,7 +22,10 @@
       "label": "KMP: run [debug +args]",
       "detail": "Run app in debug mode (without ProGuard) with launch args",
       "type": "shell",
-      "command": "./gradlew :composeApp:run --args=\\\"'foo foo2' bar\\\" --quiet",
+      "command": "./gradlew :composeApp:run --args=\"'foo foo2' bar\" --quiet",
+      "windows": {
+        "command": "./gradlew :composeApp:run --args=\\\"'foo foo2' bar\\\" --quiet"
+      },
       "options": {
         "env": {
           "BUILD_TYPE": "debug",
